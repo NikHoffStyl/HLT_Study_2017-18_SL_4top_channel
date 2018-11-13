@@ -1,6 +1,7 @@
 from __future__ import (division, print_function)
 
 import ROOT 
+from ROOT import TLatex
 from importlib import import_module
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor 
@@ -170,7 +171,7 @@ files=[]
 #Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
 #inputList =  open("../Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
 #thePostFix = "TTJets_SL"
-inputList =  open("../Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
+inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
 thePostFix = "TTTT"
 #inputList =  open("../Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC PSWeights
 #thePostFix = "TTTT_PSWeights"
@@ -214,22 +215,29 @@ h_jetPt = ROOT.gDirectory.Get("h_jetPt")
 if not (h_jetPt):
     print("jetPt histogram is empty")
 h_jetPtTrigger = ROOT.gDirectory.Get("h_jetPtTrigger")
-h_jetPtTrigger.SetLineColor(kRed)
+h_jetPtTrigger.SetLineColor(ROOT.kRed)
 if not (h_jetPtTrigger):
     print("jetPtTrigger histogram is empty")
 cv = triggerCanvas.cd(1)
 h_jetPt.Draw()
 cv = triggerCanvas.cd(2)
 h_jetPtTrigger.Draw()
-cv = triggerCanvas.cd(3)
-h_jetPtTriggerStack.Add(h_jetPtTrigger)
-h_jetPtTriggerStack.Add(h_jetPt) 
-h_jetPtTriggerStack.Draw('nostack')
 cv = triggerCanvas.cd(4)
-h_jetPtTriggerRatio = (h_jetPt).Clone("self.h_jetPtTriggerRatio")
+h_jetPtTriggerRatio = (h_jetPt).Clone("h_jetPtTriggerRatio")
 h_jetPtTriggerRatio.Divide(h_jetPtTrigger)
 h_jetPtTriggerRatio.Draw()
-
+cv = triggerCanvas.cd(3)
+#h_jetPtTrigger.Draw()
+#h_jetPt.Draw('same')
+h_jetPtTriggerStack.Add(h_jetPtTrigger)
+h_jetPtTriggerStack.Add(h_jetPt)
+h_jetPtTriggerStack.Draw('nostack')
+h_jetPt.SetStats(False)
+h_jetPtTrigger.SetStats(False)
+legend = ROOT.TLegend(0.1, 0.7,0.48, 0.9)
+legend.SetHeader("Histograms of jet P_{T}", "C")
+legend.AddEntry(h_jetPtTrigger, "with Trigger", "l")
+legend.AddEntry(h_jetPt, "without Trigger", "l")
+legend.Draw()
 triggerCanvas.Print("histCanvas.png")
-
 histFile.Close()
