@@ -131,7 +131,7 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
             if abs(jet.eta) > 2.4:
                 continue
 
-            if hltriger:
+            if hltriger==1:
                 self.h_jetPtT.Fill(jet.pt)
             #jetCounter += 1
             # Fill 2D histo
@@ -275,12 +275,12 @@ cv = triggerCanvas.cd(3)
 #h_jetPtTrigger.Draw()
 #h_jetPt.Draw('same')
 h_PtTriggerStack.Add(h_jetPt)
-h_jetPt.GetYaxis().SetTitleOffset(1.5)
+h_jetPt.GetYaxis().SetTitleOffset(1.7)
 h_PtTriggerStack.Add(h_elPt)
 h_PtTriggerStack.Add(h_muonPt)
 h_PtTriggerStack.Add(h_jetPtT)
 h_PtTriggerStack.Add(h_elPtT)
-h_muonPtT.GetYaxis().SetTitleOffset(1.5)
+h_muonPtT.GetYaxis().SetTitleOffset(1.7)
 h_PtTriggerStack.Add(h_muonPtT)
 #h_PtTriggerStack.GetYaxis().SetTitleOffset(1.5)
 h_PtTriggerStack.Draw('nostack')
@@ -292,12 +292,13 @@ h_muonPt.SetStats(False)
 h_muonPtT.SetStats(False)
 legend = ROOT.TLegend(0.5, 0.5,0.9, 0.9)
 legend.SetNColumns(2)
+legend.SetLegendFont(50)
 legend.SetHeader("Histograms of P_{T}, with (without) trigger on left (right)", "C")
 legend.AddEntry(h_jetPtT, "jet", "l")
-legend.AddEntry(h_elPtT, "electron", "l")
-legend.AddEntry(h_muonPtT, "muon ", "l")
 legend.AddEntry(h_jetPt, "jet", "l")
+legend.AddEntry(h_elPtT, "electron", "l")
 legend.AddEntry(h_elPt, "electron", "l")
+legend.AddEntry(h_muonPtT, "muon ", "l")
 legend.AddEntry(h_muonPt, "muon ", "l")
 legend.Draw()
 triggerCanvas.Print("histCanvas.png")
