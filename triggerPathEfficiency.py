@@ -1,5 +1,6 @@
 import ROOT
 from ROOT import TLatex
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 def main():
     #Create canvas
@@ -86,7 +87,7 @@ def main():
     h_muonPtT.SetStats(False)
     legend = ROOT.TLegend(0.5, 0.5,0.9, 0.9)
     legend.SetNColumns(2)
-    legend.SetLegendFont(50)
+    SetLegendFont(50)
     legend.SetHeader("Histograms of P_{T}, with (without) trigger on left (right)", "C")
     legend.AddEntry(h_jetPtT, "jet", "l")
     legend.AddEntry(h_jetPt, "jet", "l")
