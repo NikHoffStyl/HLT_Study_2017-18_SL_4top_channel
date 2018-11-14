@@ -23,23 +23,36 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
         #The histogram then has to be 'booked' with the service that will write everything to the output file via self.addObject()
         self.h_jets = ROOT.TH1D('h_jets', 'someTitle;nJets;Events',   20, 0, 20)
         self.addObject(self.h_jets)
-        #Repeat for other histograms
+        self.h_jetsT = ROOT.TH1D('h_jetsT', 'someTitle;nJets;Events',   20, 0, 20)
+        self.addObject(self.h_jetsT)
         self.h_fatjets = ROOT.TH1D('h_fatjets', ';nFatJets;Events', 8, 0, 8)
         self.addObject(self.h_fatjets)
+        self.h_fatjetsT = ROOT.TH1D('h_fatjetsT', ';nFatJets;Events', 8, 0, 8)
+        self.addObject(self.h_fatjetsT)
         self.h_subjets = ROOT.TH1D('h_subjets', ';nSubJets;Events', 16, 0, 16)
         self.addObject(self.h_subjets)
+        self.h_subjetsT = ROOT.TH1D('h_subjetsT', ';nSubJets;Events', 16, 0, 16)
+        self.addObject(self.h_subjetsT)
 	self.h_jetEta = ROOT.TH1D('h_jetEta', ';valJetEta;Events', 40, -2.5, 2.5)
         self.addObject(self.h_jetEta)
-	self.h_jetPtTrigger = ROOT.TH1D('h_jetPtTrigger', ';JetPt_withTrigger;Events', 60, 0, 200)
-        self.addObject(self.h_jetPtTrigger)
-	self.h_jetPt = ROOT.TH1D('h_jetPt', ';JetPt_withoutTrigger;Events', 60, 0, 200)
+	self.h_jetEtaT = ROOT.TH1D('h_jetEtaT', ';valJetEta;Events', 40, -2.5, 2.5)
+        self.addObject(self.h_jetEtaT)
+        self.h_jetPt = ROOT.TH1D('h_jetPt', ';JetPt_withoutTrigger;Events', 60, 0, 200)
         self.addObject(self.h_jetPt)
+        self.h_jetPtT = ROOT.TH1D('h_jetPtT', ';JetPt_withTrigger;Events', 60, 0, 200)
+        self.addObject(self.h_jetPtT)
 	self.h_elPt = ROOT.TH1D('h_elPt', ';valElPt;Events', 60, 0, 200)
         self.addObject(self.h_elPt)
+	self.h_elPtT = ROOT.TH1D('h_elPtT', ';valElPt;Events', 60, 0, 200)
+        self.addObject(self.h_elPtT)
 	self.h_muonPt = ROOT.TH1D('h_muonPt', ';valMuonPt;Events', 60, 0, 200)
         self.addObject(self.h_muonPt)
+	self.h_muonPtT = ROOT.TH1D('h_muonPtT', ';valMuonPt;Events', 60, 0, 200)
+        self.addObject(self.h_muonPtT)
 	self.h_jetPhi = ROOT.TH1D('h_jetPhi', ';valJetPhi;Events', 20, -3.14, 3.14)
         self.addObject(self.h_jetPhi)
+	self.h_jetPhiT = ROOT.TH1D('h_jetPhiT', ';valJetPhi;Events', 20, -3.14, 3.14)
+        self.addObject(self.h_jetPhiT)
         self.h_jet_map = ROOT.TH2F('h_jet_map', ';Jet Eta;Jet Phi', 40, -2.5, 2.5, 20, -3.14, 3.14)
         self.addObject(self.h_jet_map)
         self.h_jetPtPhi = ROOT.TH2F('h_jetPtPhi', ';Jet Phi;Jet Pt', 20, -3.14, 3.14, 60, 30, 400)
@@ -119,8 +132,7 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
                 continue
 
             if hltriger:
-                self.h_jetPtTrigger.Fill(jet.pt)
-                continue
+                self.h_jetPtT.Fill(jet.pt)
             #jetCounter += 1
             # Fill 2D histo
             self.h_jet_map.Fill(jet.eta, jet.phi)
@@ -130,9 +142,6 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
             #numJet = getattr(event, "nJet")
             self.h_jetPtnjet.Fill(nAK4Jets,jet.pt)
             self.h_jetPt.Fill(jet.pt)
-            """for nm, muon in enumerate(muons) :
-               #eventSum += muon.p4()
-               self.h_muonPt.Fill(muon.pt)"""
             #Count b-tagged jets with two algos at the medium working point
             #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             if jet.btagCSVV2 > 0.8838:
@@ -141,20 +150,15 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
                 nMedDeepB += 1
 
         #Use the enumerate() function to get both an index and the iterated item in the collection
-        #print("\n{0:>5s} {1:>10s} {2:>10s} {3:>10s}".format("Muon", "Pt", "Eta", "Phi"))
-
-            #print("{0:*<5d} {1:>10.4f} {2:>+10.3f} {3:>+10.3f}".format(nm+1, muon.pt, muon.eta, muon.phi))
-
-        #print("\n{0:>5s} {1:>10s} {2:>10s} {3:>10s}".format("Ele", "Pt", "Eta", "Phi"))
         for ne, ele in enumerate(electrons) :
+            if hltriger:
+                self.h_elPtT.Fill(ele.pt)
             self.h_elPt.Fill(ele.pt)
-            #eventSum += ele.p4()
-            #print("{0:*^5d} {1:>10.4f} {2:> 10.3f} {3:> 10.3f}".format(ne+1, ele.pt, ele.eta, ele.phi))
+        for nm, muon in enumerate(muons) :
+            if hltriger:
+                self.h_muonPtT.Fill(muon.pt)
+            self.h_muonPt.Fill(muon.pt)
 
-        #print("\n{0:>5s} {1:>10s} {2:>10s} {3:>10s}".format("Jet", "Pt", "Eta", "Phi"))
-        """for nj, jet in enumerate(jets):
-            eventSum += jet.p4()
-            print("{0: >5d} {1:>10.4f} {2:>-10.3f} {3:>-10.3f}".format(nj+1, jet.pt, jet.eta, jet.phi))"""
         # Fill 1D histo
 	self.h_jetEta.Fill(jet.eta)
         self.h_jetPhi.Fill(jet.phi)
@@ -205,39 +209,96 @@ p99=PostProcessor(".",
 p99.run()
 #start stackin
 #Create canvas
-triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Canvas of Pt with and without triggers', 800,800)
+triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Canvas of Pt with and without triggers', 950,650)
 triggerCanvas.Divide(2,2)
 
-h_jetPtTriggerStack = ROOT.THStack('h_jetPtTriggerStack', ';jetPt (GeV); Events (a.u.)')
+#Get histos from file
+h_PtTriggerStack = ROOT.THStack('h_PtTriggerStack', ';jetPt (GeV); Events (a.u.)')
 histFile = ROOT.TFile.Open("OutHistoMaker2.root")
 plotDirectory = histFile.cd("plots")
 h_jetPt = ROOT.gDirectory.Get("h_jetPt")
+h_jetPt.SetLineColor(28)
 if not (h_jetPt):
     print("jetPt histogram is empty")
-h_jetPtTrigger = ROOT.gDirectory.Get("h_jetPtTrigger")
-h_jetPtTrigger.SetLineColor(ROOT.kRed)
-if not (h_jetPtTrigger):
-    print("jetPtTrigger histogram is empty")
+h_jetPtT = ROOT.gDirectory.Get("h_jetPtT")
+h_jetPtT.SetLineColor(1)
+if not (h_jetPtT):
+    print("jetPt_t histogram is empty")
+h_elPt = ROOT.gDirectory.Get("h_elPt")
+h_elPt.SetLineColor(2)
+if not (h_elPt):
+    print("elPt histogram is empty")
+h_elPtT = ROOT.gDirectory.Get("h_elPtT")
+h_elPtT.SetLineColor(3)
+if not (h_elPtT):
+    print("elPt_t histogram is empty")
+h_muonPt = ROOT.gDirectory.Get("h_muonPt")
+h_muonPt.SetLineColor(4)
+if not (h_muonPt):
+    print("muonPt histogram is empty")
+h_muonPtT = ROOT.gDirectory.Get("h_muonPtT")
+h_muonPtT.SetLineColor(6)
+if not (h_muonPtT):
+    print("jetPt_t histogram is empty")
+
 cv = triggerCanvas.cd(1)
+h_jetPt.GetYaxis().SetTitleOffset(1.5)
 h_jetPt.Draw()
+
 cv = triggerCanvas.cd(2)
-h_jetPtTrigger.Draw()
+h_jetPtT.GetYaxis().SetTitleOffset(1.5)
+h_jetPtT.Draw()
+
 cv = triggerCanvas.cd(4)
+cv.SetLogy()
+cv.SetLogx()
 h_jetPtTriggerRatio = (h_jetPt).Clone("h_jetPtTriggerRatio")
-h_jetPtTriggerRatio.Divide(h_jetPtTrigger)
+h_jetPtTriggerRatio.Divide(h_jetPtT)
+h_jetPtTriggerRatio.SetLineColor(1)
 h_jetPtTriggerRatio.Draw()
+#h_jetPtTriggerRatio.GetYaxis().SetTitleOffset(1.3)
+h_elPtTriggerRatio = (h_elPt).Clone("h_elPtTriggerRatio")
+h_elPtTriggerRatio.Divide(h_elPtT)
+h_elPtTriggerRatio.SetLineColor(2)
+h_elPtTriggerRatio.Draw('same')
+h_muonPtTriggerRatio = (h_muonPt).Clone("h_muonPtTriggerRatio")
+h_muonPtTriggerRatio.Divide(h_muonPtT)
+h_muonPtTriggerRatio.SetLineColor(4)
+h_muonPtTriggerRatio.Draw('same')
+legg = ROOT.TLegend(0.1, 0.7,0.3, 0.9)
+legg.AddEntry(h_jetPtTriggerRatio, "jet", "l")
+legg.AddEntry(h_elPtTriggerRatio, "electron", "l")
+legg.AddEntry(h_muonPtTriggerRatio, "muon", "l")
+legg.Draw()
+
 cv = triggerCanvas.cd(3)
 #h_jetPtTrigger.Draw()
 #h_jetPt.Draw('same')
-h_jetPtTriggerStack.Add(h_jetPtTrigger)
-h_jetPtTriggerStack.Add(h_jetPt)
-h_jetPtTriggerStack.Draw('nostack')
+h_PtTriggerStack.Add(h_jetPt)
+h_jetPt.GetYaxis().SetTitleOffset(1.5)
+h_PtTriggerStack.Add(h_elPt)
+h_PtTriggerStack.Add(h_muonPt)
+h_PtTriggerStack.Add(h_jetPtT)
+h_PtTriggerStack.Add(h_elPtT)
+h_muonPtT.GetYaxis().SetTitleOffset(1.5)
+h_PtTriggerStack.Add(h_muonPtT)
+#h_PtTriggerStack.GetYaxis().SetTitleOffset(1.5)
+h_PtTriggerStack.Draw('nostack')
 h_jetPt.SetStats(False)
-h_jetPtTrigger.SetStats(False)
-legend = ROOT.TLegend(0.47, 0.7,0.9, 0.9)
-legend.SetHeader("Histograms of jet P_{T}", "C")
-legend.AddEntry(h_jetPtTrigger, "with Trigger", "l")
-legend.AddEntry(h_jetPt, "without Trigger", "l")
+h_jetPtT.SetStats(False)
+h_elPt.SetStats(False)
+h_elPtT.SetStats(False)
+h_muonPt.SetStats(False)
+h_muonPtT.SetStats(False)
+legend = ROOT.TLegend(0.5, 0.5,0.9, 0.9)
+legend.SetNColumns(2)
+legend.SetHeader("Histograms of P_{T}, with (without) trigger on left (right)", "C")
+legend.AddEntry(h_jetPtT, "jet", "l")
+legend.AddEntry(h_elPtT, "electron", "l")
+legend.AddEntry(h_muonPtT, "muon ", "l")
+legend.AddEntry(h_jetPt, "jet", "l")
+legend.AddEntry(h_elPt, "electron", "l")
+legend.AddEntry(h_muonPt, "muon ", "l")
 legend.Draw()
 triggerCanvas.Print("histCanvas.png")
 histFile.Close()
