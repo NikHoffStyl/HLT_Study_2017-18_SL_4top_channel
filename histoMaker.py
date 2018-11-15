@@ -38,11 +38,11 @@ class HistogramMaker(Module):
         self.addObject(self.h_jetEta)
         self.h_jetEtaT = ROOT.TH1D('h_jetEtaT', ';valJetEta;Events', 40, -2.5, 2.5)
         self.addObject(self.h_jetEtaT)
-        self.h_jetPt = ROOT.TH1D('h_jetPt', ';JetPt_withoutTrigger;Events', 60, 0, 200)
+        self.h_jetPt = ROOT.TH1D('h_jetPt', ';JetPt;Events', 60, 0, 200)
         self.addObject(self.h_jetPt)
-        self.h_jetPtT = ROOT.TH1D('h_jetPtT', ';JetPt_withTrigger;Events', 60, 0, 200)
+        self.h_jetPtT = ROOT.TH1D('h_jetPtT', ';JetPt;Events', 60, 0, 200)
         self.addObject(self.h_jetPtT)
-        self.h_elPt = ROOT.TH1D('h_elPt', ';valElPt;Events', 60, 0, 200)
+        self.h_elPt = ROOT.TH1D('h_elPt', ';valElPt ;Events', 60, 0, 200)
         self.addObject(self.h_elPt)
         self.h_elPtT = ROOT.TH1D('h_elPtT', ';valElPt;Events', 60, 0, 200)
         self.addObject(self.h_elPtT)
@@ -54,15 +54,15 @@ class HistogramMaker(Module):
         self.addObject(self.h_jetPhi)
         self.h_jetPhiT = ROOT.TH1D('h_jetPhiT', ';valJetPhi;Events', 20, -3.14, 3.14)
         self.addObject(self.h_jetPhiT)
-        self.h_jet_map = ROOT.TH2F('h_jet_map', ';Jet Eta;Jet Phi', 40, -2.5, 2.5, 20, -3.14, 3.14)
+        self.h_jet_map = ROOT.TH2F('h_jet_map', ';Jet #eta;Jet #phi', 40, -2.5, 2.5, 20, -3.14, 3.14)
         self.addObject(self.h_jet_map)
-        self.h_jetPtPhi = ROOT.TH2F('h_jetPtPhi', ';Jet Phi;Jet Pt', 20, -3.14, 3.14, 60, 30, 400)
+        self.h_jetPtPhi = ROOT.TH2F('h_jetPtPhi', ';Jet #phi;Jet P_{T}', 20, -3.14, 3.14, 60, 30, 400)
         self.addObject(self.h_jetPtPhi)
-        self.h_jetPtEta = ROOT.TH2F('h_jetPtEta', ';Jet Eta;Jet Pt', 40, -2.5, 2.5, 60, 30, 400)
+        self.h_jetPtEta = ROOT.TH2F('h_jetPtEta', ';Jet #eta;Jet P_{T}', 40, -2.5, 2.5, 60, 30, 400)
         self.addObject(self.h_jetPtEta)
-        self.h_jetPtId = ROOT.TH2F('h_jetPtId', ';Jet ID;Jet Pt', 11, 0,10, 60, 30, 400)
+        self.h_jetPtId = ROOT.TH2F('h_jetPtId', ';Jet ID;Jet P_{T}', 11, 0,10, 60, 30, 400)
         self.addObject(self.h_jetPtId)
-        self.h_jetPtnjet = ROOT.TH2F('h_jetPtnjet', ';Number of Jets;Jet Pt', 21, 0,20, 60, 30, 500)
+        self.h_jetPtnjet = ROOT.TH2F('h_jetPtnjet', ';Number of Jets;Jet P_{T}', 21, 0,20, 60, 30, 500)
         self.addObject(self.h_jetPtnjet)
         self.h_medCSVV2 = ROOT.TH1D('h_medCSVV2', ';Medium CSVV2 btags; Events', 5, 0, 5)
         self.addObject(self.h_medCSVV2)
@@ -105,9 +105,9 @@ class HistogramMaker(Module):
         jets = Collection(event, "Jet")
         fatjets = Collection(event, "FatJet")
         subjets = Collection(event, "SubJet")
-        hltAk4PfJet30 = getattr(event, "HLT_AK4PFJet30")
+        hltAk4PfJet100 = getattr(event, "HLT_AK4PFJet100")
         hltIsoMu24 = getattr(event,"HLT_IsoMu24")
-        isoTkMu24 = getattr(event, "IsoTkMu24")
+        #isoTkMu24 = getattr(event, "IsoTkMu24")
 
         nEles = len(electrons)
         nMus = len(muons)
@@ -134,7 +134,7 @@ class HistogramMaker(Module):
             if abs(jet.eta) > 2.4:
                 continue
 
-            if hltAk4PfJet30 and hltIsoMu24:
+            if hltAk4PfJet100 and hltIsoMu24:
                 self.h_jetPtT.Fill(jet.pt)
             #jetCounter += 1
             # Fill 2D histo
@@ -154,11 +154,11 @@ class HistogramMaker(Module):
 
         #Use the enumerate() function to get both an index and the iterated item in the collection
         for ne, ele in enumerate(electrons) :
-            if hltAk4PfJet30 and hltIsoMu24:
+            if hltAk4PfJet100 and hltIsoMu24:
                 self.h_elPtT.Fill(ele.pt)
             self.h_elPt.Fill(ele.pt)
         for nm, muon in enumerate(muons) :
-            if hltAk4PfJet30 and hltIsoMu24:
+            if hltAk4PfJet100 and hltIsoMu24:
                 self.h_muonPtT.Fill(muon.pt)
             self.h_muonPt.Fill(muon.pt)
 
