@@ -194,8 +194,8 @@ onefile = [files[0]]
 print("Opening a single file: " + str(onefile) )
 
 p99=PostProcessor(".",
-                  #files,
-                  onefile,
+                  files,
+                  #onefile,
                   cut="nJet > 3 && nFatJet > 0",
                   modules=[HistogramMaker()],
                   jsonInput=None,

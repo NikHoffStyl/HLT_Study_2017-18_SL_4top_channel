@@ -4,7 +4,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 def main():
     #Create canvas
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Canvas of Pt with and without triggers', 950,650)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Canvas of Pt with and without triggers', 980,660)
     triggerCanvas.Divide(2,2)
 
     #Get histos from file
@@ -60,10 +60,12 @@ def main():
     h_muonPtTriggerRatio.Divide(h_muonPt)
     h_muonPtTriggerRatio.SetLineColor(4)
     h_muonPtTriggerRatio.Draw('same')
-    legg = ROOT.TLegend(0.1, 0.7,0.3, 0.9)
+    legg = ROOT.TLegend(0.12, 0.7,0.3, 0.87)
     legg.AddEntry(h_jetPtTriggerRatio, "jet", "l")
     legg.AddEntry(h_elPtTriggerRatio, "electron", "l")
     legg.AddEntry(h_muonPtTriggerRatio, "muon", "l")
+    ROOT.gStyle.SetLegendTextSize(0.04)
+    legg.SetBorderSize(0)
     legg.Draw()
 
     cv = triggerCanvas.cd(3)
@@ -85,10 +87,11 @@ def main():
     h_elPtT.SetStats(False)
     h_muonPt.SetStats(False)
     h_muonPtT.SetStats(False)
-    legend = ROOT.TLegend(0.5, 0.5,0.9, 0.9)
+    legend = ROOT.TLegend(0.47, 0.3,0.88, 0.86)
     legend.SetNColumns(2)
-    gStyle.SetLegendFont(50)
-    legend.SetHeader("Histograms of P_{T}, with (without) trigger on left (right)", "C")
+    ROOT.gStyle.SetLegendTextSize(0.04)
+    legend.SetBorderSize(0)
+    legend.SetHeader("with(without) trigger on left(right)", "C")
     en1=legend.AddEntry(h_jetPtT, "jet", "l")
     en2=legend.AddEntry(h_jetPt, "jet", "l")
     en3=legend.AddEntry(h_elPtT, "electron", "l")
