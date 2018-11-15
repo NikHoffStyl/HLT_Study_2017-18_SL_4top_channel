@@ -87,7 +87,7 @@ def main():
     h_elPtT.SetStats(False)
     h_muonPt.SetStats(False)
     h_muonPtT.SetStats(False)
-    legend = ROOT.TLegend(0.47, 0.3,0.88, 0.86)
+    legend = ROOT.TLegend(0.47, 0.4,0.88, 0.86)
     legend.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.04)
     legend.SetBorderSize(0)

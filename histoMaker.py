@@ -9,11 +9,11 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import Pos
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
-class HistogramMaker(Module): #This line defines our class ExampleModule, and in parenthesis, we indicate it Inherits from the Module class we imported above.
+class HistogramMaker(Module):
     def __init__(self):
         self.writeHistFile=True #Necessary for an output file to be created?
         self.counter = 0 #Define this global variable to count events
-        self.EventLimit = 100000 #-1 for no limit, anthing larger chosen here will be the limit of events fully processed
+        self.EventLimit = 100000 #-1 for no limit, anything larger chosen here will be the limit of events fully processed
 
     def beginJob(self,histFile=None,histDirName=None):
         #beginJob is typically where histograms should be initialized
@@ -107,7 +107,7 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
         subjets = Collection(event, "SubJet")
         hltAk4PfJet30 = getattr(event, "HLT_AK4PFJet30")
         hltIsoMu24 = getattr(event,"HLT_IsoMu24")
-        #isoTkMu24 = getattr(event, "IsoTkMu24")
+        isoTkMu24 = getattr(event, "IsoTkMu24")
 
         nEles = len(electrons)
         nMus = len(muons)
