@@ -45,8 +45,8 @@ def main():
     h_jetPtT.Draw()
 
     cv = triggerCanvas.cd(4)
-    cv.SetLogy()
-    cv.SetLogx()
+    #cv.SetLogy()
+    #cv.SetLogx()
     h_jetPtTriggerRatio = (h_jetPtT).Clone("h_jetPtTriggerRatio")
     h_jetPtTriggerRatio.Divide(h_jetPt)
     h_jetPtTriggerRatio.SetLineColor(1)
