@@ -3,6 +3,7 @@ from __future__ import (division, print_function)
 import ROOT
 from ROOT import TLatex
 from importlib import import_module
+import time
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
@@ -104,7 +105,9 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
         jets = Collection(event, "Jet")
         fatjets = Collection(event, "FatJet")
         subjets = Collection(event, "SubJet")
-        hltriger = getattr(event, "HLT_AK4PFJet80")
+        hltAk4PfJet30 = getattr(event, "HLT_AK4PFJet30")
+        hltIsoMu24 = getattr(event,"HLT_IsoMu24")
+        #isoTkMu24 = getattr(event, "IsoTkMu24")
 
         nEles = len(electrons)
         nMus = len(muons)
@@ -120,18 +123,18 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
         nMedDeepB = 0
         #jetCounter =0
 
-        for jet in jets:
+        for nj, jet in enumerate(jets):
             #Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
             if jet.jetId < 2:
                 continue
             # Minimum 30GeV Pt on the jets
-            #if jet.pt < 30:
-             #   continue
+            if jet.pt < 30:
+                continue
             # Only look at jets within |eta| < 2.4
             if abs(jet.eta) > 2.4:
                 continue
 
-            if hltriger==1:
+            if hltAk4PfJet30 and hltIsoMu24:
                 self.h_jetPtT.Fill(jet.pt)
             #jetCounter += 1
             # Fill 2D histo
@@ -151,24 +154,22 @@ class HistogramMaker(Module): #This line defines our class ExampleModule, and in
 
         #Use the enumerate() function to get both an index and the iterated item in the collection
         for ne, ele in enumerate(electrons) :
-            if hltriger:
+            if hltAk4PfJet30 and hltIsoMu24:
                 self.h_elPtT.Fill(ele.pt)
             self.h_elPt.Fill(ele.pt)
         for nm, muon in enumerate(muons) :
-            if hltriger:
+            if hltAk4PfJet30 and hltIsoMu24:
                 self.h_muonPtT.Fill(muon.pt)
             self.h_muonPt.Fill(muon.pt)
 
         # Fill 1D histo
-	self.h_jetEta.Fill(jet.eta)
+	    self.h_jetEta.Fill(jet.eta)
         self.h_jetPhi.Fill(jet.phi)
         self.h_medCSVV2.Fill(nMedCSVV2)
         self.h_medDeepB.Fill(nMedDeepB)
 
         return True
 
-#triggerCanvas.Print('triggerplots.png')
-#self.addObject(self.triggerCanvas)
 #files=["06CC0D9B-4244-E811-8B62-485B39897212_CH01-Skim.root"]
 filePrefix = "root://cms-xrd-global.cern.ch/"
 files=[]
@@ -186,17 +187,14 @@ for line in inputList:
     #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
     files.append(filePrefix + str(line).replace('\n','') )
 
-#for file in files:
-#    print(file)
+for file in files:
+    print(file)
 
-#Only take first file in extensive list:
-onefile = [files[0]]
-print("Opening a single file: " + str(onefile) )
 
 p99=PostProcessor(".",
                   files,
                   #onefile,
-                  cut="nJet > 3 && nFatJet > 0",
+                  cut="nJet > 6 && nMuon >0",
                   modules=[HistogramMaker()],
                   jsonInput=None,
                   noOut=True,
@@ -205,5 +203,7 @@ p99=PostProcessor(".",
                   histFileName="OutHistoMaker2.root",
                   histDirName="plots",
                   )
-
+t0 = time.clock()
 p99.run()
+t1 = time.clock()
+print("Elapsed time %7.1fs" %(t1-t0)
