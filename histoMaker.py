@@ -107,7 +107,7 @@ class HistogramMaker(Module):
         subjets = Collection(event, "SubJet")
         hltAk4PfJet100 = getattr(event, "HLT_AK4PFJet100")
         hltIsoMu24 = getattr(event,"HLT_IsoMu24")
-        #isoTkMu24 = getattr(event, "IsoTkMu24")
+        hltIsoTkMu24 = getattr(event, "HLT_IsoTkMu24")
 
         nEles = len(electrons)
         nMus = len(muons)
@@ -134,7 +134,7 @@ class HistogramMaker(Module):
             if abs(jet.eta) > 2.4:
                 continue
 
-            if hltAk4PfJet100 and hltIsoMu24:
+            if  hltIsoMu24 and hltIsoTkMu24:
                 self.h_jetPtT.Fill(jet.pt)
             #jetCounter += 1
             # Fill 2D histo
