@@ -122,6 +122,8 @@ class HistogramMaker(Module):
         nMedCSVV2 = 0
         nMedDeepB = 0
         #jetCounter =0"""
+        jetHT_withT=0
+        jetHT_withoutT=0
 
         for nj, jet in enumerate(jets):
             #Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
@@ -134,7 +136,7 @@ class HistogramMaker(Module):
             if abs(jet.eta) > 2.4:
                 continue
 
-            if  hltIsoMu24 or hltIsoTkMu24:
+            if hltIsoMu24:
                 #self.h_jetPtT.Fill(jet.pt)
                 jetHT_withT += jet.pt
             #jetCounter += 1
@@ -156,19 +158,20 @@ class HistogramMaker(Module):
 
         #Use the enumerate() function to get both an index and the iterated item in the collection
         for ne, ele in enumerate(electrons) :
-            if hltIsoTkMu24 or hltIsoMu24:
+            if hltIsoMu24:
                 self.h_elPtT.Fill(ele.pt)
             self.h_elPt.Fill(ele.pt)
         for nm, muon in enumerate(muons) :
-            if hltIsoTkMu24 or hltIsoMu24:
+            if hltIsoMu24:
                 self.h_muonPtT.Fill(muon.pt)
             self.h_muonPt.Fill(muon.pt)
 
         # Fill 1D histo
 	    #self.h_jetEta.Fill(jet.eta)
         #self.h_jetPhi.Fill(jet.phi)
-        self.h_jetPt.Fill(jetHT_withT)
-        self.h_jetPtT.Fill(jetHT_withoutT)
+        if hltIsoMu24:
+            self.h_jetPtT.Fill(jetHT_withT)
+        self.h_jetPt.Fill(jetHT_withoutT)
         #self.h_medCSVV2.Fill(nMedCSVV2)
         #self.h_medDeepB.Fill(nMedDeepB)
 
