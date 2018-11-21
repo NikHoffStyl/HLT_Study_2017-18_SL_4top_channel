@@ -107,7 +107,7 @@ class HistogramMaker(Module):
         #subjets = Collection(event, "SubJet")
         hltAk4PfJet100 = getattr(event, "HLT_AK4PFJet100")
         hltIsoMu24 = getattr(event,"HLT_IsoMu24")
-        hltIsoTkMu24 = getattr(event, "HLT_IsoTkMu24")
+        hltIsoTkMu24 = getattr(event, "HLT_IsoMu24_eta2p1")
 
         """nEles = len(electrons)
         nMus = len(muons)
