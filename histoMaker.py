@@ -22,7 +22,7 @@ class HistogramMaker(Module):
 
         #Create a 1-D histogram (TH1D) with histogram_name h_jets, and someTitle(title)/nJets(x-axis)/Events(y-axis), 20 bins, Domain 0 to 20
         #The histogram then has to be 'booked' with the service that will write everything to the output file via self.addObject()
-        self.h_jets = ROOT.TH1D('h_jets', 'someTitle;nJets;Events',   20, 0, 20)
+        """self.h_jets = ROOT.TH1D('h_jets', 'someTitle;nJets;Events',   20, 0, 20)
         self.addObject(self.h_jets)
         self.h_jetsT = ROOT.TH1D('h_jetsT', 'someTitle;nJets;Events',   20, 0, 20)
         self.addObject(self.h_jetsT)
@@ -37,7 +37,7 @@ class HistogramMaker(Module):
         self.h_jetEta = ROOT.TH1D('h_jetEta', ';valJetEta;Events', 40, -2.5, 2.5)
         self.addObject(self.h_jetEta)
         self.h_jetEtaT = ROOT.TH1D('h_jetEtaT', ';valJetEta;Events', 40, -2.5, 2.5)
-        self.addObject(self.h_jetEtaT)
+        self.addObject(self.h_jetEtaT)"""
         self.h_jetPt = ROOT.TH1D('h_jetPt', ';JetPt;Events', 60, 0, 200)
         self.addObject(self.h_jetPt)
         self.h_jetPtT = ROOT.TH1D('h_jetPtT', ';JetPt;Events', 60, 0, 200)
@@ -50,7 +50,7 @@ class HistogramMaker(Module):
         self.addObject(self.h_muonPt)
         self.h_muonPtT = ROOT.TH1D('h_muonPtT', ';valMuonPt;Events', 60, 0, 200)
         self.addObject(self.h_muonPtT)
-        self.h_jetPhi = ROOT.TH1D('h_jetPhi', ';valJetPhi;Events', 20, -3.14, 3.14)
+        """self.h_jetPhi = ROOT.TH1D('h_jetPhi', ';valJetPhi;Events', 20, -3.14, 3.14)
         self.addObject(self.h_jetPhi)
         self.h_jetPhiT = ROOT.TH1D('h_jetPhiT', ';valJetPhi;Events', 20, -3.14, 3.14)
         self.addObject(self.h_jetPhiT)
@@ -67,7 +67,7 @@ class HistogramMaker(Module):
         self.h_medCSVV2 = ROOT.TH1D('h_medCSVV2', ';Medium CSVV2 btags; Events', 5, 0, 5)
         self.addObject(self.h_medCSVV2)
         self.h_medDeepB = ROOT.TH1D('h_medDeepB', ';Medium DeepCSV btags; Events', 5, 0, 5)
-        self.addObject(self.h_medDeepB)
+        self.addObject(self.h_medDeepB)"""
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
@@ -96,20 +96,20 @@ class HistogramMaker(Module):
         #This will 'work' for anything that has some common name + '_' (like "SV_x" and "SV_y" and "SV_z")
 
         #Objects:
-        met = Object(event, "MET")
-        PV = Object(event, "PV")
+        #met = Object(event, "MET")
+        #PV = Object(event, "PV")
 
         #Collections:
         electrons = Collection(event, "Electron")
         muons = Collection(event, "Muon")
         jets = Collection(event, "Jet")
-        fatjets = Collection(event, "FatJet")
-        subjets = Collection(event, "SubJet")
+        #fatjets = Collection(event, "FatJet")
+        #subjets = Collection(event, "SubJet")
         hltAk4PfJet100 = getattr(event, "HLT_AK4PFJet100")
         hltIsoMu24 = getattr(event,"HLT_IsoMu24")
         hltIsoTkMu24 = getattr(event, "HLT_IsoTkMu24")
 
-        nEles = len(electrons)
+        """nEles = len(electrons)
         nMus = len(muons)
         nAK4Jets = len(jets)
         nAK8Jets = len(fatjets)
@@ -121,7 +121,7 @@ class HistogramMaker(Module):
 
         nMedCSVV2 = 0
         nMedDeepB = 0
-        #jetCounter =0
+        #jetCounter =0"""
 
         for nj, jet in enumerate(jets):
             #Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
@@ -134,39 +134,43 @@ class HistogramMaker(Module):
             if abs(jet.eta) > 2.4:
                 continue
 
-            if  hltIsoMu24 and hltIsoTkMu24:
-                self.h_jetPtT.Fill(jet.pt)
+            if  hltIsoMu24 or hltIsoTkMu24:
+                #self.h_jetPtT.Fill(jet.pt)
+                jetHT_withT += jet.pt
             #jetCounter += 1
+            jetHT_withoutT += jet.pt
             # Fill 2D histo
-            self.h_jet_map.Fill(jet.eta, jet.phi)
+            """self.h_jet_map.Fill(jet.eta, jet.phi)
             self.h_jetPtPhi.Fill(jet.phi, jet.pt)
             self.h_jetPtEta.Fill(jet.eta, jet.pt)
-            self.h_jetPtId.Fill(jet.jetId, jet.pt)
+            self.h_jetPtId.Fill(jet.jetId, jet.pt)"""
             #numJet = getattr(event, "nJet")
-            self.h_jetPtnjet.Fill(nAK4Jets,jet.pt)
-            self.h_jetPt.Fill(jet.pt)
+            #self.h_jetPtnjet.Fill(nAK4Jets,jet.pt)
+            #self.h_jetPt.Fill(jet.pt)
             #Count b-tagged jets with two algos at the medium working point
             #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-            if jet.btagCSVV2 > 0.8838:
+            """if jet.btagCSVV2 > 0.8838:
                 nMedCSVV2 += 1
             if jet.btagDeepB > 0.4941:
-                nMedDeepB += 1
+                nMedDeepB += 1"""
 
         #Use the enumerate() function to get both an index and the iterated item in the collection
         for ne, ele in enumerate(electrons) :
-            if hltAk4PfJet100 and hltIsoMu24:
+            if hltIsoTkMu24 or hltIsoMu24:
                 self.h_elPtT.Fill(ele.pt)
             self.h_elPt.Fill(ele.pt)
         for nm, muon in enumerate(muons) :
-            if hltAk4PfJet100 and hltIsoMu24:
+            if hltIsoTkMu24 or hltIsoMu24:
                 self.h_muonPtT.Fill(muon.pt)
             self.h_muonPt.Fill(muon.pt)
 
         # Fill 1D histo
-	    self.h_jetEta.Fill(jet.eta)
-        self.h_jetPhi.Fill(jet.phi)
-        self.h_medCSVV2.Fill(nMedCSVV2)
-        self.h_medDeepB.Fill(nMedDeepB)
+	    #self.h_jetEta.Fill(jet.eta)
+        #self.h_jetPhi.Fill(jet.phi)
+        self.h_jetPt.Fill(jetHT_withT)
+        self.h_jetPtT.Fill(jetHT_withoutT)
+        #self.h_medCSVV2.Fill(nMedCSVV2)
+        #self.h_medDeepB.Fill(nMedDeepB)
 
         return True
 
@@ -200,7 +204,7 @@ p99=PostProcessor(".",
                   noOut=True,
                   justcount=False,
                   postfix=thePostFix,
-                  histFileName="OutHistoMaker2.root",
+                  histFileName="../OutHistoMaker2.root",
                   histDirName="plots",
                   )
 t0 = time.clock()
