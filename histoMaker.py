@@ -127,7 +127,7 @@ p99=PostProcessor(".",
                   noOut=True,
                   justcount=False,
                   postfix=thePostFix,
-                  histFileName="../OutHistoMaker2.root",
+                  histFileName="../RWOutput/OutHistoMaker2.root",
                   histDirName="plots",
                   )
 t0 = time.clock()

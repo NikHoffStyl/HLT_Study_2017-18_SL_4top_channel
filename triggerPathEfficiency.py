@@ -9,7 +9,7 @@ def main():
 
     #Get histos from file
     h_PtTriggerStack = ROOT.THStack('h_PtTriggerStack', ';P_{T} (GeV); Events ')
-    histFile = ROOT.TFile.Open("../OutHistoMaker2.root")
+    histFile = ROOT.TFile.Open("../RWOutput/OutHistoMaker2.root")
     plotDirectory = histFile.cd("plots")
     h_jetPt = ROOT.gDirectory.Get("h_jetPt")
     h_jetPt.SetLineColor(28)
@@ -107,7 +107,7 @@ def main():
     en5=legend.AddEntry(h_muonPtT, "muon ", "l")
     en6=legend.AddEntry(h_muonPt, "muon ", "l")
     legend.Draw()
-    triggerCanvas.Print("histCanvas.png")
+    triggerCanvas.Print("../RWOutput/histCanvas.png")
     histFile.Close()
 
 main()
