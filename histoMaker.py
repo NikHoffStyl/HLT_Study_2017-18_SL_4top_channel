@@ -38,17 +38,17 @@ class HistogramMaker(Module):
         self.addObject(self.h_jetEta)
         self.h_jetEtaT = ROOT.TH1D('h_jetEtaT', ';valJetEta;Events', 40, -2.5, 2.5)
         self.addObject(self.h_jetEtaT)"""
-        self.h_jetPt = ROOT.TH1D('h_jetPt', ';JetPt;Events', 60, 0, 200)
+        self.h_jetPt = ROOT.TH1D('h_jetPt', ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetPt)
-        self.h_jetPtT = ROOT.TH1D('h_jetPtT', ';JetPt;Events', 60, 0, 200)
+        self.h_jetPtT = ROOT.TH1D('h_jetPtT', ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetPtT)
-        self.h_elPt = ROOT.TH1D('h_elPt', ';valElPt ;Events', 60, 0, 200)
+        self.h_elPt = ROOT.TH1D('h_elPt', ';P_{T} ;Events', 200, 0, 300)
         self.addObject(self.h_elPt)
-        self.h_elPtT = ROOT.TH1D('h_elPtT', ';valElPt;Events', 60, 0, 200)
+        self.h_elPtT = ROOT.TH1D('h_elPtT', ';P_{T};Events', 200, 0, 300)
         self.addObject(self.h_elPtT)
-        self.h_muonPt = ROOT.TH1D('h_muonPt', ';valMuonPt;Events', 60, 0, 200)
+        self.h_muonPt = ROOT.TH1D('h_muonPt', ';P_{T};Events', 200, 0, 300)
         self.addObject(self.h_muonPt)
-        self.h_muonPtT = ROOT.TH1D('h_muonPtT', ';valMuonPt;Events', 60, 0, 200)
+        self.h_muonPtT = ROOT.TH1D('h_muonPtT', ';P_{T};Events', 200, 0, 300)
         self.addObject(self.h_muonPtT)
         """self.h_jetPhi = ROOT.TH1D('h_jetPhi', ';valJetPhi;Events', 20, -3.14, 3.14)
         self.addObject(self.h_jetPhi)
@@ -201,7 +201,7 @@ for file in files:
 p99=PostProcessor(".",
                   files,
                   #onefile,
-                  cut="nJet > 6 && nMuon >0",
+                  cut="nJet > 5 && nMuon > 0 ",
                   modules=[HistogramMaker()],
                   jsonInput=None,
                   noOut=True,
