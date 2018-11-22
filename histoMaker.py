@@ -59,9 +59,19 @@ class HistogramMaker(Module):
         electrons = Collection(event, "Electron")
         muons = Collection(event, "Muon")
         jets = Collection(event, "Jet")
-        hltAk4PfJet100 = getattr(event, "HLT_AK4PFJet100")
-        hltIsoMu24 = getattr(event,"HLT_IsoMu24")
-        hltIsoTkMu24 = getattr(event, "HLT_IsoMu24_eta2p1")
+        HLTObj = Object(event, "HLT") #object with only the trigger branches in that event
+        hltAk4PfJet100 = getattr(HLTObj, "_AK4PFJet100")
+        hltIsoMu24 = getattr(HLTObj,"_IsoMu24")
+        hltIsoTkMu24 = getattr(HLTObj, "_IsoMu24_eta2p1")
+
+        """triggers = ["AK4PFJet100", "IsoMu24", "IsoMu24_eta2p1"] #without "HLT_" prefix
+        passAny = False
+        for trig in triggers:
+            if getattr(HLTObj, trig):
+                passAny = True
+
+        if not passAny:
+            return False #skip to next event"""
 
         jetHT_withT=0
         jetHT_withoutT=0
