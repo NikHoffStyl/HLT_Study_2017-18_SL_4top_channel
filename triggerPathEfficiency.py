@@ -1,3 +1,4 @@
+import os, errno
 import ROOT
 from ROOT import TLatex
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
@@ -5,11 +6,13 @@ from datetime import datetime
 
 def main():
     time_ = datetime.now()
-    #Create canvas
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Canvas of Pt with and without triggers', 1300,700)
-    triggerCanvas.Divide(2,2)
 
-    #Get histos from file
+    # - Create canvases
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Preselection cuts: IsoMu24, PFHT680', 1300,700)
+    triggerCanvas.Divide(2,2)
+    eventPrgCanvas = ROOT.TCanvas('eventPrgCanvas', 'Canvas of events in each selection step', 500,500)
+
+    # - Jet HT histograms
     h_PtTriggerStack = ROOT.THStack('h_PtTriggerStack', ';muon p_{T} (GeV); Events ')
     histFile = ROOT.TFile.Open("../RWOutput/OutHistoMaker2.root")
     plotDirectory = histFile.cd("plots")
@@ -29,14 +32,8 @@ def main():
     h_jetHtT3.SetLineStyle(1)
     if not (h_jetHtT3):
         print("jetPtT3 histogram is empty")
-    """ h_elPt = ROOT.gDirectory.Get("h_elPt")
-    h_elPt.SetLineColor(2)
-    if not (h_elPt):
-        print("elPt histogram is empty")
-    h_elPtT = ROOT.gDirectory.Get("h_elPtT")
-    h_elPtT.SetLineColor(3)
-    if not (h_elPtT):
-        print("elPt_t histogram is empty")"""
+
+    # - Muon histograms
     h_muonPt = ROOT.gDirectory.Get("h_muonPt")
     h_muonPt.SetLineColor(28)
     if not (h_muonPt):
@@ -53,7 +50,14 @@ def main():
     h_muonPtT3.SetLineStyle(1)
     if not (h_muonPtT3):
         print("muonPtT3 histogram is empty")
+    h_eventsPrg = ROOT.gDirectory.Get("h_eventsPrg")
+    if not (h_eventsPrg):
+        print("h_eventsPrg histogram is empty")
+        return 
 
+    ###########################
+    # - Draw Histos on Canvas #
+    ###########################
     cv = triggerCanvas.cd(1)
     h_jetHt.GetXaxis().SetTitle("H_{T} (GeV)")
     h_jetHt.GetYaxis().SetTitleOffset(1.5)
@@ -64,21 +68,19 @@ def main():
     legg = ROOT.TLegend(0.12, 0.7,0.3, 0.87)
     legg.AddEntry(h_jetHt, "no trigger", "l")
     legg.AddEntry(h_jetHtT1, "IsoMu24", "l")
-    legg.AddEntry(h_jetHtT2, "Mu50", "l")
-    legg.AddEntry(h_jetHtT3, "IsoMu24 and Mu50", "l")
+    legg.AddEntry(h_jetHtT2, "PFHT370", "l")
+    legg.AddEntry(h_jetHtT3, "IsoMu24 and PFHT370", "l")
     ROOT.gStyle.SetLegendTextSize(0.04)
     legg.SetBorderSize(0)
     legg.Draw()
-
+    
     cv = triggerCanvas.cd(2)
     h_jetHtTriggerRatio1 = (h_jetHtT1).Clone("h_jetPtTriggerRatio1")
     h_jetHtTriggerRatio1.Divide(h_jetHt)
     h_jetHtTriggerRatio1.SetLineStyle(2)
     h_jetHtTriggerRatio1.Draw()
     h_jetHtTriggerRatio1.SetTitle("Trigger Efficiency vs H_{T};H_{T} (GeV);Trigger Efficiency")
-    #h_jetHtTriggerRatio1.GetXaxis().SetTitle("H_{T} (GeV)")
-    #h_jetHtTriggerRatio1.GetYaxis().SetTitle("Trigger Efficiency")
-    h_jetHtTriggerRatio1.GetYaxis().SetRangeUser(0,1)
+    h_jetHtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
     h_jetHtTriggerRatio1.SetStats(False)
     h_jetHtTriggerRatio2 = (h_jetHtT2).Clone("h_jetPtTriggerRatio2")
     h_jetHtTriggerRatio2.Divide(h_jetHt)
@@ -90,8 +92,8 @@ def main():
     h_jetHtTriggerRatio3.Draw('same')
     legg2 = ROOT.TLegend(0.12, 0.7,0.3, 0.87)
     legg2.AddEntry(h_jetHtTriggerRatio1, "IsoMu24", "l")
-    legg2.AddEntry(h_jetHtTriggerRatio2, "Mu50", "l")
-    legg2.AddEntry(h_jetHtTriggerRatio3, "IsoMu24 and Mu50", "l")
+    legg2.AddEntry(h_jetHtTriggerRatio2, "PFHT370", "l")
+    legg2.AddEntry(h_jetHtTriggerRatio3, "IsoMu24 and PFHT370", "l")
     ROOT.gStyle.SetLegendTextSize(0.04)
     legg2.SetBorderSize(0)
     legg2.Draw()
@@ -110,14 +112,12 @@ def main():
     h_muonPtTriggerRatio3.SetLineStyle(1)
     h_muonPtTriggerRatio3.Draw('same')
     h_muonPtTriggerRatio1.SetTitle("Trigger Efficiency vs muon p_{T};muon p_{T} (GeV);Trigger Efficiency")
-    #h_muonPtTriggerRatio1.GetXaxis().SetTitle("muon p_{T} (GeV)")
-    #h_muonPtTriggerRatio1.GetYaxis().SetTitle("Trigger Efficiency")
-    h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1)
+    h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
     h_muonPtTriggerRatio1.SetStats(False)
     legg3 = ROOT.TLegend(0.5, 0.1,0.88, 0.33)
     legg3.AddEntry(h_muonPtTriggerRatio1, "IsoMu24", "l")
-    legg3.AddEntry(h_muonPtTriggerRatio2, "Mu50", "l")
-    legg3.AddEntry(h_muonPtTriggerRatio3, "IsoMu24 and Mu50", "l")
+    legg3.AddEntry(h_muonPtTriggerRatio2, "PFHT370", "l")
+    legg3.AddEntry(h_muonPtTriggerRatio3, "IsoMu24 and PFHT370", "l")
     ROOT.gStyle.SetLegendTextSize(0.04)
     legg3.SetBorderSize(0)
     legg3.Draw()
@@ -135,16 +135,32 @@ def main():
     h_muonPtT2.SetStats(False)
     h_muonPtT3.SetStats(False)
     legend = ROOT.TLegend(0.6, 0.7,0.88, 0.87)
-    #legend.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.04)
     legend.SetBorderSize(0)
     en5=legend.AddEntry(h_muonPt, "no trigger", "l")
     en5=legend.AddEntry(h_muonPtT1, "IsoMu24", "l")
-    en5=legend.AddEntry(h_muonPtT2, "Mu50", "l")
-    en6=legend.AddEntry(h_muonPtT3, "IsoMu24 and Mu50", "l")
+    en5=legend.AddEntry(h_muonPtT2, "PFHT370", "l")
+    en6=legend.AddEntry(h_muonPtT3, "IsoMu24 and PFHT370", "l")
     legend.Draw()
-    triggerCanvas.Print(time_.strftime("../RWOutput/Canvas%d_%m_%y_%H%M.png"))
+
+    #######################
+    # Save Canvas to File #
+    #######################
+    filename = time_.strftime("TriggerPlots/W%V_%y/Canvas%d_%m_%y_%H%M.png")
+    if not os.path.exists(os.path.dirname(filename)):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/Canvas%d_%m_%y_%H%M.png"))
+    
+    # -Test Event numbers along steps
+    cv = eventPrgCanvas.cd(1)
+    h_eventsPrg.Draw()
+    
     histFile.Close()
+    
 
 main()
 
