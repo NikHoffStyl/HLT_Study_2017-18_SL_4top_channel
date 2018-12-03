@@ -5,10 +5,17 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime 
 
 def main():
+    """ This code merges histograms, only for specific root file """
+
+    # - TODO: Add Command line arguments
+    
+    # - Initialise variables
     time_ = datetime.now()
+    triggerPath1 = 'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
+    triggerPath2 = 'IsoMu24'
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Preselection cuts: IsoMu24, PFHT680', 1300,700)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers: ' + triggerPath1 + 'and' + triggerPath2 , 1300,700)
     triggerCanvas.Divide(2,2)
     eventPrgCanvas = ROOT.TCanvas('eventPrgCanvas', 'Canvas of events in each selection step', 500,500)
 
@@ -16,37 +23,37 @@ def main():
     h_PtTriggerStack = ROOT.THStack('h_PtTriggerStack', ';muon p_{T} (GeV); Events ')
     histFile = ROOT.TFile.Open("../RWOutput/OutHistoMaker2.root")
     plotDirectory = histFile.cd("plots")
-    h_jetHt = ROOT.gDirectory.Get("h_jetHt")
+    h_jetHt = ROOT.gDirectory.Get("h_jetHt_notrigger")
     h_jetHt.SetLineColor(28)
     if not (h_jetHt):
         print("jetHt histogram is empty")
-    h_jetHtT1 = ROOT.gDirectory.Get("h_jetHtT1")
+    h_jetHtT1 = ROOT.gDirectory.Get("h_jetHt_" + triggerPath1)
     h_jetHtT1.SetLineStyle(2)
     if not (h_jetHtT1):
         print("jetPtT1 histogram is empty")
-    h_jetHtT2 = ROOT.gDirectory.Get("h_jetHtT2")
+    h_jetHtT2 = ROOT.gDirectory.Get("h_jetHt_" + triggerPath2)
     h_jetHtT2.SetLineStyle(7)
     if not (h_jetHtT2):
         print("jetPtT2 histogram is empty")
-    h_jetHtT3 = ROOT.gDirectory.Get("h_jetHtT3")
+    h_jetHtT3 = ROOT.gDirectory.Get("h_jetHt_combined")
     h_jetHtT3.SetLineStyle(1)
     if not (h_jetHtT3):
         print("jetPtT3 histogram is empty")
 
     # - Muon histograms
-    h_muonPt = ROOT.gDirectory.Get("h_muonPt")
+    h_muonPt = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt.SetLineColor(28)
     if not (h_muonPt):
         print("muonPt histogram is empty")
-    h_muonPtT1 = ROOT.gDirectory.Get("h_muonPtT1")
+    h_muonPtT1 = ROOT.gDirectory.Get("h_muonPt_" + triggerPath1)
     h_muonPtT1.SetLineStyle(2)
     if not (h_muonPtT1):
         print("muonPtT1 histogram is empty")
-    h_muonPtT2 = ROOT.gDirectory.Get("h_muonPtT2")
+    h_muonPtT2 = ROOT.gDirectory.Get("h_muonPt_" + triggerPath2)
     h_muonPtT2.SetLineStyle(7)
     if not (h_muonPtT2):
         print("muonPtT2 histogram is empty")
-    h_muonPtT3 = ROOT.gDirectory.Get("h_muonPtT3")
+    h_muonPtT3 = ROOT.gDirectory.Get("h_muonPt_combined")
     h_muonPtT3.SetLineStyle(1)
     if not (h_muonPtT3):
         print("muonPtT3 histogram is empty")
@@ -67,9 +74,9 @@ def main():
     h_jetHtT3.Draw('same')
     legg = ROOT.TLegend(0.12, 0.7,0.3, 0.87)
     legg.AddEntry(h_jetHt, "no trigger", "l")
-    legg.AddEntry(h_jetHtT1, "IsoMu24", "l")
-    legg.AddEntry(h_jetHtT2, "PFHT370", "l")
-    legg.AddEntry(h_jetHtT3, "IsoMu24 and PFHT370", "l")
+    legg.AddEntry(h_jetHtT1, triggerPath1, "l")
+    legg.AddEntry(h_jetHtT2, triggerPath2, "l")
+    legg.AddEntry(h_jetHtT3, triggerPath1 + " and " + triggerPath2, "l")
     ROOT.gStyle.SetLegendTextSize(0.04)
     legg.SetBorderSize(0)
     legg.Draw()
@@ -91,9 +98,9 @@ def main():
     h_jetHtTriggerRatio3.SetLineStyle(1)
     h_jetHtTriggerRatio3.Draw('same')
     legg2 = ROOT.TLegend(0.12, 0.7,0.3, 0.87)
-    legg2.AddEntry(h_jetHtTriggerRatio1, "IsoMu24", "l")
-    legg2.AddEntry(h_jetHtTriggerRatio2, "PFHT370", "l")
-    legg2.AddEntry(h_jetHtTriggerRatio3, "IsoMu24 and PFHT370", "l")
+    legg2.AddEntry(h_jetHtTriggerRatio1, triggerPath1, "l")
+    legg2.AddEntry(h_jetHtTriggerRatio2, triggerPath2, "l")
+    legg2.AddEntry(h_jetHtTriggerRatio3, triggerPath1 + " and " + triggerPath2, "l")
     ROOT.gStyle.SetLegendTextSize(0.04)
     legg2.SetBorderSize(0)
     legg2.Draw()
@@ -115,9 +122,9 @@ def main():
     h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
     h_muonPtTriggerRatio1.SetStats(False)
     legg3 = ROOT.TLegend(0.5, 0.1,0.88, 0.33)
-    legg3.AddEntry(h_muonPtTriggerRatio1, "IsoMu24", "l")
-    legg3.AddEntry(h_muonPtTriggerRatio2, "PFHT370", "l")
-    legg3.AddEntry(h_muonPtTriggerRatio3, "IsoMu24 and PFHT370", "l")
+    legg3.AddEntry(h_muonPtTriggerRatio1, triggerPath1, "l")
+    legg3.AddEntry(h_muonPtTriggerRatio2, triggerPath2, "l")
+    legg3.AddEntry(h_muonPtTriggerRatio3, triggerPath1 + " and " + triggerPath2, "l")
     ROOT.gStyle.SetLegendTextSize(0.04)
     legg3.SetBorderSize(0)
     legg3.Draw()
@@ -138,9 +145,9 @@ def main():
     ROOT.gStyle.SetLegendTextSize(0.04)
     legend.SetBorderSize(0)
     en5=legend.AddEntry(h_muonPt, "no trigger", "l")
-    en5=legend.AddEntry(h_muonPtT1, "IsoMu24", "l")
-    en5=legend.AddEntry(h_muonPtT2, "PFHT370", "l")
-    en6=legend.AddEntry(h_muonPtT3, "IsoMu24 and PFHT370", "l")
+    en5=legend.AddEntry(h_muonPtT1, triggerPath1, "l")
+    en5=legend.AddEntry(h_muonPtT2, triggerPath2, "l")
+    en6=legend.AddEntry(h_muonPtT3, triggerPath1 + " and  " + triggerPath2, "l")
     legend.Draw()
 
     #######################

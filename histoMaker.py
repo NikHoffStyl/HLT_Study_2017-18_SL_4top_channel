@@ -99,12 +99,8 @@ class HistogramMaker(Module):
         trigPath={}
         for key in self.trigList:
             for tg in self.trigList[key]:
-                #if getattr(HLTObj,tg):
                 trigPath[tg] = getattr(HLTObj,tg)
-            #else: print(" ERROR: There is no such attribute. " + key +tg)
-            #trigPath[tg] = getattr(HLTObj,tg)
-            #if not trigPath[tg]:print(" ERROR: There is no such attribute. ")
-
+    
         passAny = False
         for trig in self.trigCombination1:
             if trigPath[trig]:
@@ -115,8 +111,6 @@ class HistogramMaker(Module):
         jetHT_withT3=0
         jetHT_withoutT=0
 
-        # - TODO: Add correct identification cuts for muons(or electrons).
-        
         if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>10s} {3:>10s} {4:>10s}"
                                 .format("Jet", "jetId","Pt", "Eta", "Phi"))
         for nj, jet in enumerate(jets):
@@ -148,6 +142,9 @@ class HistogramMaker(Module):
         if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>6s} {3:>7s} {4:>6s} {5:>10s} {6:>10s} {7:>10s}"
                                 .format("Muon", "pdgId","softId","tightId","jetIdx", "Pt", "Eta", "Phi"))
         for nm, muon in enumerate(muons) :
+            # - TODO: Add correct identification cuts for muons(or electrons).                                                                   
+            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False):
+                continue
             if nm < 1:
                 if trigPath[self.triggerPath1]:
                     self.h_muonPt[self.triggerPath1].Fill(muon.pt)
