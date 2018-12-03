@@ -20,15 +20,15 @@ class HistogramMaker(Module):
         self.EventLimit = -1 # 100000 -1 for no limit of events fully processed
         self.trigList={"HT": ['PFHT180', 'PFHT250', 'PFHT370', 'PFHT430','PFHT510',
                        'PFHT590', 'PFHT680', 'PFHT780', 'PFHT890', 'PFHT1050',
-                       'HLT_PFHT380_SixPFJet32', 'HLT_PFHT430_SixPFJet40',
-                       'HLT_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2',
-                       'HLT_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2',
-                       'HLT_PFHT430_SixPFJet40_PFBTagCSV_1p5']
-                       "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24',]
+                       'PFHT380_SixPFJet32', 'PFHT430_SixPFJet40',
+                       'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2',
+                       'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2',
+                       'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
+                       "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
         self.triggerPath1 = 'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
         self.triggerParth2 = 'IsoMu24'
-        self.trigCombination1 = [triggerPath1, triggerParth2]
+        self.trigCombination1 = [self.triggerPath1, self.triggerParth2]
 
     def beginJob(self,histFile=None,histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -96,10 +96,14 @@ class HistogramMaker(Module):
         muons = Collection(event, "Muon")
         jets = Collection(event, "Jet")
         HLTObj = Object(event, "HLT") #object with only the trigger branches in that event
-        for key, tg in self.trigList.items():
-            if getattr(HLTObj,tg):
+        trigPath={}
+        for key in self.trigList:
+            for tg in self.trigList[key]:
+                #if getattr(HLTObj,tg):
                 trigPath[tg] = getattr(HLTObj,tg)
-            else: print(" ERROR: There is no such attribute. ")
+            #else: print(" ERROR: There is no such attribute. " + key +tg)
+            #trigPath[tg] = getattr(HLTObj,tg)
+            #if not trigPath[tg]:print(" ERROR: There is no such attribute. ")
 
         passAny = False
         for trig in self.trigCombination1:
@@ -146,12 +150,12 @@ class HistogramMaker(Module):
         for nm, muon in enumerate(muons) :
             if nm < 1:
                 if trigPath[self.triggerPath1]:
-                    self.h_muonPtT1.Fill(muon.pt)
+                    self.h_muonPt[self.triggerPath1].Fill(muon.pt)
                 if trigPath[self.triggerParth2]:
-                    self.h_muonPtT2.Fill(muon.pt)
+                    self.h_muonPt[self.triggerPath2].Fill(muon.pt)
                 if passAny:
-                    self.h_muonPtT3.Fill(muon.pt)
-                self.h_muonPt.Fill(muon.pt)
+                    self.h_muonPt['combined'].Fill(muon.pt)
+                self.h_muonPt['no_trigger'].Fill(muon.pt)
             if (self.counter<5 and passAny):print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
                                                   "{6:>+10.3f} {7:>+10.3f}"
                                                   .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
@@ -162,12 +166,12 @@ class HistogramMaker(Module):
                                             muon.pdgId, muon.eta, muon.phi))
 
         if trigPath[self.triggerPath1]:
-            self.h_jetHtT1.Fill(jetHT_withT1)
+            self.h_jetHt[self.triggerPath1].Fill(jetHT_withT1)
         if trigPath[self.triggerParth2]:
-            self.h_jetHtT2.Fill(jetHT_withT2)
+            self.h_jetHt[self.triggerPath2].Fill(jetHT_withT2)
         if passAny:
-            self.h_jetHtT3.Fill(jetHT_withT3)
-        self.h_jetHt.Fill(jetHT_withoutT)
+            self.h_jetHt['combined'].Fill(jetHT_withT3)
+        self.h_jetHt['no_trigger'].Fill(jetHT_withoutT)
         
         return True
 
