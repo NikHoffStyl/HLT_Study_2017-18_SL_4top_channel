@@ -175,10 +175,10 @@ class HistogramMaker(Module):
 filePrefix = "root://cms-xrd-global.cern.ch/"
 files=[]
 #Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
-#inputList =  open("../Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
-#thePostFix = "TTJets_SL"
-inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
-thePostFix = "TTTT"
+inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
+thePostFix = "TTJets_SL"
+#inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
+#thePostFix = "TTTT"
 #inputList =  open("../Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC PSWeights
 #thePostFix = "TTTT_PSWeights"
 #inputList =  open("../Infiles/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # W (to Lep + Nu) + jets
