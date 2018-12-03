@@ -27,8 +27,8 @@ class HistogramMaker(Module):
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
         self.triggerPath1 = 'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
-        self.triggerParth2 = 'IsoMu24'
-        self.trigCombination1 = [self.triggerPath1, self.triggerParth2]
+        self.triggerPath2 = 'IsoMu24'
+        self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
 
     def beginJob(self,histFile=None,histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -43,10 +43,10 @@ class HistogramMaker(Module):
         self.h_jetHt[self.triggerPath1] = ROOT.TH1D('h_jetHt_' + self.triggerPath1,
                                                     self.triggerPath1 + ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt[self.triggerPath1])
-        self.h_jetHt[self.triggerParth2] = ROOT.TH1D('h_jetHt_' + self.triggerParth2,
-                                                     self.triggerParth2 + ';H_{T};Events', 200, 0, 2300)
-        self.addObject(self.h_jetHt[self.triggerParth2])
-        self.h_jetHt['combined'] = ROOT.TH1D('h_jetHt_combined', self.triggerPath1 + 'and' + self.triggerParth2 +
+        self.h_jetHt[self.triggerPath2] = ROOT.TH1D('h_jetHt_' + self.triggerPath2,
+                                                     self.triggerPath2 + ';H_{T};Events', 200, 0, 2300)
+        self.addObject(self.h_jetHt[self.triggerPath2])
+        self.h_jetHt['combined'] = ROOT.TH1D('h_jetHt_combined', self.triggerPath1 + 'and' + self.triggerPath2 +
                                              ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt['combined'])
 
@@ -57,10 +57,10 @@ class HistogramMaker(Module):
         self.h_muonPt[self.triggerPath1] = ROOT.TH1D('h_muonPt_' + self.triggerPath1,
                                                      self.triggerPath1 + ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt[self.triggerPath1])
-        self.h_muonPt[self.triggerParth2] = ROOT.TH1D('h_muonPt_' + self.triggerParth2,
-                                                      self.triggerParth2 + ';Muon P_{T};Events', 200, 0, 170)
-        self.addObject(self.h_muonPt[self.triggerParth2])
-        self.h_muonPt['combined'] = ROOT.TH1D('h_muonPt_combined', self.triggerPath1 + 'and' + self.triggerParth2 +
+        self.h_muonPt[self.triggerPath2] = ROOT.TH1D('h_muonPt_' + self.triggerPath2,
+                                                      self.triggerPath2 + ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt[self.triggerPath2])
+        self.h_muonPt['combined'] = ROOT.TH1D('h_muonPt_combined', self.triggerPath1 + 'and' + self.triggerPath2 +
                                               ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['combined'])
 
@@ -132,7 +132,7 @@ class HistogramMaker(Module):
                        
             if trigPath[self.triggerPath1]:
                 jetHT_withT1 += jet.pt
-            if trigPath[self.triggerParth2]:
+            if trigPath[self.triggerPath2]:
                 jetHT_withT2 += jet.pt
             if passAny:
                 jetHT_withT3 += jet.pt
@@ -151,7 +151,7 @@ class HistogramMaker(Module):
             if nm < 1:
                 if trigPath[self.triggerPath1]:
                     self.h_muonPt[self.triggerPath1].Fill(muon.pt)
-                if trigPath[self.triggerParth2]:
+                if trigPath[self.triggerPath2]:
                     self.h_muonPt[self.triggerPath2].Fill(muon.pt)
                 if passAny:
                     self.h_muonPt['combined'].Fill(muon.pt)
@@ -167,7 +167,7 @@ class HistogramMaker(Module):
 
         if trigPath[self.triggerPath1]:
             self.h_jetHt[self.triggerPath1].Fill(jetHT_withT1)
-        if trigPath[self.triggerParth2]:
+        if trigPath[self.triggerPath2]:
             self.h_jetHt[self.triggerPath2].Fill(jetHT_withT2)
         if passAny:
             self.h_jetHt['combined'].Fill(jetHT_withT3)
