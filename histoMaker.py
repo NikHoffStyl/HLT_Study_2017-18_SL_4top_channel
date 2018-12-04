@@ -8,6 +8,20 @@ import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+
+def process_arguments():
+    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-e", "--events-per-job", type=int, default=1000,
+                        help="Set the number of events per job")
+    parser.add_argument("-t1", "--trigger-path1", default="PFHT380_SixPFJet32_DoublePFBTagCSV_2p2",
+                        help="Set the first trigger path")
+    parser.add_argument("-t2", "--trigger-path2", default="IsoMu24",
+                        help="Set the second trigger path")
+    args = parser.parse_args()
+    return args
+
+argms = process_arguments()
 
 class HistogramMaker(Module):
     """ This class HistogramMaker() does as the name suggests. """
@@ -26,7 +40,7 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1 = 'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
+        self.triggerPath1 = argms.t1#'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
         self.triggerPath2 = 'IsoMu24'
         self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
 
@@ -72,7 +86,7 @@ class HistogramMaker(Module):
         """ process event, return True (go to next module) or False (fail, go to next event) """
 
         self.counter += 1
-        self.h_eventsPrg.Fill(1)
+        self.h_eventsPrg.Fill(0)
 
         # - 'Halt' execution for events past the first N (20 when written) by returning False
         if self.counter > self.EventLimit > -1:
@@ -111,8 +125,8 @@ class HistogramMaker(Module):
         jetHT_withT3=0
         jetHT_withoutT=0
 
-        if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>10s} {3:>10s} {4:>10s}"
-                                .format("Jet", "jetId","Pt", "Eta", "Phi"))
+        #if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>10s} {3:>10s} {4:>10s}"
+         #                       .format("Jet", "jetId","Pt", "Eta", "Phi"))
         for nj, jet in enumerate(jets):
             # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
             if jet.jetId < 2:
@@ -130,17 +144,19 @@ class HistogramMaker(Module):
                 jetHT_withT2 += jet.pt
             if passAny:
                 jetHT_withT3 += jet.pt
-                if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f} (No triggers)"
-                                        .format(nj+1, jet.jetId, jet.pt, jet.eta, jet.phi))
+                #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f} (No triggers)"
+                 #                       .format(nj+1, jet.jetId, jet.pt, jet.eta, jet.phi))
             jetHT_withoutT += jet.pt
-            if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f}"
-                                    .format(nj+1, jet.jetId, jet.pt, jet.eta, jet.phi))
+            #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f}"
+            #                        .format(nj+1, jet.jetId, jet.pt, jet.eta, jet.phi))
             
-        self.h_eventsPrg.Fill(2)
-        if passAny: self.h_eventsPrg.Fill(3)
+        self.h_eventsPrg.Fill(1)
+        if trigPath[self.triggerPath1]:self.h_eventsPrg.Fill(2)
+        if trigPath[self.triggerPath2]:self.h_eventsPrg.Fill(3)
+        if passAny: self.h_eventsPrg.Fill(4)
 
-        if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>6s} {3:>7s} {4:>6s} {5:>10s} {6:>10s} {7:>10s}"
-                                .format("Muon", "pdgId","softId","tightId","jetIdx", "Pt", "Eta", "Phi"))
+        #if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>6s} {3:>7s} {4:>6s} {5:>10s} {6:>10s} {7:>10s}"
+         #                       .format("Muon", "pdgId","softId","tightId","jetIdx", "Pt", "Eta", "Phi"))
         for nm, muon in enumerate(muons) :
             # - TODO: Add correct identification cuts for muons(or electrons).                                                                   
             if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False):
@@ -153,15 +169,15 @@ class HistogramMaker(Module):
                 if passAny:
                     self.h_muonPt['combined'].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
-            if (self.counter<5 and passAny):print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
-                                                  "{6:>+10.3f} {7:>+10.3f}"
-                                                  .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
-                                                          muon.pt, muon.eta, muon.phi))
-            if self.counter<5:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} {6:>+10.3f} "
-                                    "{7:>+10.3f} (No triggers)"
-                                    .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
-                                            muon.pdgId, muon.eta, muon.phi))
-
+            #if (self.counter<5 and passAny):print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
+             #                                     "{6:>+10.3f} {7:>+10.3f}"
+             #                                     .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
+             #                                             muon.pt, muon.eta, muon.phi))
+            #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} {6:>+10.3f} "
+              #                      "{7:>+10.3f} (No triggers)"
+              #                      .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
+              #                             muon.pdgId, muon.eta, muon.phi))
+        self.h_eventsPrg.Fill(1)
         if trigPath[self.triggerPath1]:
             self.h_jetHt[self.triggerPath1].Fill(jetHT_withT1)
         if trigPath[self.triggerPath2]:
@@ -173,6 +189,7 @@ class HistogramMaker(Module):
         return True
 
 filePrefix = "root://cms-xrd-global.cern.ch/"
+#filePrefix = "root://cmseos.fnal.gov/"
 files=[]
 #Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
 inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
