@@ -11,7 +11,7 @@ def main():
     
     # - Initialise variables
     time_ = datetime.now()
-    triggerPath1 = 'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
+    triggerPath1 = 'PFHT430_SixPFJet40_PFBTagCSV_1p5'
     triggerPath2 = 'IsoMu24'
 
     # - Create canvases
@@ -22,7 +22,7 @@ def main():
     # - Jet HT histograms
     h_PtTriggerStack = ROOT.THStack('h_PtTriggerStack', ';muon p_{T} (GeV); Events ')
     histFile = ROOT.TFile.Open("../RWOutput/OutHistoMaker2.root")
-    plotDirectory = histFile.cd("plots")
+    histFile.cd("plots")
     h_jetHt = ROOT.gDirectory.Get("h_jetHt_notrigger")
     h_jetHt.SetLineColor(28)
     if not (h_jetHt):
@@ -65,7 +65,7 @@ def main():
     ###########################
     # - Draw Histos on Canvas #
     ###########################
-    cv = triggerCanvas.cd(1)
+    triggerCanvas.cd(1)
     h_jetHt.GetXaxis().SetTitle("H_{T} (GeV)")
     h_jetHt.GetYaxis().SetTitleOffset(1.5)
     h_jetHt.Draw()
@@ -81,7 +81,7 @@ def main():
     legg.SetBorderSize(0)
     legg.Draw()
     
-    cv = triggerCanvas.cd(2)
+    triggerCanvas.cd(2)
     h_jetHtTriggerRatio1 = (h_jetHtT1).Clone("h_jetPtTriggerRatio1")
     h_jetHtTriggerRatio1.Divide(h_jetHt)
     h_jetHtTriggerRatio1.SetLineStyle(2)
@@ -105,7 +105,7 @@ def main():
     legg2.SetBorderSize(0)
     legg2.Draw()
 
-    cv = triggerCanvas.cd(4)
+    triggerCanvas.cd(4)
     h_muonPtTriggerRatio1 = (h_muonPtT1).Clone("h_muonPtTriggerRatio1")
     h_muonPtTriggerRatio1.Divide(h_muonPt)
     h_muonPtTriggerRatio1.SetLineStyle(2)
@@ -129,7 +129,7 @@ def main():
     legg3.SetBorderSize(0)
     legg3.Draw()
 
-    cv = triggerCanvas.cd(3)
+    triggerCanvas.cd(3)
     h_muonPt.GetYaxis().SetTitleOffset(1.7)
     h_PtTriggerStack.Add(h_muonPt)
     h_muonPtT1.GetYaxis().SetTitleOffset(1.7)
@@ -144,10 +144,10 @@ def main():
     legend = ROOT.TLegend(0.6, 0.7,0.88, 0.87)
     ROOT.gStyle.SetLegendTextSize(0.04)
     legend.SetBorderSize(0)
-    en5=legend.AddEntry(h_muonPt, "no trigger", "l")
-    en5=legend.AddEntry(h_muonPtT1, triggerPath1, "l")
-    en5=legend.AddEntry(h_muonPtT2, triggerPath2, "l")
-    en6=legend.AddEntry(h_muonPtT3, triggerPath1 + " and  " + triggerPath2, "l")
+    legend.AddEntry(h_muonPt, "no trigger", "l")
+    legend.AddEntry(h_muonPtT1, triggerPath1, "l")
+    legend.AddEntry(h_muonPtT2, triggerPath2, "l")
+    legend.AddEntry(h_muonPtT3, triggerPath1 + " and  " + triggerPath2, "l")
     legend.Draw()
 
     #######################
@@ -167,6 +167,5 @@ def main():
     #h_eventsPrg.Draw()
     #eventPrgCanvas.Print("eventProgress.png")
     histFile.Close()
-    
 
 main()

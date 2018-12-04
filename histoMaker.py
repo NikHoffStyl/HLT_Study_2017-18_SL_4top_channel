@@ -3,9 +3,7 @@ from __future__ import (division, print_function)
 import ROOT
 from ROOT import TLatex
 from importlib import import_module
-import time
 
-from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 #from argProcessor import process_arguments as args
@@ -27,7 +25,7 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1 ='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'#args().triggerpath1
+        self.triggerPath1 ='PFHT430_SixPFJet40_PFBTagCSV_1p5'#args().triggerpath1
         self.triggerPath2 = 'IsoMu24'#args().triggerpath2
         self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
 

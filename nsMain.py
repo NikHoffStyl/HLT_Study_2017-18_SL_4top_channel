@@ -1,6 +1,4 @@
 from __future__ import (division, print_function)
-import ROOT
-from ROOT import TLatex
 from importlib import import_module
 import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
@@ -10,7 +8,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 def process_arguments():
     """ Process command-line arguments """
 
-    parser = ArgumentParser()
+    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("--ttjets", action = "store_true", help="Set input files to tt + jets MC")
     parser.add_argument("--tttt", action = "store_true", help="Set input files to tttt MC")
     parser.add_argument("--tttt_weights", action = "store_true", help="Set input files to tttt MC with PSWeights")
@@ -20,21 +18,22 @@ def process_arguments():
     return args
 
 def main(argms):
-    """ This is where the input files are chosen and the PostPriocessor runs """
+    """ This is where the input files are chosen and the PostProcessor runs """
 
     filePrefix = "root://cms-xrd-global.cern.ch/"
     #filePrefix = "root://cmseos.fnal.gov/"
     files=[]
 
-    #Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
+    # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
+    # you may want to change path to suit your file ordering
     if argms.ttjets:
         inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
         thePostFix = "TTJets_SL"
     elif argms.tttt_weights:
-        inputList =  open("../Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC PSWeights
+        inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC PSWeights
         thePostFix = "TTTT_PSWeights"
     elif argms.wjets:
-        inputList =  open("../Infiles/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # W (to Lep + Nu) + jets
+        inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # W (to Lep + Nu) + jets
         thePostFix = "WJetsToLNu"
     else:
         inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
