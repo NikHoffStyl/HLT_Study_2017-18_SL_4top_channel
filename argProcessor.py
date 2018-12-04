@@ -1,7 +1,7 @@
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 def process_arguments():
-    latest_tag = get_latest_bacc_tag()
+    #latest_tag = get_latest_bacc_tag()
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-e", "--events-per-job", type=int, default=1000,
                         help="Set the number of events per job")
@@ -9,23 +9,23 @@ def process_arguments():
                        # help="Set the number of jobs to submit")
     #parser.add_argument("-m", "--max-jobs", type=int, default=None,
      #                   help="Set the maximum number of jobs to run at once")
-    parser.add_argument("-o", "--out-dir", default=None,
-                        help="Set the output directory")
+    #parser.add_argument("-o", "--out-dir", default=None,
+     #                   help="Set the output directory")
     parser.add_argument("-t1", "--trigger-path1", default="PFHT380_SixPFJet32_DoublePFBTagCSV_2p2",
                         help="Set the first trigger path")
     parser.add_argument("-t2", "--trigger-path2", default="IsoMu24",
                         help="Set the second trigger path")
-    parser.add_argument("-T", "--out-tag", default=latest_tag,
-                        help="The tag to use for output, under CVMFS")
-    parser.add_argument("-j", "--job-script-template", default=DEFAULT_TEMPLATE_JOBSCRIPT,
-                        help="A template jobscript that this code fills in.")
-    parser.add_argument("--job-name", default=None,
-                        help="Set the job name")
-    parser.add_argument("macro", help="The path to a valid BACCARAT macro to run")
+    #parser.add_argument("-T", "--out-tag", default=latest_tag,
+     #                   help="The tag to use for output, under CVMFS")
+    #parser.add_argument("-j", "--job-script-template", default=DEFAULT_TEMPLATE_JOBSCRIPT,
+     #                   help="A template jobscript that this code fills in.")
+    #parser.add_argument("--job-name", default=None,
+      #                  help="Set the job name")
+    #parser.add_argument("macro", help="The path to a valid BACCARAT macro to run")
     args = parser.parse_args()
 
     # Tweak / resolve complex args
-    args.macro = os.path.realpath(args.macro)
+    """args.macro = os.path.realpath(args.macro)
     if not args.bacc_setup_script:
         args.bacc_setup_script = os.path.join(SETUP_BACCARAT_ON_CVMFS, args.bacc_tag, "setup.sh")
     else:
@@ -35,6 +35,6 @@ def process_arguments():
         logger.error("Cannot read setup script for BACCARAT, '%s'" % args.bacc_setup_script)
         return None
     if not args.job_name:
-        args.job_name = os.path.basename(os.path.splitext(args.macro)[0])
+        args.job_name = os.path.basename(os.path.splitext(args.macro)[0])"""
 
     return args

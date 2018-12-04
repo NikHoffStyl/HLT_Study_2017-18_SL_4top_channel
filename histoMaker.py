@@ -8,20 +8,7 @@ import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
-def process_arguments():
-    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-e", "--events-per-job", type=int, default=1000,
-                        help="Set the number of events per job")
-    parser.add_argument("-t1", "--triggerpath1", default="PFHT380_SixPFJet32_DoublePFBTagCSV_2p2",
-                        help="Set the first trigger path")
-    parser.add_argument("-t2", "--triggerpath2", default="IsoMu24",
-                        help="Set the second trigger path")
-    args = parser.parse_args()
-    return args
-
-argms = process_arguments()
+from argProcessor import process_arguments as args
 
 class HistogramMaker(Module):
     """ This class HistogramMaker() does as the name suggests. """
@@ -40,8 +27,8 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1 = argms.triggerpath1#'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
-        self.triggerPath2 = 'IsoMu24'
+        self.triggerPath1 ='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'#args().triggerpath1
+        self.triggerPath2 = 'IsoMu24'#args().triggerpath2
         self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
 
     def beginJob(self,histFile=None,histDirName=None):
@@ -187,7 +174,7 @@ class HistogramMaker(Module):
         self.h_jetHt['no_trigger'].Fill(jetHT_withoutT)
         
         return True
-
+"""
 filePrefix = "root://cms-xrd-global.cern.ch/"
 #filePrefix = "root://cmseos.fnal.gov/"
 files=[]
@@ -205,8 +192,8 @@ for line in inputList:
     #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
     files.append(filePrefix + str(line).replace('\n','') )
 
-"""for file in files:
-    print(file)"""
+for file in files:
+    print(file)
 onefile=[files[0]]
 
 p99=PostProcessor(".",
@@ -224,4 +211,4 @@ p99=PostProcessor(".",
 t0 = time.clock()
 p99.run()
 t1 = time.clock()
-print("Elapsed time %7.1fs" %(t1-t0))
+print("Elapsed time %7.1fs" %(t1-t0))"""
