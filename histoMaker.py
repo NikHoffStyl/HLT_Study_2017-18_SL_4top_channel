@@ -8,7 +8,7 @@ import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
-from argProcessor import process_arguments as args
+#from argProcessor import process_arguments as args
 
 class HistogramMaker(Module):
     """ This class HistogramMaker() does as the name suggests. """
@@ -174,41 +174,3 @@ class HistogramMaker(Module):
         self.h_jetHt['no_trigger'].Fill(jetHT_withoutT)
         
         return True
-"""
-filePrefix = "root://cms-xrd-global.cern.ch/"
-#filePrefix = "root://cmseos.fnal.gov/"
-files=[]
-#Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
-inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
-thePostFix = "TTJets_SL"
-#inputList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
-#thePostFix = "TTTT"
-#inputList =  open("../Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC PSWeights
-#thePostFix = "TTTT_PSWeights"
-#inputList =  open("../Infiles/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # W (to Lep + Nu) + jets
-#thePostFix = "WJetsToLNu"
-
-for line in inputList:
-    #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
-    files.append(filePrefix + str(line).replace('\n','') )
-
-for file in files:
-    print(file)
-onefile=[files[0]]
-
-p99=PostProcessor(".",
-                  #files,
-                  onefile,
-                  cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
-                  modules=[HistogramMaker()],
-                  jsonInput=None,
-                  noOut=True,
-                  justcount=False,
-                  postfix=thePostFix,
-                  histFileName="../RWOutput/OutHistoMaker2.root",
-                  histDirName="plots",
-                  )
-t0 = time.clock()
-p99.run()
-t1 = time.clock()
-print("Elapsed time %7.1fs" %(t1-t0))"""

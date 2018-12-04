@@ -170,8 +170,3 @@ def main():
     
 
 main()
-
-"""if __name__ == "__main__":
-    args = process_arguments()
-    if args:
-        main(args)"""
