@@ -14,9 +14,9 @@ def process_arguments():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-e", "--events-per-job", type=int, default=1000,
                         help="Set the number of events per job")
-    parser.add_argument("-t1", "--trigger-path1", default="PFHT380_SixPFJet32_DoublePFBTagCSV_2p2",
+    parser.add_argument("-t1", "--triggerpath1", default="PFHT380_SixPFJet32_DoublePFBTagCSV_2p2",
                         help="Set the first trigger path")
-    parser.add_argument("-t2", "--trigger-path2", default="IsoMu24",
+    parser.add_argument("-t2", "--triggerpath2", default="IsoMu24",
                         help="Set the second trigger path")
     args = parser.parse_args()
     return args
@@ -40,7 +40,7 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1 = argms.t1#'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
+        self.triggerPath1 = argms.triggerpath1#'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
         self.triggerPath2 = 'IsoMu24'
         self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
 
