@@ -163,9 +163,9 @@ def main():
     triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/Canvas%d_%m_%y_%H%M.png"))
     
     # -Test Event numbers along steps
-    cv = eventPrgCanvas.cd(1)
-    h_eventsPrg.Draw()
-    
+    #eventPrgCanvas.cd(1)
+    #h_eventsPrg.Draw()
+    #eventPrgCanvas.Print("eventProgress.png")
     histFile.Close()
     
 
