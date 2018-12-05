@@ -105,58 +105,71 @@ class HistogramMaker(Module):
             if trigPath[trig]:
                 passAny = True
 
-        jetHT_withT1=0
-        jetHT_withT2=0
-        jetHT_withT3=0
-        jetHT_withoutT=0
+        jetHT={"t1":0, "t2":0, "comb":0, "notrig":0}
+        muonPT={"t1":0, "t2":0, "comb":0, "notrig":0}
+
+        # jetHT_withT1=0
+        # jetHT_withT2=0
+        # jetHT_withT3=0
+        # jetHT_withoutT=0
+        nJetPass =0
+        nMuonsPass =0
 
         #if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>10s} {3:>10s} {4:>10s}"
          #                       .format("Jet", "jetId","Pt", "Eta", "Phi"))
         for nj, jet in enumerate(jets):
-            # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
-            if jet.jetId < 2: continue
-            # - Minimum 30GeV Pt on the jets
-            if jet.pt < 30: continue
-            # - Only look at jets within |eta| < 2.4
-            if abs(jet.eta) > 2.4: continue
+            # # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
+            # if jet.jetId < 2:
+            #     nJetsIded +=1
+            #     continue
+            # # - Minimum 30GeV Pt on the jets
+            # if jet.pt < 30:
+            #     nJetsPt +=1
+            #     continue
+            # # - Only look at jets within |eta| < 2.4
+            # if abs(jet.eta) > 2.4:
+            #     nJetsEta +=1
+            #     continue
+            if jet.jetId<2 and jet.pt<30 and jet.eta>2.4 and jet.btagCSVV2 < 0.8838:continue
+            else:nJetPass +=1
 
             #Count b-tagged jets with two algos at the medium working point
             #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-            if jet.btagCSVV2 < 0.8838: continue # tight = 0.9693
-            if jet.btagDeepB < 0.4941: continue # no tight
+            #if jet.btagCSVV2 < 0.8838: continue # tight = 0.9693
+            #if jet.btagDeepB < 0.4941: continue # no tight
             #if jet.btagDeepC < 0.4941: continue # tight = 0.8001
             #if jet.btagDeepFlavB < 0.7489: continue # no tight
-            if trigPath[self.triggerPath1]: jetHT_withT1 += jet.pt
-            if trigPath[self.triggerPath2]: jetHT_withT2 += jet.pt
+            if trigPath[self.triggerPath1]: jetHT["t1"] += jet.pt
+            if trigPath[self.triggerPath2]: jetHT["t2"] += jet.pt
             if passAny:
-                jetHT_withT3 += jet.pt
+                jetHT["comb"] += jet.pt
                 #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f} (No triggers)"
                  #                       .format(nj+1, jet.jetId, jet.pt, jet.eta, jet.phi))
-            jetHT_withoutT += jet.pt
+            jetHT["notrig"] += jet.pt
             #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f}"
             #                        .format(nj+1, jet.jetId, jet.pt, jet.eta, jet.phi))
-            
-        self.h_eventsPrg.Fill(1)
-        if trigPath[self.triggerPath1]:self.h_eventsPrg.Fill(2)
-        if trigPath[self.triggerPath2]:self.h_eventsPrg.Fill(3)
-        if passAny: self.h_eventsPrg.Fill(4)
+
+        if nJetPass >4:
+            self.h_eventsPrg.Fill(1)
+            if trigPath[self.triggerPath1]:self.h_eventsPrg.Fill(2)
+            if trigPath[self.triggerPath2]:self.h_eventsPrg.Fill(3)
+            if passAny: self.h_eventsPrg.Fill(4)
 
         #if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>6s} {3:>7s} {4:>6s} {5:>10s} {6:>10s} {7:>10s}"
          #                       .format("Muon", "pdgId","softId","tightId","jetIdx", "Pt", "Eta", "Phi"))
         for nm, muon in enumerate(muons) :
             # - TODO: Add correct identification cuts for muons(or electrons).                                                                   
-            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False): continue
-            # - Only look at jets within |eta| < 2.4
-            if abs(muon.eta) > 2.4: continue
-            if nm < 1:
-                if trigPath[self.triggerPath1]:
-                    self.h_muonPt[self.triggerPath1].Fill(muon.pt)
-                if trigPath[self.triggerPath2]:
-                    self.h_muonPt[self.triggerPath2].Fill(muon.pt)
-                if passAny:
-                    self.h_muonPt['combined'].Fill(muon.pt)
-                self.h_muonPt['no_trigger'].Fill(muon.pt)
-            if (self.counter<5 and passAny):print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
+            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False):
+                # - Only look at jets within |eta| < 2.4
+                if abs(muon.eta) > 2.4: continue
+                else:nMuonsPass+=1
+
+            if nm < 1 and nJetPass >4:
+                if trigPath[self.triggerPath1]: muonPT["t1"]+=1
+                if trigPath[self.triggerPath2]: muonPT["t2"]+=1
+                if passAny:muonPT["comb"]+=1
+                muonPT["notrig"]+=1
+            if self.counter<5 and passAny:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
                                                  "{6:>+10.3f} {7:>+10.3f}"
                                                  .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
                                                          muon.pt, muon.eta, muon.phi))
@@ -164,13 +177,21 @@ class HistogramMaker(Module):
                                    "{7:>+10.3f} (No triggers)"
                                    .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
                                           muon.pdgId, muon.eta, muon.phi))
-        self.h_eventsPrg.Fill(1)
-        if trigPath[self.triggerPath1]:
-            self.h_jetHt[self.triggerPath1].Fill(jetHT_withT1)
-        if trigPath[self.triggerPath2]:
-            self.h_jetHt[self.triggerPath2].Fill(jetHT_withT2)
-        if passAny:
-            self.h_jetHt['combined'].Fill(jetHT_withT3)
-        self.h_jetHt['no_trigger'].Fill(jetHT_withoutT)
+        if nJetPass >4 and nMuonsPass:
+            if trigPath[self.triggerPath1]:
+                self.h_muonPt[self.triggerPath1].Fill(muonPT["t1"])
+            if trigPath[self.triggerPath2]:
+                self.h_muonPt[self.triggerPath2].Fill(muonPT["t2"])
+            if passAny:
+                self.h_muonPt['combined'].Fill(muonPT["comb"])
+            self.h_muonPt['no_trigger'].Fill(muonPT["notrig"])
+            self.h_eventsPrg.Fill(1)
+            if trigPath[self.triggerPath1]:
+                self.h_jetHt[self.triggerPath1].Fill(jetHT["t1"])
+            if trigPath[self.triggerPath2]:
+                self.h_jetHt[self.triggerPath2].Fill(jetHT["t2"])
+            if passAny:
+                self.h_jetHt['combined'].Fill(jetHT["comb"])
+            self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True
