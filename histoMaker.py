@@ -114,19 +114,20 @@ class HistogramMaker(Module):
          #                       .format("Jet", "jetId","Pt", "Eta", "Phi"))
         for nj, jet in enumerate(jets):
             # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
-            if jet.jetId < 2:
-                continue
+            if jet.jetId < 2: continue
             # - Minimum 30GeV Pt on the jets
-            if jet.pt < 30:
-                continue
+            if jet.pt < 30: continue
             # - Only look at jets within |eta| < 2.4
-            if abs(jet.eta) > 2.4:
-                continue
-                       
-            if trigPath[self.triggerPath1]:
-                jetHT_withT1 += jet.pt
-            if trigPath[self.triggerPath2]:
-                jetHT_withT2 += jet.pt
+            if abs(jet.eta) > 2.4: continue
+
+            #Count b-tagged jets with two algos at the medium working point
+            #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+            if jet.btagCSVV2 < 0.8838: continue # tight = 0.9693
+            if jet.btagDeepB < 0.4941: continue # no tight
+            #if jet.btagDeepC < 0.4941: continue # tight = 0.8001
+            #if jet.btagDeepFlavB < 0.7489: continue # no tight
+            if trigPath[self.triggerPath1]: jetHT_withT1 += jet.pt
+            if trigPath[self.triggerPath2]: jetHT_withT2 += jet.pt
             if passAny:
                 jetHT_withT3 += jet.pt
                 #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f} (No triggers)"
@@ -144,8 +145,9 @@ class HistogramMaker(Module):
          #                       .format("Muon", "pdgId","softId","tightId","jetIdx", "Pt", "Eta", "Phi"))
         for nm, muon in enumerate(muons) :
             # - TODO: Add correct identification cuts for muons(or electrons).                                                                   
-            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False):
-                continue
+            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False): continue
+            # - Only look at jets within |eta| < 2.4
+            if abs(muon.eta) > 2.4: continue
             if nm < 1:
                 if trigPath[self.triggerPath1]:
                     self.h_muonPt[self.triggerPath1].Fill(muon.pt)
@@ -154,14 +156,14 @@ class HistogramMaker(Module):
                 if passAny:
                     self.h_muonPt['combined'].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
-            #if (self.counter<5 and passAny):print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
-             #                                     "{6:>+10.3f} {7:>+10.3f}"
-             #                                     .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
-             #                                             muon.pt, muon.eta, muon.phi))
-            #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} {6:>+10.3f} "
-              #                      "{7:>+10.3f} (No triggers)"
-              #                      .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
-              #                             muon.pdgId, muon.eta, muon.phi))
+            if (self.counter<5 and passAny):print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
+                                                 "{6:>+10.3f} {7:>+10.3f}"
+                                                 .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
+                                                         muon.pt, muon.eta, muon.phi))
+            if self.counter<5:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} {6:>+10.3f} "
+                                   "{7:>+10.3f} (No triggers)"
+                                   .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
+                                          muon.pdgId, muon.eta, muon.phi))
         self.h_eventsPrg.Fill(1)
         if trigPath[self.triggerPath1]:
             self.h_jetHt[self.triggerPath1].Fill(jetHT_withT1)
