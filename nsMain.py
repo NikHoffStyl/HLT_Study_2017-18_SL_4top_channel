@@ -49,8 +49,8 @@ def main(argms):
     onefile=[files[0]]
 
     p99=PostProcessor(".",
-                      #files,
-                      onefile,
+                      files,
+                      #onefile,
                       cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
                       modules=[HistogramMaker()],
                       jsonInput=None,
