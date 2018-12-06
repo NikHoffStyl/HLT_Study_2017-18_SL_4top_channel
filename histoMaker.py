@@ -113,7 +113,7 @@ class HistogramMaker(Module):
         # jetHT_withT3=0
         # jetHT_withoutT=0
         nJetPass =0
-        nMuonsPass =0
+        firstMuonPass = False
 
         #if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>10s} {3:>10s} {4:>10s}"
          #                       .format("Jet", "jetId","Pt", "Eta", "Phi"))
@@ -159,16 +159,20 @@ class HistogramMaker(Module):
          #                       .format("Muon", "pdgId","softId","tightId","jetIdx", "Pt", "Eta", "Phi"))
         for nm, muon in enumerate(muons) :
             # - TODO: Add correct identification cuts for muons(or electrons).                                                                   
-            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False):
+            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False):continue
+            else:
                 # - Only look at jets within |eta| < 2.4
-                if abs(muon.eta) > 2.4: continue
-                else:nMuonsPass+=1
+                if abs(muon.eta) > 2.4 and nm==0 and muon.miniPFRelIso_all > 0.15: continue
+                else:firstMuonPass=True
 
-            if nm < 1 and nJetPass >4:
-                if trigPath[self.triggerPath1]: muonPT["t1"]+=1
-                if trigPath[self.triggerPath2]: muonPT["t2"]+=1
-                if passAny:muonPT["comb"]+=1
-                muonPT["notrig"]+=1
+            if nm < 1 and nJetPass >4 and firstMuonPass == True:
+                if trigPath[self.triggerPath1]:
+                    self.h_muonPt[self.triggerPath1].Fill(muon.pt)
+                if trigPath[self.triggerPath2]:
+                    self.h_muonPt[self.triggerPath2].Fill(muon.pt)
+                if passAny:
+                    self.h_muonPt['combined'].Fill(muon.pt)
+                self.h_muonPt['no_trigger'].Fill(muon.pt)
             if self.counter<5 and passAny:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
                                                  "{6:>+10.3f} {7:>+10.3f}"
                                                  .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
@@ -177,14 +181,7 @@ class HistogramMaker(Module):
                                    "{7:>+10.3f} (No triggers)"
                                    .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
                                           muon.pdgId, muon.eta, muon.phi))
-        if nJetPass >4 and nMuonsPass:
-            if trigPath[self.triggerPath1]:
-                self.h_muonPt[self.triggerPath1].Fill(muonPT["t1"])
-            if trigPath[self.triggerPath2]:
-                self.h_muonPt[self.triggerPath2].Fill(muonPT["t2"])
-            if passAny:
-                self.h_muonPt['combined'].Fill(muonPT["comb"])
-            self.h_muonPt['no_trigger'].Fill(muonPT["notrig"])
+        if nJetPass >4 and firstMuonPass==True:
             self.h_eventsPrg.Fill(1)
             if trigPath[self.triggerPath1]:
                 self.h_jetHt[self.triggerPath1].Fill(jetHT["t1"])
