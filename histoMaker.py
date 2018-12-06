@@ -25,7 +25,7 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1 ='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'#args().triggerpath1
+        self.triggerPath1 ='PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'#args().triggerpath1
         self.triggerPath2 = 'IsoMu24'#args().triggerpath2
         self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
 
@@ -107,6 +107,7 @@ class HistogramMaker(Module):
 
         jetHT={"t1":0, "t2":0, "comb":0, "notrig":0}
         nJetPass =0
+        nBtagPass = 0
         firstMuonPass = False
 
         #if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>10s} {3:>10s} {4:>10s}"
@@ -115,9 +116,11 @@ class HistogramMaker(Module):
             # # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
             # # - Minimum 30GeV Pt on the jets
             # # - Only look at jets within |eta| < 2.4
-            if jet.jetId<2 or jet.pt<30 or jet.eta>2.4 or jet.btagCSVV2 < 0.8838:continue
+            if jet.jetId<2 or jet.pt<30 or jet.eta>2.4 :continue
             else:nJetPass +=1
 
+            if jet.btagDeepFlavB > 0.7489:
+            else:nBtagPass +=1
             #Count b-tagged jets with two algos at the medium working point
             #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             #if jet.btagCSVV2 < 0.8838: continue # tight = 0.9693
@@ -134,7 +137,7 @@ class HistogramMaker(Module):
             #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:>10.4f} {3:>+10.3f} {4:>+10.3f}"
             #                        .format(nj+1, jet.jetId, jet.pt, jet.eta, jet.phi))
 
-        if nJetPass >4:
+        if nJetPass >4 and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
             if trigPath[self.triggerPath1]:self.h_eventsPrg.Fill(2)
             if trigPath[self.triggerPath2]:self.h_eventsPrg.Fill(3)
@@ -149,7 +152,7 @@ class HistogramMaker(Module):
                     continue
                 else:firstMuonPass=True
 
-            if nm ==0 and nJetPass >4 and firstMuonPass == True:
+            if nm ==0 and nJetPass >4 and firstMuonPass == True and nBtagPass >0:
                 if trigPath[self.triggerPath1]:
                     self.h_muonPt[self.triggerPath1].Fill(muon.pt)
                 if trigPath[self.triggerPath2]:
@@ -157,15 +160,15 @@ class HistogramMaker(Module):
                 if passAny:
                     self.h_muonPt['combined'].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
-            #if self.counter<5 and passAny:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
-             #                                    "{6:>+10.3f} {7:>+10.3f}"
-              #                                   .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
-               #                                          muon.pt, muon.eta, muon.phi))
-            #if self.counter<5:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} {6:>+10.3f} "
-             #                      "{7:>+10.3f} (No triggers)"
-              #                     .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
-               #                           muon.pdgId, muon.eta, muon.phi))
-        if nJetPass >4 and firstMuonPass==True:
+            if self.counter<5 and passAny:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} "
+                                                 "{6:>+10.3f} {7:>+10.3f}"
+                                                 .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx,
+                                                         muon.pt, muon.eta, muon.phi))
+            if self.counter<5:print("{0:*<5d} {1:*<5d} {2:*<6d} {3:*<7d} {4:*<6d} {5:>10.4f} {6:>+10.3f} "
+                                   "{7:>+10.3f} (No triggers)"
+                                   .format(nm+1, muon.pdgId, muon.softId, muon.tightId, muon.jetIdx, muon.pt,
+                                          muon.pdgId, muon.eta, muon.phi))
+        if nJetPass >4 and firstMuonPass==True and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
             if trigPath[self.triggerPath1]:
                 self.h_jetHt[self.triggerPath1].Fill(jetHT["t1"])
