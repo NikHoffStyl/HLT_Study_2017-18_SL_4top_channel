@@ -25,7 +25,7 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1 ='PFHT430_SixPFJet40_PFBTagCSV_1p5'#args().triggerpath1
+        self.triggerPath1 ='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'#args().triggerpath1
         self.triggerPath2 = 'IsoMu24'#args().triggerpath2
         self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
 
@@ -106,12 +106,6 @@ class HistogramMaker(Module):
                 passAny = True
 
         jetHT={"t1":0, "t2":0, "comb":0, "notrig":0}
-        muonPT={"t1":0, "t2":0, "comb":0, "notrig":0}
-
-        # jetHT_withT1=0
-        # jetHT_withT2=0
-        # jetHT_withT3=0
-        # jetHT_withoutT=0
         nJetPass =0
         firstMuonPass = False
 
@@ -119,18 +113,9 @@ class HistogramMaker(Module):
          #                       .format("Jet", "jetId","Pt", "Eta", "Phi"))
         for nj, jet in enumerate(jets):
             # # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
-            # if jet.jetId < 2:
-            #     nJetsIded +=1
-            #     continue
             # # - Minimum 30GeV Pt on the jets
-            # if jet.pt < 30:
-            #     nJetsPt +=1
-            #     continue
             # # - Only look at jets within |eta| < 2.4
-            # if abs(jet.eta) > 2.4:
-            #     nJetsEta +=1
-            #     continue
-            if jet.jetId<2 and jet.pt<30 and jet.eta>2.4 and jet.btagCSVV2 < 0.8838:continue
+            if jet.jetId<2 or jet.pt<30 or jet.eta>2.4 or jet.btagCSVV2 < 0.8838:continue
             else:nJetPass +=1
 
             #Count b-tagged jets with two algos at the medium working point
@@ -158,14 +143,13 @@ class HistogramMaker(Module):
         #if self.counter<5:print("\n{0:>5s} {1:>5s} {2:>6s} {3:>7s} {4:>6s} {5:>10s} {6:>10s} {7:>10s}"
          #                       .format("Muon", "pdgId","softId","tightId","jetIdx", "Pt", "Eta", "Phi"))
         for nm, muon in enumerate(muons) :
-            # - TODO: Add correct identification cuts for muons(or electrons).                                                                   
-            if (getattr(muon, "tightId") == False) and (getattr(muon, "mediumId") ==False):continue
-            else:
-                # - Only look at jets within |eta| < 2.4
-                if abs(muon.eta) > 2.4 and nm==0 and muon.miniPFRelIso_all > 0.15: continue
+            # - TODO: Add correct identification cuts for muons(or electrons).
+            if nm == 0:
+                if (getattr(muon, "tightId") == False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
+                    continue
                 else:firstMuonPass=True
 
-            if nm < 1 and nJetPass >4 and firstMuonPass == True:
+            if nm ==0 and nJetPass >4 and firstMuonPass == True:
                 if trigPath[self.triggerPath1]:
                     self.h_muonPt[self.triggerPath1].Fill(muon.pt)
                 if trigPath[self.triggerPath2]:

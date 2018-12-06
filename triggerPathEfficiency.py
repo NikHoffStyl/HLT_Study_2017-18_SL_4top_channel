@@ -11,7 +11,7 @@ def main():
     
     # - Initialise variables
     time_ = datetime.now()
-    triggerPath1 = 'PFHT430_SixPFJet40_PFBTagCSV_1p5'
+    triggerPath1 = 'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
     triggerPath2 = 'IsoMu24'
 
     # - Create canvases
