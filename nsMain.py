@@ -9,9 +9,9 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", type=string, choices= ["ttjets","tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", choices= ["ttjets","tttt", "tttt_weights", "wjets"],
                         help= "Set list of input files")
-    parser.add_argument("-r", "--redirector", type=string, choices= ["xrd-global","xrdUS","xrdEU_Asia", "eos", "iihe"],
+    parser.add_argument("-r", "--redirector", choices= ["xrd-global","xrdUS","xrdEU_Asia", "eos", "iihe"],
                         help= "Sets redirector to query locations for LFN")
 
     # parser.add_argument("--ttjets", action = "store_true", help="Set input files to tt + jets MC")
@@ -73,7 +73,7 @@ def main(argms):
                       histFileName="../RWOutput/OutHistoMaker2.root",
                       histDirName="plots",
                       #branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
-                      #outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
+                      outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                       )
     t0 = time.clock()
     p99.run()
