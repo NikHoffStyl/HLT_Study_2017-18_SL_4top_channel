@@ -9,7 +9,7 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", type=string, choices= ["ttjets","tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", type=str, choices= ["ttjets","tttt", "tttt_weights", "wjets"],
                         help= "Set list of input files")
     parser.add_argument("-r", "--redirector", type=string, choices= ["xrd-global","xrdUS","xrdEU_Asia", "eos", "iihe"],
                         help= "Sets redirector to query locations for LFN")
