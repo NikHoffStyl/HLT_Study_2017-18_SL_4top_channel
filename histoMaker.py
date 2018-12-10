@@ -25,13 +25,15 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1 ='PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'#args().triggerpath1
-        self.triggerPath1_1='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
-        self.triggerPath1_2='PFHT430_SixPFJet40_PFBTagCSV_1p5'
-        self.triggerPath2 = 'IsoMu24'#args().triggerpath2
-        self.trigCombination1 = [self.triggerPath1, self.triggerPath2]
-        self.trigCombination2 = [self.triggerPath1_1, self.triggerPath2]
-        self.trigCombination3 = [self.triggerPath1_2, self.triggerPath2]
+        self.triggerPath1_1 ='PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'
+        self.triggerPath1_2='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
+        self.triggerPath1_3='PFHT430_SixPFJet40_PFBTagCSV_1p5'
+        self.triggerPath1_4='PFHT430_SixPFJet40'
+        self.triggerPath2 = 'IsoMu24'
+        self.trigCombination1 = [self.triggerPath1_1, self.triggerPath2]
+        self.trigCombination2 = [self.triggerPath1_2, self.triggerPath2]
+        self.trigCombination3 = [self.triggerPath1_3, self.triggerPath2]
+        self.trigCombination4 = [self.triggerPath1_4, self.triggerPath2]
 
     def beginJob(self,histFile=None,histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -43,56 +45,68 @@ class HistogramMaker(Module):
         self.h_jetHt = {}
         self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt['no_trigger'])
-        self.h_jetHt[self.triggerPath1] = ROOT.TH1D('h_jetHt_' + self.triggerPath1,
-                                                    self.triggerPath1 + ';H_{T};Events', 200, 0, 2300)
-        self.addObject(self.h_jetHt[self.triggerPath1])
         self.h_jetHt[self.triggerPath1_1] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_1,
                                                     self.triggerPath1_1 + ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt[self.triggerPath1_1])
         self.h_jetHt[self.triggerPath1_2] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_2,
                                                     self.triggerPath1_2 + ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt[self.triggerPath1_2])
+        self.h_jetHt[self.triggerPath1_3] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_3,
+                                                    self.triggerPath1_3 + ';H_{T};Events', 200, 0, 2300)
+        self.addObject(self.h_jetHt[self.triggerPath1_3])
+        self.h_jetHt[self.triggerPath1_4] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_4,
+                                                      self.triggerPath1_4 + ';H_{T};Events', 200, 0, 2300)
+        self.addObject(self.h_jetHt[self.triggerPath1_4])
         self.h_jetHt[self.triggerPath2] = ROOT.TH1D('h_jetHt_' + self.triggerPath2,
                                                      self.triggerPath2 + ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt[self.triggerPath2])
-        self.h_jetHt['combination1'] = ROOT.TH1D('h_jetHt_combination1', self.triggerPath1 + 'and' + self.triggerPath2 +
+        self.h_jetHt['combination1'] = ROOT.TH1D('h_jetHt_combination1', self.triggerPath1_1 + 'and' + self.triggerPath2 +
                                              ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt['combination1'])
-        self.h_jetHt['combination2'] = ROOT.TH1D('h_jetHt_combination2', self.triggerPath1_1 + 'and' + self.triggerPath2 +
+        self.h_jetHt['combination2'] = ROOT.TH1D('h_jetHt_combination2', self.triggerPath1_2 + 'and' + self.triggerPath2 +
                                              ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt['combination2'])
-        self.h_jetHt['combination3'] = ROOT.TH1D('h_jetHt_combination3', self.triggerPath1_2 + 'and' + self.triggerPath2 +
+        self.h_jetHt['combination3'] = ROOT.TH1D('h_jetHt_combination3', self.triggerPath1_3 + 'and' + self.triggerPath2 +
                                              ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt['combination3'])
+        self.h_jetHt['combination4'] = ROOT.TH1D('h_jetHt_combination4', self.triggerPath1_4 + 'and' + self.triggerPath2 +
+                                                 ';H_{T};Events', 200, 0, 2300)
+        self.addObject(self.h_jetHt['combination4'])
 
         # - Defining Muon pT histograms to be saved to file
         self.h_muonPt = {}
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['no_trigger'])
-        self.h_muonPt[self.triggerPath1] = ROOT.TH1D('h_muonPt_' + self.triggerPath1,
-                                                     self.triggerPath1 + ';Muon P_{T};Events', 200, 0, 170)
-        self.addObject(self.h_muonPt[self.triggerPath1])
         self.h_muonPt[self.triggerPath1_1] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_1,
                                                      self.triggerPath1_1 + ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt[self.triggerPath1_1])
         self.h_muonPt[self.triggerPath1_2] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_2,
                                                      self.triggerPath1_2 + ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt[self.triggerPath1_2])
+        self.h_muonPt[self.triggerPath1_3] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_3,
+                                                     self.triggerPath1_3 + ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt[self.triggerPath1_3])
+        self.h_muonPt[self.triggerPath1_4] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_4,
+                                                       self.triggerPath1_4 + ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt[self.triggerPath1_4])
         self.h_muonPt[self.triggerPath2] = ROOT.TH1D('h_muonPt_' + self.triggerPath2,
                                                       self.triggerPath2 + ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt[self.triggerPath2])
-        self.h_muonPt['combination1'] = ROOT.TH1D('h_muonPt_combination1', self.triggerPath1 + 'and' + self.triggerPath2 +
+        self.h_muonPt['combination1'] = ROOT.TH1D('h_muonPt_combination1', self.triggerPath1_1 + 'and' + self.triggerPath2 +
                                               ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['combination1'])
-        self.h_muonPt['combination2'] = ROOT.TH1D('h_muonPt_combination2', self.triggerPath1_1 + 'and' + self.triggerPath2 +
+        self.h_muonPt['combination2'] = ROOT.TH1D('h_muonPt_combination2', self.triggerPath1_2 + 'and' + self.triggerPath2 +
                                               ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['combination2'])
-        self.h_muonPt['combination3'] = ROOT.TH1D('h_muonPt_combination3', self.triggerPath1_2 + 'and' + self.triggerPath2 +
+        self.h_muonPt['combination3'] = ROOT.TH1D('h_muonPt_combination3', self.triggerPath1_3 + 'and' + self.triggerPath2 +
                                               ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['combination3'])
+        self.h_muonPt['combination4'] = ROOT.TH1D('h_muonPt_combination4', self.triggerPath1_4 + 'and' + self.triggerPath2 +
+                                                  ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt['combination4'])
 
         # - FIXME: May be a better way.
-        self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';steps;entries', 10,0,10)
+        self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';steps;entries', 11,0,11)
         self.addObject(self.h_eventsPrg)
 
     def analyze(self, event):
@@ -132,7 +146,12 @@ class HistogramMaker(Module):
             if trigPath[trig]:
                 passComb3 = True
 
-        jetHT={"t1":0, "t1_1":0, "t1_2":0, "t2":0, "comb1":0, "comb2":0, "comb3":0, "notrig":0}
+        passComb4 = False
+        for trig in self.trigCombination4:
+            if trigPath[trig]:
+                passComb4 = True
+
+        jetHT={"t1_1":0, "t1_2":0, "t1_3":0, "t1_4":0, "t2":0, "comb1":0, "comb2":0, "comb3":0, "comb4":0, "notrig":0}
         nJetPass =0
         nBtagPass = 0
         firstMuonPass = False
@@ -150,9 +169,9 @@ class HistogramMaker(Module):
             if jet.btagDeepFlavB > 0.7489: nBtagPass +=1
 
             # Calculate jetHT for different trigger paths and combinations of them
-            if trigPath[self.triggerPath1]: jetHT["t1"] += jet.pt
-            if trigPath[self.triggerPath1]: jetHT["t1_1"] += jet.pt
-            if trigPath[self.triggerPath1]: jetHT["t1_2"] += jet.pt
+            if trigPath[self.triggerPath1_1]: jetHT["t1_1"] += jet.pt
+            if trigPath[self.triggerPath1_2]: jetHT["t1_2"] += jet.pt
+            if trigPath[self.triggerPath1_3]: jetHT["t1_3"] += jet.pt
             if trigPath[self.triggerPath2]: jetHT["t2"] += jet.pt
             if passComb1:
                 jetHT["comb1"] += jet.pt
@@ -160,6 +179,8 @@ class HistogramMaker(Module):
                 jetHT["comb2"] += jet.pt
             if passComb3:
                 jetHT["comb3"] += jet.pt
+            if passComb4:
+                jetHT["comb4"] += jet.pt
             jetHT["notrig"] += jet.pt
 
         for nm, muon in enumerate(muons) :
@@ -170,12 +191,14 @@ class HistogramMaker(Module):
                 else:firstMuonPass=True
 
             if nm ==0 and nJetPass >4 and firstMuonPass == True and nBtagPass >0:
-                if trigPath[self.triggerPath1]:
-                    self.h_muonPt[self.triggerPath1].Fill(muon.pt)
                 if trigPath[self.triggerPath1_1]:
                     self.h_muonPt[self.triggerPath1_1].Fill(muon.pt)
                 if trigPath[self.triggerPath1_2]:
                     self.h_muonPt[self.triggerPath1_2].Fill(muon.pt)
+                if trigPath[self.triggerPath1_3]:
+                    self.h_muonPt[self.triggerPath1_3].Fill(muon.pt)
+                if trigPath[self.triggerPath1_4]:
+                    self.h_muonPt[self.triggerPath1_4].Fill(muon.pt)
                 if trigPath[self.triggerPath2]:
                     self.h_muonPt[self.triggerPath2].Fill(muon.pt)
                 if passComb1:
@@ -184,26 +207,31 @@ class HistogramMaker(Module):
                     self.h_muonPt['combination2'].Fill(muon.pt)
                 if passComb3:
                     self.h_muonPt['combination3'].Fill(muon.pt)
+                if passComb4:
+                    self.h_muonPt['combination4'].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
 
         if nJetPass >4 and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
-            if trigPath[self.triggerPath1]:self.h_eventsPrg.Fill(2)
-            if trigPath[self.triggerPath1_1]:self.h_eventsPrg.Fill(3)
-            if trigPath[self.triggerPath1_2]:self.h_eventsPrg.Fill(4)
-            if trigPath[self.triggerPath2]:self.h_eventsPrg.Fill(5)
-            if passComb1: self.h_eventsPrg.Fill(6)
-            if passComb2: self.h_eventsPrg.Fill(7)
-            if passComb3: self.h_eventsPrg.Fill(8)
+            if trigPath[self.triggerPath1_1]:self.h_eventsPrg.Fill(2)
+            if trigPath[self.triggerPath1_2]:self.h_eventsPrg.Fill(3)
+            if trigPath[self.triggerPath1_3]:self.h_eventsPrg.Fill(4)
+            if trigPath[self.triggerPath1_4]:self.h_eventsPrg.Fill(5)
+            if trigPath[self.triggerPath2]:self.h_eventsPrg.Fill(6)
+            if passComb1: self.h_eventsPrg.Fill(7)
+            if passComb2: self.h_eventsPrg.Fill(8)
+            if passComb3: self.h_eventsPrg.Fill(9)
+            if passComb4: self.h_eventsPrg.Fill(10)
 
         if nJetPass >4 and firstMuonPass==True and nBtagPass >0:
-            self.h_eventsPrg.Fill(1)
-            if trigPath[self.triggerPath1]:
-                self.h_jetHt[self.triggerPath1].Fill(jetHT["t1"])
             if trigPath[self.triggerPath1_1]:
                 self.h_jetHt[self.triggerPath1_1].Fill(jetHT["t1_1"])
             if trigPath[self.triggerPath1_2]:
                 self.h_jetHt[self.triggerPath1_2].Fill(jetHT["t1_2"])
+            if trigPath[self.triggerPath1_3]:
+                self.h_jetHt[self.triggerPath1_3].Fill(jetHT["t1_3"])
+            if trigPath[self.triggerPath1_4]:
+                self.h_jetHt[self.triggerPath1_4].Fill(jetHT["t1_4"])
             if trigPath[self.triggerPath2]:
                 self.h_jetHt[self.triggerPath2].Fill(jetHT["t2"])
             if passComb1:
@@ -212,6 +240,8 @@ class HistogramMaker(Module):
                 self.h_jetHt['combination2'].Fill(jetHT["comb2"])
             if passComb3:
                 self.h_jetHt['combination3'].Fill(jetHT["comb3"])
+            if passComb4:
+                self.h_jetHt['combination4'].Fill(jetHT["comb4"])
             self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True
