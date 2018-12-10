@@ -172,6 +172,7 @@ class HistogramMaker(Module):
             if trigPath[self.triggerPath1_1]: jetHT["t1_1"] += jet.pt
             if trigPath[self.triggerPath1_2]: jetHT["t1_2"] += jet.pt
             if trigPath[self.triggerPath1_3]: jetHT["t1_3"] += jet.pt
+            if trigPath[self.triggerPath1_4]: jetHT["t1_4"] += jet.pt
             if trigPath[self.triggerPath2]: jetHT["t2"] += jet.pt
             if passComb1:
                 jetHT["comb1"] += jet.pt
