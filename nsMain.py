@@ -52,9 +52,10 @@ def main(argms):
         outtputFile = "OutHistosTTTT.root"
     else: return 0
 
-
+    iterat=0
     for line in inputLFNList:
-        if line > 10: break
+        iterat+=1
+        if iterat > 1: continue
         #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
         files.append(redirector + str(line).replace('\n','') )
 
