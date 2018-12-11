@@ -11,8 +11,8 @@ def process_arguments():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices= ["ttjets","tttt", "tttt_weights", "wjets"],
                         default = "tttt", help= "Set list of input files")
-    parser.add_argument("-r", "--redirector", choices= ["xrd-global","xrdUS","xrdEU_Asia", "eos", "iihe"],
-                        default = "xrd-global", help= "Sets redirector to query locations for LFN")
+    parser.add_argument("-r", "--redirector", choices= ["xrd-global","xrdUS","xrdEU_Asia", "eos", "iihe", "local"],
+                        default = "local", help= "Sets redirector to query locations for LFN")
     args = parser.parse_args()
     return args
 
@@ -29,33 +29,43 @@ def main(argms):
         redirector = "root://cmseos.fnal.gov/"
     elif argms.redirector == "iihe":
         redirector = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
+    elif argms.redirector == "local":
+        if argms.inputLFN == "ttjets": redirector="../myInFiles/TTjets/"
+        elif argms.inputLFN == "tttt_weights": redirector = "../myInFiles/TTTTweights/"
+        elif argms.inputLFN == "wjets": redirector = "../myInFiles/Wjets/"
+        elif argms.inputLFN == "tttt": redirector = "../myInFiles/TTTT/"
+        else: return 0
     else: return 0
     files=[]
 
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
     # you may want to change path to suit your file ordering
-    if argms.inputLFN == "ttjets":
-        inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
+    if argms.inputLFN == "ttjets": # tt + jets MC
+        if argms.redirector == "local": inputLFNList =  open("../myInFiles/TTjets/TTjets_files.txt", "r")
+        else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
         outtputFile = "OutHistosTTjets.root"
-    elif argms.inputLFN == "tttt_weights":
-        inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC PSWeights
+    elif argms.inputLFN == "tttt_weights": # tttt MC PSWeights
+        if argms.redirector == "local": inputLFNList =  open("../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
+        else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT_PSWeights"
         outtputFile = "OutHistosTTTTweights.root"
-    elif argms.inputLFN == "wjets":
-        inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # W (to Lep + Nu) + jets
+    elif argms.inputLFN == "wjets": # W (to Lep + Nu) + jets
+        if  argms.redirector == "local": inputLFNList =  open("../myInFiles/Wjets/Wjets_files.txt", "r")
+        else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "WJetsToLNu"
         outtputFile = "OutHistosWjets.root"
-    elif argms.inputLFN == "tttt":
-        inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
+    elif argms.inputLFN == "tttt": # tttt MC
+        if argms.redirector == "local": inputLFNList =  open("../myInFiles/TTTT/TTTT_files.txt", "r")
+        else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
         outtputFile = "OutHistosTTTT.root"
     else: return 0
 
-    iterat=0
+    iterat = 0
     for line in inputLFNList:
-        iterat+=1
-        if iterat > 1: continue
+        iterat += 1
+        #if iterat > 10: break
         #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
         files.append(redirector + str(line).replace('\n','') )
 
