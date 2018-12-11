@@ -1,7 +1,9 @@
-# Remote Work
+# Nikos - Four Top Production Repository
 Repository for Working in the Single Lepton tttt decay channel
 
-To produce a text file of triggers( and other unwanted stuff, which will be removed) do:
+## Combining High-Level-Trigger (HLT)
+
+To produce a text file of [triggers](https://twiki.cern.ch/twiki/bin/view/CMS/TriggerStudies)( and other unwanted stuff, which will be removed) do:
 ```
 $ HLTnames.py | tee LeafNames.txt
 ```
