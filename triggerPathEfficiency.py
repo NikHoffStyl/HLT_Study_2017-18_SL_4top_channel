@@ -2,12 +2,31 @@ import os, errno
 import ROOT
 from ROOT import TLatex
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from datetime import datetime 
+from datetime import datetime
 
-def main():
+def process_arguments():
+    """ Process command-line arguments """
+
+    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-f", "--inputLFN", choices= ["ttjets","tttt", "tttt_weights", "wjets"],
+                        default = "tttt", help= "Set list of input files")
+    args = parser.parse_args()
+    return args
+
+def main(argms):
     """ This code merges histograms, only for specific root file """
 
     # - TODO: Add Command line arguments
+    if argms.inputLFN == "ttjets":
+        inputFile = "OutHistosTTjets.root"
+    elif argms.inputLFN == "tttt_weights":
+        inputFile = "OutHistosTTTTweights.root"
+    elif argms.inputLFN == "wjets":
+        inputFile = "OutHistosWjets.root"
+    elif argms.inputLFN == "tttt":
+        inputFile = "OutHistosTTTT.root"
+    else:
+        inputFile = "OutHistosTTTT.root"
     
     # - Initialise variables
     time_ = datetime.now()
@@ -24,7 +43,7 @@ def main():
 
     # - Open file and sub folder
     #h_PtTriggerStack = ROOT.THStack('h_PtTriggerStack', ';muon p_{T} (GeV); Events ')
-    histFile = ROOT.TFile.Open("../RWOutput/OutHistoMaker2.root")
+    histFile = ROOT.TFile.Open(inputFile)
     histFile.cd("plots")
 
     # - Jet HT histograms
@@ -197,40 +216,40 @@ def main():
     h_jetHtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
     h_jetHtTriggerRatio1.SetStats(False)
     h_jetHtTriggerRatio1.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1.SetLineStyle(2)
-    #h_jetHtTriggerRatio1.Draw()
+    h_jetHtTriggerRatio1.SetLineStyle(2)
+    h_jetHtTriggerRatio1.Draw()
     h_jetHtTriggerRatio1_2 = (h_jetHtT1_2).Clone("h_jetPtTriggerRatio1_2")
     h_jetHtTriggerRatio1_2.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1_2.SetLineStyle(2)
+    h_jetHtTriggerRatio1_2.SetLineStyle(2)
     h_jetHtTriggerRatio1_2.Draw('same')
     h_jetHtTriggerRatio1_3 = (h_jetHtT1_3).Clone("h_jetPtTriggerRatio1_3")
     h_jetHtTriggerRatio1_3.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1_3.SetLineStyle(2)
-   # h_jetHtTriggerRatio1_3.Draw('same')
+    h_jetHtTriggerRatio1_3.SetLineStyle(2)
+    h_jetHtTriggerRatio1_3.Draw('same')
     h_jetHtTriggerRatio1_4 = (h_jetHtT1_4).Clone("h_jetPtTriggerRatio1_4")
     h_jetHtTriggerRatio1_4.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1_4.SetLineStyle(2)
-  #  h_jetHtTriggerRatio1_4.Draw('same')
+    h_jetHtTriggerRatio1_4.SetLineStyle(2)
+    h_jetHtTriggerRatio1_4.Draw('same')
     h_jetHtTriggerRatio2 = (h_jetHtT2).Clone("h_jetPtTriggerRatio2")
     h_jetHtTriggerRatio2.Divide(h_jetHt)
-    # h_jetHtTriggerRatio2.SetLineStyle(7)
+    h_jetHtTriggerRatio2.SetLineStyle(7)
     h_jetHtTriggerRatio2.Draw('same')
     h_jetHtTriggerRatio3_1 = (h_jetHtT3_1).Clone("h_jetPtTriggerRatio3_1")
     h_jetHtTriggerRatio3_1.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_1.SetLineStyle(1)
-#    h_jetHtTriggerRatio3_1.Draw('same')
+    h_jetHtTriggerRatio3_1.SetLineStyle(1)
+    h_jetHtTriggerRatio3_1.Draw('same')
     h_jetHtTriggerRatio3_2 = (h_jetHtT3_2).Clone("h_jetPtTriggerRatio3_2")
     h_jetHtTriggerRatio3_2.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_2.SetLineStyle(1)
-#    h_jetHtTriggerRatio3_2.Draw('same')
+    h_jetHtTriggerRatio3_2.SetLineStyle(1)
+    h_jetHtTriggerRatio3_2.Draw('same')
     h_jetHtTriggerRatio3_3 = (h_jetHtT3_3).Clone("h_jetPtTriggerRatio3_3")
     h_jetHtTriggerRatio3_3.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_3.SetLineStyle(1)
- #   h_jetHtTriggerRatio3_3.Draw('same')
+    h_jetHtTriggerRatio3_3.SetLineStyle(1)
+    h_jetHtTriggerRatio3_3.Draw('same')
     h_jetHtTriggerRatio3_4 = (h_jetHtT3_4).Clone("h_jetPtTriggerRatio3_4")
     h_jetHtTriggerRatio3_4.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_4.SetLineStyle(1)
-#    h_jetHtTriggerRatio3_4.Draw('same')
+    h_jetHtTriggerRatio3_4.SetLineStyle(1)
+    h_jetHtTriggerRatio3_4.Draw('same')
     legg2 = ROOT.TLegend(0.3, 0.1,0.85, 0.5)
     legg2.AddEntry(h_jetHtTriggerRatio1, triggerPath1_1, "l")
     legg2.AddEntry(h_jetHtTriggerRatio1_2, triggerPath1_2, "l")
@@ -248,40 +267,40 @@ def main():
     triggerCanvas.cd(4)
     h_muonPtTriggerRatio1 = (h_muonPtT1_1).Clone("h_muonPtTriggerRatio1")
     h_muonPtTriggerRatio1.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1.SetLineStyle(2)
- #   h_muonPtTriggerRatio1.Draw()
+    h_muonPtTriggerRatio1.SetLineStyle(2)
+    h_muonPtTriggerRatio1.Draw()
     h_muonPtTriggerRatio1_2 = (h_muonPtT1_2).Clone("h_muonPtTriggerRatio1_2")
     h_muonPtTriggerRatio1_2.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1_2.SetLineStyle(2)
-#    h_muonPtTriggerRatio1_2.Draw('same')
+    h_muonPtTriggerRatio1_2.SetLineStyle(2)
+    h_muonPtTriggerRatio1_2.Draw('same')
     h_muonPtTriggerRatio1_3 = (h_muonPtT1_3).Clone("h_muonPtTriggerRatio1_3")
     h_muonPtTriggerRatio1_3.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1_3.SetLineStyle(2)
- #   h_muonPtTriggerRatio1_3.Draw('same')
+    h_muonPtTriggerRatio1_3.SetLineStyle(2)
+    h_muonPtTriggerRatio1_3.Draw('same')
     h_muonPtTriggerRatio1_4 = (h_muonPtT1_4).Clone("h_muonPtTriggerRatio1_4")
     h_muonPtTriggerRatio1_4.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1_4.SetLineStyle(2)
-  #  h_muonPtTriggerRatio1_4.Draw('same')
+    h_muonPtTriggerRatio1_4.SetLineStyle(2)
+    h_muonPtTriggerRatio1_4.Draw('same')
     h_muonPtTriggerRatio2 = (h_muonPtT2).Clone("h_muonPtTriggerRatio2")
     h_muonPtTriggerRatio2.Divide(h_muonPt)
-    # h_muonPtTriggerRatio2.SetLineStyle(7)
+    h_muonPtTriggerRatio2.SetLineStyle(7)
     h_muonPtTriggerRatio2.Draw('same')
     h_muonPtTriggerRatio3_1 = (h_muonPtT3_1).Clone("h_muonPtTriggerRatio3_1")
     h_muonPtTriggerRatio3_1.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_1.SetLineStyle(1)
- #   h_muonPtTriggerRatio3_1.Draw('same')
+    h_muonPtTriggerRatio3_1.SetLineStyle(1)
+    h_muonPtTriggerRatio3_1.Draw('same')
     h_muonPtTriggerRatio3_2 = (h_muonPtT3_2).Clone("h_muonPtTriggerRatio3_2")
     h_muonPtTriggerRatio3_2.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_2.SetLineStyle(1)
- #   h_muonPtTriggerRatio3_2.Draw('same')
+    h_muonPtTriggerRatio3_2.SetLineStyle(1)
+    h_muonPtTriggerRatio3_2.Draw('same')
     h_muonPtTriggerRatio3_3 = (h_muonPtT3_3).Clone("h_muonPtTriggerRatio3_3")
     h_muonPtTriggerRatio3_3.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_3.SetLineStyle(1)
+    h_muonPtTriggerRatio3_3.SetLineStyle(1)
     h_muonPtTriggerRatio3_3.Draw('same')
     h_muonPtTriggerRatio3_4 = (h_muonPtT3_4).Clone("h_muonPtTriggerRatio3_4")
     h_muonPtTriggerRatio3_4.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_4.SetLineStyle(1)
-#    h_muonPtTriggerRatio3_4.Draw('same')
+    h_muonPtTriggerRatio3_4.SetLineStyle(1)
+    h_muonPtTriggerRatio3_4.Draw('same')
     h_muonPtTriggerRatio1.SetTitle("Trigger Efficiency vs muon p_{T};muon p_{T} (GeV);Trigger Efficiency")
     h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
     h_muonPtTriggerRatio1.SetStats(False)
@@ -317,4 +336,4 @@ def main():
     #eventPrgCanvas.Print("eventProgress.png")
     histFile.Close()
 
-main()
+main(process_arguments())

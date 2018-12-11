@@ -10,16 +10,10 @@ def process_arguments():
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices= ["ttjets","tttt", "tttt_weights", "wjets"],
-                        help= "Set list of input files")
+                        default = "tttt", help= "Set list of input files")
     parser.add_argument("-r", "--redirector", choices= ["xrd-global","xrdUS","xrdEU_Asia", "eos", "iihe"],
-                        help= "Sets redirector to query locations for LFN")
-
-    # parser.add_argument("--ttjets", action = "store_true", help="Set input files to tt + jets MC")
-    # parser.add_argument("--tttt", action = "store_true", help="Set input files to tttt MC")
-    # parser.add_argument("--tttt_weights", action = "store_true", help="Set input files to tttt MC with PSWeights")
-    # parser.add_argument("--wjets", action = "store_true", help="Set input files to W (to lep + Nu) +jets MC")
+                        default = "xrd-global", help= "Sets redirector to query locations for LFN")
     args = parser.parse_args()
-
     return args
 
 def main(argms):
@@ -33,8 +27,9 @@ def main(argms):
         redirector = "root://xrootd-cms.infn.it/"
     elif argms.redirector == "eos":
         redirector = "root://cmseos.fnal.gov/"
-    else:
+    elif argms.redirector == "iihe":
         redirector = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
+    else: return 0
     files=[]
 
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
@@ -42,35 +37,37 @@ def main(argms):
     if argms.inputLFN == "ttjets":
         inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # tt + jets MC
         thePostFix = "TTJets_SL"
+        outtputFile = "OutHistosTTjets.root"
     elif argms.inputLFN == "tttt_weights":
         inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC PSWeights
         thePostFix = "TTTT_PSWeights"
+        outtputFile = "OutHistosTTTTweights.root"
     elif argms.inputLFN == "wjets":
         inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r") # W (to Lep + Nu) + jets
         thePostFix = "WJetsToLNu"
-    else:
+        outtputFile = "OutHistosWjets.root"
+    elif argms.inputLFN == "tttt":
         inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r") # tttt MC
         thePostFix = "TTTT"
+        outtputFile = "OutHistosTTTT.root"
+    else: return 0
 
 
     for line in inputLFNList:
+        if line > 10: break
         #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
         files.append(redirector + str(line).replace('\n','') )
 
-    """for file in files:
-          print(file)"""
-    #onefile=[files[0]]
-
     p99=PostProcessor(".",
                       files,
-                      #onefile,
+                      #files[0],
                       cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
                       modules=[HistogramMaker()],
                       jsonInput=None,
                       noOut=True,
                       justcount=False,
                       postfix=thePostFix,
-                      histFileName="../RWOutput/OutHistoMaker2.root",
+                      histFileName=outtputFile,
                       histDirName="plots",
                       #branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                       outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
