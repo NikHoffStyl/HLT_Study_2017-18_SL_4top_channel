@@ -48,11 +48,13 @@ def main(argms):
     # - Jet HT histograms
     h_jetHt = ROOT.gDirectory.Get("h_jetHt_notrigger")
     h_jetHt.SetLineColor(1)
+    h_jetHt.SetTitle("no trigger")
     if not (h_jetHt):
         print("jetHt histogram is empty")
     h_jetHtT1_1 = ROOT.gDirectory.Get("h_jetHt_" + triggerPath1_1)
     h_jetHtT1_1.SetLineStyle(2)
     h_jetHtT1_1.SetLineColor(2)
+    h_jetHtT1_1.SetTitle("PFHT380")
     if not (h_jetHtT1_1):
         print("jetPtT1 histogram is empty")
     # h_jetHtT1_2 = ROOT.gDirectory.Get("h_jetHt_" + triggerPath1_2)
@@ -167,8 +169,8 @@ def main(argms):
     # h_jetHtT3_2.Draw('same')
     # h_jetHtT3_3.Draw('same')
     # h_jetHtT3_4.Draw('same')
-    cv1.BuildLegend(0.5,0.4, 0.5, 0.4)
-
+    legg=cv1.BuildLegend()
+    ROOT.gStyle.SetLegendTextSize(0.03)
 
     cv3=triggerCanvas.cd(3)
     h_muonPt.GetYaxis().SetTitleOffset(1.5)
@@ -182,7 +184,8 @@ def main(argms):
     # h_muonPtT3_2.Draw('same')
     # h_muonPtT3_3.Draw('same')
     # h_muonPtT3_4.Draw('same')
-    cv3.BuildLegend(0.5,0.4, 0.5, 0.4)
+    cv3.BuildLegend(0.4,0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.04)
 
     cv2=triggerCanvas.cd(2)
     h_jetHtTriggerRatio1 = (h_jetHtT1_1).Clone("h_jetPtTriggerRatio1")
@@ -224,7 +227,8 @@ def main(argms):
     # h_jetHtTriggerRatio3_4.Divide(h_jetHt)
     # h_jetHtTriggerRatio3_4.SetLineStyle(1)
     # h_jetHtTriggerRatio3_4.Draw('same')
-    cv2.BuildLegend(0.5,0.4, 0.5, 0.4)
+    cv2.BuildLegend(0.4,0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.04)
 
     cv4=triggerCanvas.cd(4)
     h_muonPtTriggerRatio1 = (h_muonPtT1_1).Clone("h_muonPtTriggerRatio1")
@@ -266,7 +270,8 @@ def main(argms):
     h_muonPtTriggerRatio1.SetTitle(";muon p_{T} (GeV);Trigger Efficiency")
     h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
     h_muonPtTriggerRatio1.SetStats(False)
-    cv4.BuildLegend(0.5,0.4, 0.5, 0.4)
+    cv4.BuildLegend(0.4,0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.04)
 
     #######################
     # Save Canvas to File #

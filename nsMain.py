@@ -72,7 +72,7 @@ def main(argms):
     p99=PostProcessor(".",
                       files,
                       #files[0],
-                      cut="nJet > 5 && Jet_jetId >2 && abs(Jet_eta) <2.4 &&( nMuon >0 || nElectron >0 ) && Muon_softId == True",
+                      cut="nJet > 5 && Jet_jetId>2 &&( nMuon >0 || nElectron >0 )",
                       modules=[HistogramMaker()],
                       jsonInput=None,
                       noOut=True,
