@@ -65,7 +65,7 @@ def main(argms):
     iterat = 0
     for line in inputLFNList:
         iterat += 1
-        #if iterat > 10: break
+        if iterat > 5: break
         #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
         files.append(redirector + str(line).replace('\n','') )
 
