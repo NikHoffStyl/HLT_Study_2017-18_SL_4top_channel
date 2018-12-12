@@ -44,7 +44,7 @@ def main(argms):
         if argms.redirector == "local": inputLFNList =  open("../myInFiles/TTjets/TTjets_files.txt", "r")
         else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
-        outtputFile = "OutHistosTTjets.root"
+        outtputFile = "OutHistosTT6jets.root"
     elif argms.inputLFN == "tttt_weights": # tttt MC PSWeights
         if argms.redirector == "local": inputLFNList =  open("../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
         else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r")
