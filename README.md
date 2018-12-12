@@ -1,7 +1,7 @@
 # [Nikos - Four Top Production Repository](https://github.com/NikHoffStyl/RemoteWork)
 Repository for Working in the Single Lepton tttt decay channel. 
 
-## Combining High-Level-Trigger (HLT)
+## Combining High-Level-Trigger (HLT) :high_brightness:
 
   * To produce a text file of [triggers](https://twiki.cern.ch/twiki/bin/view/CMS/TriggerStudies)
 ( and other unwanted stuff, which will be removed) do:
@@ -47,4 +47,4 @@ and exit if trigger does not exist.
 At the moment it makes more sense not to introduce command line args for triggers as 
 this code is only ~~used~~ by me!
 
-
+When this is done and saved :floppy_disk:, sit back relax and have many :beers:.
