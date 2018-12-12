@@ -130,9 +130,9 @@ def main(argms):
     h_muonPtT3_1.SetLineColor(2)
     if not (h_muonPtT3_1):
         print("muonPtT3_1 histogram is empty")
-    h_muonPtT3_2 = ROOT.gDirectory.Get("h_muonPt_combination2")
-    h_muonPtT3_2.SetLineStyle(1)
-    h_muonPtT3_2.SetLineColor(4)
+    # h_muonPtT3_2 = ROOT.gDirectory.Get("h_muonPt_combination2")
+    # h_muonPtT3_2.SetLineStyle(1)
+    # h_muonPtT3_2.SetLineColor(4)
     # if not (h_muonPtT3_2):
     #     print("muonPtT3_2 histogram is empty")
     # h_muonPtT3_3 = ROOT.gDirectory.Get("h_muonPt_combination3")
