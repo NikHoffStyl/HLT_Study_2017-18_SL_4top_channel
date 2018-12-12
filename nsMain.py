@@ -59,7 +59,7 @@ def main(argms):
         if argms.redirector == "local": inputLFNList =  open("../myInFiles/TTTT/TTTT_files.txt", "r")
         else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
-        outtputFile = "OutHistosTTTT.root"
+        outtputFile = "OutHistosTTTT_6jets.root"
     else: return 0
 
     iterat = 0
@@ -72,7 +72,7 @@ def main(argms):
     p99=PostProcessor(".",
                       files,
                       #files[0],
-                      cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
+                      cut="nJet > 5 && Jet_jetId >2 && abs(Jet_eta) <2.4 &&( nMuon >0 || nElectron >0 ) && Muon_softId == true",
                       modules=[HistogramMaker()],
                       jsonInput=None,
                       noOut=True,

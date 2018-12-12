@@ -161,7 +161,7 @@ class HistogramMaker(Module):
             # # - Minimum 30GeV Pt on the jets
             # # - Only look at jets within |eta| < 2.4
             # - FIXME: Correct identification cuts for jets.
-            if jet.jetId<2 or jet.pt<30 or jet.eta>2.4 :continue
+            if jet.jetId<2 or jet.pt<30 or abs(jet.eta)>2.4 :continue
             else:nJetPass +=1
 
             #Count b-tagged jets with two algos at the medium working point
@@ -191,7 +191,7 @@ class HistogramMaker(Module):
                     continue
                 else:firstMuonPass=True
 
-            if nm ==0 and nJetPass >4 and firstMuonPass == True and nBtagPass >0:
+            if nm ==0 and nJetPass >5 and firstMuonPass == True and nBtagPass >0:
                 if trigPath[self.triggerPath1_1]:
                     self.h_muonPt[self.triggerPath1_1].Fill(muon.pt)
                 if trigPath[self.triggerPath1_2]:
@@ -212,7 +212,7 @@ class HistogramMaker(Module):
                     self.h_muonPt['combination4'].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
 
-        if nJetPass >4 and nBtagPass >0:
+        if nJetPass >5 and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
             if trigPath[self.triggerPath1_1]:self.h_eventsPrg.Fill(2)
             if trigPath[self.triggerPath1_2]:self.h_eventsPrg.Fill(3)
@@ -224,7 +224,7 @@ class HistogramMaker(Module):
             if passComb3: self.h_eventsPrg.Fill(9)
             if passComb4: self.h_eventsPrg.Fill(10)
 
-        if nJetPass >4 and firstMuonPass==True and nBtagPass >0:
+        if nJetPass >5 and firstMuonPass==True and nBtagPass >0:
             if trigPath[self.triggerPath1_1]:
                 self.h_jetHt[self.triggerPath1_1].Fill(jetHT["t1_1"])
             if trigPath[self.triggerPath1_2]:
