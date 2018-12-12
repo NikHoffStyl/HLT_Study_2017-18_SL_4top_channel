@@ -57,8 +57,8 @@ class HistogramMaker(Module):
         # self.h_jetHt[self.triggerPath1_4] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_4,
         #                                               self.triggerPath1_4 + ';H_{T};Events', 200, 0, 2300)
         # self.addObject(self.h_jetHt[self.triggerPath1_4])
-        # self.h_jetHt[self.triggerPath2] = ROOT.TH1D('h_jetHt_' + self.triggerPath2,
-        #                                              self.triggerPath2 + ';H_{T};Events', 200, 0, 2300)
+        self.h_jetHt[self.triggerPath2] = ROOT.TH1D('h_jetHt_' + self.triggerPath2,
+                                                     self.triggerPath2 + ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt[self.triggerPath2])
         self.h_jetHt['combination1'] = ROOT.TH1D('h_jetHt_combination1', self.triggerPath1_1 + 'and' + self.triggerPath2 +
                                              ';H_{T};Events', 200, 0, 2300)
@@ -89,9 +89,9 @@ class HistogramMaker(Module):
         # self.h_muonPt[self.triggerPath1_4] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_4,
         #                                                self.triggerPath1_4 + ';Muon P_{T};Events', 200, 0, 170)
         # self.addObject(self.h_muonPt[self.triggerPath1_4])
-        # self.h_muonPt[self.triggerPath2] = ROOT.TH1D('h_muonPt_' + self.triggerPath2,
-        #                                               self.triggerPath2 + ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt[self.triggerPath2])
+        self.h_muonPt[self.triggerPath2] = ROOT.TH1D('h_muonPt_' + self.triggerPath2,
+                                                      self.triggerPath2 + ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt[self.triggerPath2])
         self.h_muonPt['combination1'] = ROOT.TH1D('h_muonPt_combination1', self.triggerPath1_1 + 'and' + self.triggerPath2 +
                                               ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['combination1'])
