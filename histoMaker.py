@@ -24,7 +24,7 @@ class HistogramMaker(Module):
         if TrigLst is None: self.trigLst=[]
         else:
             self.trigLst = TrigLst
-            for i in range(self.numTriggers):
+            for i in range(self.numTriggers -1):
                 self.trigCombination[i] = [self.trigLst[i+1], self.trigLst[0]]
 
         # - Define Dictionaries
@@ -49,7 +49,7 @@ class HistogramMaker(Module):
             self.addObject(self.h_jetHt[trgPath])
             self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 200, 0, 170)
             self.addObject(self.h_muonPt[trgPath])
-        for i in range(self.numTriggers):
+        for i in range(self.numTriggers -1):
             self.h_jetHt['combination' + str(i+1)] = ROOT.TH1D('h_jetHt_combination' + str(i+1), self.trigLst[i+1] + 'and' + self.trigLst[0] +
                                                      ';H_{T};Events', 200, 1, 2300)
             self.addObject(self.h_jetHt['combination' + str(i+1)])
@@ -84,7 +84,7 @@ class HistogramMaker(Module):
             for tg in self.trigDict[key]:
                 trigPath[tg] = getattr(HLTObj,tg)
     
-        for i in range(self.numTriggers):
+        for i in range(self.numTriggers -1):
             passComb[i] = False
             for trig in self.trigCombination[i]:
                 if trigPath[trig]:
@@ -111,8 +111,9 @@ class HistogramMaker(Module):
             if jet.btagDeepFlavB > 0.7489: nBtagPass +=1
 
             # Calculate jetHT for different trigger paths and combinations of them
-            for i in range(self.numTriggers):
-                if trigPath[self.trigLst[i]]: jetHT["t" + str(i)] += jet.pt
+            if trigPath[self.trigLst[0]]: jetHT["t0"] += jet.pt
+            for i in range(self.numTriggers -1):
+                if trigPath[self.trigLst[i+1]]: jetHT["t" + str(i+1)] += jet.pt
                 if passComb[i]: jetHT["comb" + str(i+1)] += jet.pt
             jetHT["notrig"] += jet.pt
 
@@ -138,7 +139,7 @@ class HistogramMaker(Module):
         if nJetPass >5 and firstMuonPass==True and nBtagPass >0:
             for i in range(self.numTriggers):
                 if trigPath[self.trigLst[i]]: self.h_jetHt[self.trigLst[i]].Fill(jetHT["t" +str(i)])
-                if passComb[i]1: self.h_jetHt['combination' + str(i+1)].Fill(jetHT["comb" + str(i+1)])
+                if passComb[i]: self.h_jetHt['combination' + str(i+1)].Fill(jetHT["comb" + str(i+1)])
             self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True
