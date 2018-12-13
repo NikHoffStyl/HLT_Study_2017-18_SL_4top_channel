@@ -69,11 +69,23 @@ def main(argms):
         #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
         files.append(redirector + str(line).replace('\n','') )
 
+    trigDictionary={"HT": ['PFHT180', 'PFHT250', 'PFHT370', 'PFHT430','PFHT510',
+                     'PFHT590', 'PFHT680', 'PFHT780', 'PFHT890', 'PFHT1050',
+                     'PFHT380_SixPFJet32', 'PFHT430_SixPFJet40',
+                     'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2',
+                     'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2',
+                     'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
+                    "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
+                    }
+
     p99=PostProcessor(".",
                       files,
                       #files[0],
                       cut="nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 &&( nMuon >0 || nElectron >0 ) && Muon_softId == 1",
-                      modules=[HistogramMaker(trigLst = ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2','IsoMu24'])],
+                      modules=[HistogramMaker(writeHistFile=True,
+                                              EventLimit = -1,
+                                              trigDict=trigDictionary,
+                                              trigLst = ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2','IsoMu24'])],
                       jsonInput=None,
                       noOut=True,
                       justcount=False,

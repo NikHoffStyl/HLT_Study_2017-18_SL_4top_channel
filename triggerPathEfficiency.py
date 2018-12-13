@@ -240,7 +240,9 @@ def main(argms):
 
     cv4=triggerCanvas.cd(4)
     h_muonPtTriggerRatio1 = (h_muonPtT1_1).Clone("h_muonPtTriggerRatio1")
-    h_muonPtTriggerRatio1.SetTitle("PFHT380")
+    h_muonPtTriggerRatio1.SetTitle("PFHT380;muon p_{T} (GeV);Trigger Efficiency")
+    h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
+    h_muonPtTriggerRatio1.SetStats(False)
     h_muonPtTriggerRatio1.Divide(h_muonPt)
     h_muonPtTriggerRatio1.SetLineStyle(2)
     h_muonPtTriggerRatio1.Draw()
@@ -278,9 +280,6 @@ def main(argms):
     # h_muonPtTriggerRatio3_4.Divide(h_muonPt)
     # h_muonPtTriggerRatio3_4.SetLineStyle(1)
     # h_muonPtTriggerRatio3_4.Draw('same')
-    h_muonPtTriggerRatio1.SetTitle(";muon p_{T} (GeV);Trigger Efficiency")
-    h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
-    h_muonPtTriggerRatio1.SetStats(False)
     cv4.BuildLegend(0.4,0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.04)
 
