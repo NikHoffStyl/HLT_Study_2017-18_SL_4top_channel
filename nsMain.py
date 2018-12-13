@@ -13,6 +13,11 @@ def process_arguments():
                         default = "tttt", help= "Set list of input files")
     parser.add_argument("-r", "--redirector", choices= ["xrd-global","xrdUS","xrdEU_Asia", "eos", "iihe", "local"],
                         default = "local", help= "Sets redirector to query locations for LFN")
+    parser.add_argument("-nw", "--noWriteFile", action = "store_true",
+                        help="Does not output a ROOT file, which contains the histograms.")
+    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
+                        help="Set a limit to the number of events.")
+    #parser.add_argument("-t", "--triggerList", type=[], default = ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2','IsoMu24'])
     args = parser.parse_args()
     return args
 
@@ -62,6 +67,9 @@ def main(argms):
         outtputFile = "OutHistosTTTT_6jets.root"
     else: return 0
 
+    if argms.noWriteFile: writeFile=False
+    else: writeFile = True
+
     iterat = 0
     for line in inputLFNList:
         iterat += 1
@@ -82,10 +90,10 @@ def main(argms):
                       files,
                       #files[0],
                       cut="nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 &&( nMuon >0 || nElectron >0 ) && Muon_softId == 1",
-                      modules=[HistogramMaker(writeHistFile=True,
-                                              EventLimit = -1,
+                      modules=[HistogramMaker(writeHistFile=writeFile,
+                                              EventLimit = argms.eventLimit,
                                               trigDict=trigDictionary,
-                                              trigLst = ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2','IsoMu24'])],
+                                              trigLst = ['IsoMu24','PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2','PFHT380_SixPFJet32_DoublePFBTagCSV_2p2','PFHT430_SixPFJet40_PFBTagCSV_1p5','PFHT430_SixPFJet40'])],
                       jsonInput=None,
                       noOut=True,
                       justcount=False,

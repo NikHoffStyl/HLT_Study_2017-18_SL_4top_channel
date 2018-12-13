@@ -22,15 +22,10 @@ class HistogramMaker(Module):
         if trigLst is None: self.trigLst=[]
         else:
             self.trigLst = trigLst
-            #self.trigLst[0] = trigLst[0]#'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'
-            # self.triggerPath1_2='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
-            # self.triggerPath1_3='PFHT430_SixPFJet40_PFBTagCSV_1p5'
-            # self.triggerPath1_4='PFHT430_SixPFJet40'
-            #self.triggerPath2 = trigLst[1]#'IsoMu24'
-            self.trigCombination1 = [self.trigLst[0], self.trigLst[1]]
-            # self.trigCombination2 = [self.triggerPath1_2, self.trigLst[1]]
-            # self.trigCombination3 = [self.triggerPath1_3, self.trigLst[1]]
-            # self.trigCombination4 = [self.triggerPath1_4, self.trigLst[1]]
+            self.trigCombination1 = [self.trigLst[1], self.trigLst[0]]
+            self.trigCombination2 = [self.trigLst[2], self.trigLst[0]]
+            self.trigCombination3 = [self.trigLst[3], self.trigLst[0]]
+            self.trigCombination4 = [self.trigLst[4], self.trigLst[0]]
         self.h_jetHt = {}
         self.h_muonPt = {}
 
@@ -47,34 +42,18 @@ class HistogramMaker(Module):
             self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath,
                                                           trgPath + ';H_{T};Events', 200, 0, 2300)
             self.addObject(self.h_jetHt[trgPath])
-
-        # self.h_jetHt[self.trigLst[0]] = ROOT.TH1D('h_jetHt_' + self.trigLst[0],
-        #                                             self.trigLst[0] + ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt[self.trigLst[0]])
-        # self.h_jetHt[self.triggerPath1_2] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_2,
-        #                                             self.triggerPath1_2 + ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt[self.triggerPath1_2])
-        # self.h_jetHt[self.triggerPath1_3] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_3,
-        #                                             self.triggerPath1_3 + ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt[self.triggerPath1_3])
-        # self.h_jetHt[self.triggerPath1_4] = ROOT.TH1D('h_jetHt_' + self.triggerPath1_4,
-        #                                               self.triggerPath1_4 + ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt[self.triggerPath1_4])
-        # self.h_jetHt[self.trigLst[1]] = ROOT.TH1D('h_jetHt_' + self.trigLst[1],
-        #                                              self.trigLst[1] + ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt[self.trigLst[1]])
-        self.h_jetHt['combination1'] = ROOT.TH1D('h_jetHt_combination1', self.trigLst[0] + 'and' + self.trigLst[1] +
+        self.h_jetHt['combination1'] = ROOT.TH1D('h_jetHt_combination1', self.trigLst[1] + 'and' + self.trigLst[0] +
                                              ';H_{T};Events', 200, 0, 2300)
         self.addObject(self.h_jetHt['combination1'])
-        # self.h_jetHt['combination2'] = ROOT.TH1D('h_jetHt_combination2', self.triggerPath1_2 + 'and' + self.trigLst[1] +
-        #                                      ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt['combination2'])
-        # self.h_jetHt['combination3'] = ROOT.TH1D('h_jetHt_combination3', self.triggerPath1_3 + 'and' + self.trigLst[1] +
-        #                                      ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt['combination3'])
-        # self.h_jetHt['combination4'] = ROOT.TH1D('h_jetHt_combination4', self.triggerPath1_4 + 'and' + self.trigLst[1] +
-        #                                          ';H_{T};Events', 200, 0, 2300)
-        # self.addObject(self.h_jetHt['combination4'])
+        self.h_jetHt['combination2'] = ROOT.TH1D('h_jetHt_combination2', self.trigLst[2] + 'and' + self.trigLst[0] +
+                                             ';H_{T};Events', 200, 0, 2300)
+        self.addObject(self.h_jetHt['combination2'])
+        self.h_jetHt['combination3'] = ROOT.TH1D('h_jetHt_combination3', self.trigLst[3] + 'and' + self.trigLst[0] +
+                                             ';H_{T};Events', 200, 0, 2300)
+        self.addObject(self.h_jetHt['combination3'])
+        self.h_jetHt['combination4'] = ROOT.TH1D('h_jetHt_combination4', self.trigLst[4] + 'and' + self.trigLst[0] +
+                                                 ';H_{T};Events', 200, 0, 2300)
+        self.addObject(self.h_jetHt['combination4'])
 
         ##
         # - Defining Muon pT histograms to be saved to file
@@ -86,34 +65,18 @@ class HistogramMaker(Module):
             self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath,
                                                            trgPath + ';Muon P_{T};Events', 200, 0, 170)
             self.addObject(self.h_muonPt[trgPath])
-
-        # self.h_muonPt[self.trigLst[0]] = ROOT.TH1D('h_muonPt_' + self.trigLst[0],
-        #                                              self.trigLst[0] + ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt[self.trigLst[0]])
-        # self.h_muonPt[self.triggerPath1_2] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_2,
-        #                                              self.triggerPath1_2 + ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt[self.triggerPath1_2])
-        # self.h_muonPt[self.triggerPath1_3] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_3,
-        #                                              self.triggerPath1_3 + ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt[self.triggerPath1_3])
-        # self.h_muonPt[self.triggerPath1_4] = ROOT.TH1D('h_muonPt_' + self.triggerPath1_4,
-        #                                                self.triggerPath1_4 + ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt[self.triggerPath1_4])
-        # self.h_muonPt[self.trigLst[1]] = ROOT.TH1D('h_muonPt_' + self.trigLst[1],
-        #                                               self.trigLst[1] + ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt[self.trigLst[1]])
-        self.h_muonPt['combination1'] = ROOT.TH1D('h_muonPt_combination1', self.trigLst[0] + 'and' + self.trigLst[1] +
+        self.h_muonPt['combination1'] = ROOT.TH1D('h_muonPt_combination1', self.trigLst[1] + 'and' + self.trigLst[0] +
                                               ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['combination1'])
-        # self.h_muonPt['combination2'] = ROOT.TH1D('h_muonPt_combination2', self.triggerPath1_2 + 'and' + self.trigLst[1] +
-        #                                       ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt['combination2'])
-        # self.h_muonPt['combination3'] = ROOT.TH1D('h_muonPt_combination3', self.triggerPath1_3 + 'and' + self.trigLst[1] +
-        #                                       ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt['combination3'])
-        # self.h_muonPt['combination4'] = ROOT.TH1D('h_muonPt_combination4', self.triggerPath1_4 + 'and' + self.trigLst[1] +
-        #                                           ';Muon P_{T};Events', 200, 0, 170)
-        # self.addObject(self.h_muonPt['combination4'])
+        self.h_muonPt['combination2'] = ROOT.TH1D('h_muonPt_combination2', self.trigLst[2] + 'and' + self.trigLst[0] +
+                                              ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt['combination2'])
+        self.h_muonPt['combination3'] = ROOT.TH1D('h_muonPt_combination3', self.trigLst[3] + 'and' + self.trigLst[0] +
+                                              ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt['combination3'])
+        self.h_muonPt['combination4'] = ROOT.TH1D('h_muonPt_combination4', self.trigLst[4] + 'and' + self.trigLst[0] +
+                                                  ';Muon P_{T};Events', 200, 0, 170)
+        self.addObject(self.h_muonPt['combination4'])
 
         # - FIXME: May be a better way.
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';steps;entries', 11,0,11)
@@ -146,20 +109,20 @@ class HistogramMaker(Module):
             if trigPath[trig]:
                 passComb1 = True
 
-        # passComb2 = False
-        # for trig in self.trigCombination2:
-        #     if trigPath[trig]:
-        #         passComb2 = True
-        #
-        # passComb3 = False
-        # for trig in self.trigCombination3:
-        #     if trigPath[trig]:
-        #         passComb3 = True
-        #
-        # passComb4 = False
-        # for trig in self.trigCombination4:
-        #     if trigPath[trig]:
-        #         passComb4 = True
+        passComb2 = False
+        for trig in self.trigCombination2:
+            if trigPath[trig]:
+                passComb2 = True
+
+        passComb3 = False
+        for trig in self.trigCombination3:
+            if trigPath[trig]:
+                passComb3 = True
+
+        passComb4 = False
+        for trig in self.trigCombination4:
+            if trigPath[trig]:
+                passComb4 = True
 
         jetHT={"t1_1":0, "t1_2":0, "t1_3":0, "t1_4":0, "t2":0, "comb1":0, "comb2":0, "comb3":0, "comb4":0, "notrig":0}
         #for key in self.trigDict: jetHT.update({key:0})
@@ -180,15 +143,15 @@ class HistogramMaker(Module):
             if jet.btagDeepFlavB > 0.7489: nBtagPass +=1
 
             # Calculate jetHT for different trigger paths and combinations of them
-            if trigPath[self.trigLst[0]]: jetHT["t1_1"] += jet.pt
-            # if trigPath[self.triggerPath1_2]: jetHT["t1_2"] += jet.pt
-            # if trigPath[self.triggerPath1_3]: jetHT["t1_3"] += jet.pt
-            # if trigPath[self.triggerPath1_4]: jetHT["t1_4"] += jet.pt
-            if trigPath[self.trigLst[1]]: jetHT["t2"] += jet.pt
+            if trigPath[self.trigLst[1]]: jetHT["t1_1"] += jet.pt
+            if trigPath[self.trigLst[2]]: jetHT["t1_2"] += jet.pt
+            if trigPath[self.trigLst[3]]: jetHT["t1_3"] += jet.pt
+            if trigPath[self.trigLst[4]]: jetHT["t1_4"] += jet.pt
+            if trigPath[self.trigLst[0]]: jetHT["t2"] += jet.pt
             if passComb1: jetHT["comb1"] += jet.pt
-            # if passComb2: jetHT["comb2"] += jet.pt
-            # if passComb3: jetHT["comb3"] += jet.pt
-            # if passComb4: jetHT["comb4"] += jet.pt
+            if passComb2: jetHT["comb2"] += jet.pt
+            if passComb3: jetHT["comb3"] += jet.pt
+            if passComb4: jetHT["comb4"] += jet.pt
             jetHT["notrig"] += jet.pt
 
         for nm, muon in enumerate(muons) :
@@ -199,39 +162,39 @@ class HistogramMaker(Module):
                 else:firstMuonPass=True
 
             if nm ==0 and nJetPass >5 and firstMuonPass == True and nBtagPass >0:
-                if trigPath[self.trigLst[0]]: self.h_muonPt[self.trigLst[0]].Fill(muon.pt)
-                # if trigPath[self.triggerPath1_2]: self.h_muonPt[self.triggerPath1_2].Fill(muon.pt)
-                # if trigPath[self.triggerPath1_3]: self.h_muonPt[self.triggerPath1_3].Fill(muon.pt)
-                # if trigPath[self.triggerPath1_4]: self.h_muonPt[self.triggerPath1_4].Fill(muon.pt)
                 if trigPath[self.trigLst[1]]: self.h_muonPt[self.trigLst[1]].Fill(muon.pt)
+                if trigPath[self.trigLst[2]]: self.h_muonPt[self.trigLst[2]].Fill(muon.pt)
+                if trigPath[self.trigLst[3]]: self.h_muonPt[self.trigLst[3]].Fill(muon.pt)
+                if trigPath[self.trigLst[4]]: self.h_muonPt[self.trigLst[4]].Fill(muon.pt)
+                if trigPath[self.trigLst[0]]: self.h_muonPt[self.trigLst[0]].Fill(muon.pt)
                 if passComb1: self.h_muonPt['combination1'].Fill(muon.pt)
-                # if passComb2: self.h_muonPt['combination2'].Fill(muon.pt)
-                # if passComb3: self.h_muonPt['combination3'].Fill(muon.pt)
-                # if passComb4: self.h_muonPt['combination4'].Fill(muon.pt)
+                if passComb2: self.h_muonPt['combination2'].Fill(muon.pt)
+                if passComb3: self.h_muonPt['combination3'].Fill(muon.pt)
+                if passComb4: self.h_muonPt['combination4'].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
 
         if nJetPass >5 and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
-            if trigPath[self.trigLst[0]]:self.h_eventsPrg.Fill(2)
-            # if trigPath[self.triggerPath1_2]:self.h_eventsPrg.Fill(3)
-            # if trigPath[self.triggerPath1_3]:self.h_eventsPrg.Fill(4)
-            # if trigPath[self.triggerPath1_4]:self.h_eventsPrg.Fill(5)
-            if trigPath[self.trigLst[1]]:self.h_eventsPrg.Fill(6)
+            if trigPath[self.trigLst[1]]:self.h_eventsPrg.Fill(2)
+            if trigPath[self.trigLst[2]]:self.h_eventsPrg.Fill(3)
+            if trigPath[self.trigLst[3]]:self.h_eventsPrg.Fill(4)
+            if trigPath[self.trigLst[4]]:self.h_eventsPrg.Fill(5)
+            if trigPath[self.trigLst[0]]:self.h_eventsPrg.Fill(6)
             if passComb1: self.h_eventsPrg.Fill(7)
-            # if passComb2: self.h_eventsPrg.Fill(8)
-            # if passComb3: self.h_eventsPrg.Fill(9)
-            # if passComb4: self.h_eventsPrg.Fill(10)
+            if passComb2: self.h_eventsPrg.Fill(8)
+            if passComb3: self.h_eventsPrg.Fill(9)
+            if passComb4: self.h_eventsPrg.Fill(10)
 
         if nJetPass >5 and firstMuonPass==True and nBtagPass >0:
-            if trigPath[self.trigLst[0]]: self.h_jetHt[self.trigLst[0]].Fill(jetHT["t1_1"])
-            # if trigPath[self.triggerPath1_2]: self.h_jetHt[self.triggerPath1_2].Fill(jetHT["t1_2"])
-            # if trigPath[self.triggerPath1_3]: self.h_jetHt[self.triggerPath1_3].Fill(jetHT["t1_3"])
-            # if trigPath[self.triggerPath1_4]: self.h_jetHt[self.triggerPath1_4].Fill(jetHT["t1_4"])
-            if trigPath[self.trigLst[1]]: self.h_jetHt[self.trigLst[1]].Fill(jetHT["t2"])
+            if trigPath[self.trigLst[1]]: self.h_jetHt[self.trigLst[1]].Fill(jetHT["t1_1"])
+            if trigPath[self.trigLst[2]]: self.h_jetHt[self.trigLst[2]].Fill(jetHT["t1_2"])
+            if trigPath[self.trigLst[3]]: self.h_jetHt[self.trigLst[3]].Fill(jetHT["t1_3"])
+            if trigPath[self.trigLst[4]]: self.h_jetHt[self.trigLst[4]].Fill(jetHT["t1_4"])
+            if trigPath[self.trigLst[0]]: self.h_jetHt[self.trigLst[0]].Fill(jetHT["t2"])
             if passComb1: self.h_jetHt['combination1'].Fill(jetHT["comb1"])
-            # if passComb2: self.h_jetHt['combination2'].Fill(jetHT["comb2"])
-            # if passComb3: self.h_jetHt['combination3'].Fill(jetHT["comb3"])
-            # if passComb4: self.h_jetHt['combination4'].Fill(jetHT["comb4"])
+            if passComb2: self.h_jetHt['combination2'].Fill(jetHT["comb2"])
+            if passComb3: self.h_jetHt['combination3'].Fill(jetHT["comb3"])
+            if passComb4: self.h_jetHt['combination4'].Fill(jetHT["comb4"])
             self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True
