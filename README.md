@@ -24,15 +24,20 @@ The choice of triggers is given here, along with the preselection criteria.
 The help message given for [`nsMain.py`](nsMain.py) is:
 ```
 usage: nsMain.py [-h] [-f {ttjets,tttt,tttt_weights,wjets}]
-                 [-r {xrd-global,xrdUS,xrdEU_Asia,eos,iihe}]
+                 [-r {xrd-global,xrdUS,xrdEU_Asia,eos,iihe,local}] [-nw]
+                 [-e EVENTLIMIT]
 
 optional arguments:
   -h, --help            show this help message and exit
   -f {ttjets,tttt,tttt_weights,wjets}, --inputLFN {ttjets,tttt,tttt_weights,wjets}
-                        Set list of input files (default: None)
-  -r {xrd-global,xrdUS,xrdEU_Asia,eos,iihe}, --redirector {xrd-global,xrdUS,xrdEU_Asia,eos,iihe}
+                        Set list of input files (default: tttt)
+  -r {xrd-global,xrdUS,xrdEU_Asia,eos,iihe,local}, --redirector {xrd-global,xrdUS,xrdEU_Asia,eos,iihe,local}
                         Sets redirector to query locations for LFN (default:
-                        None)
+                        local)
+  -nw, --noWriteFile    Does not output a ROOT file, which contains the
+                        histograms. (default: False)
+  -e EVENTLIMIT, --eventLimit EVENTLIMIT
+                        Set a limit to the number of events. (default: -1)
 ```
 ___
 
