@@ -21,7 +21,7 @@ class HistogramMaker(Module):
         else: self.trigDict=trigDict
         if trigLst is None: self.trigLst=[]
         else:
-            self.trgLst = trigLst
+            self.trigLst = trigLst
             #self.trigLst[0] = trigLst[0]#'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'
             # self.triggerPath1_2='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
             # self.triggerPath1_3='PFHT430_SixPFJet40_PFBTagCSV_1p5'
@@ -82,7 +82,7 @@ class HistogramMaker(Module):
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['no_trigger'])
 
-        for trgPath in self.trgLst:
+        for trgPath in self.trigLst:
             self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath,
                                                            trgPath + ';Muon P_{T};Events', 200, 0, 170)
             self.addObject(self.h_muonPt[trgPath])

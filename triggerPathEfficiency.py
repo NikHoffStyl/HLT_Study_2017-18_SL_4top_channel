@@ -190,7 +190,7 @@ def main(argms):
     # h_muonPtT3_2.Draw('same')
     # h_muonPtT3_3.Draw('same')
     # h_muonPtT3_4.Draw('same')
-    cv3.BuildLegend(0.4,0.3, 0.4, 0.3)
+    cv3.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
 
     cv2=triggerCanvas.cd(2)
@@ -235,7 +235,7 @@ def main(argms):
     # h_jetHtTriggerRatio3_4.Divide(h_jetHt)
     # h_jetHtTriggerRatio3_4.SetLineStyle(1)
     # h_jetHtTriggerRatio3_4.Draw('same')
-    cv2.BuildLegend(0.4,0.3, 0.4, 0.3)
+    cv2.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
 
     cv4=triggerCanvas.cd(4)
@@ -264,7 +264,7 @@ def main(argms):
     h_muonPtTriggerRatio2.SetLineStyle(7)
     h_muonPtTriggerRatio2.Draw('same')
     h_muonPtTriggerRatio3_1 = (h_muonPtT3_1).Clone("h_muonPtTriggerRatio3_1")
-    h_muonPtTriggerRatio1.SetTitle("combined")
+    h_muonPtTriggerRatio3_1.SetTitle("combined")
     h_muonPtTriggerRatio3_1.Divide(h_muonPt)
     h_muonPtTriggerRatio3_1.SetLineStyle(1)
     h_muonPtTriggerRatio3_1.Draw('same')
@@ -280,7 +280,7 @@ def main(argms):
     # h_muonPtTriggerRatio3_4.Divide(h_muonPt)
     # h_muonPtTriggerRatio3_4.SetLineStyle(1)
     # h_muonPtTriggerRatio3_4.Draw('same')
-    cv4.BuildLegend(0.4,0.3, 0.4, 0.3)
+    cv4.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
 
     #######################
