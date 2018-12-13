@@ -11,13 +11,13 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 class HistogramMaker(Module):
     """ This class HistogramMaker() does as the name suggests. """
 
-    def __init__(self):
+    def __init__(self, trigLst = None):
         """ Initialise global variables """
 
         self.writeHistFile=True #Necessary for an output file to be created?
         self.counter = 0 #Define this global variable to count events
         self.EventLimit = -1 # 100000 -1 for no limit of events fully processed
-        self.trigList={"HT": ['PFHT180', 'PFHT250', 'PFHT370', 'PFHT430','PFHT510',
+        self.trigDict={"HT": ['PFHT180', 'PFHT250', 'PFHT370', 'PFHT430','PFHT510',
                        'PFHT590', 'PFHT680', 'PFHT780', 'PFHT890', 'PFHT1050',
                        'PFHT380_SixPFJet32', 'PFHT430_SixPFJet40',
                        'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2',
@@ -25,15 +25,19 @@ class HistogramMaker(Module):
                        'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
                        "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
                        }
-        self.triggerPath1_1 ='PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'
-        # self.triggerPath1_2='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
-        # self.triggerPath1_3='PFHT430_SixPFJet40_PFBTagCSV_1p5'
-        # self.triggerPath1_4='PFHT430_SixPFJet40'
-        self.triggerPath2 = 'IsoMu24'
-        self.trigCombination1 = [self.triggerPath1_1, self.triggerPath2]
-        # self.trigCombination2 = [self.triggerPath1_2, self.triggerPath2]
-        # self.trigCombination3 = [self.triggerPath1_3, self.triggerPath2]
-        # self.trigCombination4 = [self.triggerPath1_4, self.triggerPath2]
+        if trigLst is None:
+            self.trigLst=[]
+        else:
+            self.trgLst = trigLst
+            self.triggerPath1_1 = trigLst[0]#'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'
+            # self.triggerPath1_2='PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'
+            # self.triggerPath1_3='PFHT430_SixPFJet40_PFBTagCSV_1p5'
+            # self.triggerPath1_4='PFHT430_SixPFJet40'
+            self.triggerPath2 = trigLst[1]#'IsoMu24'
+            self.trigCombination1 = [self.triggerPath1_1, self.triggerPath2]
+            # self.trigCombination2 = [self.triggerPath1_2, self.triggerPath2]
+            # self.trigCombination3 = [self.triggerPath1_3, self.triggerPath2]
+            # self.trigCombination4 = [self.triggerPath1_4, self.triggerPath2]
 
     def beginJob(self,histFile=None,histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -127,8 +131,8 @@ class HistogramMaker(Module):
         jets = Collection(event, "Jet")
         HLTObj = Object(event, "HLT") #object with only the trigger branches in that event
         trigPath={}
-        for key in self.trigList:
-            for tg in self.trigList[key]:
+        for key in self.trigDict:
+            for tg in self.trigDict[key]:
                 trigPath[tg] = getattr(HLTObj,tg)
     
         passComb1 = False
@@ -174,14 +178,10 @@ class HistogramMaker(Module):
             # if trigPath[self.triggerPath1_3]: jetHT["t1_3"] += jet.pt
             # if trigPath[self.triggerPath1_4]: jetHT["t1_4"] += jet.pt
             if trigPath[self.triggerPath2]: jetHT["t2"] += jet.pt
-            if passComb1:
-                jetHT["comb1"] += jet.pt
-            # if passComb2:
-            #     jetHT["comb2"] += jet.pt
-            # if passComb3:
-            #     jetHT["comb3"] += jet.pt
-            # if passComb4:
-            #     jetHT["comb4"] += jet.pt
+            if passComb1: jetHT["comb1"] += jet.pt
+            # if passComb2: jetHT["comb2"] += jet.pt
+            # if passComb3: jetHT["comb3"] += jet.pt
+            # if passComb4: jetHT["comb4"] += jet.pt
             jetHT["notrig"] += jet.pt
 
         for nm, muon in enumerate(muons) :
