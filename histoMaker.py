@@ -18,9 +18,9 @@ class HistogramMaker(Module):
         self.eventCounter = 0
         self.eventLimit = EventLimit # 100000 -1 for no limit of events fully processed
         self.numTriggers = len(TrigLst)
-
+        print(self.numTriggers)
         # - Define Lists
-        self.trigCombination = []
+        self.trigCombination = [""]*self.numTriggers
         if TrigLst is None: self.trigLst=[]
         else:
             self.trigLst = TrigLst
@@ -79,7 +79,7 @@ class HistogramMaker(Module):
         jets = Collection(event, "Jet")
         HLTObj = Object(event, "HLT") #object with only the trigger branches in that event
         trigPath = {}
-        passComb = []
+        passComb = [0]*self.numTriggers
         for key in self.trigDict:
             for tg in self.trigDict[key]:
                 trigPath[tg] = getattr(HLTObj,tg)
@@ -113,7 +113,7 @@ class HistogramMaker(Module):
             # Calculate jetHT for different trigger paths and combinations of them
             for i in range(self.numTriggers):
                 if trigPath[self.trigLst[i]]: jetHT["t" + str(i)] += jet.pt
-                if i>0 && passComb[i-1]: jetHT["comb" + str(i)] += jet.pt
+                if i>0 and passComb[i-1]: jetHT["comb" + str(i)] += jet.pt
             jetHT["notrig"] += jet.pt
 
         for nm, muon in enumerate(muons) :
@@ -126,19 +126,19 @@ class HistogramMaker(Module):
             if nm ==0 and nJetPass >5 and firstMuonPass == True and nBtagPass >0:
                 for i in range(self.numTriggers):
                     if trigPath[self.trigLst[i]]: self.h_muonPt[self.trigLst[i]].Fill(muon.pt)
-                    if i>0 && passComb[i-1]: self.h_muonPt['combination' + str(i)].Fill(muon.pt)
+                    if i>0 and passComb[i-1]: self.h_muonPt['combination' + str(i)].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
 
         if nJetPass >5 and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
             for i in range(self.numTriggers):
                 if trigPath[self.trigLst[i]]:self.h_eventsPrg.Fill(2+i)
-                if i>0 && passComb[i-1]: self.h_eventsPrg.Fill(6+i)
+                if i>0 and passComb[i-1]: self.h_eventsPrg.Fill(6+i)
 
         if nJetPass >5 and firstMuonPass==True and nBtagPass >0:
             for i in range(self.numTriggers):
                 if trigPath[self.trigLst[i]]: self.h_jetHt[self.trigLst[i]].Fill(jetHT["t" +str(i)])
-                if i>0 && passComb[i-1]: self.h_jetHt['combination' + str(i)].Fill(jetHT["comb" + str(i)])
+                if i>0 and passComb[i-1]: self.h_jetHt['combination' + str(i)].Fill(jetHT["comb" + str(i)])
             self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True

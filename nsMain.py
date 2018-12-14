@@ -100,7 +100,7 @@ def main(argms):
                       postfix=thePostFix,
                       histFileName=outtputFile,
                       histDirName="plots",
-                      #branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
+                      branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                       outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                       )
     t0 = time.clock()
