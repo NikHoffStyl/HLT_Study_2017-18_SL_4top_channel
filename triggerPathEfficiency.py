@@ -175,7 +175,8 @@ def main(argms):
     h_jetHtT3_2.Draw('same')
     h_jetHtT3_3.Draw('same')
     h_jetHtT3_4.Draw('same')
-    cv1.BuildLegend()
+    leg1=cv1.BuildLegend()
+    leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
 
     cv3=triggerCanvas.cd(3)
