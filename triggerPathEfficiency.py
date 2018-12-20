@@ -114,7 +114,7 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg].Draw('same')
-    leg1=cv1.BuildLegend(0.4,0.4,0.9,0.9)
+    leg1=cv1.BuildLegend(0.4,0.9,0.4,0.9)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
     pdfCreator(0,cv1)
@@ -128,7 +128,7 @@ def main(argms):
         if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
         i += 1
 
-    cv2.BuildLegend(0.4,0.4,0.9,0.9)
+    cv2.BuildLegend(0.4,0.9,0.4,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
     pdfCreator(1,cv2)
 
@@ -141,7 +141,7 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_muonPt[tg].Draw('same')
-    cv3.BuildLegend(0.4,0.4,0.9,0.9)
+    cv3.BuildLegend(0.4,0.9,0.4,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
     pdfCreator(1,cv3)
 
@@ -153,7 +153,7 @@ def main(argms):
         if i == 0 :h_muoPtTriggerRatio[tg].Draw()
         if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
         i += 1
-    cv4.BuildLegend(0.4,0.4,0.9,0.9)
+    cv4.BuildLegend(0.4,0.9,0.4,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
     pdfCreator(2,cv4)
 
