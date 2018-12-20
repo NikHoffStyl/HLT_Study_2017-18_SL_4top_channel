@@ -13,6 +13,18 @@ def process_arguments():
     args = parser.parse_args()
     return args
 
+def pdfCreator(arg):
+    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
+    if not os.path.exists(os.path.dirname(filename)):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    if arg == 0: triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf("),"pdf")
+    if arg == 1: triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf"),"pdf")
+    if arg == 2: triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf)"),"pdf")
+
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
@@ -67,6 +79,7 @@ def main(argms):
     if not (h_muonPt["notrigger"]):
         print("No trigger muon Pt histogram is empty")
 
+    i=1
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg] = ROOT.gDirectory.Get("h_jetHt_" + tg)
@@ -77,6 +90,17 @@ def main(argms):
             h_muonEta[tg] = ROOT.gDirectory.Get("h_muonEta_" + tg)
             h_muonPhi[tg] = ROOT.gDirectory.Get("h_muonPhi_" + tg)
             h_muonMap[tg] = ROOT.gDirectory.Get("h_muonMap_" + tg)
+
+            h_jetHt[tg].SetLineColor(i)
+            h_jetEta[tg].SetLineColor(i)
+            h_jetPhi[tg].SetLineColor(i)
+            h_jetMap[tg].SetLineColor(i)
+            h_muonPt[tg].SetLineColor(i)
+            h_muonEta[tg].SetLineColor(i)
+            h_muonPhi[tg].SetLineColor(i)
+            h_muonMap[tg].SetLineColor(i)
+
+            i+=1
 
     # - Events histogram
     h_eventsPrg = ROOT.gDirectory.Get("h_eventsPrg")
@@ -93,72 +117,20 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg].Draw('same')
-    leg1=cv1.BuildLegend()
-    leg1.SetNColumns(2)
+    leg1=cv1.BuildLegend(0.4,0.4,0.8,0.8)
+    #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(0)
 
-    cv2=triggerCanvas.cd(2)
-    for tg in trigList["combos"]:
+    cv2=triggerCanvas.cd(1)
+    for tg in (trigList["combos"] and trigList["stndlone"]):
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetPtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
         h_jetHtTriggerRatio[tg].Draw('same')
 
-    # h_jetHtTriggerRatio1 = (h_jetHtT1_1).Clone("h_jetPtTriggerRatio1")
-    # h_jetHtTriggerRatio1.SetTitle("PFHT380;H_{T} (GeV);Trigger Efficiency")
-    # h_jetHtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
-    # h_jetHtTriggerRatio1.SetStats(False)
-    # h_jetHtTriggerRatio1.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1.SetLineStyle(2)
-    # h_jetHtTriggerRatio1.Draw()
-    # h_jetHtTriggerRatio1_2 = (h_jetHtT1_2).Clone("h_jetPtTriggerRatio1_2")
-    # h_jetHtTriggerRatio1_2.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1_2.SetLineStyle(2)
-    # h_jetHtTriggerRatio1_2.Draw('same')
-    # h_jetHtTriggerRatio1_3 = (h_jetHtT1_3).Clone("h_jetPtTriggerRatio1_3")
-    # h_jetHtTriggerRatio1_3.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1_3.SetLineStyle(2)
-    # h_jetHtTriggerRatio1_3.Draw('same')
-    # h_jetHtTriggerRatio1_4 = (h_jetHtT1_4).Clone("h_jetPtTriggerRatio1_4")
-    # h_jetHtTriggerRatio1_4.Divide(h_jetHt)
-    # h_jetHtTriggerRatio1_4.SetLineStyle(2)
-    # h_jetHtTriggerRatio1_4.Draw('same')
-    # h_jetHtTriggerRatio2 = (h_jetHtT2).Clone("h_jetPtTriggerRatio2")
-    # h_jetHtTriggerRatio2.SetTitle("IsoMu24")
-    # h_jetHtTriggerRatio2.Divide(h_jetHt)
-    # h_jetHtTriggerRatio2.SetLineStyle(7)
-    # h_jetHtTriggerRatio2.Draw('same')
-    # h_jetHtTriggerRatio3_1 = (h_jetHtT3_1).Clone("h_jetPtTriggerRatio3_1")
-    # h_jetHtTriggerRatio3_1.SetTitle("combined")
-    # h_jetHtTriggerRatio3_1.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_1.SetLineStyle(1)
-    # h_jetHtTriggerRatio3_1.Draw('same')
-    # h_jetHtTriggerRatio3_2 = (h_jetHtT3_2).Clone("h_jetPtTriggerRatio3_2")
-    # h_jetHtTriggerRatio3_2.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_2.SetLineStyle(1)
-    # h_jetHtTriggerRatio3_2.Draw('same')
-    # h_jetHtTriggerRatio3_3 = (h_jetHtT3_3).Clone("h_jetPtTriggerRatio3_3")
-    # h_jetHtTriggerRatio3_3.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_3.SetLineStyle(1)
-    # h_jetHtTriggerRatio3_3.Draw('same')
-    # h_jetHtTriggerRatio3_4 = (h_jetHtT3_4).Clone("h_jetPtTriggerRatio3_4")
-    # h_jetHtTriggerRatio3_4.Divide(h_jetHt)
-    # h_jetHtTriggerRatio3_4.SetLineStyle(1)
-    # h_jetHtTriggerRatio3_4.Draw('same')
     cv2.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
-
-    #######################
-    # Save Canvas to File #
-    #######################
-    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
-    if not os.path.exists(os.path.dirname(filename)):
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-    triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf("),"pdf")
-
+    pdfCreator(1)
 
     ##############################
     # - Draw pT Histos on Canvas #
@@ -171,65 +143,16 @@ def main(argms):
             h_muonPt[tg].Draw('same')
     cv3.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
+    pdfCreator(1)
 
-    cv4=triggerCanvas.cd(2)
-    for tg in trigList["combos"]:
+    cv4=triggerCanvas.cd(1)
+    for tg in (trigList["combos"] and trigList["stndlone"]):
         h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         h_muoPtTriggerRatio[tg].Draw('same')
-
-    # h_muonPtTriggerRatio1 = (h_muonPtT1_1).Clone("h_muonPtTriggerRatio1")
-    # h_muonPtTriggerRatio1.SetTitle("PFHT380;muon p_{T} (GeV);Trigger Efficiency")
-    # h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
-    # h_muonPtTriggerRatio1.SetStats(False)
-    # h_muonPtTriggerRatio1.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1.SetLineStyle(2)
-    # h_muonPtTriggerRatio1.Draw()
-    # h_muonPtTriggerRatio1_2 = (h_muonPtT1_2).Clone("h_muonPtTriggerRatio1_2")
-    # h_muonPtTriggerRatio1_2.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1_2.SetLineStyle(2)
-    # h_muonPtTriggerRatio1_2.Draw('same')
-    # h_muonPtTriggerRatio1_3 = (h_muonPtT1_3).Clone("h_muonPtTriggerRatio1_3")
-    # h_muonPtTriggerRatio1_3.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1_3.SetLineStyle(2)
-    # h_muonPtTriggerRatio1_3.Draw('same')
-    # h_muonPtTriggerRatio1_4 = (h_muonPtT1_4).Clone("h_muonPtTriggerRatio1_4")
-    # h_muonPtTriggerRatio1_4.Divide(h_muonPt)
-    # h_muonPtTriggerRatio1_4.SetLineStyle(2)
-    # h_muonPtTriggerRatio1_4.Draw('same')
-    # h_muonPtTriggerRatio2 = (h_muonPtT2).Clone("h_muonPtTriggerRatio2")
-    # h_muonPtTriggerRatio2.SetTitle("IsoMu24")
-    # h_muonPtTriggerRatio2.Divide(h_muonPt)
-    # h_muonPtTriggerRatio2.SetLineStyle(7)
-    # h_muonPtTriggerRatio2.Draw('same')
-    # h_muonPtTriggerRatio3_1 = (h_muonPtT3_1).Clone("h_muonPtTriggerRatio3_1")
-    # h_muonPtTriggerRatio3_1.SetTitle("combined")
-    # h_muonPtTriggerRatio3_1.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_1.SetLineStyle(1)
-    # h_muonPtTriggerRatio3_1.Draw('same')
-    # h_muonPtTriggerRatio3_2 = (h_muonPtT3_2).Clone("h_muonPtTriggerRatio3_2")
-    # h_muonPtTriggerRatio3_2.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_2.SetLineStyle(1)
-    # h_muonPtTriggerRatio3_2.Draw('same')
-    # h_muonPtTriggerRatio3_3 = (h_muonPtT3_3).Clone("h_muonPtTriggerRatio3_3")
-    # h_muonPtTriggerRatio3_3.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_3.SetLineStyle(1)
-    # h_muonPtTriggerRatio3_3.Draw('same')
-    # h_muonPtTriggerRatio3_4 = (h_muonPtT3_4).Clone("h_muonPtTriggerRatio3_4")
-    # h_muonPtTriggerRatio3_4.Divide(h_muonPt)
-    # h_muonPtTriggerRatio3_4.SetLineStyle(1)
-    # h_muonPtTriggerRatio3_4.Draw('same')
     cv4.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
-
-    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
-    if not os.path.exists(os.path.dirname(filename)):
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-    triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf)"),"pdf")
+    pdfCreator(2)
 
     #######################
     # Save Canvas to File #
