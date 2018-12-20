@@ -66,24 +66,25 @@ class HistogramMaker(Module):
                 self.addObject(self.h_muonPhi[trgPath])
         for t1 in self.trigLst["t1"]:
             for t2 in self.trigLst["t2"]:
-                self.h_jetHt[t1 +'_'+ t2] = ROOT.TH1D('h_jetHt_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                self.h_jetHt[t1 +'_'+ t2] = ROOT.TH1D('h_jetHt_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
                                                                  ';H_{T};Events', 200, 1, 2300)
                 self.addObject(self.h_jetHt[t1 +'_'+ t2])
-                self.h_jetEta[t1 +'_'+ t2] = ROOT.TH1D('h_jetEta_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                self.h_jetEta[t1 +'_'+ t2] = ROOT.TH1D('h_jetEta_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
                                                       ';Jet #eta;Events', 200, -6, 6)
                 self.addObject(self.h_jetEta[t1 +'_'+ t2])
-                self.h_jetPhi[t1 +'_'+ t2] = ROOT.TH1D('h_jetPhi_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                self.h_jetPhi[t1 +'_'+ t2] = ROOT.TH1D('h_jetPhi_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
                                                       ';Jet #phi;Events', 200, -6, 6)
                 self.addObject(self.h_jetPhi[t1 +'_'+ t2])
-                self.h_muonPt[t1 +'_'+ t2] = ROOT.TH1D('h_muonPt_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                self.h_muonPt[t1 +'_'+ t2] = ROOT.TH1D('h_muonPt_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
                                                                   ';Muon P_{T};Events', 200, 0, 170)
                 self.addObject(self.h_muonPt[t1 +'_'+ t2])
-                self.h_muonEta[t1 +'_'+ t2] = ROOT.TH1D('h_muonEta_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                self.h_muonEta[t1 +'_'+ t2] = ROOT.TH1D('h_muonEta_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
                                                        ';Muon #eta;Events', 200, -6, 6)
                 self.addObject(self.h_muonEta[t1 +'_'+ t2])
-                self.h_muonPhi[t1 +'_'+ t2] = ROOT.TH1D('h_muonPhi_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                self.h_muonPhi[t1 +'_'+ t2] = ROOT.TH1D('h_muonPhi_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
                                                        ';Muon #phi;Events', 200, -6, 6)
                 self.addObject(self.h_muonPhi[t1 +'_'+ t2])
+                self.trigLst["combos"].append(t1 +'_'+ t2) # append new triggers to old list
 
         # - FIXME: May be a better way.
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';steps;entries', 11,0,11)
@@ -108,23 +109,20 @@ class HistogramMaker(Module):
         HLTObj = Object(event, "HLT") #object with only the trigger branches in that event
 
         trigPath = {}
-        passComb = [0]*self.numTriggers
+        #passComb = [0]*self.numTriggers
 
         for key in self.trigLst:
             for tg in self.trigLst[key]:
-                trigPath[tg] = getattr(HLTObj,tg)
+                if not self.trigLst[key] == self.trigLst["combos"]: trigPath[tg] = getattr(HLTObj,tg)
     
         for i in range(self.comboCounter):
-            passComb[i] = False
+            #passComb[i] = False
             trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]]=False
             for trig in self.trigCombination[i]:
                 if trigPath[trig]:
-                    passComb[i] = True
+                    #passComb[i] = True
                     trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]]=True
 
-        #for t1 in self.trigLst["t1"]:
-         #   for t2 in self.trigLst["t2"]:
-          #      self.trigLst["stndlone"].append(t1 +'_'+ t2) # append new triggers to old list
 
         jetHT={"notrig":0}
         for key in self.trigLst:

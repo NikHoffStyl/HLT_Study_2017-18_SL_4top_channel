@@ -93,7 +93,8 @@ def main(argms):
     #             'Mu15_IsoVVVL_PFHT450',
     #             'Mu15_IsoVVVL_PFHT600']
     #         }
-    trigList = {"stndlone":['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
+    trigList = {"combos":[],
+                "stndlone":['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
                 "t1" :['IsoMu24'],
                 "t2":['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
