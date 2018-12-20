@@ -69,16 +69,16 @@ def main(argms):
     # - Jet HT histograms
     h_jetHt["notrigger"] = ROOT.gDirectory.Get("h_jetHt_notrigger")
     h_jetHt["notrigger"].SetLineColor(1)
-    h_jetHt["notrigger"].SetTitle("no trigger")
+    # h_jetHt["notrigger"].SetTitle("no trigger")
     if not (h_jetHt["notrigger"]):
         print("No trigger jet Ht histogram is empty")
     h_muonPt["notrigger"] = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt["notrigger"].SetLineColor(1)
-    h_muonPt["notrigger"].SetTitle("no trigger")
+    # h_muonPt["notrigger"].SetTitle("no trigger")
     if not (h_muonPt["notrigger"]):
         print("No trigger muon Pt histogram is empty")
 
-    i=1
+    i=2
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg] = ROOT.gDirectory.Get("h_jetHt_" + tg)
@@ -117,17 +117,20 @@ def main(argms):
     leg1=cv1.BuildLegend(0.4,0.4,0.9,0.9)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
-    pdfCreator(0,triggerCanvas)
+    pdfCreator(0,cv1)
 
     cv2=triggerCanvas.cd(1)
+    i=0
     for tg in (trigList["combos"] and trigList["stndlone"]):
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetPtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
-        h_jetHtTriggerRatio[tg].Draw('same')
+        if  i==0: h_jetHtTriggerRatio[tg].Draw()
+        if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
+        i += 1
 
     cv2.BuildLegend(0.4,0.4,0.9,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(1,triggerCanvas)
+    pdfCreator(1,cv2)
 
     ##############################
     # - Draw pT Histos on Canvas #
@@ -140,16 +143,19 @@ def main(argms):
             h_muonPt[tg].Draw('same')
     cv3.BuildLegend(0.4,0.4,0.9,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(1,triggerCanvas)
+    pdfCreator(1,cv3)
 
     cv4=triggerCanvas.cd(1)
+    i=0
     for tg in (trigList["combos"] and trigList["stndlone"]):
         h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
-        h_muoPtTriggerRatio[tg].Draw('same')
+        if i == 0 :h_muoPtTriggerRatio[tg].Draw()
+        if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
+        i += 1
     cv4.BuildLegend(0.4,0.4,0.9,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(2,triggerCanvas)
+    pdfCreator(2,cv4)
 
     #######################
     # Save Canvas to File #
