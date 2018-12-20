@@ -46,6 +46,16 @@ To produce [trigger efficiency](triggerPathEfficiency.py) plots run:
 $ python triggerPathEfficiency.py
 ```
 
+The help nessage given for [`triggerPathEfficiency.py](triggerPathEfficiency.py)
+```
+usage: triggerPathEfficiency.py [-h] [-f {ttjets,tttt,tttt_weights,wjets}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f {ttjets,tttt,tttt_weights,wjets}, --inputLFN {ttjets,tttt,tttt_weights,wjets}
+                        Set list of input files (default: tttt)
+```
+
 I will try to introduce the option to input a trigger as an argument to some of these 
 and if argument is not given it will revert to search for a default trigger 
 and exit if trigger does not exist.
