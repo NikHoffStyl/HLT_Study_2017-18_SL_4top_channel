@@ -47,7 +47,7 @@ def main(argms):
     h_muoPtTriggerRatio = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers: PFHT380or430_min6jets_min1btag and' + triggerPath2 , 1100,600)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers: PFHT380or430_min6jets_min1btag', 1100,600)
     triggerCanvas.Divide(2,1)
     #eventPrgCanvas = ROOT.TCanvas('eventPrgCanvas', 'Canvas of events in each selection step', 500,500)
 
@@ -174,7 +174,7 @@ def main(argms):
 
     cv4=triggerCanvas.cd(2)
     for tg in trigList["combos"]:
-        h_muoPtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_muonPtRatio" + tg)
+        h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         h_muoPtTriggerRatio[tg].Draw('same')
 
