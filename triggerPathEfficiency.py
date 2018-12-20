@@ -94,11 +94,9 @@ def main(argms):
             h_jetHt[tg].SetLineColor(i)
             h_jetEta[tg].SetLineColor(i)
             h_jetPhi[tg].SetLineColor(i)
-            h_jetMap[tg].SetLineColor(i)
             h_muonPt[tg].SetLineColor(i)
             h_muonEta[tg].SetLineColor(i)
             h_muonPhi[tg].SetLineColor(i)
-            h_muonMap[tg].SetLineColor(i)
 
             i+=1
 
