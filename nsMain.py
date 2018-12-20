@@ -77,14 +77,25 @@ def main(argms):
         #.replace('\n','') protects against new line characters at end of filenames, use just str(line) if problem appears
         files.append(redirector + str(line).replace('\n','') )
 
-    trigDictionary={"HT": ['PFHT180', 'PFHT250', 'PFHT370', 'PFHT430','PFHT510',
-                     'PFHT590', 'PFHT680', 'PFHT780', 'PFHT890', 'PFHT1050',
-                     'PFHT380_SixPFJet32', 'PFHT430_SixPFJet40',
-                     'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2',
-                     'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2',
-                     'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
-                    "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24']
-                    }
+    # trigDict={"HT": ['PFHT180', 'PFHT250', 'PFHT370', 'PFHT430','PFHT510',
+    #                  'PFHT590', 'PFHT680', 'PFHT780', 'PFHT890', 'PFHT1050',
+    #                  'PFHT380_SixPFJet32', 'PFHT430_SixPFJet40',
+    #                  'PFHT380_SixPFJet32_DoublePFBTagCSV_2p2',
+    #                  'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2',
+    #                  'PFHT430_SixPFJet40_PFBTagCSV_1p5'],
+    #         "Mu":['Mu17_TrkIsoVVL', 'Mu19_TrkIsoVVL', 'IsoMu24',
+    #             'Ele15_IsoVVVL_PFHT450_CaloBTagCSV_4p5',
+    #             'Ele15_IsoVVVL_PFHT450_PFMET50',
+    #             'Ele15_IsoVVVL_PFHT450',
+    #             'Ele15_IsoVVVL_PFHT600',
+    #             'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5',
+    #             'Mu15_IsoVVVL_PFHT450_PFMET50',
+    #             'Mu15_IsoVVVL_PFHT450',
+    #             'Mu15_IsoVVVL_PFHT600']
+    #         }
+    trigList = {"stndlone":['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
+                "t1" :['IsoMu24'],
+                "t2":['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
     p99=PostProcessor(".",
                       files,
@@ -92,8 +103,7 @@ def main(argms):
                       cut="nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 &&( nMuon >0 || nElectron >0 ) && Muon_softId == 1",
                       modules=[HistogramMaker(WriteHistFile=writeFile,
                                               EventLimit = argms.eventLimit,
-                                              TrigDict=trigDictionary,
-                                              TrigLst = ['IsoMu24','PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2','PFHT380_SixPFJet32_DoublePFBTagCSV_2p2','PFHT430_SixPFJet40_PFBTagCSV_1p5','PFHT430_SixPFJet40'])],
+                                              TrigLst = trigList)],
                       jsonInput=None,
                       noOut=True,
                       justcount=False,
