@@ -13,7 +13,8 @@ def process_arguments():
     args = parser.parse_args()
     return args
 
-def pdfCreator(arg):
+def pdfCreator(arg, canvas):
+    time_ = datetime.now()
     filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
     if not os.path.exists(os.path.dirname(filename)):
         try:
@@ -21,9 +22,9 @@ def pdfCreator(arg):
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    if arg == 0: triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf("),"pdf")
-    if arg == 1: triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf"),"pdf")
-    if arg == 2: triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf)"),"pdf")
+    if arg == 0: canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf("),"pdf")
+    if arg == 1: canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf"),"pdf")
+    if arg == 2: canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf)"),"pdf")
 
 def main(argms):
     """ This code merges histograms, only for specific root file """
@@ -40,8 +41,6 @@ def main(argms):
         return 0
     
     # - Initialise variables
-    time_ = datetime.now()
-
     trigList = {"combos":['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'],
                 "stndlone":['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
                 "t1" :['IsoMu24'],
@@ -118,7 +117,7 @@ def main(argms):
     leg1=cv1.BuildLegend(0.4,0.4,0.8,0.8)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
-    pdfCreator(0)
+    pdfCreator(0,triggerCanvas)
 
     cv2=triggerCanvas.cd(1)
     for tg in (trigList["combos"] and trigList["stndlone"]):
@@ -128,7 +127,7 @@ def main(argms):
 
     cv2.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(1)
+    pdfCreator(1,triggerCanvas)
 
     ##############################
     # - Draw pT Histos on Canvas #
@@ -141,7 +140,7 @@ def main(argms):
             h_muonPt[tg].Draw('same')
     cv3.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(1)
+    pdfCreator(1,triggerCanvas)
 
     cv4=triggerCanvas.cd(1)
     for tg in (trigList["combos"] and trigList["stndlone"]):
@@ -150,7 +149,7 @@ def main(argms):
         h_muoPtTriggerRatio[tg].Draw('same')
     cv4.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(2)
+    pdfCreator(2,triggerCanvas)
 
     #######################
     # Save Canvas to File #
