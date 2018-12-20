@@ -59,7 +59,7 @@ def main(argms):
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers: PFHT380or430_min6jets_min1btag', 1100,600)
-    triggerCanvas.Divide(2,1)
+    #triggerCanvas.Divide(2,1)
     #eventPrgCanvas = ROOT.TCanvas('eventPrgCanvas', 'Canvas of events in each selection step', 500,500)
 
     # - Open file and sub folder
@@ -114,7 +114,7 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg].Draw('same')
-    leg1=cv1.BuildLegend(0.4,0.4,0.8,0.8)
+    leg1=cv1.BuildLegend(0.4,0.4,0.9,0.9)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
     pdfCreator(0,triggerCanvas)
@@ -125,7 +125,7 @@ def main(argms):
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
         h_jetHtTriggerRatio[tg].Draw('same')
 
-    cv2.BuildLegend()
+    cv2.BuildLegend(0.4,0.4,0.9,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
     pdfCreator(1,triggerCanvas)
 
@@ -138,7 +138,7 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_muonPt[tg].Draw('same')
-    cv3.BuildLegend()
+    cv3.BuildLegend(0.4,0.4,0.9,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
     pdfCreator(1,triggerCanvas)
 
@@ -147,7 +147,7 @@ def main(argms):
         h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         h_muoPtTriggerRatio[tg].Draw('same')
-    cv4.BuildLegend()
+    cv4.BuildLegend(0.4,0.4,0.9,0.9)
     ROOT.gStyle.SetLegendTextSize(0.04)
     pdfCreator(2,triggerCanvas)
 
