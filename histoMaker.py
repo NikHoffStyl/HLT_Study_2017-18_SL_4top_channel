@@ -11,27 +11,30 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 class HistogramMaker(Module):
     """ This class HistogramMaker() does as the name suggests. """
 
-    def __init__(self, WriteHistFile=True,EventLimit = 100000,TrigDict=None,TrigLst = None):
+    def __init__(self, WriteHistFile=True,EventLimit = -1,TrigLst = None):
         """ Initialise global variables """
 
-        self.writeHistFile=WriteHistFile
         self.eventCounter = 0
-        self.eventLimit = EventLimit # 100000 -1 for no limit of events fully processed
-        self.numTriggers = len(TrigLst)
-        print(self.numTriggers)
-        # - Define Lists
+        self.comboCounter=0
+        self.numTriggers = len(TrigLst["t1"]* len(TrigLst["t2"]))
+        print("Number of Combined Triggers: %d" %(self.numTriggers))
         self.trigCombination = [""]*self.numTriggers
-        if TrigLst is None: self.trigLst=[]
-        else:
-            self.trigLst = TrigLst
-            for i in range(1,self.numTriggers):
-                self.trigCombination[i-1] = [self.trigLst[i], self.trigLst[0]]
-
-        # - Define Dictionaries
-        if TrigDict is None: self.trigDict = {}
-        else: self.trigDict=TrigDict
         self.h_jetHt = {}
         self.h_muonPt = {}
+
+
+        self.writeHistFile=WriteHistFile
+        self.eventLimit = EventLimit # 100000 -1 for no limit of events fully processed
+        if TrigLst is None: self.trigLst={}
+        else:
+            self.trigLst = TrigLst
+            i=0
+            for t1 in self.trigLst["t1"]:
+                for t2 in self.trigLst["t2"]:
+                    self.trigCombination[i] = [t1, t2]
+                    i+=1
+
+
 
     def beginJob(self,histFile=None,histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -44,18 +47,23 @@ class HistogramMaker(Module):
         self.addObject(self.h_jetHt['no_trigger'])
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 200, 0, 170)
         self.addObject(self.h_muonPt['no_trigger'])
-        for trgPath in self.trigLst:
-            self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 200, 1, 2300)
-            self.addObject(self.h_jetHt[trgPath])
-            self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 200, 0, 170)
-            self.addObject(self.h_muonPt[trgPath])
-        for i in range(1, self.numTriggers):
-            self.h_jetHt['combination' + str(i)] = ROOT.TH1D('h_jetHt_combination' + str(i), self.trigLst[i] + 'and' + self.trigLst[0] +
-                                                     ';H_{T};Events', 200, 1, 2300)
-            self.addObject(self.h_jetHt['combination' + str(i)])
-            self.h_muonPt['combination' + str(i)] = ROOT.TH1D('h_muonPt_combination' + str(i), self.trigLst[i] + 'and' + self.trigLst[0] +
-                                                  ';Muon P_{T};Events', 200, 0, 170)
-            self.addObject(self.h_muonPt['combination' + str(i)])
+        for key in self.trigLst:
+            for trgPath in self.trigLst[key]:
+                self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 200, 1, 2300)
+                self.addObject(self.h_jetHt[trgPath])
+                self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 200, 0, 170)
+                self.addObject(self.h_muonPt[trgPath])
+        for t1 in self.trigLst["t1"]:
+            for t2 in self.trigLst["t2"]:
+                self.h_jetHt[t1 +'_'+ t2] = ROOT.TH1D('h_jetHt_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                                                                 ';H_{T};Events', 200, 1, 2300)
+                self.addObject(self.h_jetHt[t1 +'_'+ t2])
+                self.h_muonPt[t1 +'_'+ t2] = ROOT.TH1D('h_muonPt_combination' + str(self.comboCounter), t1 + 'and' + t2 +
+                                                                  ';Muon P_{T};Events', 200, 0, 170)
+                self.addObject(self.h_muonPt[t1 +'_'+ t2])
+
+                self.trigLst["stndlone"].append(t1 +'_'+ t2) # append new triggers to old list
+                self.comboCounter+=1
 
         # - FIXME: May be a better way.
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';steps;entries', 11,0,11)
@@ -80,20 +88,33 @@ class HistogramMaker(Module):
         HLTObj = Object(event, "HLT") #object with only the trigger branches in that event
         trigPath = {}
         passComb = [0]*self.numTriggers
-        for key in self.trigDict:
-            for tg in self.trigDict[key]:
+        for key in self.trigLst:
+            for tg in self.trigLst[key]:
                 trigPath[tg] = getattr(HLTObj,tg)
     
-        for i in range(self.numTriggers-1):
+        for i in range(self.comboCounter):
             passComb[i] = False
             for trig in self.trigCombination[i]:
                 if trigPath[trig]:
                     passComb[i] = True
 
+        i=0
+        for tg in self.trigLst["stndlone"]:
+            passComb[i] = False
+            for trig in self.trigCombination[i]:
+                if trigPath[trig]:
+                    passComb[i] = True
+                    i+=1
+
         jetHT={"notrig":0}
-        for i in range(self.numTriggers):
-            jetHT.update({("t"+str(i)):0})
-            if i>0: jetHT.update({("comb"+str(i)):0})
+        # for i in range(self.numTriggers):
+        #     jetHT.update({("t"+str(i)):0})
+        #     if i>0: jetHT.update({("comb"+str(i)):0})
+
+        for key in self.trigLst:
+            for tg in self.trigLst[key]:
+                jetHT.update({tg:0})
+
         nJetPass =0
         nBtagPass = 0
         firstMuonPass = False
@@ -111,9 +132,14 @@ class HistogramMaker(Module):
             if jet.btagDeepFlavB > 0.7489: nBtagPass +=1
 
             # Calculate jetHT for different trigger paths and combinations of them
-            for i in range(self.numTriggers):
-                if trigPath[self.trigLst[i]]: jetHT["t" + str(i)] += jet.pt
-                if i>0 and passComb[i-1]: jetHT["comb" + str(i)] += jet.pt
+            #i=0
+            for key in self.trigLst:
+                for tg in self.trigLst[key]:
+                    if trigPath[tg]:
+                        jetHT[tg] += jet.pt
+                    # if key == "stndlone" and passComb[i]:
+                    #     jetHT[tg] += jet.pt
+                      #  i+=1
             jetHT["notrig"] += jet.pt
 
         for nm, muon in enumerate(muons) :
@@ -124,21 +150,25 @@ class HistogramMaker(Module):
                 else:firstMuonPass=True
 
             if nm ==0 and nJetPass >5 and firstMuonPass == True and nBtagPass >0:
-                for i in range(self.numTriggers):
-                    if trigPath[self.trigLst[i]]: self.h_muonPt[self.trigLst[i]].Fill(muon.pt)
-                    if i>0 and passComb[i-1]: self.h_muonPt['combination' + str(i)].Fill(muon.pt)
+                for key in self.trigLst:
+                    for tg in self.trigLst[key]:
+                        if trigPath[tg]: self.h_muonPt[tg].Fill(muon.pt)
+                        #tgName = tg.find("combination")
+                        #if not tgName == -1: self.h_muonPt[tg].Fill(muon.pt)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
 
         if nJetPass >5 and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
-            for i in range(self.numTriggers):
-                if trigPath[self.trigLst[i]]:self.h_eventsPrg.Fill(2+i)
-                if i>0 and passComb[i-1]: self.h_eventsPrg.Fill(6+i)
+            for key in self.trigLst:
+                for tg in self.trigLst[key]:
+                    if trigPath[tg]:self.h_eventsPrg.Fill(2+i)
+                    #if i>0 and passComb[i-1]: self.h_eventsPrg.Fill(6+i)
 
         if nJetPass >5 and firstMuonPass==True and nBtagPass >0:
-            for i in range(self.numTriggers):
-                if trigPath[self.trigLst[i]]: self.h_jetHt[self.trigLst[i]].Fill(jetHT["t" +str(i)])
-                if i>0 and passComb[i-1]: self.h_jetHt['combination' + str(i)].Fill(jetHT["comb" + str(i)])
+            for key in self.trigLst:
+                for tg in self.trigLst[key]:
+                    if trigPath[tg]: self.h_jetHt[tg].Fill(jetHT[tg])
+                    #if i>0 and passComb[i-1]: self.h_jetHt['combination' + str(i)].Fill(jetHT[tg])
             self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True
