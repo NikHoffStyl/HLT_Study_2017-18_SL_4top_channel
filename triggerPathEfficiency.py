@@ -16,7 +16,6 @@ def process_arguments():
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
-    # - TODO: Add Command line arguments
     if argms.inputLFN == "ttjets":
         inputFile = "OutHistosTT6jets.root"
     elif argms.inputLFN == "tttt_weights":
@@ -38,7 +37,7 @@ def main(argms):
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers: PFHT380or430_min6jets_min1btag and' + triggerPath2 , 1100,700)
-    triggerCanvas.Divide(2,2)
+    triggerCanvas.Divide(1,2)
     #eventPrgCanvas = ROOT.TCanvas('eventPrgCanvas', 'Canvas of events in each selection step', 500,500)
 
     # - Open file and sub folder
@@ -179,21 +178,6 @@ def main(argms):
     leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
 
-    cv3=triggerCanvas.cd(3)
-    h_muonPt.GetYaxis().SetTitleOffset(1.5)
-    h_muonPt.Draw()
-    h_muonPtT1_1.Draw('same')
-    # h_muonPtT1_2.Draw('same')
-    # h_muonPtT1_3.Draw('same')
-    # h_muonPtT1_4.Draw('same')
-    h_muonPtT2.Draw('same')
-    h_muonPtT3_1.Draw('same')
-    # h_muonPtT3_2.Draw('same')
-    # h_muonPtT3_3.Draw('same')
-    # h_muonPtT3_4.Draw('same')
-    cv3.BuildLegend()
-    ROOT.gStyle.SetLegendTextSize(0.04)
-
     cv2=triggerCanvas.cd(2)
     h_jetHtTriggerRatio1 = (h_jetHtT1_1).Clone("h_jetPtTriggerRatio1")
     h_jetHtTriggerRatio1.SetTitle("PFHT380;H_{T} (GeV);Trigger Efficiency")
@@ -237,6 +221,33 @@ def main(argms):
     # h_jetHtTriggerRatio3_4.SetLineStyle(1)
     # h_jetHtTriggerRatio3_4.Draw('same')
     cv2.BuildLegend()
+    ROOT.gStyle.SetLegendTextSize(0.04)
+
+    #######################
+    # Save Canvas to File #
+    #######################
+    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
+    if not os.path.exists(os.path.dirname(filename)):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf("),"pdf")
+
+    cv3=triggerCanvas.cd(3)
+    h_muonPt.GetYaxis().SetTitleOffset(1.5)
+    h_muonPt.Draw()
+    h_muonPtT1_1.Draw('same')
+    # h_muonPtT1_2.Draw('same')
+    # h_muonPtT1_3.Draw('same')
+    # h_muonPtT1_4.Draw('same')
+    h_muonPtT2.Draw('same')
+    h_muonPtT3_1.Draw('same')
+    # h_muonPtT3_2.Draw('same')
+    # h_muonPtT3_3.Draw('same')
+    # h_muonPtT3_4.Draw('same')
+    cv3.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
 
     cv4=triggerCanvas.cd(4)
@@ -284,18 +295,27 @@ def main(argms):
     cv4.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
 
-    #######################
-    # Save Canvas to File #
-    #######################
-    filename = time_.strftime("TriggerPlots/W%V_%y/Canvas%d_%m_%y_%H%M.png")
+    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
     if not os.path.exists(os.path.dirname(filename)):
         try:
             os.makedirs(os.path.dirname(filename))
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-    triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/Canvas%d_%m_%y_%H%M.png"))
-    
+    triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf)"),"pdf")
+
+    #######################
+    # Save Canvas to File #
+    #######################
+    # filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
+    # if not os.path.exists(os.path.dirname(filename)):
+    #     try:
+    #         os.makedirs(os.path.dirname(filename))
+    #     except OSError as exc:
+    #         if exc.errno != errno.EEXIST:
+    #             raise
+    # triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.png"))
+    #
     # -Test Event numbers along steps
     #eventPrgCanvas.cd(1)
     #h_eventsPrg.Draw()
