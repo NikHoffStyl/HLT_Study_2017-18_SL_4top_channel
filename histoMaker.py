@@ -16,7 +16,7 @@ class HistogramMaker(Module):
 
         self.eventCounter = 0
         self.comboCounter=0
-        self.numTriggers = len(TrigLst["t1"]* len(TrigLst["t2"]))
+        self.numTriggers = len(TrigLst["t1"])* len(TrigLst["t2"])+len(TrigLst["stndlone"])
         print("Number of Combined Triggers: %d" %(self.numTriggers))
         self.trigCombination = [""]*self.numTriggers
         self.h_jetHt = {}
@@ -56,13 +56,13 @@ class HistogramMaker(Module):
                 self.addObject(self.h_jetHt[trgPath])
                 self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Events', 200, -6, 6)
                 self.addObject(self.h_jetEta[trgPath])
-                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #phi;Events', 200, -6, 6)
+                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Events', 200, -6, 6)
                 self.addObject(self.h_jetPhi[trgPath])
                 self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 200, 0, 170)
                 self.addObject(self.h_muonPt[trgPath])
                 self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Events', 200, -6, 6)
                 self.addObject(self.h_muonEta[trgPath])
-                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #phi;Events', 200, -6, 6)
+                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Events', 200, -6, 6)
                 self.addObject(self.h_muonPhi[trgPath])
         for t1 in self.trigLst["t1"]:
             for t2 in self.trigLst["t2"]:
@@ -116,13 +116,15 @@ class HistogramMaker(Module):
     
         for i in range(self.comboCounter):
             passComb[i] = False
+            trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]]=False
             for trig in self.trigCombination[i]:
                 if trigPath[trig]:
                     passComb[i] = True
+                    trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]]=True
 
-        for t1 in self.trigLst["t1"]:
-            for t2 in self.trigLst["t2"]:
-                self.trigLst["stndlone"].append(t1 +'_'+ t2) # append new triggers to old list
+        #for t1 in self.trigLst["t1"]:
+         #   for t2 in self.trigLst["t2"]:
+          #      self.trigLst["stndlone"].append(t1 +'_'+ t2) # append new triggers to old list
 
         jetHT={"notrig":0}
         for key in self.trigLst:

@@ -64,7 +64,7 @@ def main(argms):
         if argms.redirector == "local": inputLFNList =  open("../myInFiles/TTTT/TTTT_files.txt", "r")
         else: inputLFNList =  open("../NanoAODTools/StandaloneExamples/Infiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
-        outtputFile = "OutHistosTTTT_6jets.root"
+        outtputFile = "TestOutHistosTTTT_6jets.root"
     else: return 0
 
     if argms.noWriteFile: writeFile=False
