@@ -37,7 +37,7 @@ def main(argms):
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers: PFHT380or430_min6jets_min1btag and' + triggerPath2 , 1100,700)
-    triggerCanvas.Divide(1,2)
+    triggerCanvas.Divide(2,1)
     #eventPrgCanvas = ROOT.TCanvas('eventPrgCanvas', 'Canvas of events in each selection step', 500,500)
 
     # - Open file and sub folder
@@ -235,7 +235,7 @@ def main(argms):
                 raise
     triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf("),"pdf")
 
-    cv3=triggerCanvas.cd(3)
+    cv3=triggerCanvas.cd(1)
     h_muonPt.GetYaxis().SetTitleOffset(1.5)
     h_muonPt.Draw()
     h_muonPtT1_1.Draw('same')
@@ -250,7 +250,7 @@ def main(argms):
     cv3.BuildLegend()
     ROOT.gStyle.SetLegendTextSize(0.04)
 
-    cv4=triggerCanvas.cd(4)
+    cv4=triggerCanvas.cd(2)
     h_muonPtTriggerRatio1 = (h_muonPtT1_1).Clone("h_muonPtTriggerRatio1")
     h_muonPtTriggerRatio1.SetTitle("PFHT380;muon p_{T} (GeV);Trigger Efficiency")
     h_muonPtTriggerRatio1.GetYaxis().SetRangeUser(0,1.1)
