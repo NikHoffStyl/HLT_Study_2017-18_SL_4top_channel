@@ -52,8 +52,22 @@ class HistogramMaker(Module):
         # - Defining histograms to be saved to file
         self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200, 1, 2600)
         self.addObject(self.h_jetHt['no_trigger'])
+        self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200,-6, 8)
+        self.addObject(self.h_jetEta['no_trigger'])
+        self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200, -6, 8)
+        self.addObject(self.h_jetPhi['no_trigger'])
+        self.h_jetMap['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200, -6, 6, 20, -3.2, 3.2)
+        self.addObject(self.h_jetMap['no_trigger'])
+
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 300, 0, 300)
         self.addObject(self.h_muonPt['no_trigger'])
+        self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 300, -6, 8)
+        self.addObject(self.h_muonEta['no_trigger'])
+        self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 300, -6, 8)
+        self.addObject(self.h_muonPhi['no_trigger'])
+        self.h_muonMap['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 300, -6, 6, 20, -3.2, 3.2)
+        self.addObject(self.h_muonMap['no_trigger'])
+
         for key in self.trigLst:
             for trgPath in self.trigLst[key]:
                 self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 200, 1, 2600)
