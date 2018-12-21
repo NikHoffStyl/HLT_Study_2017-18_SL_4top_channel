@@ -58,9 +58,8 @@ def main(argms):
     h_muoPtTriggerRatio = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers: PFHT380or430_min6jets_min1btag', 1100,600)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100,600)
     #triggerCanvas.Divide(2,1)
-    #eventPrgCanvas = ROOT.TCanvas('eventPrgCanvas', 'Canvas of events in each selection step', 500,500)
 
     # - Open file and sub folder
     histFile = ROOT.TFile.Open(inputFile)
@@ -69,12 +68,10 @@ def main(argms):
     # - Jet HT histograms
     h_jetHt["notrigger"] = ROOT.gDirectory.Get("h_jetHt_notrigger")
     h_jetHt["notrigger"].SetLineColor(1)
-    # h_jetHt["notrigger"].SetTitle("no trigger")
     if not (h_jetHt["notrigger"]):
         print("No trigger jet Ht histogram is empty")
     h_muonPt["notrigger"] = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt["notrigger"].SetLineColor(1)
-    # h_muonPt["notrigger"].SetTitle("no trigger")
     if not (h_muonPt["notrigger"]):
         print("No trigger muon Pt histogram is empty")
 
@@ -105,36 +102,51 @@ def main(argms):
         print("h_eventsPrg histogram is empty")
         return 
 
-    ##############################
-    # - Draw HT Histos on Canvas #
-    ##############################
+    ####################
+    # - Draw on Canvas #
+    ####################
+    # - Canvas Details
+    triggerCanvas.cd(2)
+    l = TLatex(0.1,0.4,"""On-line (pre-)selection Requisites: \n
+                          nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 && \n
+                          ( nMuon >0 || nElectron >0 ) && Muon_softId == 1  \n \n
+                        Event Limit : None \n \n
+                        Off-line (post-)selection Requisites: \n
+                          jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets \n
+                          jet.btagDeepFlavB > 0.7489 for at least one jet \n
+                          muon_tightId=True and muon_|#eta|<2.4 
+                          and muon.miniPFRelIso_all<0.15 for at least one muon
+                        """
+               )
+    l.SetTextSize(0.15)
+    l.Draw()
+    pdfCreator(0,triggerCanvas)
+
+    # - HT or pT plots ---------------------------------
     cv1=triggerCanvas.cd(1)
     h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_jetHt["notrigger"].Draw()
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg].Draw('same')
-    leg1=cv1.BuildLegend(0.4,0.9,0.4,0.9)
+    cv1.BuildLegend(0.4,0.9,0.4,0.9)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.03)
-    pdfCreator(0,cv1)
+    pdfCreator(1,triggerCanvas)
 
     cv2=triggerCanvas.cd(1)
     i=0
     for tg in (trigList["combos"] and trigList["stndlone"]):
-        h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetPtRatio" + tg)
+        h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
         if  i==0: h_jetHtTriggerRatio[tg].Draw()
         if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
         i += 1
 
-    cv2.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(1,cv2)
+    cv2.BuildLegend(0.2,0.9,0.2,0.9)
+    ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(1,triggerCanvas)
 
-    ##############################
-    # - Draw pT Histos on Canvas #
-    ##############################
     cv3=triggerCanvas.cd(1)
     h_muonPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_muonPt["notrigger"].Draw()
@@ -142,8 +154,8 @@ def main(argms):
         for tg in trigList[key]:
             h_muonPt[tg].Draw('same')
     cv3.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(1,cv3)
+    ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(1,triggerCanvas)
 
     cv4=triggerCanvas.cd(1)
     i=0
@@ -153,26 +165,76 @@ def main(argms):
         if i == 0 :h_muoPtTriggerRatio[tg].Draw()
         if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
         i += 1
-    cv4.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.04)
-    pdfCreator(2,cv4)
+    cv4.BuildLegend(0.2,0.9,0.2,0.9)
+    ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(1,triggerCanvas)
 
-    #######################
-    # Save Canvas to File #
-    #######################
-    # filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
-    # if not os.path.exists(os.path.dirname(filename)):
-    #     try:
-    #         os.makedirs(os.path.dirname(filename))
-    #     except OSError as exc:
-    #         if exc.errno != errno.EEXIST:
-    #             raise
-    # triggerCanvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.png"))
-    #
-    # -Test Event numbers along steps
-    #eventPrgCanvas.cd(1)
-    #h_eventsPrg.Draw()
-    #eventPrgCanvas.Print("eventProgress.png")
+    # - Eta plots ------------------------------------------
+    cv5=triggerCanvas.cd(1)
+    h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_jetEta["notrigger"].Draw()
+    for key in trigList:
+        for tg in trigList[key]:
+            h_jetEta[tg].Draw('same')
+    cv5.BuildLegend(0.4,0.9,0.4,0.9)
+    ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(1,triggerCanvas)
+
+    cv6=triggerCanvas.cd(1)
+    h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_muonEta["notrigger"].Draw()
+    for key in trigList:
+        for tg in trigList[key]:
+            h_muonEta[tg].Draw('same')
+    cv6.BuildLegend(0.4,0.9,0.4,0.9)
+    ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(1,triggerCanvas)
+
+
+    # - Phi plots ------------------------------------------
+    cv7=triggerCanvas.cd(1)
+    h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_jetPhi["notrigger"].Draw()
+    for key in trigList:
+        for tg in trigList[key]:
+            h_jetPhi[tg].Draw('same')
+    cv7.BuildLegend(0.4,0.9,0.4,0.9)
+    ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(1,triggerCanvas)
+
+    cv8=triggerCanvas.cd(1)
+    h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_muonPhi["notrigger"].Draw()
+    for key in trigList:
+        for tg in trigList[key]:
+            h_muonPhi[tg].Draw('same')
+    cv8.BuildLegend(0.4,0.9,0.4,0.9)
+    ROOT.gStyle.SetLegendTextSize(0.03)
+    pdfCreator(1,triggerCanvas)
+
+    # - Eta-Phi Map plots ------------------------------------------
+    triggerCanvas.cd(1)
+    h_jetMap["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_jetMap["notrigger"].Draw('CONTZ')
+    pdfCreator(1,triggerCanvas)
+    for key in trigList:
+        for tg in trigList[key]:
+            h_jetMap[tg].Draw('CONTZ')
+            pdfCreator(1,triggerCanvas)
+
+    h_muonMap["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_muonMap["notrigger"].Draw('CONTZ')
+    pdfCreator(1,triggerCanvas)
+    for key in trigList:
+        for tg in trigList[key]:
+            h_muonMap[tg].Draw('CONTZ')
+            pdfCreator(1,triggerCanvas)
+
+    # - Test Event numbers along steps ----------
+    triggerCanvas.cd(1)
+    h_eventsPrg.Draw()
+    pdfCreator(2,triggerCanvas)
+
     histFile.Close()
 
 main(process_arguments())

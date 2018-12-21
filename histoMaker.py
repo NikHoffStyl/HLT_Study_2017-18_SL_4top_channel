@@ -50,53 +50,31 @@ class HistogramMaker(Module):
         Module.beginJob(self,histFile,histDirName) #pass histFile and histDirName first passed to the PostProcessor
 
         # - Defining histograms to be saved to file
-        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200, 1, 2300)
+        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200, 1, 2600)
         self.addObject(self.h_jetHt['no_trigger'])
-        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 200, 0, 170)
+        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 300, 0, 300)
         self.addObject(self.h_muonPt['no_trigger'])
         for key in self.trigLst:
             for trgPath in self.trigLst[key]:
-                self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 200, 1, 2300)
+                self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 200, 1, 2600)
                 self.addObject(self.h_jetHt[trgPath])
-                self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Events', 200, -6, 6)
+                self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Events', 200, -6, 8)
                 self.addObject(self.h_jetEta[trgPath])
-                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Events', 200, -6, 6)
+                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Events', 200, -6, 8)
                 self.addObject(self.h_jetPhi[trgPath])
-                self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap' + trgPath,  trgPath + ';Jet Eta;Jet Phi', 40, -2.5, 2.5, 20, -3.14, 3.14)
+                self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath,  trgPath + ';Jet Eta;Jet Phi', 40, -6, 6, 20, -3.2, 3.2)
                 self.addObject(self.h_jetMap[trgPath])
-                self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 200, 0, 170)
+                self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 300, 0, 300)
                 self.addObject(self.h_muonPt[trgPath])
-                self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Events', 200, -6, 6)
+                self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Events', 200, -4, 7)
                 self.addObject(self.h_muonEta[trgPath])
-                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Events', 200, -6, 6)
+                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Events', 200, -6, 8)
                 self.addObject(self.h_muonPhi[trgPath])
-                self.h_muonMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath,  trgPath + ';Jet Eta;Jet Phi', 40, -2.5, 2.5, 20, -3.14, 3.14)
+                self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath,  trgPath + ';Jet Eta;Jet Phi', 40, -3, 3, 20, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath]) #Draw ith CONTZ COLZPOL COLZ1 ARR E
 
         # - Test creation of ntuple
         self.nJet = ROOT.TNtuple( "njet", "tuple of Jets", "HT : eta : phi ")
-
-        # for t1 in self.trigLst["t1"]:
-        #     for t2 in self.trigLst["t2"]:
-        #         self.h_jetHt[t1 +'_'+ t2] = ROOT.TH1D('h_jetHt_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
-        #                                                          ';H_{T};Events', 200, 1, 2300)
-        #         self.addObject(self.h_jetHt[t1 +'_'+ t2])
-        #         self.h_jetEta[t1 +'_'+ t2] = ROOT.TH1D('h_jetEta_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
-        #                                               ';Jet #eta;Events', 200, -6, 6)
-        #         self.addObject(self.h_jetEta[t1 +'_'+ t2])
-        #         self.h_jetPhi[t1 +'_'+ t2] = ROOT.TH1D('h_jetPhi_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
-        #                                               ';Jet #phi;Events', 200, -6, 6)
-        #         self.addObject(self.h_jetPhi[t1 +'_'+ t2])
-        #         self.h_muonPt[t1 +'_'+ t2] = ROOT.TH1D('h_muonPt_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
-        #                                                           ';Muon P_{T};Events', 200, 0, 170)
-        #         self.addObject(self.h_muonPt[t1 +'_'+ t2])
-        #         self.h_muonEta[t1 +'_'+ t2] = ROOT.TH1D('h_muonEta_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
-        #                                                ';Muon #eta;Events', 200, -6, 6)
-        #         self.addObject(self.h_muonEta[t1 +'_'+ t2])
-        #         self.h_muonPhi[t1 +'_'+ t2] = ROOT.TH1D('h_muonPhi_combination' + str(self.comboCounter), t1 + ' and ' + t2 +
-        #                                                ';Muon #phi;Events', 200, -6, 6)
-        #         self.addObject(self.h_muonPhi[t1 +'_'+ t2])
-        #         self.trigLst["combos"].append(t1 +'_'+ t2) # append new triggers to old list
 
         # - FIXME: May be a better way.
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';steps;entries', 11,0,11)
@@ -121,18 +99,15 @@ class HistogramMaker(Module):
         HLTObj = Object(event, "HLT") #object with only the trigger branches in that event
 
         trigPath = {}
-        #passComb = [0]*self.numTriggers
 
         for key in self.trigLst:
             for tg in self.trigLst[key]:
                 if not self.trigLst[key] == self.trigLst["combos"]: trigPath[tg] = getattr(HLTObj,tg)
     
         for i in range(self.comboCounter):
-            #passComb[i] = False
             trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]]=False
             for trig in self.trigCombination[i]:
                 if trigPath[trig]:
-                    #passComb[i] = True
                     trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]]=True
 
 
@@ -158,14 +133,10 @@ class HistogramMaker(Module):
             if jet.btagDeepFlavB > 0.7489: nBtagPass +=1
 
             # Calculate jetHT for different trigger paths and combinations of them
-            #i=0
             for key in self.trigLst:
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         jetHT[tg] += jet.pt
-                        # self.h_jetEta[tg].Fill(jet.eta)
-                        # self.h_jetPhi[tg].Fill(jet.phi)
-                        # self.h_jetMap[tg].Fill()
             jetHT["notrig"] += jet.pt
 
         for nm, muon in enumerate(muons) :
@@ -182,6 +153,7 @@ class HistogramMaker(Module):
                             self.h_muonPt[tg].Fill(muon.pt)
                             self.h_muonEta[tg].Fill(muon.eta)
                             self.h_muonPhi[tg].Fill(muon.phi)
+                            self.h_muonMap[tg].Fill(muon.eta , muon.phi)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
 
         if nJetPass >5 and nBtagPass >0:
@@ -189,7 +161,6 @@ class HistogramMaker(Module):
             for key in self.trigLst:
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:self.h_eventsPrg.Fill(2+i)
-                    #if i>0 and passComb[i-1]: self.h_eventsPrg.Fill(6+i)
 
         if nJetPass >5 and firstMuonPass==True and nBtagPass >0:
             for key in self.trigLst:
@@ -200,7 +171,6 @@ class HistogramMaker(Module):
                         self.h_jetPhi[tg].Fill(jet.phi)
                         self.h_jetMap[tg].Fill(jet.eta , jet.phi)
                         self.nJet.Fill(jetHT[tg],jet.eta, jet.phi)
-                    #if i>0 and passComb[i-1]: self.h_jetHt['combination' + str(i)].Fill(jetHT[tg])
             self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True
