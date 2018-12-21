@@ -70,10 +70,34 @@ def main(argms):
     h_jetHt["notrigger"].SetLineColor(1)
     if not (h_jetHt["notrigger"]):
         print("No trigger jet Ht histogram is empty")
+    h_jetEta["notrigger"] = ROOT.gDirectory.Get("h_jetEta_notrigger")
+    h_jetEta["notrigger"].SetLineColor(1)
+    if not (h_jetEta["notrigger"]):
+        print("No trigger jet Eta histogram is empty")
+    h_jetPhi["notrigger"] = ROOT.gDirectory.Get("h_jetPhi_notrigger")
+    h_jetPhi["notrigger"].SetLineColor(1)
+    if not (h_jetPhi["notrigger"]):
+        print("No trigger jet Phi histogram is empty")
+    h_jetMap["notrigger"] = ROOT.gDirectory.Get("h_jetMap_notrigger")
+    h_jetMap["notrigger"].SetLineColor(1)
+    if not (h_jetMap["notrigger"]):
+        print("No trigger jet map histogram is empty")
     h_muonPt["notrigger"] = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt["notrigger"].SetLineColor(1)
     if not (h_muonPt["notrigger"]):
         print("No trigger muon Pt histogram is empty")
+    h_muonEta["notrigger"] = ROOT.gDirectory.Get("h_muonEta_notrigger")
+    h_muonEta["notrigger"].SetLineColor(1)
+    if not (h_muonEta["notrigger"]):
+        print("No trigger muon eta histogram is empty")
+    h_muonPhi["notrigger"] = ROOT.gDirectory.Get("h_muonPhi_notrigger")
+    h_muonPhi["notrigger"].SetLineColor(1)
+    if not (h_muonPhi["notrigger"]):
+        print("No trigger muon Phi histogram is empty")
+    h_muonMap["notrigger"] = ROOT.gDirectory.Get("h_muonMap_notrigger")
+    h_muonMap["notrigger"].SetLineColor(1)
+    if not (h_muonMap["notrigger"]):
+        print("No trigger muon map histogram is empty")
 
     i=2
     for key in trigList:
