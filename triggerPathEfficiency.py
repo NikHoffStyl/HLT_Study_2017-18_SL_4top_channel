@@ -142,7 +142,7 @@ def main(argms):
                           and muon.miniPFRelIso_all<0.15 for at least one muon
                         """
                )
-    l.SetTextSize(0.15)
+    l.SetTextSize(0.015)
     l.Draw()
     pdfCreator(0,triggerCanvas)
 
@@ -153,22 +153,30 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg].Draw('same')
-    cv1.BuildLegend(0.4,0.9,0.4,0.9)
+    cv1.BuildLegend(0.4,0.3,0.4,0.3)
     #leg1.SetNColumns(2)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     cv2=triggerCanvas.cd(1)
     i=0
-    for tg in (trigList["combos"] and trigList["stndlone"]):
+    for tg in trigList["combos"]:
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
         if  i==0: h_jetHtTriggerRatio[tg].Draw()
         if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
         i += 1
 
-    cv2.BuildLegend(0.2,0.9,0.2,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+    i=0
+    for tg in trigList["stndlone"]:
+        h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
+        h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
+        if  i==0: h_jetHtTriggerRatio[tg].Draw()
+        if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
+        i += 1
+
+    cv2.BuildLegend(0.4,0.3,0.4,0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     cv3=triggerCanvas.cd(1)
@@ -177,20 +185,27 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_muonPt[tg].Draw('same')
-    cv3.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+    cv3.BuildLegend(0.4,0.3,0.4,0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     cv4=triggerCanvas.cd(1)
     i=0
-    for tg in (trigList["combos"] and trigList["stndlone"]):
+    for tg in trigList["combos"]:
         h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         if i == 0 :h_muoPtTriggerRatio[tg].Draw()
         if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
         i += 1
-    cv4.BuildLegend(0.2,0.9,0.2,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+
+    for tg in trigList["stndlone"]:
+        h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
+        h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
+        if i == 0 :h_muoPtTriggerRatio[tg].Draw()
+        if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
+        i += 1
+    cv4.BuildLegend(0.4,0.3,0.4,0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     # - Eta plots ------------------------------------------
@@ -200,8 +215,8 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetEta[tg].Draw('same')
-    cv5.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+    cv5.BuildLegend(0.4,0.3,0.4,0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     cv6=triggerCanvas.cd(1)
@@ -210,8 +225,8 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_muonEta[tg].Draw('same')
-    cv6.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+    cv6.BuildLegend(0.4,0.3,0.4,0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
 
@@ -222,8 +237,8 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetPhi[tg].Draw('same')
-    cv7.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+    cv7.BuildLegend(0.4,0.3,0.4,0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     cv8=triggerCanvas.cd(1)
@@ -232,8 +247,8 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_muonPhi[tg].Draw('same')
-    cv8.BuildLegend(0.4,0.9,0.4,0.9)
-    ROOT.gStyle.SetLegendTextSize(0.03)
+    cv8.BuildLegend(0.4,0.3,0.4,0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     # - Eta-Phi Map plots ------------------------------------------

@@ -50,41 +50,41 @@ class HistogramMaker(Module):
         Module.beginJob(self,histFile,histDirName) #pass histFile and histDirName first passed to the PostProcessor
 
         # - Defining histograms to be saved to file
-        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 200, 1, 2600)
+        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 300, 1, 3000)
         self.addObject(self.h_jetHt['no_trigger'])
-        self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', ';H_{T};Events', 200,-6, 8)
+        self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', ';Jet #eta;Events', 300,-6, 8)
         self.addObject(self.h_jetEta['no_trigger'])
-        self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', ';H_{T};Events', 200, -6, 8)
+        self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', ';Jet #phi;Events', 300, -6, 8)
         self.addObject(self.h_jetPhi['no_trigger'])
-        self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', ';H_{T};Events', 200, -6, 6, 20, -3.2, 3.2)
+        self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', ';Jet Eta;Jet Phi', 300, -6, 6, 20, -3.2, 3.2)
         self.addObject(self.h_jetMap['no_trigger'])
 
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 300, 0, 300)
         self.addObject(self.h_muonPt['no_trigger'])
-        self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', ';Muon P_{T};Events', 300, -6, 8)
+        self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', ';Muon #eta;Events', 300, -6, 8)
         self.addObject(self.h_muonEta['no_trigger'])
-        self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', ';Muon P_{T};Events', 300, -6, 8)
+        self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', ';Muon #phi;Events', 300, -6, 8)
         self.addObject(self.h_muonPhi['no_trigger'])
-        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', ';Muon P_{T};Events', 300, -6, 6, 20, -3.2, 3.2)
+        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', ';Muon Eta;Muon Phi', 300, -6, 6, 20, -3.2, 3.2)
         self.addObject(self.h_muonMap['no_trigger'])
 
         for key in self.trigLst:
             for trgPath in self.trigLst[key]:
-                self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 200, 1, 2600)
+                self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 300, 1, 3000)
                 self.addObject(self.h_jetHt[trgPath])
-                self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Events', 200, -6, 8)
+                self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Events', 300, -6, 8)
                 self.addObject(self.h_jetEta[trgPath])
-                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Events', 200, -6, 8)
+                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Events', 300, -6, 8)
                 self.addObject(self.h_jetPhi[trgPath])
                 self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath,  trgPath + ';Jet Eta;Jet Phi', 40, -6, 6, 20, -3.2, 3.2)
                 self.addObject(self.h_jetMap[trgPath])
                 self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 300, 0, 300)
                 self.addObject(self.h_muonPt[trgPath])
-                self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Events', 200, -4, 7)
+                self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Events', 300, -4, 7)
                 self.addObject(self.h_muonEta[trgPath])
-                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Events', 200, -6, 8)
+                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Events', 300, -6, 8)
                 self.addObject(self.h_muonPhi[trgPath])
-                self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath,  trgPath + ';Jet Eta;Jet Phi', 40, -3, 3, 20, -3.2, 3.2)
+                self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath,  trgPath + ';Muon Eta;Muon Phi', 40, -3, 3, 20, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath]) #Draw ith CONTZ COLZPOL COLZ1 ARR E
 
         # - Test creation of ntuple
@@ -151,7 +151,14 @@ class HistogramMaker(Module):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         jetHT[tg] += jet.pt
+                        self.h_jetEta[tg].Fill(jet.eta)
+                        self.h_jetPhi[tg].Fill(jet.phi)
+                        self.h_jetMap[tg].Fill(jet.eta , jet.phi)
+                        #self.nJet.Fill(jetHT[tg],jet.eta, jet.phi)
             jetHT["notrig"] += jet.pt
+            self.h_jetEta['no_trigger'].Fill(jet.eta)
+            self.h_jetPhi['no_trigger'].Fill(jet.phi)
+            self.h_jetMap['no_trigger'].Fill(jet.eta , jet.phi)
 
         for nm, muon in enumerate(muons) :
             # - FIXME: Correct identification cuts for muons.
@@ -169,6 +176,9 @@ class HistogramMaker(Module):
                             self.h_muonPhi[tg].Fill(muon.phi)
                             self.h_muonMap[tg].Fill(muon.eta , muon.phi)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
+                self.h_muonEta['no_trigger'].Fill(muon.eta)
+                self.h_muonPhi['no_trigger'].Fill(muon.phi)
+                self.h_muonMap['no_trigger'].Fill(muon.eta , muon.phi)
 
         if nJetPass >5 and nBtagPass >0:
             self.h_eventsPrg.Fill(1)
@@ -181,10 +191,7 @@ class HistogramMaker(Module):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         self.h_jetHt[tg].Fill(jetHT[tg])
-                        self.h_jetEta[tg].Fill(jet.eta)
-                        self.h_jetPhi[tg].Fill(jet.phi)
-                        self.h_jetMap[tg].Fill(jet.eta , jet.phi)
-                        self.nJet.Fill(jetHT[tg],jet.eta, jet.phi)
+
             self.h_jetHt['no_trigger'].Fill(jetHT["notrig"])
         
         return True
