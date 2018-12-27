@@ -145,7 +145,6 @@ def main(argms):
 
     # - HT plots ---------------------------------
     cv1=triggerCanvas.cd(1)
-    latex = TLatex()
     h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_jetHt["notrigger"].Draw()
     for key in trigList:
@@ -154,8 +153,8 @@ def main(argms):
     cv1.BuildLegend(0.4,0.3,0.4,0.3)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    latex.DrawLatex(.083,.95,"#bf{CMS}")
-    latex.DrawLatex(.083,.9, argms.inputLFN)
+    l.DrawLatex(.083,.9,"#bf{CMS}")
+    l.DrawLatex(.083,.7, argms.inputLFN)
     pdfCreator(1,triggerCanvas)
 
     cv2=triggerCanvas.cd(1)
@@ -251,16 +250,14 @@ def main(argms):
 
     # - Eta-Phi Map plots ------------------------------------------
     triggerCanvas.cd(1)
-    h_jetMap["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_jetMap["notrigger"].Draw('CONTZ')
+    h_jetMap["notrigger"].Draw('CONT4Z')
     pdfCreator(1,triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_jetMap[tg].Draw('COLZ1')
+            h_jetMap[tg].Draw('CONT4Z')
             pdfCreator(1,triggerCanvas)
 
-    h_muonMap["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_muonMap["notrigger"].Draw('ARR')
+    h_muonMap["notrigger"].Draw('SURF5')
     pdfCreator(1,triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
