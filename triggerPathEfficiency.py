@@ -130,26 +130,54 @@ def main(argms):
     # - Draw on Canvas #
     ####################
     # - Canvas Details
-    triggerCanvas.cd(2)
-    l = TLatex(0.1,0.4,"""#splitline{On-line (pre-)selection Requisites:} 
-                          {nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 && 
-                          ( nMuon >0 || nElectron >0 ) && Muon_softId == 1 } 
-                        {Event Limit : None} 
-                        {Off-line (post-)selection Requisites:} 
-                          {jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets
+    triggerCanvas.cd(1)
+    l = TLatex(0.1,0.4,"""On-line (pre-)selection Requisites: 
+                          nJet > 5 && Jet.jetId>2 && abs(Jet.eta) <2.4 && 
+                          ( nMuon >0 || nElectron >0 ) && Muon.softId == 1  
+                         Event Limit : None
+                        Off-line (post-)selection Requisites:
+                          jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets
                           jet.btagDeepFlavB > 0.7489 for at least one jet
-                          muon_tightId=True and muon_|#eta|<2.4 
-                          and muon.miniPFRelIso_all<0.15 for at least one muon}
+                          muontightId=True and muon |#eta|<2.4 
+                          and muon.miniPFRelIso_all<0.15 for at least one muon
                         """
                )
     l.SetTextSize(0.015)
     l.Draw()
     pdfCreator(0,triggerCanvas)
 
+    triggerCanvas.cd(1)
+    l = TLatex()                                                                                                                                                         
+    l.DrawLatex(0.1, 0.90, "#bold{On-line (pre-)selection Requisites:}")
+    l.DrawLatex(0.2, 0.85, "#spade nJet > 5 and Jet.jetId>2 and abs(Jet.eta) <2.4 ")
+    l.DrawLatex(0.2, 0.85, "#spade (nMuon >0 or nElectron >0 ) and Muon.softId == 1")
+    l.DrawLatex(0.1, 0.80, "#bold{Event Limit: } None (see last page)")
+    l.DrawLatex(0.1, 0.75, "#bold{Off-line (post-)selection Requisites:}")
+    l.DrawLatex(0.2, 0.70, "#bullet jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets")
+    l.DrawLatex(0.2, 0.65, "#bullet jet.btagDeepFlavB > 0.7489 for at least one jet ")
+    l.DrawLatex(0.2, 0.60, "#bullet muontightId=True and muon |#eta|<2.4 and muon.miniPFRelIso_all<0.15 for at least one muon")
+    l.SetTextSize(0.015)
+    l.Draw()
+    pdfCreator(1,triggerCanvas)
+
+    triggerCanvas.cd(1)
+    l = TLatex()
+    l.DrawLatex(0.1, 0.90, "#bold{On-line (pre-)selection Requisites:}")
+    l.DrawLatex(0.2, 0.85, "#spade nJet > 5 and Jet.jetId>2 and abs(Jet.eta) <2.4 ")
+    l.DrawLatex(0.2, 0.85, "#spade (nMuon >0 or nElectron >0 ) and Muon.softId == 1")
+    l.DrawLatex(0.1, 0.80, "#bold{Event Limit: } None (see last page)")
+    l.DrawLatex(0.1, 0.75, "#bold{Off-line (post-)selection Requisites:}")
+    l.DrawLatex(0.2, 0.70, "#bullet jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets")
+    l.DrawLatex(0.2, 0.65, "#bullet jet.btagDeepFlavB > 0.7489 for at least one jet ")
+    l.DrawLatex(0.2, 0.60, "#bullet muontightId=True and muon |#eta|<2.4 and muon.miniPFRelIso_all<0.15 for at least one muon")
+    l.SetTextSize(0.015)
+    pdfCreator(1,triggerCanvas)
+
     # - HT or pT plots ---------------------------------
     cv1=triggerCanvas.cd(1)
-    TLatex.DrawLatex(.083,.95,"#bold{CMS}")
-    TLatex.DrawLatex(.083,.9, argms.inputLFN)
+    latex = TLatex()
+    latex.DrawLatex(.083,.95,"#bold{CMS}")
+    latex.DrawLatex(.083,.9, argms.inputLFN)
     h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_jetHt["notrigger"].Draw()
     for key in trigList:
@@ -158,6 +186,7 @@ def main(argms):
     cv1.BuildLegend(0.4,0.3,0.4,0.3)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
+    latex.Draw("same")
     pdfCreator(1,triggerCanvas)
 
     cv2=triggerCanvas.cd(1)
