@@ -131,53 +131,21 @@ def main(argms):
     ####################
     # - Canvas Details
     triggerCanvas.cd(1)
-    l = TLatex(0.1,0.4,"""On-line (pre-)selection Requisites: 
-                          nJet > 5 && Jet.jetId>2 && abs(Jet.eta) <2.4 && 
-                          ( nMuon >0 || nElectron >0 ) && Muon.softId == 1  
-                         Event Limit : None
-                        Off-line (post-)selection Requisites:
-                          jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets
-                          jet.btagDeepFlavB > 0.7489 for at least one jet
-                          muontightId=True and muon |#eta|<2.4 
-                          and muon.miniPFRelIso_all<0.15 for at least one muon
-                        """
-               )
-    l.SetTextSize(0.015)
-    l.Draw()
-    pdfCreator(0,triggerCanvas)
-
-    triggerCanvas.cd(1)
     l = TLatex()                                                                                                                                                         
-    l.DrawLatex(0.1, 0.90, "#bold{On-line (pre-)selection Requisites:}")
-    l.DrawLatex(0.2, 0.85, "#spade nJet > 5 and Jet.jetId>2 and abs(Jet.eta) <2.4 ")
-    l.DrawLatex(0.2, 0.85, "#spade (nMuon >0 or nElectron >0 ) and Muon.softId == 1")
-    l.DrawLatex(0.1, 0.80, "#bold{Event Limit: } None (see last page)")
-    l.DrawLatex(0.1, 0.75, "#bold{Off-line (post-)selection Requisites:}")
-    l.DrawLatex(0.2, 0.70, "#bullet jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets")
-    l.DrawLatex(0.2, 0.65, "#bullet jet.btagDeepFlavB > 0.7489 for at least one jet ")
-    l.DrawLatex(0.2, 0.60, "#bullet muontightId=True and muon |#eta|<2.4 and muon.miniPFRelIso_all<0.15 for at least one muon")
-    l.SetTextSize(0.015)
-    l.Draw()
-    pdfCreator(1,triggerCanvas)
-
-    triggerCanvas.cd(1)
-    l = TLatex()
-    l.DrawLatex(0.1, 0.90, "#bold{On-line (pre-)selection Requisites:}")
-    l.DrawLatex(0.2, 0.85, "#spade nJet > 5 and Jet.jetId>2 and abs(Jet.eta) <2.4 ")
-    l.DrawLatex(0.2, 0.85, "#spade (nMuon >0 or nElectron >0 ) and Muon.softId == 1")
-    l.DrawLatex(0.1, 0.80, "#bold{Event Limit: } None (see last page)")
-    l.DrawLatex(0.1, 0.75, "#bold{Off-line (post-)selection Requisites:}")
-    l.DrawLatex(0.2, 0.70, "#bullet jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets")
-    l.DrawLatex(0.2, 0.65, "#bullet jet.btagDeepFlavB > 0.7489 for at least one jet ")
-    l.DrawLatex(0.2, 0.60, "#bullet muontightId=True and muon |#eta|<2.4 and muon.miniPFRelIso_all<0.15 for at least one muon")
+    l.DrawLatex(0.10, 0.70, "#bf{On-line (pre-)selection Requisites for:}")
+    l.DrawLatex(0.16, 0.65, "#spade #bf{Jets:} number > 5 , jetId > 2 and |#eta| < 2.4 ")
+    l.DrawLatex(0.16, 0.60, "#spade #bf{Muons:} number >0 and has softId")
+    l.DrawLatex(0.10, 0.55, "#bf{Event Limit: } None (see last page)")
+    l.DrawLatex(0.10, 0.50, "#bf{Off-line (post-)selection Requisites for:}")
+    l.DrawLatex(0.16, 0.45, "#bullet bf{Jets:} jetId > 2 , p_{T} > 30 and |#eta|<2.4 (for at least 6)")
+    l.DrawLatex(0.16, 0.40, "      btagDeepFlavB > 0.7489 (for at least one jet) ")
+    l.DrawLatex(0.16, 0.35, "#bullet bf{Muons:} has tightId, |#eta|<2.4 and miniPFRelIso_all<0.15 (for at least 1)")
     l.SetTextSize(0.015)
     pdfCreator(1,triggerCanvas)
 
-    # - HT or pT plots ---------------------------------
+    # - HT plots ---------------------------------
     cv1=triggerCanvas.cd(1)
     latex = TLatex()
-    latex.DrawLatex(.083,.95,"#bold{CMS}")
-    latex.DrawLatex(.083,.9, argms.inputLFN)
     h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_jetHt["notrigger"].Draw()
     for key in trigList:
@@ -186,7 +154,8 @@ def main(argms):
     cv1.BuildLegend(0.4,0.3,0.4,0.3)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    latex.Draw("same")
+    latex.DrawLatex(.083,.95,"#bf{CMS}")
+    latex.DrawLatex(.083,.9, argms.inputLFN)
     pdfCreator(1,triggerCanvas)
 
     cv2=triggerCanvas.cd(1)
@@ -197,8 +166,6 @@ def main(argms):
         if  i==0: h_jetHtTriggerRatio[tg].Draw()
         if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
         i += 1
-
-    i=0
     for tg in trigList["stndlone"]:
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
@@ -210,6 +177,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
+    # - pT plots ---------------------------------
     cv3=triggerCanvas.cd(1)
     h_muonPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_muonPt["notrigger"].Draw()
@@ -228,7 +196,6 @@ def main(argms):
         if i == 0 :h_muoPtTriggerRatio[tg].Draw()
         if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
         i += 1
-
     for tg in trigList["stndlone"]:
         h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
@@ -289,15 +256,15 @@ def main(argms):
     pdfCreator(1,triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_jetMap[tg].Draw('CONTZ')
+            h_jetMap[tg].Draw('COLZ1')
             pdfCreator(1,triggerCanvas)
 
     h_muonMap["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_muonMap["notrigger"].Draw('CONTZ')
+    h_muonMap["notrigger"].Draw('ARR')
     pdfCreator(1,triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_muonMap[tg].Draw('CONTZ')
+            h_muonMap[tg].Draw('E')
             pdfCreator(1,triggerCanvas)
 
     # - Test Event numbers along steps ----------
