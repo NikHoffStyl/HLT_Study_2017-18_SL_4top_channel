@@ -131,15 +131,15 @@ def main(argms):
     ####################
     # - Canvas Details
     triggerCanvas.cd(2)
-    l = TLatex(0.1,0.4,"""On-line (pre-)selection Requisites: \n
-                          nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 && \n
-                          ( nMuon >0 || nElectron >0 ) && Muon_softId == 1  \n \n
-                        Event Limit : None \n \n
-                        Off-line (post-)selection Requisites: \n
-                          jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets \n
-                          jet.btagDeepFlavB > 0.7489 for at least one jet \n
+    l = TLatex(0.1,0.4,"""#splitline{On-line (pre-)selection Requisites:} 
+                          {nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 && 
+                          ( nMuon >0 || nElectron >0 ) && Muon_softId == 1 } 
+                        {Event Limit : None} 
+                        {Off-line (post-)selection Requisites:} 
+                          {jet.jetId>2 or jet.pt>30 or jet|#eta|<2.4 for at least 6 jets
+                          jet.btagDeepFlavB > 0.7489 for at least one jet
                           muon_tightId=True and muon_|#eta|<2.4 
-                          and muon.miniPFRelIso_all<0.15 for at least one muon
+                          and muon.miniPFRelIso_all<0.15 for at least one muon}
                         """
                )
     l.SetTextSize(0.015)
@@ -148,6 +148,8 @@ def main(argms):
 
     # - HT or pT plots ---------------------------------
     cv1=triggerCanvas.cd(1)
+    TLatex.DrawLatex(.083,.95,"#bold{CMS}")
+    TLatex.DrawLatex(.083,.9, argms.inputLFN)
     h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_jetHt["notrigger"].Draw()
     for key in trigList:
