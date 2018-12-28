@@ -132,20 +132,20 @@ def main(argms):
     # - Canvas Details
     triggerCanvas.cd(1)
     l = TLatex()                                                                                                                                                         
-    l.DrawLatex(0.10, 0.70, "#bf{On-line (pre-)selection Requisites for:}")
-    l.DrawLatex(0.16, 0.65, "#spade #bf{Jets:} number > 5 , jetId > 2 and |#eta| < 2.4 ")
-    l.DrawLatex(0.16, 0.60, "#spade #bf{Muons:} number >0 and has softId")
-    l.DrawLatex(0.10, 0.55, "#bf{Event Limit: } None (see last page)")
-    l.DrawLatex(0.10, 0.50, "#bf{Off-line (post-)selection Requisites for:}")
-    l.DrawLatex(0.16, 0.45, "#bullet bf{Jets:} jetId > 2 , p_{T} > 30 and |#eta|<2.4 (for at least 6)")
-    l.DrawLatex(0.16, 0.40, "      btagDeepFlavB > 0.7489 (for at least one jet) ")
-    l.DrawLatex(0.16, 0.35, "#bullet bf{Muons:} has tightId, |#eta|<2.4 and miniPFRelIso_all<0.15 (for at least 1)")
+    l.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
+    l.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > 5 , jetId > 2 and |#eta| < 2.4 }")
+    l.DrawLatex(0.16, 0.60, "#bullet Muons: #bf{number >0 and has softId}")
+    l.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
+    l.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
+    l.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > 2 , p_{T} > 30 and |#eta|<2.4 (for at least 6)}")
+    l.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
+    l.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<2.4 and miniPFRelIso_all<0.15 (for at least 1)}")
     l.SetTextSize(0.015)
     pdfCreator(1,triggerCanvas)
 
     # - HT plots ---------------------------------
     cv1=triggerCanvas.cd(1)
-    h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    #h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_jetHt["notrigger"].Draw()
     for key in trigList:
         for tg in trigList[key]:
@@ -153,8 +153,10 @@ def main(argms):
     cv1.BuildLegend(0.4,0.3,0.4,0.3)
     #leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    l.DrawLatex(.083,.9,"#bf{CMS}")
-    l.DrawLatex(.083,.7, argms.inputLFN)
+    tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     pdfCreator(1,triggerCanvas)
 
     cv2=triggerCanvas.cd(1)
@@ -162,28 +164,40 @@ def main(argms):
     for tg in trigList["combos"]:
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
-        if  i==0: h_jetHtTriggerRatio[tg].Draw()
+        if  i==0: 
+            h_jetHtTriggerRatio[tg].Draw()
+            tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
         if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
         i += 1
     for tg in trigList["stndlone"]:
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
-        if  i==0: h_jetHtTriggerRatio[tg].Draw()
+        if  i==0: 
+            h_jetHtTriggerRatio[tg].Draw()
+            tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
         if  i==1: h_jetHtTriggerRatio[tg].Draw('same')
         i += 1
 
     cv2.BuildLegend(0.4,0.3,0.4,0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     pdfCreator(1,triggerCanvas)
 
     # - pT plots ---------------------------------
     cv3=triggerCanvas.cd(1)
-    h_muonPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    #h_muonPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_muonPt["notrigger"].Draw()
+    tX1 = 0.04*(h_muonPt["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
             h_muonPt[tg].Draw('same')
     cv3.BuildLegend(0.4,0.3,0.4,0.3)
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
@@ -192,81 +206,109 @@ def main(argms):
     for tg in trigList["combos"]:
         h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
-        if i == 0 :h_muoPtTriggerRatio[tg].Draw()
+        if i == 0 :
+            h_muoPtTriggerRatio[tg].Draw()
+            tX1 = 0.04*(h_muoPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95*(h_muoPtTriggerRatio[tg].GetMaximum())
         if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
         i += 1
     for tg in trigList["stndlone"]:
         h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
-        if i == 0 :h_muoPtTriggerRatio[tg].Draw()
+        if i == 0 :
+            h_muoPtTriggerRatio[tg].Draw()
+            tX1 = 0.04*(h_muoPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95*(h_muoPtTriggerRatio[tg].GetMaximum())
         if i == 1 :h_muoPtTriggerRatio[tg].Draw('same')
         i += 1
     cv4.BuildLegend(0.4,0.3,0.4,0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     pdfCreator(1,triggerCanvas)
 
     # - Eta plots ------------------------------------------
     cv5=triggerCanvas.cd(1)
-    h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    #h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
     h_jetEta["notrigger"].Draw()
+    tX1 = 0.94*(-6)
+    tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
             h_jetEta[tg].Draw('same')
     cv5.BuildLegend(0.4,0.3,0.4,0.3)
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     cv6=triggerCanvas.cd(1)
-    h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    #h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_muonEta["notrigger"].Draw()
+    tX1 = 0.94*(-6)
+    tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
             h_muonEta[tg].Draw('same')
     cv6.BuildLegend(0.4,0.3,0.4,0.3)
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
 
     # - Phi plots ------------------------------------------
     cv7=triggerCanvas.cd(1)
-    h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    #h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.3)
     h_jetPhi["notrigger"].Draw()
+    tX1 = 0.94*(-6)
+    tY1 = 0.95*(h_jetPhi["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
             h_jetPhi[tg].Draw('same')
     cv7.BuildLegend(0.4,0.3,0.4,0.3)
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     cv8=triggerCanvas.cd(1)
-    h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    #h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
     h_muonPhi["notrigger"].Draw()
+    tX1 = 0.94*(-6)
+    tY1 = 0.97*(h_muonPhi["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
             h_muonPhi[tg].Draw('same')
     cv8.BuildLegend(0.4,0.3,0.4,0.3)
+    l.SetTextSize(0.03)
+    l.DrawLatex(tX1,tY1,"#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(1,triggerCanvas)
 
     # - Eta-Phi Map plots ------------------------------------------
     triggerCanvas.cd(1)
-    h_jetMap["notrigger"].Draw('CONT4Z')
+    h_jetMap["notrigger"].Draw('SURF1')#CONT4Z
     pdfCreator(1,triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_jetMap[tg].Draw('CONT4Z')
+            h_jetMap[tg].Draw('SURF1')
             pdfCreator(1,triggerCanvas)
 
-    h_muonMap["notrigger"].Draw('SURF5')
+    h_muonMap["notrigger"].Draw('SURF1')
     pdfCreator(1,triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_muonMap[tg].Draw('E')
+            h_muonMap[tg].Draw('SURF1')#E
             pdfCreator(1,triggerCanvas)
 
     # - Test Event numbers along steps ----------
     triggerCanvas.cd(1)
     h_eventsPrg.Draw()
+    tY1 = 0.05*(h_eventsPrg.GetMaximum())
+    l.SetTextAngle(50)
+    l.DrawLatex(0.5,tY1,"Pre-selection")
+    l.DrawLatex(1.5,tY1,"Post-selection")
     pdfCreator(2,triggerCanvas)
 
     histFile.Close()
