@@ -306,7 +306,7 @@ def main(argms):
     triggerCanvas.cd(1)
     h_eventsPrg.Draw()
     tY1 = 0.05*(h_eventsPrg.GetMaximum())
-    l.SetTextAngle(50)
+    l.SetTextAngle(80)
     l.DrawLatex(0.5,tY1,"Pre-selection")
     l.DrawLatex(1.5,tY1,"Post-selection")
     pdfCreator(2,triggerCanvas)
