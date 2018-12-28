@@ -141,7 +141,7 @@ def main(argms):
     l.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     l.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<2.4 and miniPFRelIso_all<0.15 (for at least 1)}")
     l.SetTextSize(0.015)
-    pdfCreator(1,triggerCanvas)
+    pdfCreator(0,triggerCanvas)
 
     # - HT plots ---------------------------------
     cv1=triggerCanvas.cd(1)
