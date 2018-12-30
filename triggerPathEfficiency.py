@@ -43,7 +43,7 @@ def main(argms):
     elif argms.inputLFN == "wjets":
         inputFile = "OutHistosWjets.root"
     elif argms.inputLFN == "tttt":
-        inputFile = "TestOutHistosTTTT_6jets.root"
+        inputFile = "OutHistosTTTT_6jets.root"
     else:
         return 0
     

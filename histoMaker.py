@@ -18,7 +18,7 @@ class HistogramMaker(Module):
         self.comboCounter = 0
         self.numTriggers = len(trigLst["t1"]) * len(trigLst["t2"]) + len(trigLst["stndlone"])
         print("Number of Combined Triggers: %d" % self.numTriggers)
-        self.trigCombination = []*self.numTriggers
+        self.trigCombination = [0]*self.numTriggers
         self.h_jetHt = {}
         self.h_jetEta = {}
         self.h_jetPhi = {}
