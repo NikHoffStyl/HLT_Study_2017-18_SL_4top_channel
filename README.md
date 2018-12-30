@@ -5,18 +5,18 @@ Repository for Working in the Single Lepton tttt decay channel.
 
   * To produce a text file of [triggers](https://twiki.cern.ch/twiki/bin/view/CMS/TriggerStudies)
 ( and other unwanted stuff, which will be removed) do:
-```bash
-     $ HLTnames.py | tee LeafNames.txt
+```
+    $ HLTnames.py | tee LeafNames.txt
 ```
     
 or 
-```bash
-     $ HLTnames.py > LeafNames.txt
+```
+    $ HLTnames.py > LeafNames.txt
 ```
 
 To produce histograms run:
-```bash
-     $ python nsMain.py
+```
+    $ python3 nsMain.py
 ```
 which imports histoMaker and adds HistogramMaker() as an argument to the postProcessor. 
 The choice of triggers is given here, along with the preselection criteria.
@@ -41,12 +41,12 @@ optional arguments:
 ```
 ___
 
-To produce [trigger efficiency](triggerPathEfficiency.py) plots run:
+To produce [`trigger efficiency`](triggerPathEfficiency.py) plots run:
 ```
-$ python triggerPathEfficiency.py
+    $ python3 triggerPathEfficiency.py
 ```
 
-The help nessage given for [`triggerPathEfficiency.py](triggerPathEfficiency.py)
+The help nessage given for [`triggerPathEfficiency.py`](triggerPathEfficiency.py) is:
 ```
 usage: triggerPathEfficiency.py [-h] [-f {ttjets,tttt,tttt_weights,wjets}]
 
