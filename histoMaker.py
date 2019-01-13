@@ -21,14 +21,28 @@ class HistogramMaker(Module):
         self.numTriggers = len(trigLst["t1"]) * len(trigLst["t2"]) + len(trigLst["stndlone"])
         print("Number of Combined Triggers: %d" % self.numTriggers)
         self.trigCombination = [0]*self.numTriggers
+
         self.h_jetHt = {}
         self.h_jetEta = {}
         self.h_jetPhi = {}
         self.h_jetMap = {}
+
         self.h_muonPt = {}
         self.h_muonEta = {}
         self.h_muonPhi = {}
         self.h_muonMap = {}
+
+        self.h_elPt = {}
+        self.h_elEta = {}
+        self.h_elPhi = {}
+        self.h_elMap = {}
+
+        self.h_metPt = {}
+        self.h_metPhi = {}
+
+        self.h_genMetPt = {}
+        self.h_genMetPhi = {}
+
         self.nJet = None
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';steps;entries', 11, 0, 11)
 
@@ -69,6 +83,26 @@ class HistogramMaker(Module):
         self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', ';Muon Eta;Muon Phi', 300, -6, 6, 20, -3.2, 3.2)
         self.addObject(self.h_muonMap['no_trigger'])
 
+        self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', ';Electron P_{T};Events', 300, 0, 300)
+        self.addObject(self.h_elPt['no_trigger'])
+        self.h_elEta['no_trigger'] = ROOT.TH1D('h_elEta_notrigger', ';Electron #eta;Events', 300, -6, 8)
+        self.addObject(self.h_elEta['no_trigger'])
+        self.h_elPhi['no_trigger'] = ROOT.TH1D('h_elPhi_notrigger', ';Electron #phi;Events', 300, -6, 8)
+        self.addObject(self.h_elPhi['no_trigger'])
+        self.h_elMap['no_trigger'] = ROOT.TH2F('h_elMap_notrigger', ';Electron Eta;Electron Phi',
+                                               300, -6, 6, 20, -3.2, 3.2)
+        self.addObject(self.h_elMap['no_trigger'])
+
+        self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', ';MET P_{T};Events', 300, 0, 300)
+        self.addObject(self.h_metPt['no_trigger'])
+        self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', ';MET #phi;Events', 300, -6, 8)
+        self.addObject(self.h_metPhi['no_trigger'])
+
+        self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', ';GenMET P_{T};Events', 300, 0, 300)
+        self.addObject(self.h_genMetPt['no_trigger'])
+        self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', ';GenMET #phi;Events', 300, -6, 8)
+        self.addObject(self.h_genMetPhi['no_trigger'])
+
         for key in self.trigLst:
             for trgPath in self.trigLst[key]:
                 self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 300, 1, 3000)
@@ -80,6 +114,7 @@ class HistogramMaker(Module):
                 self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath,  trgPath + ';Jet Eta;Jet Phi',
                                                    40, -6, 6, 20, -3.2, 3.2)
                 self.addObject(self.h_jetMap[trgPath])
+
                 self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 300, 0, 300)
                 self.addObject(self.h_muonPt[trgPath])
                 self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Events', 300, -4, 7)
@@ -89,6 +124,28 @@ class HistogramMaker(Module):
                 self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath,  trgPath + ';Muon Eta;Muon Phi',
                                                     40, -3, 3, 20, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
+
+                self.h_elPt[trgPath] = ROOT.TH1D('h_elPt_' + trgPath, trgPath + ';Electron P_{T};Events', 300, 0, 300)
+                self.addObject(self.h_elPt[trgPath])
+                self.h_elEta[trgPath] = ROOT.TH1D('h_elEta_' + trgPath, trgPath + ';Electron #eta;Events', 300, -4, 7)
+                self.addObject(self.h_elEta[trgPath])
+                self.h_elPhi[trgPath] = ROOT.TH1D('h_elPhi_' + trgPath, trgPath + ';Electron #phi;Events', 300, -6, 8)
+                self.addObject(self.h_elPhi[trgPath])
+                self.h_elMap[trgPath] = ROOT.TH2F('h_elMap_' + trgPath, trgPath + ';Electron Eta;Electron Phi',
+                                                  40, -3, 3, 20, -3.2, 3.2)
+                self.addObject(self.h_elMap[trgPath])
+
+                self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T};Events', 300, 0, 300)
+                self.addObject(self.h_metPt[trgPath])
+                self.h_metPhi[trgPath] = ROOT.TH1D('h_metPhi_' + trgPath, trgPath + ';MET #phi;Events', 300, -6, 8)
+                self.addObject(self.h_metPhi[trgPath])
+
+                self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T};Events',
+                                                     300, 0, 300)
+                self.addObject(self.h_genMetPt[trgPath])
+                self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Events',
+                                                      300, -6, 8)
+                self.addObject(self.h_genMetPhi[trgPath])
 
         # - TODO: Test creation of ntuple
         self.nJet = ROOT.TNtuple("njet", "tuple of Jets", "HT : eta : phi ")
@@ -108,10 +165,12 @@ class HistogramMaker(Module):
         ##################################
         #  Event Collections and Objects #
         ##################################
-        # - Collections:
         muons = Collection(event, "Muon")
+        electrons = Collection(event, "Electron")
         jets = Collection(event, "Jet")
         hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
+        met = Object(event, "MET")
+        genMet = Object(event, "GenMET")
 
         trigPath = {}
 
@@ -134,6 +193,7 @@ class HistogramMaker(Module):
         nJetPass = 0
         nBtagPass = 0
         firstMuonPass = False
+        firstElPass = False
 
         for nj, jet in enumerate(jets):
             # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
@@ -144,7 +204,7 @@ class HistogramMaker(Module):
             else:
                 nJetPass += 1
 
-            # Count b-tagged jets with two algos at the medium working point
+            # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
             # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             if jet.btagDeepFlavB > 0.7489:
                 nBtagPass += 1
@@ -183,14 +243,50 @@ class HistogramMaker(Module):
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
 
+        for nl, el in enumerate(electrons):
+            if nl == 0:
+                if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
+                    continue
+                else:
+                    firstElPass = True
+
+            if nl == 0 and nJetPass > 5 and firstElPass is True and nBtagPass > 0:
+                for key in self.trigLst:
+                    for tg in self.trigLst[key]:
+                        if trigPath[tg]:
+                            self.h_elPt[tg].Fill(el.pt)
+                            self.h_elEta[tg].Fill(el.eta)
+                            self.h_elPhi[tg].Fill(el.phi)
+                            self.h_elMap[tg].Fill(el.eta, el.phi)
+                self.h_elPt['no_trigger'].Fill(el.pt)
+                self.h_elEta['no_trigger'].Fill(el.eta)
+                self.h_elPhi['no_trigger'].Fill(el.phi)
+                self.h_elMap['no_trigger'].Fill(el.eta, el.phi)
+
+        metPt = getattr(met, "pt")
+        metPhi = getattr(met, "phi")
+        genMetPt = getattr(genMet, "pt")
+        genMetPhi = getattr(genMet, "pt")
+        for key in self.trigLst:
+            for tg in self.trigLst[key]:
+                if trigPath[tg]:
+                    self.h_metPt[tg].Fill(metPt)
+                    self.h_metPhi[tg].Fill(metPhi)
+                    self.h_genMetPt[tg].Fill(genMetPt)
+                    self.h_genMetPhi[tg].Fill(genMetPhi)
+        self.h_metPt['no_trigger'].Fill(metPt)
+        self.h_metPhi['no_trigger'].Fill(metPhi)
+        self.h_genMetPt['no_trigger'].Fill(genMetPt)
+        self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
+
         if nJetPass > 5 and nBtagPass > 0:
             self.h_eventsPrg.Fill(1)
-            i = 0
+            # i = 0
             for key in self.trigLst:
-                for tg in self.trigLst[key]:
+                for i, tg in enumerate(self.trigLst[key]):
                     if trigPath[tg]:
                         self.h_eventsPrg.Fill(2+i)
-                        i += 1
+                        # i += 1
 
         if nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
             for key in self.trigLst:

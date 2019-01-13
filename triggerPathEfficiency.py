@@ -16,9 +16,9 @@ def process_arguments():
     return args
 
 
-def pdfCreator(arg, canvas):
+def pdfCreator(parg, arg, canvas):
     time_ = datetime.now()
-    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf")
+    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a" + parg.inputLFN + ".pdf")
     if not os.path.exists(os.path.dirname(filename)):
         try:
             os.makedirs(os.path.dirname(filename))
@@ -26,11 +26,11 @@ def pdfCreator(arg, canvas):
             if exc.errno != errno.EEXIST:
                 raise
     if arg == 0:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf("), "pdf")
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a" + parg.inputLFN + ".pdf("), "pdf")
     if arg == 1:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf"), "pdf")
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a" + parg.inputLFN + ".pdf"), "pdf")
     if arg == 2:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a.pdf)"), "pdf")
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a" + parg.inputLFN + ".pdf)"), "pdf")
 
 
 def main(argms):
@@ -61,8 +61,13 @@ def main(argms):
     h_muonEta = {}
     h_muonPhi = {}
     h_muonMap = {}
+    h_elPt = {}
+    h_elEta = {}
+    h_elPhi = {}
+    h_elMap = {}
     h_jetHtTriggerRatio = {}
-    h_muoPtTriggerRatio = {}
+    h_muonPtTriggerRatio = {}
+    h_elPtTriggerRatio = {}
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100, 600)
@@ -72,7 +77,7 @@ def main(argms):
     histFile = ROOT.TFile.Open(inputFile)
     histFile.cd("plots")
 
-    # - Jet HT histograms
+    # - Histograms
     h_jetHt["notrigger"] = ROOT.gDirectory.Get("h_jetHt_notrigger")
     h_jetHt["notrigger"].SetLineColor(1)
     if not (h_jetHt["notrigger"]):
@@ -89,6 +94,7 @@ def main(argms):
     h_jetMap["notrigger"].SetLineColor(1)
     if not (h_jetMap["notrigger"]):
         print("No trigger jet map histogram is empty")
+
     h_muonPt["notrigger"] = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt["notrigger"].SetLineColor(1)
     if not (h_muonPt["notrigger"]):
@@ -106,6 +112,23 @@ def main(argms):
     if not (h_muonMap["notrigger"]):
         print("No trigger muon map histogram is empty")
 
+    h_elPt["notrigger"] = ROOT.gDirectory.Get("h_elPt_notrigger")
+    h_elPt["notrigger"].SetLineColor(1)
+    if not (h_elPt["notrigger"]):
+        print("No trigger el Pt histogram is empty")
+    h_elEta["notrigger"] = ROOT.gDirectory.Get("h_elEta_notrigger")
+    h_elEta["notrigger"].SetLineColor(1)
+    if not (h_elEta["notrigger"]):
+        print("No trigger el eta histogram is empty")
+    h_elPhi["notrigger"] = ROOT.gDirectory.Get("h_elPhi_notrigger")
+    h_elPhi["notrigger"].SetLineColor(1)
+    if not (h_elPhi["notrigger"]):
+        print("No trigger el Phi histogram is empty")
+    h_elMap["notrigger"] = ROOT.gDirectory.Get("h_elMap_notrigger")
+    h_elMap["notrigger"].SetLineColor(1)
+    if not (h_elMap["notrigger"]):
+        print("No trigger el map histogram is empty")
+
     i = 2
     for key in trigList:
         for tg in trigList[key]:
@@ -113,10 +136,16 @@ def main(argms):
             h_jetEta[tg] = ROOT.gDirectory.Get("h_jetEta_" + tg)
             h_jetPhi[tg] = ROOT.gDirectory.Get("h_jetPhi_" + tg)
             h_jetMap[tg] = ROOT.gDirectory.Get("h_jetMap_" + tg)
+
             h_muonPt[tg] = ROOT.gDirectory.Get("h_muonPt_" + tg)
             h_muonEta[tg] = ROOT.gDirectory.Get("h_muonEta_" + tg)
             h_muonPhi[tg] = ROOT.gDirectory.Get("h_muonPhi_" + tg)
             h_muonMap[tg] = ROOT.gDirectory.Get("h_muonMap_" + tg)
+
+            h_elPt[tg] = ROOT.gDirectory.Get("h_elPt_" + tg)
+            h_elEta[tg] = ROOT.gDirectory.Get("h_elEta_" + tg)
+            h_elPhi[tg] = ROOT.gDirectory.Get("h_elPhi_" + tg)
+            h_elMap[tg] = ROOT.gDirectory.Get("h_elMap_" + tg)
 
             h_jetHt[tg].SetLineColor(i)
             h_jetEta[tg].SetLineColor(i)
@@ -124,6 +153,9 @@ def main(argms):
             h_muonPt[tg].SetLineColor(i)
             h_muonEta[tg].SetLineColor(i)
             h_muonPhi[tg].SetLineColor(i)
+            h_elPt[tg].SetLineColor(i)
+            h_elEta[tg].SetLineColor(i)
+            h_elPhi[tg].SetLineColor(i)
 
             i += 1
 
@@ -131,7 +163,7 @@ def main(argms):
     h_eventsPrg = ROOT.gDirectory.Get("h_eventsPrg")
     if not h_eventsPrg:
         print("h_eventsPrg histogram is empty")
-        return 
+        return
 
     ####################
     # - Draw on Canvas #
@@ -148,7 +180,17 @@ def main(argms):
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<2.4 and miniPFRelIso_all<0.15 (for at least 1)}")
     ltx.SetTextSize(0.015)
-    pdfCreator(0, triggerCanvas)
+    pdfCreator(argms, 0, triggerCanvas)
+
+    # - Create text for legend
+    if argms.inputLFN == "ttjets":
+        legString = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif argms.inputLFN == "tttt":
+        legString = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif argms.inputLFN == "tttt_weights":
+        legString = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    else:
+        legString = "#splitline{CMS}{W #rightarrow jets}"
 
     # - HT plots ---------------------------------
     cv1 = triggerCanvas.cd(1)
@@ -163,8 +205,8 @@ def main(argms):
     tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
-    pdfCreator(1, triggerCanvas)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
 
     cv2 = triggerCanvas.cd(1)
     i = 0
@@ -192,10 +234,10 @@ def main(argms):
     cv2.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
-    pdfCreator(1, triggerCanvas)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
 
-    # - pT plots ---------------------------------
+    # - Muon pT plots ---------------------------------
     cv3 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_muonPt["notrigger"].Draw()
@@ -206,40 +248,83 @@ def main(argms):
             h_muonPt[tg].Draw('same')
     cv3.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
+    ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
 
     cv4 = triggerCanvas.cd(1)
     i = 0
     for tg in trigList["combos"]:
-        h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
-        h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
+        h_muonPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
+        h_muonPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         if i == 0:
-            h_muoPtTriggerRatio[tg].Draw()
-            tX1 = 0.04*(h_muoPtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95*(h_muoPtTriggerRatio[tg].GetMaximum())
+            h_muonPtTriggerRatio[tg].Draw()
+            tX1 = 0.04*(h_muonPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95*(h_muonPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_muoPtTriggerRatio[tg].Draw('same')
+            h_muonPtTriggerRatio[tg].Draw('same')
         i += 1
     for tg in trigList["stndlone"]:
-        h_muoPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
-        h_muoPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
+        h_muonPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
+        h_muonPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         if i == 0:
-            h_muoPtTriggerRatio[tg].Draw()
-            tX1 = 0.04*(h_muoPtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95*(h_muoPtTriggerRatio[tg].GetMaximum())
+            h_muonPtTriggerRatio[tg].Draw()
+            tX1 = 0.04*(h_muonPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95*(h_muonPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_muoPtTriggerRatio[tg].Draw('same')
+            h_muonPtTriggerRatio[tg].Draw('same')
         i += 1
     cv4.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
-    pdfCreator(1, triggerCanvas)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    # - Electron pT plots ---------------------------------
+    cv5 = triggerCanvas.cd(1)
+    # h_elPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_elPt["notrigger"].Draw()
+    tX1 = 0.04 * (h_elPt["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95 * (h_elPt["notrigger"].GetMaximum())
+    for key in trigList:
+        for tg in trigList[key]:
+            h_elPt[tg].Draw('same')
+    cv5.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv6 = triggerCanvas.cd(1)
+    i = 0
+    for tg in trigList["combos"]:
+        h_elPtTriggerRatio[tg] = (h_elPt[tg]).Clone("h_elPtRatio" + tg)
+        h_elPtTriggerRatio[tg].Divide(h_elPt["notrigger"])
+        if i == 0:
+            h_elPtTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_elPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_elPtTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_elPtTriggerRatio[tg].Draw('same')
+        i += 1
+    for tg in trigList["stndlone"]:
+        h_elPtTriggerRatio[tg] = (h_elPt[tg]).Clone("h_elPtRatio" + tg)
+        h_elPtTriggerRatio[tg].Divide(h_elPt["notrigger"])
+        if i == 0:
+            h_elPtTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_elPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_elPtTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_elPtTriggerRatio[tg].Draw('same')
+        i += 1
+    cv6.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
 
     # - Eta plots ------------------------------------------
-    cv5 = triggerCanvas.cd(1)
+    cv7 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
     h_jetEta["notrigger"].Draw()
     tX1 = 0.94*(-6)
@@ -247,13 +332,13 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetEta[tg].Draw('same')
-    cv5.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv7.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
+    ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
 
-    cv6 = triggerCanvas.cd(1)
+    cv8 = triggerCanvas.cd(1)
     # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_muonEta["notrigger"].Draw()
     tX1 = 0.94*(-6)
@@ -261,14 +346,28 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_muonEta[tg].Draw('same')
-    cv6.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv8.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
+    ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv9 = triggerCanvas.cd(1)
+    # h_elEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
+    h_elEta["notrigger"].Draw()
+    tX1 = 0.94 * (-6)
+    tY1 = 0.95 * (h_elEta["notrigger"].GetMaximum())
+    for key in trigList:
+        for tg in trigList[key]:
+            h_elEta[tg].Draw('same')
+    cv9.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    pdfCreator(argms, 1, triggerCanvas)
 
     # - Phi plots ------------------------------------------
-    cv7 = triggerCanvas.cd(1)
+    cv10 = triggerCanvas.cd(1)
     # h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.3)
     h_jetPhi["notrigger"].Draw()
     tX1 = 0.94*(-6)
@@ -276,13 +375,13 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetPhi[tg].Draw('same')
-    cv7.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv10.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
+    ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
 
-    cv8 = triggerCanvas.cd(1)
+    cv11 = triggerCanvas.cd(1)
     # h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
     h_muonPhi["notrigger"].Draw()
     tX1 = 0.94*(-6)
@@ -290,27 +389,48 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_muonPhi[tg].Draw('same')
-    cv8.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv11.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}")
+    ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv12 = triggerCanvas.cd(1)
+    # h_elPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
+    h_elPhi["notrigger"].Draw()
+    tX1 = 0.94 * (-6)
+    tY1 = 0.97 * (h_elPhi["notrigger"].GetMaximum())
+    for key in trigList:
+        for tg in trigList[key]:
+            h_elPhi[tg].Draw('same')
+    cv12.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    pdfCreator(argms, 1, triggerCanvas)
 
     # - Eta-Phi Map plots ------------------------------------------
     triggerCanvas.cd(1)
     h_jetMap["notrigger"].Draw('SURF1')  # CONT4Z
-    pdfCreator(1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
             h_jetMap[tg].Draw('SURF1')
-            pdfCreator(1, triggerCanvas)
+            pdfCreator(argms, 1, triggerCanvas)
 
     h_muonMap["notrigger"].Draw('SURF1')
-    pdfCreator(1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
             h_muonMap[tg].Draw('SURF1')  # E
-            pdfCreator(1, triggerCanvas)
+            pdfCreator(argms, 1, triggerCanvas)
+
+    h_elMap["notrigger"].Draw('SURF1')
+    pdfCreator(argms, 1, triggerCanvas)
+    for key in trigList:
+        for tg in trigList[key]:
+            h_elMap[tg].Draw('SURF1')  # E
+            pdfCreator(argms, 1, triggerCanvas)
 
     # - Test Event numbers along steps ----------
     triggerCanvas.cd(1)
@@ -319,7 +439,12 @@ def main(argms):
     ltx.SetTextAngle(80)
     ltx.DrawLatex(0.5, tY1, "Pre-selection")
     ltx.DrawLatex(1.5, tY1, "Post-selection")
-    pdfCreator(2, triggerCanvas)
+    # i = 0
+    for key in trigList:
+        for i, tg in enumerate(trigList[key]):
+            ltx.DrawLatex(2.5+i, tY1, tg)
+            # i += 1
+    pdfCreator(argms, 2, triggerCanvas)
 
     histFile.Close()
 
