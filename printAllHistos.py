@@ -2,7 +2,7 @@ import ROOT
 import uproot
 
 
-class PrintAllHistos():
+class PrintAllHistos:
     """ This Module prints all histograms """
 
     def __init__(self, FileName):
