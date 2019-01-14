@@ -65,42 +65,42 @@ class HistogramMaker(Module):
         Module.beginJob(self, histFile, histDirName)  # pass histFile and histDirName first passed to the PostProcessor
 
         # - Defining histograms to be saved to file
-        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', ';H_{T};Events', 300, 1, 3000)
+        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', 'no trigger ;H_{T};Events', 300, 1, 3000)
         self.addObject(self.h_jetHt['no_trigger'])
-        self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', ';Jet #eta;Events', 300, -6, 8)
+        self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', 'no trigger ;Jet #eta;Events', 300, -6, 8)
         self.addObject(self.h_jetEta['no_trigger'])
-        self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', ';Jet #phi;Events', 300, -6, 8)
+        self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', 'no trigger ;Jet #phi;Events', 300, -6, 8)
         self.addObject(self.h_jetPhi['no_trigger'])
-        self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', ';Jet Eta;Jet Phi', 300, -6, 6, 20, -3.2, 3.2)
+        self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', 'no trigger ;Jet Eta;Jet Phi', 300, -6, 6, 20, -3.2, 3.2)
         self.addObject(self.h_jetMap['no_trigger'])
 
-        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', ';Muon P_{T};Events', 300, 0, 300)
+        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T};Events', 300, 0, 300)
         self.addObject(self.h_muonPt['no_trigger'])
-        self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', ';Muon #eta;Events', 300, -6, 8)
+        self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Events', 300, -6, 8)
         self.addObject(self.h_muonEta['no_trigger'])
-        self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', ';Muon #phi;Events', 300, -6, 8)
+        self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Events', 300, -6, 8)
         self.addObject(self.h_muonPhi['no_trigger'])
-        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', ';Muon Eta;Muon Phi', 300, -6, 6, 20, -3.2, 3.2)
+        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger ;Muon Eta;Muon Phi', 300, -6, 6, 20, -3.2, 3.2)
         self.addObject(self.h_muonMap['no_trigger'])
 
-        self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', ';Electron P_{T};Events', 300, 0, 300)
+        self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', 'no trigger ;Electron P_{T};Events', 300, 0, 300)
         self.addObject(self.h_elPt['no_trigger'])
-        self.h_elEta['no_trigger'] = ROOT.TH1D('h_elEta_notrigger', ';Electron #eta;Events', 300, -6, 8)
+        self.h_elEta['no_trigger'] = ROOT.TH1D('h_elEta_notrigger', 'no trigger ;Electron #eta;Events', 300, -6, 8)
         self.addObject(self.h_elEta['no_trigger'])
-        self.h_elPhi['no_trigger'] = ROOT.TH1D('h_elPhi_notrigger', ';Electron #phi;Events', 300, -6, 8)
+        self.h_elPhi['no_trigger'] = ROOT.TH1D('h_elPhi_notrigger', 'no trigger ;Electron #phi;Events', 300, -6, 8)
         self.addObject(self.h_elPhi['no_trigger'])
-        self.h_elMap['no_trigger'] = ROOT.TH2F('h_elMap_notrigger', ';Electron Eta;Electron Phi',
+        self.h_elMap['no_trigger'] = ROOT.TH2F('h_elMap_notrigger', 'no trigger ;Electron Eta;Electron Phi',
                                                300, -6, 6, 20, -3.2, 3.2)
         self.addObject(self.h_elMap['no_trigger'])
 
-        self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', ';MET P_{T};Events', 300, 0, 300)
+        self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T};Events', 300, 0, 300)
         self.addObject(self.h_metPt['no_trigger'])
-        self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', ';MET #phi;Events', 300, -6, 8)
+        self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Events', 300, -6, 8)
         self.addObject(self.h_metPhi['no_trigger'])
 
-        self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', ';GenMET P_{T};Events', 300, 0, 300)
+        self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T};Events', 300, 0, 300)
         self.addObject(self.h_genMetPt['no_trigger'])
-        self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', ';GenMET #phi;Events', 300, -6, 8)
+        self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Events', 300, -6, 8)
         self.addObject(self.h_genMetPhi['no_trigger'])
 
         for key in self.trigLst:
@@ -281,12 +281,12 @@ class HistogramMaker(Module):
 
         if nJetPass > 5 and nBtagPass > 0:
             self.h_eventsPrg.Fill(1)
-            # i = 0
+            i = 0
             for key in self.trigLst:
-                for i, tg in enumerate(self.trigLst[key]):
+                for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         self.h_eventsPrg.Fill(2+i)
-                        # i += 1
+                        i += 1
 
         if nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
             for key in self.trigLst:

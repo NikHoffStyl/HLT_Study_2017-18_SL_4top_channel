@@ -439,11 +439,11 @@ def main(argms):
     ltx.SetTextAngle(80)
     ltx.DrawLatex(0.5, tY1, "Pre-selection")
     ltx.DrawLatex(1.5, tY1, "Post-selection")
-    # i = 0
+    i = 0
     for key in trigList:
-        for i, tg in enumerate(trigList[key]):
-            ltx.DrawLatex(2.5+i, tY1, tg)
-            # i += 1
+        for tg in trigList[key]:
+            ltx.DrawLatex((i + 2.5), tY1, tg)
+            i += 1
     pdfCreator(argms, 2, triggerCanvas)
 
     histFile.Close()
