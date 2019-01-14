@@ -140,13 +140,15 @@ def main(argms):
                         postfix=thePostFix,
                         histFileName=outputFile,
                         histDirName="plots",
-                        branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
-                        outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
+                        branchsel="myInfiles/kd_branchsel.txt",
+                        outputbranchsel="myInfiles/kd_branchsel.txt",
+                        # branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
+                        # outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                         )
-    t0 = time.clock()
+    # t0 = time.clock()
     p99.run()
-    t1 = time.clock()
-    print("Elapsed time %7.1fs" % (t1-t0))
+    # t1 = time.clock()
+    # print("Elapsed time %7.1fs" % (t1-t0))
 
 
 main(process_arguments())
