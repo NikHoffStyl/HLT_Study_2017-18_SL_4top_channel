@@ -56,32 +56,36 @@ def main(argms):
         if argms.redirector == "local":
             inputLFNList = open("../myInFiles/TTjets/TTjets_files.txt", "r")
         else:
-            inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
-                                "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
+            inputLFNList = open("myInFiles/TTjets_files.txt", "r")
+            # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
+            #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
         outputFile = "OutHistosTT6jets.root"
     elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
         if argms.redirector == "local":
             inputLFNList = open("../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
         else:
-            inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/"
-                                "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r")
+            inputLFNList = open("myInFiles/TTTTweights_files.txt", "r")
+            # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/"
+            #                     "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT_PSWeights"
         outputFile = "OutHistosTTTTweights.root"
     elif argms.inputLFN == "wjets":  # W (to Lep + Nu) + jets
         if argms.redirector == "local":
             inputLFNList = open("../myInFiles/Wjets/Wjets_files.txt", "r")
         else:
-            inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/"
-                                "WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
+            inputLFNList = open("myInFiles/Wjets_files.txt", "r")
+            # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/"
+            #                     "WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "WJetsToLNu"
         outputFile = "OutHistosWjets.root"
     elif argms.inputLFN == "tttt":  # tttt MC
         if argms.redirector == "local":
             inputLFNList = open("../myInFiles/TTTT/TTTT_files.txt", "r")
         else:
-            inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/"
-                                "TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
+            inputLFNList = open("myInFiles/TTTT_files.txt", "r")
+            # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/"
+            #                     "TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
         outputFile = "OutHistosTTTT_6jets.root"
     else:

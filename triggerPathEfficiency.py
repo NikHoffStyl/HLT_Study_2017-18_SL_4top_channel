@@ -356,6 +356,92 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
+    # - MET pT plots ---------------------------------
+    cv13 = triggerCanvas.cd(1)
+    # h_metPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_metPt["notrigger"].Draw()
+    tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
+    for key in trigList:
+        for tg in trigList[key]:
+            h_metPt[tg].Draw('same')
+    cv13.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv14 = triggerCanvas.cd(1)
+    i = 0
+    for tg in trigList["combos"]:
+        h_metPtTriggerRatio[tg] = (h_metPt[tg]).Clone("h_metPtRatio" + tg)
+        h_metPtTriggerRatio[tg].Divide(h_metPt["notrigger"])
+        if i == 0:
+            h_metPtTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_metPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_metPtTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_metPtTriggerRatio[tg].Draw('same')
+        i += 1
+    for tg in trigList["stndlone"]:
+        h_metPtTriggerRatio[tg] = (h_metPt[tg]).Clone("h_metPtRatio" + tg)
+        h_metPtTriggerRatio[tg].Divide(h_metPt["notrigger"])
+        if i == 0:
+            h_metPtTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_metPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_metPtTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_elPtTriggerRatio[tg].Draw('same')
+        i += 1
+    cv14.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    # - GenMET pT plots ---------------------------------
+    cv15 = triggerCanvas.cd(1)
+    # h_genMetPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_genMetPt["notrigger"].Draw()
+    tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
+    for key in trigList:
+        for tg in trigList[key]:
+            h_genMetPt[tg].Draw('same')
+    cv15.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv16 = triggerCanvas.cd(1)
+    i = 0
+    for tg in trigList["combos"]:
+        h_genMetPtTriggerRatio[tg] = (h_genMetPt[tg]).Clone("h_genMetPtRatio" + tg)
+        h_genMetPtTriggerRatio[tg].Divide(h_genMetPt["notrigger"])
+        if i == 0:
+            h_genMetPtTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_genMetPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_genMetPtTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_genMetPtTriggerRatio[tg].Draw('same')
+        i += 1
+    for tg in trigList["stndlone"]:
+        h_genMetPtTriggerRatio[tg] = (h_genMetPt[tg]).Clone("h_genMetPtRatio" + tg)
+        h_genMetPtTriggerRatio[tg].Divide(h_genMetPt["notrigger"])
+        if i == 0:
+            h_genMetPtTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_genMetPtTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_genMetPtTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_elPtTriggerRatio[tg].Draw('same')
+        i += 1
+    cv16.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
     # - Eta plots ------------------------------------------
     cv7 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
@@ -464,92 +550,6 @@ def main(argms):
         for tg in trigList[key]:
             h_elMap[tg].Draw('SURF1')  # E
             pdfCreator(argms, 1, triggerCanvas)
-
-    # - MET pT plots ---------------------------------
-    cv13 = triggerCanvas.cd(1)
-    # h_metPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_metPt["notrigger"].Draw()
-    tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
-    tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
-    for key in trigList:
-        for tg in trigList[key]:
-            h_metPt[tg].Draw('same')
-    cv13.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv14 = triggerCanvas.cd(1)
-    i = 0
-    for tg in trigList["combos"]:
-        h_metPtTriggerRatio[tg] = (h_metPt[tg]).Clone("h_metPtRatio" + tg)
-        h_metPtTriggerRatio[tg].Divide(h_metPt["notrigger"])
-        if i == 0:
-            h_metPtTriggerRatio[tg].Draw()
-            tX1 = 0.04 * (h_metPtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95 * (h_metPtTriggerRatio[tg].GetMaximum())
-        if i == 1:
-            h_metPtTriggerRatio[tg].Draw('same')
-        i += 1
-    for tg in trigList["stndlone"]:
-        h_metPtTriggerRatio[tg] = (h_metPt[tg]).Clone("h_metPtRatio" + tg)
-        h_metPtTriggerRatio[tg].Divide(h_metPt["notrigger"])
-        if i == 0:
-            h_metPtTriggerRatio[tg].Draw()
-            tX1 = 0.04 * (h_metPtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95 * (h_metPtTriggerRatio[tg].GetMaximum())
-        if i == 1:
-            h_elPtTriggerRatio[tg].Draw('same')
-        i += 1
-    cv14.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    # - GenMET pT plots ---------------------------------
-    cv15 = triggerCanvas.cd(1)
-    # h_genMetPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_genMetPt["notrigger"].Draw()
-    tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
-    tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
-    for key in trigList:
-        for tg in trigList[key]:
-            h_genMetPt[tg].Draw('same')
-    cv15.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv16 = triggerCanvas.cd(1)
-    i = 0
-    for tg in trigList["combos"]:
-        h_genMetPtTriggerRatio[tg] = (h_genMetPt[tg]).Clone("h_genMetPtRatio" + tg)
-        h_genMetPtTriggerRatio[tg].Divide(h_genMetPt["notrigger"])
-        if i == 0:
-            h_genMetPtTriggerRatio[tg].Draw()
-            tX1 = 0.04 * (h_genMetPtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95 * (h_genMetPtTriggerRatio[tg].GetMaximum())
-        if i == 1:
-            h_genMetPtTriggerRatio[tg].Draw('same')
-        i += 1
-    for tg in trigList["stndlone"]:
-        h_genMetPtTriggerRatio[tg] = (h_genMetPt[tg]).Clone("h_genMetPtRatio" + tg)
-        h_genMetPtTriggerRatio[tg].Divide(h_genMetPt["notrigger"])
-        if i == 0:
-            h_genMetPtTriggerRatio[tg].Draw()
-            tX1 = 0.04 * (h_genMetPtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95 * (h_genMetPtTriggerRatio[tg].GetMaximum())
-        if i == 1:
-            h_elPtTriggerRatio[tg].Draw('same')
-        i += 1
-    cv16.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
 
     # - Test Event numbers along steps ----------
     triggerCanvas.cd(1)

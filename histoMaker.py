@@ -65,85 +65,114 @@ class HistogramMaker(Module):
         Module.beginJob(self, histFile, histDirName)  # pass histFile and histDirName first passed to the PostProcessor
 
         # - Defining histograms to be saved to file
-        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger', 'no trigger ;H_{T};Events', 300, 1, 3000)
+        self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger',
+                                               'no trigger ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1, 3000)
         self.addObject(self.h_jetHt['no_trigger'])
-        self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', 'no trigger ;Jet #eta;Events', 300, -6, 8)
+        self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', 'no trigger ;Jet #eta;Number of Events per '
+                                                                      '#delta#eta = 0.046', 300, -6, 8)
         self.addObject(self.h_jetEta['no_trigger'])
-        self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', 'no trigger ;Jet #phi;Events', 300, -6, 8)
+        self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', 'no trigger ;Jet #phi;Number of Events per '
+                                                                      '#delta#phi = 0.046', 300, -6, 8)
         self.addObject(self.h_jetPhi['no_trigger'])
-        self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', 'no trigger ;Jet Eta;Jet Phi', 300, -6, 6, 20, -3.2, 3.2)
+        self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', 'no trigger ;Jet #eta;Jet #phi',
+                                                150, -6, 6, 160, -3.2, 3.2)
         self.addObject(self.h_jetMap['no_trigger'])
 
-        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T};Events', 300, 0, 300)
+        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events '
+                                                                      'per 1 GeV/c', 300, 0, 300)
         self.addObject(self.h_muonPt['no_trigger'])
-        self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Events', 300, -6, 8)
+        self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
+                                                                        '#delta#eta = 0.046', 300, -6, 8)
         self.addObject(self.h_muonEta['no_trigger'])
-        self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Events', 300, -6, 8)
+        self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
+                                                                        '#delta#phi = 0.046', 300, -6, 8)
         self.addObject(self.h_muonPhi['no_trigger'])
-        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger ;Muon Eta;Muon Phi', 300, -6, 6, 20, -3.2, 3.2)
+        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;Number of '
+                                                                        'Events per #delta#eta#times#delta#phi = 0.0016',
+                                                 150, -6, 6, 160, -3.2, 3.2)
         self.addObject(self.h_muonMap['no_trigger'])
 
-        self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', 'no trigger ;Electron P_{T};Events', 300, 0, 300)
+        self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', 'no trigger ;Electron P_{T} (GeV/c);Number of Events '
+                                                                  'per 1 GeV/c', 300, 0, 300)
         self.addObject(self.h_elPt['no_trigger'])
-        self.h_elEta['no_trigger'] = ROOT.TH1D('h_elEta_notrigger', 'no trigger ;Electron #eta;Events', 300, -6, 8)
+        self.h_elEta['no_trigger'] = ROOT.TH1D('h_elEta_notrigger', 'no trigger ;Electron #eta;Number of Events per '
+                                                                    '#delta#eta = 0.046', 300, -6, 8)
         self.addObject(self.h_elEta['no_trigger'])
-        self.h_elPhi['no_trigger'] = ROOT.TH1D('h_elPhi_notrigger', 'no trigger ;Electron #phi;Events', 300, -6, 8)
+        self.h_elPhi['no_trigger'] = ROOT.TH1D('h_elPhi_notrigger', 'no trigger ;Electron #phi;Number of Events per '
+                                                                    '#delta#phi = 0.046', 300, -6, 8)
         self.addObject(self.h_elPhi['no_trigger'])
-        self.h_elMap['no_trigger'] = ROOT.TH2F('h_elMap_notrigger', 'no trigger ;Electron Eta;Electron Phi',
-                                               300, -6, 6, 20, -3.2, 3.2)
+        self.h_elMap['no_trigger'] = ROOT.TH2F('h_elMap_notrigger', 'no trigger ;Electron #eta;Electron #phi',
+                                               150, -6, 6, 160, -3.2, 3.2)
         self.addObject(self.h_elMap['no_trigger'])
 
-        self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T};Events', 300, 0, 300)
+        self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
+                                                                    ' 1 GeV/c', 300, 0, 300)
         self.addObject(self.h_metPt['no_trigger'])
-        self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Events', 300, -6, 8)
+        self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
+                                                                      '#delta#phi = 0.046', 300, -6, 8)
         self.addObject(self.h_metPhi['no_trigger'])
 
-        self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T};Events', 300, 0, 300)
+        self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
+                                                                          'Events per 1GeV/c', 300, 0, 300)
         self.addObject(self.h_genMetPt['no_trigger'])
-        self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Events', 300, -6, 8)
+        self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
+                                                                            'per #delta#phi = 0.046', 300, -6, 8)
         self.addObject(self.h_genMetPhi['no_trigger'])
 
         for key in self.trigLst:
             for trgPath in self.trigLst[key]:
-                self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T};Events', 300, 1, 3000)
+                self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T} (GeV/c);Number of Events'
+                                                                                  ' per 10 GeV/c', 300, 1, 3000)
                 self.addObject(self.h_jetHt[trgPath])
-                self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Events', 300, -6, 8)
+                self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Number of Events per'
+                                                                                    ' #delta#eta = 0.046', 300, -6, 8)
                 self.addObject(self.h_jetEta[trgPath])
-                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Events', 300, -6, 8)
+                self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Number of Events per'
+                                                                                    ' #delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_jetPhi[trgPath])
-                self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath,  trgPath + ';Jet Eta;Jet Phi',
-                                                   40, -6, 6, 20, -3.2, 3.2)
+                self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath,  trgPath + ';Jet #eta;Jet #phi',
+                                                   150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_jetMap[trgPath])
 
-                self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T};Events', 300, 0, 300)
+                self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);Number of '
+                                                                                    'Events per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_muonPt[trgPath])
-                self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Events', 300, -4, 7)
+                self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Number of Events per'
+                                                                                      ' #delta#eta = 0.046', 300, -6, 8)
                 self.addObject(self.h_muonEta[trgPath])
-                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Events', 300, -6, 8)
+                self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Number of Events per'
+                                                                                      ' #delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_muonPhi[trgPath])
-                self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath,  trgPath + ';Muon Eta;Muon Phi',
-                                                    40, -3, 3, 20, -3.2, 3.2)
+                self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath,  trgPath + ';Muon #eta;Muon #phi',
+                                                    150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
 
-                self.h_elPt[trgPath] = ROOT.TH1D('h_elPt_' + trgPath, trgPath + ';Electron P_{T};Events', 300, 0, 300)
+                self.h_elPt[trgPath] = ROOT.TH1D('h_elPt_' + trgPath, trgPath + ';Electron P_{T} (GeV/c);Number of '
+                                                                                'Events per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_elPt[trgPath])
-                self.h_elEta[trgPath] = ROOT.TH1D('h_elEta_' + trgPath, trgPath + ';Electron #eta;Events', 300, -4, 7)
+                self.h_elEta[trgPath] = ROOT.TH1D('h_elEta_' + trgPath, trgPath + ';Electron #eta;Number of Events per '
+                                                                                  '#delta#eta = 0.046', 300, -6, 8)
                 self.addObject(self.h_elEta[trgPath])
-                self.h_elPhi[trgPath] = ROOT.TH1D('h_elPhi_' + trgPath, trgPath + ';Electron #phi;Events', 300, -6, 8)
+                self.h_elPhi[trgPath] = ROOT.TH1D('h_elPhi_' + trgPath, trgPath + ';Electron #phi;Number of Events per '
+                                                                                  '#delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_elPhi[trgPath])
-                self.h_elMap[trgPath] = ROOT.TH2F('h_elMap_' + trgPath, trgPath + ';Electron Eta;Electron Phi',
-                                                  40, -3, 3, 20, -3.2, 3.2)
+                self.h_elMap[trgPath] = ROOT.TH2F('h_elMap_' + trgPath, trgPath + ';Electron #eta;Electron #phi',
+                                                  150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_elMap[trgPath])
 
-                self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T};Events', 300, 0, 300)
+                self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
+                                                                                  'per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_metPt[trgPath])
-                self.h_metPhi[trgPath] = ROOT.TH1D('h_metPhi_' + trgPath, trgPath + ';MET #phi;Events', 300, -6, 8)
+                self.h_metPhi[trgPath] = ROOT.TH1D('h_metPhi_' + trgPath, trgPath + ';MET #phi;Number of Events per '
+                                                                                    '#delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_metPhi[trgPath])
 
-                self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T};Events',
+                self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
+                                                                                        'of Events per 1 GeV/c',
                                                      300, 0, 300)
                 self.addObject(self.h_genMetPt[trgPath])
-                self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Events',
+                self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
+                                                                                          'Events per #delta#phi = 0.046',
                                                       300, -6, 8)
                 self.addObject(self.h_genMetPhi[trgPath])
 
