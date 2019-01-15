@@ -140,9 +140,9 @@ class NTupleMaker(Module):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         jetHt[tg] += jet.pt
-                        self.nJet[tg].Fill(None, jet.eta, jet.phi)
+                        self.nJet[tg].Fill(HT, eta=jet.eta, phi=jet.phi)
             jetHt["notrig"] += jet.pt
-            self.nJet['no_trigger'].Fill(None, jet.eta, jet.phi)
+            self.nJet['no_trigger'].Fill(HT, eta=jet.eta, phi=jet.phi)
 
         for nm, muon in enumerate(muons):
             if nm == 0:
@@ -197,8 +197,8 @@ class NTupleMaker(Module):
             for key in self.trigLst:
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
-                        self.nJet[tg].Fill(jetHt[tg], None, None)
+                        self.nJet[tg].Fill(HT=jetHt[tg])
 
-            self.nJet['no_trigger'].Fill(jetHt["notrig"], None, None)
+            self.nJet['no_trigger'].Fill(HT=jetHt["notrig"])
         
         return True

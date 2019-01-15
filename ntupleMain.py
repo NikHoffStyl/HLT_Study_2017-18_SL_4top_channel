@@ -1,4 +1,6 @@
 from __future__ import (division, print_function)
+import os
+import errno
 # from importlib import import_module
 import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
@@ -118,6 +120,13 @@ def main(argms):
                 "t1": ['IsoMu24'],
                 "t2": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
+    if not os.path.exists(os.path.dirname(outputFile)):
+        try:
+            os.makedirs(os.path.dirname(outputFile))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+
     p99 = PostProcessor(".",
                         files,
                         # files[0],
@@ -132,8 +141,8 @@ def main(argms):
                         postfix=thePostFix,
                         histFileName=outputFile,
                         histDirName="plots",
-                        branchsel="myInfiles/kd_branchsel.txt",
-                        outputbranchsel="myInfiles/kd_branchsel.txt",
+                        branchsel="myInFiles/kd_branchsel.txt",
+                        outputbranchsel="myInFiles/kd_branchsel.txt",
                         # branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                         # outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                         )
