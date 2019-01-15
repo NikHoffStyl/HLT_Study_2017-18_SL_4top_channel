@@ -52,7 +52,7 @@ class NTupleMaker(Module):
         Module.beginJob(self, histFile, histDirName)  # pass histFile and histDirName first passed to the PostProcessor
 
         # - Defining ntuples to be saved to file
-        self.nJet['no_trigger'] = ROOT.TNtuple("njet_notrigger", "tuple of Jets", "HT : eta : phi ")
+        self.nJet['no_trigger'] = ROOT.TNtuple("njet_notrigger", "tuple of Jets", "HT:eta:phi")
         self.addObject(self.nJet['no_trigger'])
         self.nMuon['no_trigger'] = ROOT.TNtuple("nmuon_notrigger", "tuple of Muons", "pt : eta : phi ")
         self.addObject(self.nMuon['no_trigger'])
@@ -65,7 +65,7 @@ class NTupleMaker(Module):
 
         for key in self.trigLst:
             for trgPath in self.trigLst[key]:
-                self.nJet[trgPath] = ROOT.TNtuple("njet_" + trgPath, "tuple of Jets", "HT : eta : phi ")
+                self.nJet[trgPath] = ROOT.TNtuple("njet_" + trgPath, "tuple of Jets", "HT:eta:phi")
                 self.addObject(self.nJet[trgPath])
                 self.nMuon[trgPath] = ROOT.TNtuple("nmuon_" + trgPath, "tuple of Muons", "pt : eta : phi ")
                 self.addObject(self.nMuon[trgPath])
@@ -140,9 +140,9 @@ class NTupleMaker(Module):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         jetHt[tg] += jet.pt
-                        self.nJet[tg].Fill(HT, eta=jet.eta, phi=jet.phi)
+                        self.nJet[tg].Fill(-1, jet.eta, jet.phi)
             jetHt["notrig"] += jet.pt
-            self.nJet['no_trigger'].Fill(HT, eta=jet.eta, phi=jet.phi)
+            self.nJet['no_trigger'].Fill(-1, jet.eta, jet.phi)
 
         for nm, muon in enumerate(muons):
             if nm == 0:
@@ -197,8 +197,8 @@ class NTupleMaker(Module):
             for key in self.trigLst:
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
-                        self.nJet[tg].Fill(HT=jetHt[tg])
+                        self.nJet[tg].Fill(jetHt[tg])
 
-            self.nJet['no_trigger'].Fill(HT=jetHt["notrig"])
+            self.nJet['no_trigger'].Fill(jetHt["notrig"])
         
         return True
