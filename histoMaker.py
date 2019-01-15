@@ -11,7 +11,10 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 
 class HistogramMaker(Module):
-    """ This class HistogramMaker() does as the name suggests. """
+    """
+    This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
+    for different combinations of trigger paths.
+    """
 
     def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None):
         """ Initialise global variables """
