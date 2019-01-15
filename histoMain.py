@@ -129,8 +129,14 @@ def main(argms):
     p99 = PostProcessor(".",
                         files,
                         # files[0],
-                        cut="nJet > 5 && Jet_jetId>2 && abs(Jet_eta) <2.4 "
-                            "&&( nMuon >0 || nElectron >0 ) && Muon_softId == 1",
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) "
+                            "&& Jet_genJetIdx==0 && Jet_jetId>2 && abs(Jet_eta) <2.4 "
+                            "&& Jet_genJetIdx==1 && Jet_jetId>2 && abs(Jet_eta) <2.4 "
+                            "&& Jet_genJetIdx==2 && Jet_jetId>2 && abs(Jet_eta) <2.4 "
+                            "&& Jet_genJetIdx==3 && Jet_jetId>2 && abs(Jet_eta) <2.4 "
+                            "&& Jet_genJetIdx==4 && Jet_jetId>2 && abs(Jet_eta) <2.4 "
+                            "&& Jet_genJetIdx==5 && Jet_jetId>2 && abs(Jet_eta) <2.4 "
+                            "&& Muon_softId == 1",
                         modules=[HistogramMaker(writeHistFile=writeFile,
                                                 eventLimit=argms.eventLimit,
                                                 trigLst=trigList)],
@@ -140,8 +146,8 @@ def main(argms):
                         postfix=thePostFix,
                         histFileName=outputFile,
                         histDirName="plots",
-                        branchsel="myInfiles/kd_branchsel.txt",
-                        outputbranchsel="myInfiles/kd_branchsel.txt",
+                        branchsel="myInFiles/kd_branchsel.txt",
+                        outputbranchsel="myInFiles/kd_branchsel.txt",
                         # branchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                         # outputbranchsel="../NanoAODTools/StandaloneExamples/Infiles/kd_branchsel.txt",
                         )

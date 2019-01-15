@@ -279,6 +279,8 @@ class HistogramMaker(Module):
             if nl == 0:
                 if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
                     continue
+                if 1.4442 < abs(el.eta) < 1.566:
+                    continue
                 else:
                     firstElPass = True
 
