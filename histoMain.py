@@ -129,13 +129,7 @@ def main(argms):
     p99 = PostProcessor(".",
                         files,
                         # files[0],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) "
-                            "&& (Jet_genJetIdx<4 && Jet_jetId>2 && abs(Jet_eta) <2.4) "
-                            # "&& (Jet_genJetIdx==1 && Jet_jetId>2 && abs(Jet_eta) <2.4) "
-                            # "&& (Jet_genJetIdx==2 && Jet_jetId>2 && abs(Jet_eta) <2.4) "
-                            # "|| (Jet_genJetIdx==3 && Jet_jetId>2 && abs(Jet_eta) <2.4) "
-                            # "|| (Jet_genJetIdx==4 && Jet_jetId>2 && abs(Jet_eta) <2.4)) "
-                            # "&& Jet_jetId>2 && abs(Jet_eta) <2.4 "
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) " 
                             "&& Muon_softId == 1",
                         modules=[HistogramMaker(writeHistFile=writeFile,
                                                 eventLimit=argms.eventLimit,

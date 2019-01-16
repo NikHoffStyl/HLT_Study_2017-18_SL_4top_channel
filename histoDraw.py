@@ -54,6 +54,8 @@ def main(argms):
                 "t2": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
     h_jetHt = {}
+    h_jetMult = {}
+    h_jetBMult = {}
     h_jetEta = {}
     h_jetPhi = {}
     h_jetMap = {}
@@ -70,6 +72,8 @@ def main(argms):
     h_genMetPt = {}
     h_genMetPhi = {}
     h_jetHtTriggerRatio = {}
+    h_jetMultTriggerRatio = {}
+    h_jetBMultTriggerRatio = {}
     h_muonPtTriggerRatio = {}
     h_elPtTriggerRatio = {}
     h_metPtTriggerRatio = {}
@@ -88,6 +92,14 @@ def main(argms):
     h_jetHt["notrigger"].SetLineColor(1)
     if not (h_jetHt["notrigger"]):
         print("No trigger jet Ht histogram is empty")
+    h_jetMult["notrigger"] = ROOT.gDirectory.Get("h_jetMult_notrigger")
+    h_jetMult["notrigger"].SetLineColor(1)
+    if not (h_jetMult["notrigger"]):
+        print("No trigger jet Mult histogram is empty")
+    h_jetBMult["notrigger"] = ROOT.gDirectory.Get("h_jetBMult_notrigger")
+    h_jetBMult["notrigger"].SetLineColor(1)
+    if not (h_jetBMult["notrigger"]):
+        print("No trigger jet BMult histogram is empty")
     h_jetEta["notrigger"] = ROOT.gDirectory.Get("h_jetEta_notrigger")
     h_jetEta["notrigger"].SetLineColor(1)
     if not (h_jetEta["notrigger"]):
@@ -157,6 +169,8 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg] = ROOT.gDirectory.Get("h_jetHt_" + tg)
+            h_jetMult[tg] = ROOT.gDirectory.Get("h_jetMult_" + tg)
+            h_jetBMult[tg] = ROOT.gDirectory.Get("h_jetBMult_" + tg)
             h_jetEta[tg] = ROOT.gDirectory.Get("h_jetEta_" + tg)
             h_jetPhi[tg] = ROOT.gDirectory.Get("h_jetPhi_" + tg)
             h_jetMap[tg] = ROOT.gDirectory.Get("h_jetMap_" + tg)
@@ -177,6 +191,8 @@ def main(argms):
             h_genMetPhi[tg] = ROOT.gDirectory.Get("h_genMetPhi_" + tg)
 
             h_jetHt[tg].SetLineColor(i)
+            h_jetMult[tg].SetLineColor(i)
+            h_jetBMult[tg].SetLineColor(i)
             h_jetEta[tg].SetLineColor(i)
             h_jetPhi[tg].SetLineColor(i)
             h_muonPt[tg].SetLineColor(i)
@@ -265,6 +281,96 @@ def main(argms):
         i += 1
 
     cv2.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    # - Jet Multiplicity plots ---------------------------------
+    cv17 = triggerCanvas.cd(1)
+    # h_jetMult["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_jetMult["notrigger"].Draw()
+    for key in trigList:
+        for tg in trigList[key]:
+            h_jetMult[tg].Draw('same')
+    cv17.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    # leg1.SetNColumns(2)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    tX1 = 0.04 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv18 = triggerCanvas.cd(1)
+    i = 0
+    for tg in trigList["combos"]:
+        h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
+        h_jetMultTriggerRatio[tg].Divide(h_jetMult["notrigger"])
+        if i == 0:
+            h_jetMultTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_jetMultTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_jetMultTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_jetMultTriggerRatio[tg].Draw('same')
+        i += 1
+    for tg in trigList["stndlone"]:
+        h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
+        h_jetMultTriggerRatio[tg].Divide(h_jetMult["notrigger"])
+        if i == 0:
+            h_jetMultTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_jetMultTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_jetMultTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_jetMultTriggerRatio[tg].Draw('same')
+        i += 1
+
+    cv18.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    # - B tagged Jet Multiplicity plots ---------------------------
+    cv19 = triggerCanvas.cd(1)
+    # h_jetBMult["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_jetBMult["notrigger"].Draw()
+    for key in trigList:
+        for tg in trigList[key]:
+            h_jetBMult[tg].Draw('same')
+    cv19.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    # leg1.SetNColumns(2)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv20 = triggerCanvas.cd(1)
+    i = 0
+    for tg in trigList["combos"]:
+        h_jetBMultTriggerRatio[tg] = (h_jetBMult[tg]).Clone("h_jetBMultRatio" + tg)
+        h_jetBMultTriggerRatio[tg].Divide(h_jetBMult["notrigger"])
+        if i == 0:
+            h_jetBMultTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_jetBMultTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_jetBMultTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_jetBMultTriggerRatio[tg].Draw('same')
+        i += 1
+    for tg in trigList["stndlone"]:
+        h_jetBMultTriggerRatio[tg] = (h_jetBMult[tg]).Clone("h_jetBMultRatio" + tg)
+        h_jetBMultTriggerRatio[tg].Divide(h_jetBMult["notrigger"])
+        if i == 0:
+            h_jetBMultTriggerRatio[tg].Draw()
+            tX1 = 0.04 * (h_jetBMultTriggerRatio[tg].GetXaxis().GetXmax())
+            tY1 = 0.95 * (h_jetBMultTriggerRatio[tg].GetMaximum())
+        if i == 1:
+            h_jetBMultTriggerRatio[tg].Draw('same')
+        i += 1
+
+    cv20.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -530,29 +636,32 @@ def main(argms):
 
     # - Eta-Phi Map plots ------------------------------------------
     triggerCanvas.cd(1)
-    h_jetMap["notrigger"].Draw('SURF1')  # CONT4Z
+    h_jetMap["notrigger"].Draw('COLZ')  # CONT4Z
     pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_jetMap[tg].Draw('SURF1')
+            h_jetMap[tg].Draw('COLZ')
             pdfCreator(argms, 1, triggerCanvas)
 
-    h_muonMap["notrigger"].Draw('SURF1')
+    h_muonMap["notrigger"].Draw('COLZ')
     pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_muonMap[tg].Draw('SURF1')  # E
+            h_muonMap[tg].Draw('COLZ')  # E
             pdfCreator(argms, 1, triggerCanvas)
 
-    h_elMap["notrigger"].Draw('SURF1')
+    h_elMap["notrigger"].Draw('COLZ')
     pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
         for tg in trigList[key]:
-            h_elMap[tg].Draw('SURF1')  # E
+            h_elMap[tg].Draw('COLZ')  # E
             pdfCreator(argms, 1, triggerCanvas)
 
     # - Test Event numbers along steps ----------
     triggerCanvas.cd(1)
+    h_eventsPrg.SetFillColor(ROOT.kAzure-9)
+    h_eventsPrg.GetXaxis().SetLabelOffset(999)
+    h_eventsPrg.GetXaxis().SetLabelSize(0)
     h_eventsPrg.Draw()
     tY1 = 0.05*(h_eventsPrg.GetMaximum())
     ltx.SetTextAngle(80)
@@ -563,6 +672,8 @@ def main(argms):
         for tg in trigList[key]:
             ltx.DrawLatex((i + 2.5), tY1, tg)
             i += 1
+
+    # h.GetXAxis().SetBinLabel(binnumber,string)
     pdfCreator(argms, 2, triggerCanvas)
 
     histFile.Close()
