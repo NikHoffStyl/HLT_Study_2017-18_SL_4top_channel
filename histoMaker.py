@@ -134,11 +134,10 @@ class HistogramMaker(Module):
                                                                                   ' per 10 GeV/c', 300, 1, 3000)
                 self.addObject(self.h_jetHt[trgPath])
                 self.h_jetMult[trgPath] = ROOT.TH1D('h_jetMult_' + trgPath, trgPath + ';Multiplicity;Number of Events'
-                                                                                      ' per Number of Jets', 300, 1, 3000)
+                                                                                      ' per Number of Jets', 20, 0, 20)
                 self.addObject(self.h_jetMult[trgPath])
                 self.h_jetBMult[trgPath] = ROOT.TH1D('h_jetBMult_' + trgPath, trgPath + ';Multiplicity;Number of Events'
-                                                                                        ' per Number of Jets', 300, 1,
-                                                     3000)
+                                                                                        ' per Number of Jets', 20, 0, 20)
                 self.addObject(self.h_jetBMult[trgPath])
                 self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Number of Events per'
                                                                                     ' #delta#eta = 0.046', 300, -6, 8)
@@ -266,6 +265,15 @@ class HistogramMaker(Module):
             self.h_jetPhi['no_trigger'].Fill(jet.phi)
             self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
+            if nJetPass > 5 and nBtagPass ==1:
+                self.h_eventsPrg.Fill(1)
+                i = 0
+                for key in self.trigLst:
+                    for tg in self.trigLst[key]:
+                        if trigPath[tg]:
+                            self.h_eventsPrg.Fill(2 + i)
+                            i += 1
+
         for key in self.trigLst:
             for tg in self.trigLst[key]:
                 if trigPath[tg]:
@@ -331,15 +339,6 @@ class HistogramMaker(Module):
         self.h_metPhi['no_trigger'].Fill(metPhi)
         self.h_genMetPt['no_trigger'].Fill(genMetPt)
         self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
-
-        if nJetPass > 5 and nBtagPass > 0:
-            self.h_eventsPrg.Fill(1)
-            i = 0
-            for key in self.trigLst:
-                for tg in self.trigLst[key]:
-                    if trigPath[tg]:
-                        self.h_eventsPrg.Fill(2+i)
-                        i += 1
 
         if nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
             for key in self.trigLst:
