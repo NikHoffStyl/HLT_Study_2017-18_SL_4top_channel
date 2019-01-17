@@ -244,10 +244,10 @@ def main(argms):
     # - HT plots ---------------------------------
     cv1 = triggerCanvas.cd(1)
     # h_jetHt["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_jetHt["notrigger"].Draw()
+    h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
         for tg in trigList[key]:
-            h_jetHt[tg].Draw('same')
+            h_jetHt[tg].Draw('E1 same')
     cv1.BuildLegend(0.4, 0.3, 0.4, 0.3)
     # leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -263,21 +263,21 @@ def main(argms):
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
         if i == 0:
-            h_jetHtTriggerRatio[tg].Draw()
+            h_jetHtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_jetHtTriggerRatio[tg].Draw('same')
+            h_jetHtTriggerRatio[tg].Draw('E1 same')
         i += 1
     for tg in trigList["stndlone"]:
         h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
         h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
         if i == 0:
-            h_jetHtTriggerRatio[tg].Draw()
+            h_jetHtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_jetHtTriggerRatio[tg].Draw('same')
+            h_jetHtTriggerRatio[tg].Draw('E1 same')
         i += 1
 
     cv2.BuildLegend(0.4, 0.3, 0.4, 0.3)
@@ -289,10 +289,10 @@ def main(argms):
     # - Jet Multiplicity plots ---------------------------------
     cv17 = triggerCanvas.cd(1)
     # h_jetMult["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_jetMult["notrigger"].Draw()
+    h_jetMult["notrigger"].Draw('E1')
     for key in trigList:
         for tg in trigList[key]:
-            h_jetMult[tg].Draw('same')
+            h_jetMult[tg].Draw('E1 same')
     cv17.BuildLegend(0.4, 0.3, 0.4, 0.3)
     # leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -308,21 +308,21 @@ def main(argms):
         h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
         h_jetMultTriggerRatio[tg].Divide(h_jetMult["notrigger"])
         if i == 0:
-            h_jetMultTriggerRatio[tg].Draw()
+            h_jetMultTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_jetMultTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_jetMultTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_jetMultTriggerRatio[tg].Draw('same')
+            h_jetMultTriggerRatio[tg].Draw('E1 same')
         i += 1
     for tg in trigList["stndlone"]:
         h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
         h_jetMultTriggerRatio[tg].Divide(h_jetMult["notrigger"])
         if i == 0:
-            h_jetMultTriggerRatio[tg].Draw()
+            h_jetMultTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_jetMultTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_jetMultTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_jetMultTriggerRatio[tg].Draw('same')
+            h_jetMultTriggerRatio[tg].Draw('E1 same')
         i += 1
 
     cv18.BuildLegend(0.4, 0.3, 0.4, 0.3)
@@ -334,10 +334,10 @@ def main(argms):
     # - B tagged Jet Multiplicity plots ---------------------------
     cv19 = triggerCanvas.cd(1)
     # h_jetBMult["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_jetBMult["notrigger"].Draw()
+    h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
         for tg in trigList[key]:
-            h_jetBMult[tg].Draw('same')
+            h_jetBMult[tg].Draw('E1 same')
     cv19.BuildLegend(0.4, 0.3, 0.4, 0.3)
     # leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -353,21 +353,21 @@ def main(argms):
         h_jetBMultTriggerRatio[tg] = (h_jetBMult[tg]).Clone("h_jetBMultRatio" + tg)
         h_jetBMultTriggerRatio[tg].Divide(h_jetBMult["notrigger"])
         if i == 0:
-            h_jetBMultTriggerRatio[tg].Draw()
+            h_jetBMultTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_jetBMultTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_jetBMultTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_jetBMultTriggerRatio[tg].Draw('same')
+            h_jetBMultTriggerRatio[tg].Draw('E1 same')
         i += 1
     for tg in trigList["stndlone"]:
         h_jetBMultTriggerRatio[tg] = (h_jetBMult[tg]).Clone("h_jetBMultRatio" + tg)
         h_jetBMultTriggerRatio[tg].Divide(h_jetBMult["notrigger"])
         if i == 0:
-            h_jetBMultTriggerRatio[tg].Draw()
+            h_jetBMultTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_jetBMultTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_jetBMultTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_jetBMultTriggerRatio[tg].Draw('same')
+            h_jetBMultTriggerRatio[tg].Draw('E1 same')
         i += 1
 
     cv20.BuildLegend(0.4, 0.3, 0.4, 0.3)
@@ -379,12 +379,12 @@ def main(argms):
     # - Muon pT plots ---------------------------------
     cv3 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_muonPt["notrigger"].Draw()
+    h_muonPt["notrigger"].Draw('E1')
     tX1 = 0.04*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_muonPt[tg].Draw('same')
+            h_muonPt[tg].Draw('E1 same')
     cv3.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -397,21 +397,21 @@ def main(argms):
         h_muonPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muonPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         if i == 0:
-            h_muonPtTriggerRatio[tg].Draw()
+            h_muonPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04*(h_muonPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95*(h_muonPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_muonPtTriggerRatio[tg].Draw('same')
+            h_muonPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     for tg in trigList["stndlone"]:
         h_muonPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
         h_muonPtTriggerRatio[tg].Divide(h_muonPt["notrigger"])
         if i == 0:
-            h_muonPtTriggerRatio[tg].Draw()
+            h_muonPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04*(h_muonPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95*(h_muonPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_muonPtTriggerRatio[tg].Draw('same')
+            h_muonPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     cv4.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -422,12 +422,12 @@ def main(argms):
     # - Electron pT plots ---------------------------------
     cv5 = triggerCanvas.cd(1)
     # h_elPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_elPt["notrigger"].Draw()
+    h_elPt["notrigger"].Draw('E1')
     tX1 = 0.04 * (h_elPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_elPt["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_elPt[tg].Draw('same')
+            h_elPt[tg].Draw('E1 same')
     cv5.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -440,21 +440,21 @@ def main(argms):
         h_elPtTriggerRatio[tg] = (h_elPt[tg]).Clone("h_elPtRatio" + tg)
         h_elPtTriggerRatio[tg].Divide(h_elPt["notrigger"])
         if i == 0:
-            h_elPtTriggerRatio[tg].Draw()
+            h_elPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_elPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_elPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_elPtTriggerRatio[tg].Draw('same')
+            h_elPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     for tg in trigList["stndlone"]:
         h_elPtTriggerRatio[tg] = (h_elPt[tg]).Clone("h_elPtRatio" + tg)
         h_elPtTriggerRatio[tg].Divide(h_elPt["notrigger"])
         if i == 0:
-            h_elPtTriggerRatio[tg].Draw()
+            h_elPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_elPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_elPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_elPtTriggerRatio[tg].Draw('same')
+            h_elPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     cv6.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -465,12 +465,12 @@ def main(argms):
     # - MET pT plots ---------------------------------
     cv13 = triggerCanvas.cd(1)
     # h_metPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_metPt["notrigger"].Draw()
+    h_metPt["notrigger"].Draw('E1')
     tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_metPt[tg].Draw('same')
+            h_metPt[tg].Draw('E1 same')
     cv13.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -483,21 +483,21 @@ def main(argms):
         h_metPtTriggerRatio[tg] = (h_metPt[tg]).Clone("h_metPtRatio" + tg)
         h_metPtTriggerRatio[tg].Divide(h_metPt["notrigger"])
         if i == 0:
-            h_metPtTriggerRatio[tg].Draw()
+            h_metPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_metPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_metPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_metPtTriggerRatio[tg].Draw('same')
+            h_metPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     for tg in trigList["stndlone"]:
         h_metPtTriggerRatio[tg] = (h_metPt[tg]).Clone("h_metPtRatio" + tg)
         h_metPtTriggerRatio[tg].Divide(h_metPt["notrigger"])
         if i == 0:
-            h_metPtTriggerRatio[tg].Draw()
+            h_metPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_metPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_metPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_elPtTriggerRatio[tg].Draw('same')
+            h_elPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     cv14.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -508,12 +508,12 @@ def main(argms):
     # - GenMET pT plots ---------------------------------
     cv15 = triggerCanvas.cd(1)
     # h_genMetPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
-    h_genMetPt["notrigger"].Draw()
+    h_genMetPt["notrigger"].Draw('E1')
     tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_genMetPt[tg].Draw('same')
+            h_genMetPt[tg].Draw('E1 same')
     cv15.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -526,21 +526,21 @@ def main(argms):
         h_genMetPtTriggerRatio[tg] = (h_genMetPt[tg]).Clone("h_genMetPtRatio" + tg)
         h_genMetPtTriggerRatio[tg].Divide(h_genMetPt["notrigger"])
         if i == 0:
-            h_genMetPtTriggerRatio[tg].Draw()
+            h_genMetPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_genMetPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_genMetPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_genMetPtTriggerRatio[tg].Draw('same')
+            h_genMetPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     for tg in trigList["stndlone"]:
         h_genMetPtTriggerRatio[tg] = (h_genMetPt[tg]).Clone("h_genMetPtRatio" + tg)
         h_genMetPtTriggerRatio[tg].Divide(h_genMetPt["notrigger"])
         if i == 0:
-            h_genMetPtTriggerRatio[tg].Draw()
+            h_genMetPtTriggerRatio[tg].Draw('E1')
             tX1 = 0.04 * (h_genMetPtTriggerRatio[tg].GetXaxis().GetXmax())
             tY1 = 0.95 * (h_genMetPtTriggerRatio[tg].GetMaximum())
         if i == 1:
-            h_elPtTriggerRatio[tg].Draw('same')
+            h_elPtTriggerRatio[tg].Draw('E1 same')
         i += 1
     cv16.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -551,12 +551,12 @@ def main(argms):
     # - Eta plots ------------------------------------------
     cv7 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
-    h_jetEta["notrigger"].Draw()
+    h_jetEta["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_jetEta[tg].Draw('same')
+            h_jetEta[tg].Draw('E1 same')
     cv7.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -565,12 +565,12 @@ def main(argms):
 
     cv8 = triggerCanvas.cd(1)
     # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
-    h_muonEta["notrigger"].Draw()
+    h_muonEta["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_muonEta[tg].Draw('same')
+            h_muonEta[tg].Draw('E1 same')
     cv8.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -579,12 +579,12 @@ def main(argms):
 
     cv9 = triggerCanvas.cd(1)
     # h_elEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
-    h_elEta["notrigger"].Draw()
+    h_elEta["notrigger"].Draw('E1')
     tX1 = 0.94 * (-6)
     tY1 = 0.95 * (h_elEta["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_elEta[tg].Draw('same')
+            h_elEta[tg].Draw('E1 same')
     cv9.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -594,12 +594,12 @@ def main(argms):
     # - Phi plots ------------------------------------------
     cv10 = triggerCanvas.cd(1)
     # h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.3)
-    h_jetPhi["notrigger"].Draw()
+    h_jetPhi["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
     tY1 = 0.95*(h_jetPhi["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_jetPhi[tg].Draw('same')
+            h_jetPhi[tg].Draw('E1 same')
     cv10.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -608,12 +608,12 @@ def main(argms):
 
     cv11 = triggerCanvas.cd(1)
     # h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
-    h_muonPhi["notrigger"].Draw()
+    h_muonPhi["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
     tY1 = 0.97*(h_muonPhi["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_muonPhi[tg].Draw('same')
+            h_muonPhi[tg].Draw('E1 same')
     cv11.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -622,12 +622,12 @@ def main(argms):
 
     cv12 = triggerCanvas.cd(1)
     # h_elPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
-    h_elPhi["notrigger"].Draw()
+    h_elPhi["notrigger"].Draw('E1')
     tX1 = 0.94 * (-6)
     tY1 = 0.97 * (h_elPhi["notrigger"].GetMaximum())
     for key in trigList:
         for tg in trigList[key]:
-            h_elPhi[tg].Draw('same')
+            h_elPhi[tg].Draw('E1 same')
     cv12.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -662,7 +662,7 @@ def main(argms):
     h_eventsPrg.SetFillColor(ROOT.kAzure-9)
     h_eventsPrg.GetXaxis().SetLabelOffset(999)
     h_eventsPrg.GetXaxis().SetLabelSize(0)
-    h_eventsPrg.Draw()
+    h_eventsPrg.Draw('E1')
     tY1 = 0.05*(h_eventsPrg.GetMaximum())
     ltx.SetTextAngle(80)
     ltx.DrawLatex(0.5, tY1, "Pre-selection")
