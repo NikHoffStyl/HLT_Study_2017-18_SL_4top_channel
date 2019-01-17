@@ -664,7 +664,7 @@ def main(argms):
     h_eventsPrg.GetXaxis().SetLabelSize(0)
     h_eventsPrg.Draw('E1')
     tY1 = 0.05*(h_eventsPrg.GetMaximum())
-    ltx.SetTextAngle(80)
+    ltx.SetTextAngle(88)
     ltx.DrawLatex(0.5, tY1, "Pre-selection")
     ltx.DrawLatex(1.5, tY1, "Post-selection")
     i = 0

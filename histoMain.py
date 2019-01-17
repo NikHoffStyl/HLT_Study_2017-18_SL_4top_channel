@@ -60,7 +60,7 @@ def main(argms):
             # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
             #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
-        outputFile = "OutFiles/Histograms/TT6jets.root"
+        outputFile = "OutFiles/Histograms/TT6jets2.root"
     elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
         if argms.redirector == "local":
             inputLFNList = open("../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
@@ -87,7 +87,7 @@ def main(argms):
             # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/"
             #                     "TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
-        outputFile = "OutFiles/Histograms/TTTT_6jets.root"
+        outputFile = "OutFiles/Histograms/TTTT_6jets2.root"
     else:
         return 0
 

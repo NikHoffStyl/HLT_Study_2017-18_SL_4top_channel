@@ -23,7 +23,6 @@ class HistogramMaker(Module):
         self.comboCounter = 0
         self.numTriggers = len(trigLst["t1"]) * len(trigLst["t2"]) + len(trigLst["stndlone"])
         print("Number of Combined Triggers: %d" % self.numTriggers)
-        self.trigCombination = [0]*self.numTriggers
 
         self.h_jetHt = {}
         self.h_jetMult = {}
@@ -53,15 +52,8 @@ class HistogramMaker(Module):
 
         self.writeHistFile = writeHistFile
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
-        if trigLst is None:
-            self.trigLst = {}
-        else:
-            self.trigLst = trigLst
-            for t1 in self.trigLst["t1"]:
-                for t2 in self.trigLst["t2"]:
-                    self.trigCombination[self.comboCounter] = [t1, t2]
-                    self.comboCounter += 1
-                    self.trigLst["combos"].append(t1 + '_' + t2)  # append new triggers to old list
+        self.trigLst = trigLst
+        self.trigLst["combos"].append('IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
 
     def beginJob(self, histFile=None, histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -77,7 +69,7 @@ class HistogramMaker(Module):
                                                  20, 0, 20)
         self.h_jetBMult['no_trigger'] = ROOT.TH1D('h_jetBMult_notrigger',
                                                   'no trigger ;B tag Multiplicity ;Number of Events per Number of Jets',
-                                                 20, 0, 20)
+                                                  20, 0, 20)
         self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', 'no trigger ;Jet #eta;Number of Events per '
                                                                       '#delta#eta = 0.046', 300, -6, 8)
         self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', 'no trigger ;Jet #phi;Number of Events per '
@@ -90,8 +82,7 @@ class HistogramMaker(Module):
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
                                                                         '#delta#phi = 0.046', 300, -6, 8)
-        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;Number of '
-                                                                        'Events per #delta#eta#times#delta#phi = 0.0016',
+        self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;',
                                                  150, -6, 6, 160, -3.2, 3.2)
         self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', 'no trigger ;Electron P_{T} (GeV/c);Number of Events '
                                                                   'per 1 GeV/c', 300, 0, 300)
@@ -137,7 +128,7 @@ class HistogramMaker(Module):
                                                                                       ' per Number of Jets', 20, 0, 20)
                 self.addObject(self.h_jetMult[trgPath])
                 self.h_jetBMult[trgPath] = ROOT.TH1D('h_jetBMult_' + trgPath, trgPath + ';Multiplicity;Number of Events'
-                                                                                        ' per Number of Jets', 20, 0, 20)
+                                                                                        ' /Number of Jets', 20, 0, 20)
                 self.addObject(self.h_jetBMult[trgPath])
                 self.h_jetEta[trgPath] = ROOT.TH1D('h_jetEta_' + trgPath, trgPath + ';Jet #eta;Number of Events per'
                                                                                     ' #delta#eta = 0.046', 300, -6, 8)
@@ -187,7 +178,7 @@ class HistogramMaker(Module):
                                                      300, 0, 300)
                 self.addObject(self.h_genMetPt[trgPath])
                 self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
-                                                                                          'Events per #delta#phi = 0.046',
+                                                                                          'Events per #delta#phi=0.046',
                                                       300, -6, 8)
                 self.addObject(self.h_genMetPhi[trgPath])
 
@@ -207,7 +198,7 @@ class HistogramMaker(Module):
         #  Event Collections and Objects #
         ##################################
         muons = Collection(event, "Muon")
-        electrons = Collection(event, "Electron")
+        # electrons = Collection(event, "Electron")
         jets = Collection(event, "Jet")
         hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
         met = Object(event, "MET")
@@ -217,16 +208,14 @@ class HistogramMaker(Module):
 
         trigPath = {}
 
-        for key in self.trigLst:
-            for tg in self.trigLst[key]:
-                if not self.trigLst[key] == self.trigLst["combos"]:
-                    trigPath[tg] = getattr(hltObj, tg)
-    
-        for i in range(self.comboCounter):
-            trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]] = False
-            for trig in self.trigCombination[i]:
-                if trigPath[trig]:
-                    trigPath[self.trigCombination[i][0] + '_' + self.trigCombination[i][1]] = True
+        trigPath['IsoMu24'] = getattr(hltObj, 'IsoMu24')
+        trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = getattr(hltObj, 'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
+        trigPath['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'] = getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5')
+        trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = False
+        if trigPath['IsoMu24'] is True:
+            trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+        if trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
+            trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
 
         jetHt = {"notrig": 0}
         for key in self.trigLst:
@@ -236,7 +225,7 @@ class HistogramMaker(Module):
         nJetPass = 0
         nBtagPass = 0
         firstMuonPass = False
-        firstElPass = False
+        # firstElPass = False
 
         for nj, jet in enumerate(jets):
             # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
@@ -251,36 +240,6 @@ class HistogramMaker(Module):
             # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             if jet.btagDeepFlavB > 0.7489:
                 nBtagPass += 1
-
-            # Calculate jetHt for different trigger paths and combinations of them
-            for key in self.trigLst:
-                for tg in self.trigLst[key]:
-                    if trigPath[tg]:
-                        jetHt[tg] += jet.pt
-                        self.h_jetEta[tg].Fill(jet.eta)
-                        self.h_jetPhi[tg].Fill(jet.phi)
-                        self.h_jetMap[tg].Fill(jet.eta, jet.phi)
-            jetHt["notrig"] += jet.pt
-            self.h_jetEta['no_trigger'].Fill(jet.eta)
-            self.h_jetPhi['no_trigger'].Fill(jet.phi)
-            self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
-
-            if nJetPass > 5 and nBtagPass ==1:
-                self.h_eventsPrg.Fill(1)
-                i = 0
-                for key in self.trigLst:
-                    for tg in self.trigLst[key]:
-                        if trigPath[tg]:
-                            self.h_eventsPrg.Fill(2 + i)
-                            i += 1
-
-        for key in self.trigLst:
-            for tg in self.trigLst[key]:
-                if trigPath[tg]:
-                    self.h_jetMult[tg].Fill(nJets)
-                    self.h_jetBMult[tg].Fill(nBtagPass)
-        self.h_jetMult['no_trigger'].Fill(nJets)
-        self.h_jetBMult['no_trigger'].Fill(nBtagPass)
 
         for nm, muon in enumerate(muons):
             if nm == 0:
@@ -302,45 +261,35 @@ class HistogramMaker(Module):
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
 
-        for nl, el in enumerate(electrons):
-            if nl == 0:
-                if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
-                    continue
-                if 1.4442 < abs(el.eta) < 1.566:
-                    continue
-                else:
-                    firstElPass = True
-
-            if nl == 0 and nJetPass > 5 and firstElPass is True and nBtagPass > 0:
-                for key in self.trigLst:
-                    for tg in self.trigLst[key]:
-                        if trigPath[tg]:
-                            self.h_elPt[tg].Fill(el.pt)
-                            self.h_elEta[tg].Fill(el.eta)
-                            self.h_elPhi[tg].Fill(el.phi)
-                            self.h_elMap[tg].Fill(el.eta, el.phi)
-                self.h_elPt['no_trigger'].Fill(el.pt)
-                self.h_elEta['no_trigger'].Fill(el.eta)
-                self.h_elPhi['no_trigger'].Fill(el.phi)
-                self.h_elMap['no_trigger'].Fill(el.eta, el.phi)
-
         metPt = getattr(met, "pt")
         metPhi = getattr(met, "phi")
         genMetPt = getattr(genMet, "pt")
         genMetPhi = getattr(genMet, "pt")
-        # for key in self.trigLst:
-        #     for tg in self.trigLst[key]:
-        #         if trigPath[tg]:
-        #             self.h_metPt[tg].Fill(metPt)
-        #             self.h_metPhi[tg].Fill(metPhi)
-        #             self.h_genMetPt[tg].Fill(genMetPt)
-        #             self.h_genMetPhi[tg].Fill(genMetPhi)
-        # self.h_metPt['no_trigger'].Fill(metPt)
-        # self.h_metPhi['no_trigger'].Fill(metPhi)
-        # self.h_genMetPt['no_trigger'].Fill(genMetPt)
-        # self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
+
+        for nj, jet in enumerate(jets):
+            if nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
+                for key in self.trigLst:
+                    for tg in self.trigLst[key]:
+                        if trigPath[tg]:
+                            jetHt[tg] += jet.pt
+                            self.h_jetEta[tg].Fill(jet.eta)
+                            self.h_jetPhi[tg].Fill(jet.phi)
+                            self.h_jetMap[tg].Fill(jet.eta, jet.phi)
+                jetHt["notrig"] += jet.pt
+                self.h_jetEta['no_trigger'].Fill(jet.eta)
+                self.h_jetPhi['no_trigger'].Fill(jet.phi)
+                self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
         if nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
+            self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
+            self.h_metPt['no_trigger'].Fill(metPt)
+            self.h_metPhi['no_trigger'].Fill(metPhi)
+            self.h_genMetPt['no_trigger'].Fill(genMetPt)
+            self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
+            self.h_jetMult['no_trigger'].Fill(nJets)
+            self.h_jetBMult['no_trigger'].Fill(nBtagPass)
+            self.h_eventsPrg.Fill(1)
+            i = 0
             for key in self.trigLst:
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
@@ -349,10 +298,9 @@ class HistogramMaker(Module):
                         self.h_metPhi[tg].Fill(metPhi)
                         self.h_genMetPt[tg].Fill(genMetPt)
                         self.h_genMetPhi[tg].Fill(genMetPhi)
-            self.h_metPt['no_trigger'].Fill(metPt)
-            self.h_metPhi['no_trigger'].Fill(metPhi)
-            self.h_genMetPt['no_trigger'].Fill(genMetPt)
-            self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
-            self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
+                        self.h_jetMult[tg].Fill(nJets)
+                        self.h_jetBMult[tg].Fill(nBtagPass)
+                        self.h_eventsPrg.Fill(2 + i)
+                        i += 1
         
         return True
