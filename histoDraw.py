@@ -259,32 +259,38 @@ def main(argms):
 
     cv2 = triggerCanvas.cd(1)
     i = 0
-    for tg in trigList["combos"]:
-        h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
-        h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
-        if i == 0:
-            h_jetHtTriggerRatio[tg].Draw('E1')
-            tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
-        if i == 1:
-            h_jetHtTriggerRatio[tg].Draw('E1 same')
-        i += 1
-    for tg in trigList["stndlone"]:
-        h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
-        h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
-        if i == 0:
-            h_jetHtTriggerRatio[tg].Draw('E1')
-            tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
-            tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
-        if i == 1:
-            h_jetHtTriggerRatio[tg].Draw('E1 same')
-        i += 1
+    for key in trigList:
+        for tg in trigList[key]:
+            if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
+                h_jetHtTriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
+            # h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
+            # h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
+                if i == 0:
+                    h_jetHtTriggerRatio[tg].Draw('E1')
+                    tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
+                    tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
+                if i == 1:
+                    h_jetHtTriggerRatio[tg].Draw('E1 same')
+            i += 1
+    # for tg in trigList["stndlone"]:
+    #     if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
+    #         h_jetHtTriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
+    #     # h_jetHtTriggerRatio[tg] = (h_jetHt[tg]).Clone("h_jetHtRatio" + tg)
+    #     # h_jetHtTriggerRatio[tg].Divide(h_jetHt["notrigger"])
+    #         if i == 0:
+    #             h_jetHtTriggerRatio[tg].Draw('E1')
+    #             tX1 = 0.04*(h_jetHtTriggerRatio[tg].GetXaxis().GetXmax())
+    #             tY1 = 0.95*(h_jetHtTriggerRatio[tg].GetMaximum())
+    #         if i == 1:
+    #             h_jetHtTriggerRatio[tg].Draw('E1 same')
+    #     i += 1
 
     cv2.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
+    triggerCanvas.Print("EfficiencyTest.png")
 
     # - Jet Multiplicity plots ---------------------------------
     cv17 = triggerCanvas.cd(1)
