@@ -5,9 +5,9 @@ Repository for Working in the Single Lepton tttt decay channel.
 
 ## Combining High-Level-Trigger (HLT) :high_brightness:
 This study is done using non-prescaled HLT triggers, which can be checked by searching the HLT menu at the [CMS-HLT 
-configuration explorer](https://cmsweb.cern.ch/confdb/). The HLT Menu name/path can be found at:
-* https://twiki.cern.ch/twiki/bin/view/CMS/TopTriggerYear2017 for 2017 and
-* https://twiki.cern.ch/twiki/bin/view/CMS/TopTriggerYear2018 for 2018.
+configuration explorer](https://cmsweb.cern.ch/confdb/). The HLT Menu names/paths for 2017-18 can be found at:
+* https://twiki.cern.ch/twiki/bin/view/CMS/TopTriggerYear2017 (last updated 2018-09-27) and
+* https://twiki.cern.ch/twiki/bin/view/CMS/TopTriggerYear2018 (last updated 2018-09-12) .
 
 Currently the triggers which are being studied, in the hopes that a better event acceptance efficiency can be achieved, 
 are:
@@ -78,12 +78,12 @@ ___
 
 To produce [`histoDraw.py`](histoDraw.py) plots run:
 ```
-    $ python3 triggerPathEfficiency.py
+    $ python histoDraw.py
 ```
 
-The help nessage given for [`triggerPathEfficiency.py`](triggerPathEfficiency.py) is:
+The help nessage given for [`histoDraw.py`](histoDraw.py) is:
 ```
-usage: triggerPathEfficiency.py [-h] [-f {ttjets,tttt,tttt_weights,wjets}]
+usage: histoDraw.py [-h] [-f {ttjets,tttt,tttt_weights,wjets}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -95,6 +95,5 @@ I will try to introduce the option to input a trigger as an argument to some of 
 and if argument is not given it will revert to search for a default trigger 
 and exit if trigger does not exist.
 At the moment it makes more sense not to introduce command line args for triggers as 
-this code is only ~~used~~ by me!
+this code is only used by me!
 
-When this is done and saved :floppy_disk:, sit back relax and have many :beers:.
