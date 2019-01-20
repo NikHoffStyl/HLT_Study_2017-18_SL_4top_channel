@@ -2,7 +2,7 @@ from __future__ import (division, print_function)
 # from importlib import import_module
 import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
-from histoMaker import HistogramMaker
+from histoMaker2 import HistogramMaker
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
