@@ -11,10 +11,8 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 
 class HistogramMaker(Module):
-    """
-    This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
-    for different combinations of trigger paths.
-    """
+    """This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
+    for different combinations of trigger paths."""
 
     def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None):
         """ Initialise global variables """
@@ -224,7 +222,7 @@ class HistogramMaker(Module):
 
         nJetPass = 0
         nBtagPass = 0
-        firstMuonPass = False
+        nMuonPass = 0
         # firstElPass = False
 
         for nj, jet in enumerate(jets):
@@ -242,13 +240,14 @@ class HistogramMaker(Module):
                 nBtagPass += 1
 
         for nm, muon in enumerate(muons):
-            if nm == 0:
-                if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
-                    continue
-                else:
-                    firstMuonPass = True
+            oneMuonPass = False
+            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
+                continue
+            else:
+                nMuonPass += 1
+                if oneMuonPass is False: oneMuonPass = True
 
-            if nm == 0 and nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
+            if nMuonPass == 1 and nJetPass > 5 and nBtagPass > 0:
                 for key in self.trigLst:
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
@@ -267,7 +266,7 @@ class HistogramMaker(Module):
         genMetPhi = getattr(genMet, "pt")
 
         for nj, jet in enumerate(jets):
-            if nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
+            if nJetPass > 5 and nMuonPass > 0 and nBtagPass > 0:
                 for key in self.trigLst:
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
@@ -280,7 +279,7 @@ class HistogramMaker(Module):
                 self.h_jetPhi['no_trigger'].Fill(jet.phi)
                 self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
-        if nJetPass > 5 and firstMuonPass is True and nBtagPass > 0:
+        if nJetPass > 5 and nMuonPass > 0 and nBtagPass > 0:
             self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
             self.h_metPt['no_trigger'].Fill(metPt)
             self.h_metPhi['no_trigger'].Fill(metPhi)
