@@ -314,11 +314,11 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_jetMultTriggerRatio[tg].Draw('AP')
+                    h_TriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_jetMult["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_jetMultTriggerRatio[tg].Draw('same')
+                    h_TriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
@@ -377,11 +377,11 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_jetBMultTriggerRatio[tg].Draw('AP')
+                    h_TriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_jetBMult["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_jetBMultTriggerRatio[tg].Draw('same')
+                    h_TriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_jetBMultTriggerRatio[tg] = (h_jetBMult[tg]).Clone("h_jetBMultRatio" + tg)
@@ -439,11 +439,11 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_muonPtTriggerRatio[tg].Draw('AP')
+                    h_TriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_muonPt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_muonPtTriggerRatio[tg].Draw('same')
+                    h_TriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_muonPtTriggerRatio[tg] = (h_muonPt[tg]).Clone("h_muonPtRatio" + tg)
@@ -500,11 +500,11 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_elPtTriggerRatio[tg].Draw('AP')
+                    h_TriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_elPt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_elPtTriggerRatio[tg].Draw('same')
+                    h_TriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_elPtTriggerRatio[tg] = (h_elPt[tg]).Clone("h_elPtRatio" + tg)
@@ -561,11 +561,11 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_metPtTriggerRatio[tg].Draw('AP')
+                    h_TriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_metPt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_metPtTriggerRatio[tg].Draw('same')
+                    h_TriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_metPtTriggerRatio[tg] = (h_metPt[tg]).Clone("h_metPtRatio" + tg)
@@ -622,11 +622,11 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_genMetPtTriggerRatio[tg].Draw('AP')
+                    h_TriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_genMetPt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_genMetPtTriggerRatio[tg].Draw('same')
+                    h_TriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_genMetPtTriggerRatio[tg] = (h_genMetPt[tg]).Clone("h_genMetPtRatio" + tg)
