@@ -316,13 +316,15 @@ def main(argms):
                 j += 1
                 if i == 0:
                     h_jetMultTriggerRatio[tg].Draw('AP')
-                    graph1 = h_jetMultTriggerRatio[tg].GetPaintedGraph()
-                    graph1.SetMInimum(0)
-                    graph1.SetMaximum(1.3)
+                    h_jetMult[tg].SetAxisRange(0.,1.3, "Y")
+                    #graph1 = h_jetMultTriggerRatio[tg].GetPaintedGraph()
+                    #graph1.SetMinimum(0)
+                    #graph1.SetMaximum(1.3)
                     # tX1 = 0.04*(h_jetMult["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
                     h_jetMultTriggerRatio[tg].Draw('same')
+                    h_jetMult[tg].SetAxisRange(0.,1.3,"Y")
             i += 1
     # for tg in trigList["combos"]:
     #     h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
@@ -569,9 +571,9 @@ def main(argms):
                 j += 1
                 if i == 0:
                     h_TriggerRatio[tg].Draw('AP')
-                    graph2 = h_TriggerRatio[tg].GetPaintedGraph()
-                    graph2.SetMInimum(0)
-                    graph2.SetMaximum(1.4)
+                    #graph2 = h_TriggerRatio[tg].GetPaintedGraph()
+                    #graph2.SetMinimum(0)
+                    #graph2.SetMaximum(1.4)
                     # tX1 = 0.04*(h_metPt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
