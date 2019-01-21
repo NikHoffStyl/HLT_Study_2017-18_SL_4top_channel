@@ -269,7 +269,7 @@ def main(argms):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
                 xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(round(xTitle), xBinWidth))
+                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
@@ -310,7 +310,7 @@ def main(argms):
                 h_jetMult[tg].GetYaxis().SetRangeUser(0., 1.0)
                 xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(round(xTitle), xBinWidth))
+                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
