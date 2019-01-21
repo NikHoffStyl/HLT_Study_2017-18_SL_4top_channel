@@ -81,7 +81,7 @@ def main(argms):
     h_genMetPtTriggerRatio = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100, 600)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 800, 800)
     # triggerCanvas.Divide(2,1)
 
     # - Open file and sub folder
@@ -286,6 +286,71 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
+
+    # Upper plot will be in pad1
+    triggerCanvas.cd()
+    pad1 = ROOT.TPad("pad1", "pad1", 0, 0.3, 1, 1.0)
+    pad1.SetBottomMargin(0)
+    pad1.SetGridx()
+    pad1.Draw()
+    pad1.cd()
+    h_jetHt["notrigger"].SetStats(0)
+    h_jetHt["notrigger"].Draw()
+    for key in trigList:
+        for tg in trigList[key]:
+            h_jetHt[tg].Draw("same")
+
+    h_jetHt["notrigger"].GetYaxis().SetLabelSize(0.)
+    axis = ROOT.TGaxis(-5, 20, -5, 220, 20, 220, 510, "")
+    axis.SetLabelFont(43)
+    axis.SetLabelSize(15)
+    axis.Draw()
+
+    triggerCanvas.cd()
+    pad2 = ROOT.TPad("pad2", "pad2", 0, 0.05, 1, 0.3)
+    pad2.SetTopMargin(0)
+    pad2.SetBottomMargin(0.2)
+    pad2.SetGridx()
+    pad2.Draw()
+    pad2.cd()
+
+    for key in trigList:
+        for tg in trigList[key]:
+            h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
+            h_TriggerRatio[tg].SetLineColor(ROOT.kBlack)
+            h_TriggerRatio[tg].SetMinimum(0.)
+            h_TriggerRatio[tg].SetMaximum(1.4)
+            h_TriggerRatio[tg].Sumw2()
+            h_TriggerRatio[tg].SetStats(0)
+            h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
+            h_TriggerRatio[tg].SetMarkerStyle(21)
+            h_TriggerRatio[tg].Draw("ep")
+
+    # h1.SetLineColor(ROOT.kBlue + 1)
+    # h1.SetLineWidth(2)
+    #
+    # h1.GetYaxis().SetTitleSize(20)
+    # h1.GetYaxis().SetTitleFont(43)
+    # h1.GetYaxis().SetTitleOffset(1.55)
+    #
+    # h2.SetLineColor(ROOT.kRed)
+    # h2.SetLineWidth(2)
+    #
+    # h3.SetTitle("")
+    #
+    # h3.GetYaxis().SetTitle("ratio h1/h2 ")
+    # h3.GetYaxis().SetNdivisions(505)
+    # h3.GetYaxis().SetTitleSize(20)
+    # h3.GetYaxis().SetTitleFont(43)
+    # h3.GetYaxis().SetTitleOffset(1.55)
+    # h3.GetYaxis().SetLabelFont(43)
+    # h3.GetYaxis().SetLabelSize(15)
+    #
+    # h3.GetXaxis().SetTitleSize(20)
+    # h3.GetXaxis().SetTitleFont(43)
+    # h3.GetXaxis().SetTitleOffset(4.)
+    # h3.GetXaxis().SetLabelFont(43)
+    # h3.GetXaxis().SetLabelSize(15)
 
     # - Jet Multiplicity plots ---------------------------------
     cv17 = triggerCanvas.cd(1)
