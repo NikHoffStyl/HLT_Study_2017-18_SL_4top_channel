@@ -222,9 +222,10 @@ def main(argms):
     ####################
     # - Canvas Details
     triggerCanvas.cd(1)
+    paveL = ROOT.TPaveText()
     ltx = TLatex()
     ltx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
-    ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > 5 , jetId > 2 and |#eta| < 2.4 }")
+    ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > 5}")
     ltx.DrawLatex(0.16, 0.60, "#bullet Muons: #bf{number >0 and has softId}")
     ltx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
     ltx.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
@@ -251,7 +252,7 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg].Draw('E1 same')
-    cv1.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv1.BuildLegend(0.35, 0.3, 0.35, 0.3)
     # leg1.SetNColumns(2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
@@ -306,20 +307,22 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
-                h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
-                h_jetMult[tg].GetYaxis().SetRangeUser(0., 1.0)
+                h_jetMultTriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
                 xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
-                h_TriggerRatio[tg].SetName(tg)
-                h_TriggerRatio[tg].SetLineColor(j)
+                h_jetMultTriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} Jet".format(xTitle, xBinWidth))
+                h_jetMultTriggerRatio[tg].SetName(tg)
+                h_jetMultTriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_TriggerRatio[tg].Draw('AP')
+                    h_jetMultTriggerRatio[tg].Draw('AP')
+                    graph1 = h_jetMultTriggerRatio[tg].GetPaintedGraph()
+                    graph1.SetMInimum(0)
+                    graph1.SetMaximum(1.3)
                     # tX1 = 0.04*(h_jetMult["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_TriggerRatio[tg].Draw('same')
+                    h_jetMultTriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
@@ -342,6 +345,8 @@ def main(argms):
     #         h_jetMultTriggerRatio[tg].Draw('E1 same')
     #     i += 1
 
+    paveL.AddText(legString)
+    paveL.Draw("same")
     cv18.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
@@ -370,19 +375,19 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetBMult[tg], h_jetBMult["notrigger"]):
-                h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetBMult[tg], h_jetBMult["notrigger"])
+                h_jetBMultTriggerRatio[tg] = ROOT.TEfficiency(h_jetBMult[tg], h_jetBMult["notrigger"])
                 xTitle = h_jetBMult["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_jetBMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
-                h_TriggerRatio[tg].SetName(tg)
-                h_TriggerRatio[tg].SetLineColor(j)
+                h_jetBMultTriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} Jet".format(xTitle, xBinWidth))
+                h_jetBMultTriggerRatio[tg].SetName(tg)
+                h_jetBMultTriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_TriggerRatio[tg].Draw('AP')
+                    h_jetBMultTriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_jetBMult["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
-                    h_TriggerRatio[tg].Draw('same')
+                    h_jetBMultTriggerRatio[tg].Draw('same')
             i += 1
     # for tg in trigList["combos"]:
     #     h_jetBMultTriggerRatio[tg] = (h_jetBMult[tg]).Clone("h_jetBMultRatio" + tg)
@@ -564,6 +569,9 @@ def main(argms):
                 j += 1
                 if i == 0:
                     h_TriggerRatio[tg].Draw('AP')
+                    graph2 = h_TriggerRatio[tg].GetPaintedGraph()
+                    graph2.SetMInimum(0)
+                    graph2.SetMaximum(1.4)
                     # tX1 = 0.04*(h_metPt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 0.99
                 if i > 0:
