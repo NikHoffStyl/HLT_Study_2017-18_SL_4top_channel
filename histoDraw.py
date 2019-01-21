@@ -269,7 +269,7 @@ def main(argms):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
                 xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(round(xTitle), xBinWidth))
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
@@ -307,9 +307,10 @@ def main(argms):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
+                h_jetMult[tg].GetYaxis().SetRangeUser(0., 1.0)
                 xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(round(xTitle), xBinWidth))
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
@@ -553,6 +554,7 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_metPt[tg], h_metPt["notrigger"]):
+                h_metPt[tg].GetYaxis().SetRangeUser(0., 1.0)
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_metPt[tg], h_metPt["notrigger"])
                 xTitle = h_metPt["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_metPt["notrigger"].GetXaxis().GetBinWidth(1)
@@ -768,7 +770,7 @@ def main(argms):
     h_eventsPrg.SetFillColor(ROOT.kAzure-9)
     h_eventsPrg.GetXaxis().SetLabelOffset(999)
     h_eventsPrg.GetXaxis().SetLabelSize(0)
-    h_eventsPrg.Draw('E1')
+    h_eventsPrg.Draw()
     tY1 = 0.05*(h_eventsPrg.GetMaximum())
     ltx.SetTextAngle(88)
     ltx.DrawLatex(0.5, tY1, "Pre-selection")
