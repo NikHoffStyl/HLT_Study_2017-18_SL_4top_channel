@@ -370,7 +370,7 @@ def main(argms):
     # - B tagged Jet Multiplicity plots ---------------------------
     cv19 = triggerCanvas.cd(1)
     h_jetBMult["notrigger"].SetTitle("")
-    h_jetBMult["notrigger"].GetXaxis().SetRange(0., 8)
+    h_jetBMult["notrigger"].GetXaxis().SetRange(0, 8)
     h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
         for tg in trigList[key]:
@@ -398,7 +398,7 @@ def main(argms):
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
                 h_TriggerRatio[tg].SetMaximum(1.8)
-                h_TriggerRatio[tg].GetXaxis().SetRange(0., 8)
+                h_TriggerRatio[tg].GetXaxis().SetRange(0, 8)
                 h_TriggerRatio[tg].Draw('E1')
                 tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
                 tY1 = 0.98 * (h_TriggerRatio[tg].GetMaximum())
