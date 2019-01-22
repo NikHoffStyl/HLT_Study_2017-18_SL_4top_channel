@@ -288,34 +288,10 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
-    #################################################
-    # Upper plot will be in pad1
-    triggerCanvas2.cd(1)
-    pad1 = ROOT.TPad("pad1", "pad1", 0, 0.5, 1, 1.0)
-    pad1.SetBottomMargin(0)
-    pad1.SetGridx()
-    pad1.Draw()
-    pad1.cd()
-    h_jetHt["notrigger"].SetStats(0)
-    h_jetHt["notrigger"].Draw()
-    for key in trigList:
-        for tg in trigList[key]:
-            h_jetHt[tg].Draw("same")
-
-    h_jetHt["notrigger"].GetYaxis().SetLabelSize(0.)
-    axis = ROOT.TGaxis(-5, 20, -5, 220, 20, 220, 510, "")
-    axis.SetLabelFont(43)
-    axis.SetLabelSize(15)
-    axis.Draw()
-
-    triggerCanvas2.cd(1)
-    pad2 = ROOT.TPad("pad2", "pad2", 0, 0.05, 1, 0.5)
-    pad2.SetTopMargin(0)
-    pad2.SetBottomMargin(0.2)
-    pad2.SetGridx()
-    pad2.Draw()
-    pad2.cd()
-
+    # - HT plots 2 ---------------------------------
+    cv22 = triggerCanvas.cd(1)
+    i = 0
+    j = 2
     for key in trigList:
         for tg in trigList[key]:
             h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
@@ -327,25 +303,89 @@ def main(argms):
             h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
             h_TriggerRatio[tg].SetMarkerStyle(21)
             h_TriggerRatio[tg].Draw("AP")
-            h_jetHt[tg].GetYaxis().SetTitleSize(20)
-            h_jetHt[tg].GetYaxis().SetTitleFont(43)
-            h_jetHt[tg].GetYaxis().SetTitleOffset(1.55)
-            h_TriggerRatio[tg].SetTitle("")
-
-            h_TriggerRatio[tg].GetYaxis().SetTitle("Trigger Efficiency per 10 GeV/c")
-            h_TriggerRatio[tg].GetYaxis().SetNdivisions(505)
-            h_TriggerRatio[tg].GetYaxis().SetTitleSize(20)
-            h_TriggerRatio[tg].GetYaxis().SetTitleFont(43)
-            h_TriggerRatio[tg].GetYaxis().SetTitleOffset(1.55)
-            h_TriggerRatio[tg].GetYaxis().SetLabelFont(43)
-            h_TriggerRatio[tg].GetYaxis().SetLabelSize(15)
-
-            h_TriggerRatio[tg].GetXaxis().SetTitleSize(20)
-            h_TriggerRatio[tg].GetXaxis().SetTitleFont(43)
-            h_TriggerRatio[tg].GetXaxis().SetTitleOffset(4.)
-            h_TriggerRatio[tg].GetXaxis().SetLabelFont(43)
-            h_TriggerRatio[tg].GetXaxis().SetLabelSize(15)
-    pdfCreator(argms, 1, triggerCanvas2)
+            # h_jetHt[tg].GetYaxis().SetTitleSize(20)
+            # h_jetHt[tg].GetYaxis().SetTitleFont(43)
+            # h_jetHt[tg].GetYaxis().SetTitleOffset(1.55)
+            # h_TriggerRatio[tg].SetTitle("")
+            #
+            # if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
+            #     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
+            #     xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
+            #     xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
+            #     h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            #     h_TriggerRatio[tg].SetName(tg)
+            #     h_TriggerRatio[tg].SetLineColor(j)
+            #     j += 1
+            if i == 0:
+                h_TriggerRatio[tg].Draw('AP')
+                # tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+                tY1 = 0.99
+            if i > 0:
+                h_TriggerRatio[tg].Draw('same')
+            i += 1
+    cv22.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+    #################################################
+    # Upper plot will be in pad1
+    # triggerCanvas2.cd(1)
+    # pad1 = ROOT.TPad("pad1", "pad1", 0, 0.5, 1, 1.0)
+    # pad1.SetBottomMargin(0)
+    # pad1.SetGridx()
+    # pad1.Draw()
+    # pad1.cd()
+    # h_jetHt["notrigger"].SetStats(0)
+    # h_jetHt["notrigger"].Draw()
+    # for key in trigList:
+    #     for tg in trigList[key]:
+    #         h_jetHt[tg].Draw("same")
+    #
+    # h_jetHt["notrigger"].GetYaxis().SetLabelSize(0.)
+    # axis = ROOT.TGaxis(-5, 20, -5, 220, 20, 220, 510, "")
+    # axis.SetLabelFont(43)
+    # axis.SetLabelSize(15)
+    # axis.Draw()
+    #
+    # triggerCanvas2.cd(1)
+    # pad2 = ROOT.TPad("pad2", "pad2", 0, 0.05, 1, 0.5)
+    # pad2.SetTopMargin(0)
+    # pad2.SetBottomMargin(0.2)
+    # pad2.SetGridx()
+    # pad2.Draw()
+    # pad2.cd()
+    #
+    # for key in trigList:
+    #     for tg in trigList[key]:
+    #         h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
+    #         h_TriggerRatio[tg].SetLineColor(ROOT.kBlack)
+    #         h_TriggerRatio[tg].SetMinimum(0.)
+    #         h_TriggerRatio[tg].SetMaximum(1.4)
+    #         h_TriggerRatio[tg].Sumw2()
+    #         h_TriggerRatio[tg].SetStats(0)
+    #         h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
+    #         h_TriggerRatio[tg].SetMarkerStyle(21)
+    #         h_TriggerRatio[tg].Draw("AP")
+    #         h_jetHt[tg].GetYaxis().SetTitleSize(20)
+    #         h_jetHt[tg].GetYaxis().SetTitleFont(43)
+    #         h_jetHt[tg].GetYaxis().SetTitleOffset(1.55)
+    #         h_TriggerRatio[tg].SetTitle("")
+    #
+    #         h_TriggerRatio[tg].GetYaxis().SetTitle("Trigger Efficiency per 10 GeV/c")
+    #         h_TriggerRatio[tg].GetYaxis().SetNdivisions(505)
+    #         h_TriggerRatio[tg].GetYaxis().SetTitleSize(20)
+    #         h_TriggerRatio[tg].GetYaxis().SetTitleFont(43)
+    #         h_TriggerRatio[tg].GetYaxis().SetTitleOffset(1.55)
+    #         h_TriggerRatio[tg].GetYaxis().SetLabelFont(43)
+    #         h_TriggerRatio[tg].GetYaxis().SetLabelSize(15)
+    #
+    #         h_TriggerRatio[tg].GetXaxis().SetTitleSize(20)
+    #         h_TriggerRatio[tg].GetXaxis().SetTitleFont(43)
+    #         h_TriggerRatio[tg].GetXaxis().SetTitleOffset(4.)
+    #         h_TriggerRatio[tg].GetXaxis().SetLabelFont(43)
+    #         h_TriggerRatio[tg].GetXaxis().SetLabelSize(15)
+    # pdfCreator(argms, 1, triggerCanvas2)
     # h1.SetLineColor(ROOT.kBlue + 1)
     # h1.SetLineWidth(2)
     #
