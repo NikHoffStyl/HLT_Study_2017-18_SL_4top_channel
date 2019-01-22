@@ -82,7 +82,7 @@ def main(argms):
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100, 600)
-    triggerCanvas2 = ROOT.TCanvas('triggerCanvas2', 'Triggers2', 1100, 1200)
+    #triggerCanvas2 = ROOT.TCanvas('triggerCanvas2', 'Triggers2', 1100, 1200)
     # triggerCanvas.Divide(2,1)
 
     # - Open file and sub folder
@@ -295,14 +295,14 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
-            h_TriggerRatio[tg].SetLineColor(ROOT.kBlack)
-            h_TriggerRatio[tg].SetMinimum(0.)
-            h_TriggerRatio[tg].SetMaximum(1.4)
+            #h_TriggerRatio[tg].SetLineColor(ROOT.kBlack)
+            # h_TriggerRatio[tg].SetMinimum(0.)
+            # h_TriggerRatio[tg].SetMaximum(1.4)
             h_TriggerRatio[tg].Sumw2()
             h_TriggerRatio[tg].SetStats(0)
             h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
             h_TriggerRatio[tg].SetMarkerStyle(21)
-            h_TriggerRatio[tg].Draw("AP")
+            #h_TriggerRatio[tg].Draw("AP")
             # h_jetHt[tg].GetYaxis().SetTitleSize(20)
             # h_jetHt[tg].GetYaxis().SetTitleFont(43)
             # h_jetHt[tg].GetYaxis().SetTitleOffset(1.55)
@@ -317,6 +317,8 @@ def main(argms):
             #     h_TriggerRatio[tg].SetLineColor(j)
             #     j += 1
             if i == 0:
+                h_TriggerRatio[tg].SetMinimum(0.)
+                h_TriggerRatio[tg].SetMaximum(1.4)
                 h_TriggerRatio[tg].Draw('AP')
                 # tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                 tY1 = 0.99
@@ -449,7 +451,7 @@ def main(argms):
                     tY1 = 0.99
                 if i > 0:
                     h_jetMultTriggerRatio[tg].Draw('same')
-                    h_jetMult[tg].SetAxisRange(0.,1.3,"Y")
+                    h_jetMult[tg].SetAxisRange(0., 1.3, "Y")
             i += 1
     # for tg in trigList["combos"]:
     #     h_jetMultTriggerRatio[tg] = (h_jetMult[tg]).Clone("h_jetMultRatio" + tg)
