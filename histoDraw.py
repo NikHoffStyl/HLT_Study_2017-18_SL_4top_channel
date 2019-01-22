@@ -295,33 +295,31 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
-            #h_TriggerRatio[tg].SetLineColor(ROOT.kBlack)
-            # h_TriggerRatio[tg].SetMinimum(0.)
-            # h_TriggerRatio[tg].SetMaximum(1.4)
             h_TriggerRatio[tg].Sumw2()
             h_TriggerRatio[tg].SetStats(0)
             h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
-            h_TriggerRatio[tg].SetMarkerStyle(21)
-            #h_TriggerRatio[tg].Draw("AP")
-            # h_jetHt[tg].GetYaxis().SetTitleSize(20)
-            # h_jetHt[tg].GetYaxis().SetTitleFont(43)
-            # h_jetHt[tg].GetYaxis().SetTitleOffset(1.55)
-            # h_TriggerRatio[tg].SetTitle("")
+            xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
+            xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
+            h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_TriggerRatio[tg].GetYaxis().SetNdivisions(505)
+            # h_TriggerRatio[tg].GetYaxis().SetTitleSize(20)
+            # h_TriggerRatio[tg].GetYaxis().SetTitleFont(43)
+            # h_TriggerRatio[tg].GetYaxis().SetTitleOffset(1.55)
+            h_TriggerRatio[tg].GetYaxis().SetLabelFont(43)
+            h_TriggerRatio[tg].GetYaxis().SetLabelSize(15)
             #
-            # if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
-            #     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
-            #     xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
-            #     xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-            #     h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-            #     h_TriggerRatio[tg].SetName(tg)
-            #     h_TriggerRatio[tg].SetLineColor(j)
-            #     j += 1
+            # h_TriggerRatio[tg].GetXaxis().SetTitleSize(20)
+            # h_TriggerRatio[tg].GetXaxis().SetTitleFont(43)
+            # h_TriggerRatio[tg].GetXaxis().SetTitleOffset(4.)
+            # h_TriggerRatio[tg].GetXaxis().SetLabelFont(43)
+            # h_TriggerRatio[tg].GetXaxis().SetLabelSize(15)
+
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
                 h_TriggerRatio[tg].SetMaximum(1.4)
-                h_TriggerRatio[tg].Draw('AP')
-                # tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.99
+                h_TriggerRatio[tg].Draw('E1')
+                tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+                tY1 = 0.99*(h_jetHt["notrigger"].GetMaximum())
             if i > 0:
                 h_TriggerRatio[tg].Draw('same')
             i += 1
@@ -329,6 +327,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
+    triggerCanvas.Print("test.png")
     pdfCreator(argms, 1, triggerCanvas)
     #################################################
     # Upper plot will be in pad1
