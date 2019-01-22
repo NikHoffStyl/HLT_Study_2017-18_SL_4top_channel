@@ -81,7 +81,8 @@ def main(argms):
     h_genMetPtTriggerRatio = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 800, 800)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100, 600)
+    triggerCanvas2 = ROOT.TCanvas('triggerCanvas2', 'Triggers2', 1100, 1200)
     # triggerCanvas.Divide(2,1)
 
     # - Open file and sub folder
@@ -287,9 +288,10 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
+    #################################################
     # Upper plot will be in pad1
-    triggerCanvas.cd(1)
-    pad1 = ROOT.TPad("pad1", "pad1", 0, 0.3, 1, 1.0)
+    triggerCanvas2.cd(1)
+    pad1 = ROOT.TPad("pad1", "pad1", 0, 0.5, 1, 1.0)
     pad1.SetBottomMargin(0)
     pad1.SetGridx()
     pad1.Draw()
@@ -306,8 +308,8 @@ def main(argms):
     axis.SetLabelSize(15)
     axis.Draw()
 
-    triggerCanvas.cd(1)
-    pad2 = ROOT.TPad("pad2", "pad2", 0, 0.05, 1, 0.3)
+    triggerCanvas2.cd(1)
+    pad2 = ROOT.TPad("pad2", "pad2", 0, 0.05, 1, 0.5)
     pad2.SetTopMargin(0)
     pad2.SetBottomMargin(0.2)
     pad2.SetGridx()
@@ -324,13 +326,13 @@ def main(argms):
             h_TriggerRatio[tg].SetStats(0)
             h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
             h_TriggerRatio[tg].SetMarkerStyle(21)
-            h_TriggerRatio[tg].Draw("ep")
+            h_TriggerRatio[tg].Draw("AP")
             h_jetHt[tg].GetYaxis().SetTitleSize(20)
             h_jetHt[tg].GetYaxis().SetTitleFont(43)
             h_jetHt[tg].GetYaxis().SetTitleOffset(1.55)
             h_TriggerRatio[tg].SetTitle("")
 
-            h_TriggerRatio[tg].GetYaxis().SetTitle("ratio h1/h2 ")
+            h_TriggerRatio[tg].GetYaxis().SetTitle("Trigger Efficiency per 10 GeV/c")
             h_TriggerRatio[tg].GetYaxis().SetNdivisions(505)
             h_TriggerRatio[tg].GetYaxis().SetTitleSize(20)
             h_TriggerRatio[tg].GetYaxis().SetTitleFont(43)
@@ -343,7 +345,7 @@ def main(argms):
             h_TriggerRatio[tg].GetXaxis().SetTitleOffset(4.)
             h_TriggerRatio[tg].GetXaxis().SetLabelFont(43)
             h_TriggerRatio[tg].GetXaxis().SetLabelSize(15)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas2)
     # h1.SetLineColor(ROOT.kBlue + 1)
     # h1.SetLineWidth(2)
     #
