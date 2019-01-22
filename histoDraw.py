@@ -253,7 +253,7 @@ def main(argms):
     for key in trigList:
         for tg in trigList[key]:
             h_jetHt[tg].Draw('E1 same')
-    cv1.BuildLegend(0.35, 0.3, 0.35, 0.3)
+    cv1.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
@@ -290,8 +290,8 @@ def main(argms):
                 h_TriggerRatio[tg].SetMinimum(0.)
                 h_TriggerRatio[tg].SetMaximum(1.8)
                 h_TriggerRatio[tg].Draw('E1')
-                tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
+                tX1 = 0.04 * (h_jetHt["notrigger"].GetXaxis().GetXmax())
+                tY1 = 0.98 * (h_TriggerRatio[tg].GetMaximum())
             if i > 0:
                 h_TriggerRatio[tg].Draw('E1 same')
             i += 1
@@ -334,7 +334,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetMaximum(1.8)
                 h_TriggerRatio[tg].Draw('E1')
                 tX1 = 0.04 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
+                tY1 = 0.98 * (h_TriggerRatio[tg].GetMaximum())
             if i > 0:
                 h_TriggerRatio[tg].Draw('E1 same')
             i += 1
@@ -359,8 +359,8 @@ def main(argms):
     #         h_jetMultTriggerRatio[tg].Draw('E1 same')
     #     i += 1
 
-    paveL.AddText(legString)
-    paveL.Draw("same")
+    # paveL.AddText(legString)
+    # paveL.Draw("same")
     cv18.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
@@ -370,6 +370,7 @@ def main(argms):
     # - B tagged Jet Multiplicity plots ---------------------------
     cv19 = triggerCanvas.cd(1)
     h_jetBMult["notrigger"].SetTitle("")
+    h_jetBMult["notrigger"].GetXaxis().SetRange(0., 8)
     h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
         for tg in trigList[key]:
@@ -397,9 +398,10 @@ def main(argms):
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
                 h_TriggerRatio[tg].SetMaximum(1.8)
+                h_TriggerRatio[tg].GetXaxis().SetRange(0., 8)
                 h_TriggerRatio[tg].Draw('E1')
                 tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
+                tY1 = 0.98 * (h_TriggerRatio[tg].GetMaximum())
             if i > 0:
                 h_TriggerRatio[tg].Draw('E1 same')
             i += 1
@@ -452,6 +454,8 @@ def main(argms):
 
     # - Muon pT plots ---------------------------------
     cv3 = triggerCanvas.cd(1)
+    h_muonPt["notrigger"].SetMinimum(0.)
+    h_muonPt["notrigger"].SetMaximum(2700)
     # h_muonPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_muonPt["notrigger"].Draw('E1')
     tX1 = 0.04*(h_muonPt["notrigger"].GetXaxis().GetXmax())
@@ -479,10 +483,10 @@ def main(argms):
             h_TriggerRatio[tg].SetName(tg)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
-                h_TriggerRatio[tg].SetMaximum(1.8)
+                h_TriggerRatio[tg].SetMaximum(1.2)
                 h_TriggerRatio[tg].Draw('E1')
                 tX1 = 0.04 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.95 * (h_muonPt["notrigger"].GetMaximum())
+                tY1 = 0.98 * (h_TriggerRatio[tg].GetMaximum())
             if i > 0:
                 h_TriggerRatio[tg].Draw('E1 same')
             i += 1
@@ -615,6 +619,8 @@ def main(argms):
 
     # - MET pT plots ---------------------------------
     cv13 = triggerCanvas.cd(1)
+    h_metPt["notrigger"].SetMinimum(0.)
+    h_metPt["notrigger"].SetMaximum(1800)
     # h_metPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
     h_metPt["notrigger"].Draw('E1')
     tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
@@ -642,10 +648,10 @@ def main(argms):
             h_TriggerRatio[tg].SetName(tg)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
-                h_TriggerRatio[tg].SetMaximum(1.8)
+                h_TriggerRatio[tg].SetMaximum(1.2)
                 h_TriggerRatio[tg].Draw('E1')
                 tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
+                tY1 = 0.98 * (h_TriggerRatio[tg].GetMaximum())
             if i > 0:
                 h_TriggerRatio[tg].Draw('E1 same')
             i += 1
@@ -701,6 +707,8 @@ def main(argms):
     # - GenMET pT plots ---------------------------------
     cv15 = triggerCanvas.cd(1)
     # h_genMetPt["notrigger"].GetYaxis().SetTitleOffset(1.5)
+    h_genMetPt["notrigger"].SetMinimum(0.)
+    h_genMetPt["notrigger"].SetMaximum(2000)
     h_genMetPt["notrigger"].Draw('E1')
     tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
@@ -727,10 +735,10 @@ def main(argms):
             h_TriggerRatio[tg].SetName(tg)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
-                h_TriggerRatio[tg].SetMaximum(1.8)
+                h_TriggerRatio[tg].SetMaximum(1.2)
                 h_TriggerRatio[tg].Draw('E1')
                 tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
+                tY1 = 0.98 * (h_TriggerRatio[tg].GetMaximum())
             if i > 0:
                 h_TriggerRatio[tg].Draw('E1 same')
             i += 1
