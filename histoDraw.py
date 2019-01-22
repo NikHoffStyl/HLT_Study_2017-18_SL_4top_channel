@@ -262,31 +262,31 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv2 = triggerCanvas.cd(1)
-    i = 0
-    j = 2
-    for key in trigList:
-        for tg in trigList[key]:
-            if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
-                h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
-                xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_TriggerRatio[tg].SetName(tg)
-                h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
-                if i == 0:
-                    h_TriggerRatio[tg].Draw('AP')
+    #cv2 = triggerCanvas.cd(1)
+    #i = 0
+    #j = 2
+    #for key in trigList:
+     #   for tg in trigList[key]:
+      #      if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
+       #         h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
+        #        xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
+         #       xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
+          #      h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+           #     h_TriggerRatio[tg].SetName(tg)
+            #    h_TriggerRatio[tg].SetLineColor(j)
+              #  j += 1
+             #   if i == 0:
+               #     h_TriggerRatio[tg].Draw('AP')
                     # tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 0.99
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('same')
-            i += 1
-    cv2.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+                #    tY1 = 0.99
+                #if i > 0:
+                 #   h_TriggerRatio[tg].Draw('same')
+           # i += 1
+    #cv2.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    #ROOT.gStyle.SetLegendTextSize(0.02)
+    #ltx.SetTextSize(0.03)
+    #ltx.DrawLatex(tX1, tY1, legString)
+    #pdfCreator(argms, 1, triggerCanvas)
 
     # - HT plots 2 ---------------------------------
     cv22 = triggerCanvas.cd(1)
@@ -301,12 +301,13 @@ def main(argms):
             xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-            h_TriggerRatio[tg].GetYaxis().SetNdivisions(505)
+            h_TriggerRatio[tg].SetName(tg)
+            # h_TriggerRatio[tg].GetYaxis().SetNdivisions(505)
             # h_TriggerRatio[tg].GetYaxis().SetTitleSize(20)
             # h_TriggerRatio[tg].GetYaxis().SetTitleFont(43)
             # h_TriggerRatio[tg].GetYaxis().SetTitleOffset(1.55)
-            h_TriggerRatio[tg].GetYaxis().SetLabelFont(43)
-            h_TriggerRatio[tg].GetYaxis().SetLabelSize(15)
+            # h_TriggerRatio[tg].GetYaxis().SetLabelFont(43)
+            # h_TriggerRatio[tg].GetYaxis().SetLabelSize(15)
             #
             # h_TriggerRatio[tg].GetXaxis().SetTitleSize(20)
             # h_TriggerRatio[tg].GetXaxis().SetTitleFont(43)
@@ -316,12 +317,12 @@ def main(argms):
 
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
-                h_TriggerRatio[tg].SetMaximum(1.4)
+                h_TriggerRatio[tg].SetMaximum(1.6)
                 h_TriggerRatio[tg].Draw('E1')
                 tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 0.99*(h_jetHt["notrigger"].GetMaximum())
+                tY1 = 1.2*(h_jetHt["notrigger"].GetMaximum())
             if i > 0:
-                h_TriggerRatio[tg].Draw('same')
+                h_TriggerRatio[tg].Draw('E1 same')
             i += 1
     cv22.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
