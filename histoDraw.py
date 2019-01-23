@@ -365,6 +365,7 @@ def main(argms):
 
     # - Muon pT plots ---------------------------------
     cv3 = triggerCanvas.cd(1)
+    h_muonPt["notrigger"].SetTitle("")
     h_muonPt["notrigger"].SetMinimum(0.)
     h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
@@ -490,6 +491,7 @@ def main(argms):
 
     # - MET pT plots ---------------------------------
     cv13 = triggerCanvas.cd(1)
+    h_metPt["notrigger"].SetTitle("")
     h_metPt["notrigger"].SetMinimum(0.)
     h_metPt["notrigger"].SetMaximum(1800)
     h_metPt["notrigger"].Draw('E1')

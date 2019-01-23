@@ -121,10 +121,12 @@ def main(argms):
     #             'Mu15_IsoVVVL_PFHT450',
     #             'Mu15_IsoVVVL_PFHT600']
     #         }
-    trigList = {"combos": [],
+    trigList = {"MuPJets": [],
+                "ElPJets": [],
                 "stndlone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
-                "t1": ['IsoMu24'],
-                "t2": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
+                "Muon": ['IsoMu24'],
+                "Electron": ["Ele32_WPTight_Gsf", "Ele35_WPTight_Gsf", "Ele38_WPTight_Gsf"],
+                "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
     p99 = PostProcessor(".",
                         files,

@@ -21,7 +21,7 @@ class HistogramMaker(Module):
 
         self.eventCounter = 0
         self.comboCounter = 0
-        self.numTriggers = len(trigLst["t1"]) * len(trigLst["t2"]) + len(trigLst["stndlone"])
+        self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"]) + len(trigLst["stndlone"])
         print("Number of Combined Triggers: %d" % self.numTriggers)
         self.trigCombination = [0]*self.numTriggers
 
@@ -57,11 +57,11 @@ class HistogramMaker(Module):
             self.trigLst = {}
         else:
             self.trigLst = trigLst
-            for t1 in self.trigLst["t1"]:
-                for t2 in self.trigLst["t2"]:
-                    self.trigCombination[self.comboCounter] = [t1, t2]
+            for Muon in self.trigLst["Muon"]:
+                for Jet in self.trigLst["Jet"]:
+                    self.trigCombination[self.comboCounter] = [Muon, Jet]
                     self.comboCounter += 1
-                    self.trigLst["combos"].append(t1 + '_' + t2)  # append new triggers to old list
+                    self.trigLst["MuPJets"].append(Muon + '_' + Jet)  # append new triggers to old list
 
     def beginJob(self, histFile=None, histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -218,8 +218,8 @@ class HistogramMaker(Module):
         trigPath = {}
 
         for key in self.trigLst:
-            for tg in self.trigLst[key]:
-                if not self.trigLst[key] == self.trigLst["combos"]:
+            if not (key == "MuPJets" or key == "ElPJets"):
+                for tg in self.trigLst[key]:
                     trigPath[tg] = getattr(hltObj, tg)
     
         for i in range(self.comboCounter):
@@ -265,7 +265,7 @@ class HistogramMaker(Module):
             self.h_jetPhi['no_trigger'].Fill(jet.phi)
             self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
-            if nJetPass > 5 and nBtagPass ==1:
+            if nJetPass > 5 and nBtagPass == 1:
                 self.h_eventsPrg.Fill(1)
                 i = 0
                 for key in self.trigLst:
