@@ -29,12 +29,12 @@ class HistogramMaker(Module):
         self.h_jetPhi = {}
         self.h_jetMap = {}
 
-        self.h_jetHt2 = {}
-        self.h_jetMult2 = {}
-        self.h_jetBMult2 = {}
-        self.h_jetEta2 = {}
-        self.h_jetPhi2 = {}
-        self.h_jetMap2 = {}
+        # self.h_jetHt2 = {}
+        # self.h_jetMult2 = {}
+        # self.h_jetBMult2 = {}
+        # self.h_jetEta2 = {}
+        # self.h_jetPhi2 = {}
+        # self.h_jetMap2 = {}
 
         self.h_muonPt = {}
         self.h_muonEta = {}
@@ -52,14 +52,14 @@ class HistogramMaker(Module):
         self.h_genMetPt = {}
         self.h_genMetPhi = {}
 
-        self.h_metPt2 = {}
-        self.h_metPhi2 = {}
-
-        self.h_genMetPt2 = {}
-        self.h_genMetPhi2 = {}
+        # self.h_metPt2 = {}
+        # self.h_metPhi2 = {}
+        #
+        # self.h_genMetPt2 = {}
+        # self.h_genMetPhi2 = {}
 
         self.nJet = None
-        self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';Cuts and Triggers;Total Number of Accepted Events', 11, 0, 11)
+        self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';Cuts and Triggers;Total Number of Accepted Events', 16, 0, 16)
 
         self.writeHistFile = writeHistFile
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
@@ -90,20 +90,20 @@ class HistogramMaker(Module):
                                                                       '#delta#phi = 0.046', 300, -6, 8)
         self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', 'no trigger ;Jet #eta;Jet #phi',
                                                 150, -6, 6, 160, -3.2, 3.2)
-        self.h_jetHt2['no_trigger'] = ROOT.TH1D('h_jetHt2_notrigger',
-                                               'no trigger ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1, 3000)
-        self.h_jetMult2['no_trigger'] = ROOT.TH1D('h_jetMult2_notrigger',
-                                                 'no trigger ; Multiplicity ;Number of Events per Number of Jets',
-                                                 20, 0, 20)
-        self.h_jetBMult2['no_trigger'] = ROOT.TH1D('h_jetBMult2_notrigger',
-                                                  'no trigger ;B tag Multiplicity ;Number of Events per Number of Jets',
-                                                  20, 0, 20)
-        self.h_jetEta2['no_trigger'] = ROOT.TH1D('h_jetEta2_notrigger', 'no trigger ;Jet #eta;Number of Events per '
-                                                                      '#delta#eta = 0.046', 300, -6, 8)
-        self.h_jetPhi2['no_trigger'] = ROOT.TH1D('h_jetPhi2_notrigger', 'no trigger ;Jet #phi;Number of Events per '
-                                                                      '#delta#phi = 0.046', 300, -6, 8)
-        self.h_jetMap2['no_trigger'] = ROOT.TH2F('h_jetMap2_notrigger', 'no trigger ;Jet #eta;Jet #phi',
-                                                150, -6, 6, 160, -3.2, 3.2)
+        # self.h_jetHt2['no_trigger'] = ROOT.TH1D('h_jetHt2_notrigger',
+        #                                        'no trigger ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1, 3000)
+        # self.h_jetMult2['no_trigger'] = ROOT.TH1D('h_jetMult2_notrigger',
+        #                                          'no trigger ; Multiplicity ;Number of Events per Number of Jets',
+        #                                          20, 0, 20)
+        # self.h_jetBMult2['no_trigger'] = ROOT.TH1D('h_jetBMult2_notrigger',
+        #                                           'no trigger ;B tag Multiplicity ;Number of Events per Number of Jets',
+        #                                           20, 0, 20)
+        # self.h_jetEta2['no_trigger'] = ROOT.TH1D('h_jetEta2_notrigger', 'no trigger ;Jet #eta;Number of Events per '
+        #                                                               '#delta#eta = 0.046', 300, -6, 8)
+        # self.h_jetPhi2['no_trigger'] = ROOT.TH1D('h_jetPhi2_notrigger', 'no trigger ;Jet #phi;Number of Events per '
+        #                                                               '#delta#phi = 0.046', 300, -6, 8)
+        # self.h_jetMap2['no_trigger'] = ROOT.TH2F('h_jetMap2_notrigger', 'no trigger ;Jet #eta;Jet #phi',
+        #                                         150, -6, 6, 160, -3.2, 3.2)
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events '
                                                                       'per 1 GeV/c', 300, 0, 300)
         self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
@@ -129,26 +129,26 @@ class HistogramMaker(Module):
         self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
                                                                             'per #delta#phi = 0.046', 300, -6, 8)
 
-        self.h_metPt2['no_trigger'] = ROOT.TH1D('h_metPt2_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
-                                                                    ' 1 GeV/c', 300, 0, 300)
-        self.h_metPhi2['no_trigger'] = ROOT.TH1D('h_metPhi2_notrigger', 'no trigger ;MET #phi;Number of Events per '
-                                                                      '#delta#phi = 0.046', 300, -6, 8)
-        self.h_genMetPt2['no_trigger'] = ROOT.TH1D('h_genMetPt2_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
-                                                                          'Events per 1GeV/c', 300, 0, 300)
-        self.h_genMetPhi2['no_trigger'] = ROOT.TH1D('h_genMetPhi2_notrigger', 'no trigger ;GenMET #phi;Number of Events '
-                                                                            'per #delta#phi = 0.046', 300, -6, 8)
+        # self.h_metPt2['no_trigger'] = ROOT.TH1D('h_metPt2_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
+        #                                                             ' 1 GeV/c', 300, 0, 300)
+        # self.h_metPhi2['no_trigger'] = ROOT.TH1D('h_metPhi2_notrigger', 'no trigger ;MET #phi;Number of Events per '
+        #                                                               '#delta#phi = 0.046', 300, -6, 8)
+        # self.h_genMetPt2['no_trigger'] = ROOT.TH1D('h_genMetPt2_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
+        #                                                                   'Events per 1GeV/c', 300, 0, 300)
+        # self.h_genMetPhi2['no_trigger'] = ROOT.TH1D('h_genMetPhi2_notrigger', 'no trigger ;GenMET #phi;Number of Events '
+        #                                                                     'per #delta#phi = 0.046', 300, -6, 8)
         self.addObject(self.h_jetHt['no_trigger'])
         self.addObject(self.h_jetMult['no_trigger'])
         self.addObject(self.h_jetBMult['no_trigger'])
         self.addObject(self.h_jetEta['no_trigger'])
         self.addObject(self.h_jetPhi['no_trigger'])
         self.addObject(self.h_jetMap['no_trigger'])
-        self.addObject(self.h_jetHt2['no_trigger'])
-        self.addObject(self.h_jetMult2['no_trigger'])
-        self.addObject(self.h_jetBMult2['no_trigger'])
-        self.addObject(self.h_jetEta2['no_trigger'])
-        self.addObject(self.h_jetPhi2['no_trigger'])
-        self.addObject(self.h_jetMap2['no_trigger'])
+        # self.addObject(self.h_jetHt2['no_trigger'])
+        # self.addObject(self.h_jetMult2['no_trigger'])
+        # self.addObject(self.h_jetBMult2['no_trigger'])
+        # self.addObject(self.h_jetEta2['no_trigger'])
+        # self.addObject(self.h_jetPhi2['no_trigger'])
+        # self.addObject(self.h_jetMap2['no_trigger'])
         self.addObject(self.h_muonPt['no_trigger'])
         self.addObject(self.h_muonEta['no_trigger'])
         self.addObject(self.h_muonPhi['no_trigger'])
@@ -161,10 +161,10 @@ class HistogramMaker(Module):
         self.addObject(self.h_metPhi['no_trigger'])
         self.addObject(self.h_genMetPt['no_trigger'])
         self.addObject(self.h_genMetPhi['no_trigger'])
-        self.addObject(self.h_metPt2['no_trigger'])
-        self.addObject(self.h_metPhi2['no_trigger'])
-        self.addObject(self.h_genMetPt2['no_trigger'])
-        self.addObject(self.h_genMetPhi2['no_trigger'])
+        # self.addObject(self.h_metPt2['no_trigger'])
+        # self.addObject(self.h_metPhi2['no_trigger'])
+        # self.addObject(self.h_genMetPt2['no_trigger'])
+        # self.addObject(self.h_genMetPhi2['no_trigger'])
 
         for key in self.trigLst:
             for trgPath in self.trigLst[key]:
@@ -187,24 +187,24 @@ class HistogramMaker(Module):
                                                    150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_jetMap[trgPath])
 
-                self.h_jetHt2[trgPath] = ROOT.TH1D('h_jetHt2_' + trgPath, trgPath + ';H_{T} (GeV/c);Number of Events'
-                                                                                  ' per 10 GeV/c', 300, 1, 3000)
-                self.addObject(self.h_jetHt2[trgPath])
-                self.h_jetMult2[trgPath] = ROOT.TH1D('h_jetMult2_' + trgPath, trgPath + ';Multiplicity;Number of Events'
-                                                                                      ' per Number of Jets', 20, 0, 20)
-                self.addObject(self.h_jetMult2[trgPath])
-                self.h_jetBMult2[trgPath] = ROOT.TH1D('h_jetBMult2_' + trgPath, trgPath + ';Multiplicity;Number of Events'
-                                                                                        ' /Number of Jets', 20, 0, 20)
-                self.addObject(self.h_jetBMult2[trgPath])
-                self.h_jetEta2[trgPath] = ROOT.TH1D('h_jetEta2_' + trgPath, trgPath + ';Jet #eta;Number of Events per'
-                                                                                    ' #delta#eta = 0.046', 300, -6, 8)
-                self.addObject(self.h_jetEta2[trgPath])
-                self.h_jetPhi2[trgPath] = ROOT.TH1D('h_jetPhi2_' + trgPath, trgPath + ';Jet #phi;Number of Events per'
-                                                                                    ' #delta#phi = 0.046', 300, -6, 8)
-                self.addObject(self.h_jetPhi2[trgPath])
-                self.h_jetMap2[trgPath] = ROOT.TH2F('h_jetMap2_' + trgPath, trgPath + ';Jet #eta;Jet #phi',
-                                                   150, -3, 3, 160, -3.2, 3.2)
-                self.addObject(self.h_jetMap2[trgPath])
+                # self.h_jetHt2[trgPath] = ROOT.TH1D('h_jetHt2_' + trgPath, trgPath + ';H_{T} (GeV/c);Number of Events'
+                #                                                                   ' per 10 GeV/c', 300, 1, 3000)
+                # self.addObject(self.h_jetHt2[trgPath])
+                # self.h_jetMult2[trgPath] = ROOT.TH1D('h_jetMult2_' + trgPath, trgPath + ';Multiplicity;Number of Events'
+                #                                                                       ' per Number of Jets', 20, 0, 20)
+                # self.addObject(self.h_jetMult2[trgPath])
+                # self.h_jetBMult2[trgPath] = ROOT.TH1D('h_jetBMult2_' + trgPath, trgPath + ';Multiplicity;Number of Events'
+                #                                                                         ' /Number of Jets', 20, 0, 20)
+                # self.addObject(self.h_jetBMult2[trgPath])
+                # self.h_jetEta2[trgPath] = ROOT.TH1D('h_jetEta2_' + trgPath, trgPath + ';Jet #eta;Number of Events per'
+                #                                                                     ' #delta#eta = 0.046', 300, -6, 8)
+                # self.addObject(self.h_jetEta2[trgPath])
+                # self.h_jetPhi2[trgPath] = ROOT.TH1D('h_jetPhi2_' + trgPath, trgPath + ';Jet #phi;Number of Events per'
+                #                                                                     ' #delta#phi = 0.046', 300, -6, 8)
+                # self.addObject(self.h_jetPhi2[trgPath])
+                # self.h_jetMap2[trgPath] = ROOT.TH2F('h_jetMap2_' + trgPath, trgPath + ';Jet #eta;Jet #phi',
+                #                                    150, -3, 3, 160, -3.2, 3.2)
+                # self.addObject(self.h_jetMap2[trgPath])
 
                 self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);Number of '
                                                                                     'Events per 1 GeV/c', 300, 0, 300)
@@ -247,21 +247,21 @@ class HistogramMaker(Module):
                                                                                           'Events per #delta#phi=0.046',
                                                       300, -6, 8)
                 self.addObject(self.h_genMetPhi[trgPath])
-                self.h_metPt2[trgPath] = ROOT.TH1D('h_metPt2_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
-                                                                                  'per 1 GeV/c', 300, 0, 300)
-                self.addObject(self.h_metPt2[trgPath])
-                self.h_metPhi2[trgPath] = ROOT.TH1D('h_metPhi2_' + trgPath, trgPath + ';MET #phi;Number of Events per '
-                                                                                    '#delta#phi = 0.046', 300, -6, 8)
-                self.addObject(self.h_metPhi2[trgPath])
-
-                self.h_genMetPt2[trgPath] = ROOT.TH1D('h_genMetPt2_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
-                                                                                        'of Events per 1 GeV/c',
-                                                     300, 0, 300)
-                self.addObject(self.h_genMetPt2[trgPath])
-                self.h_genMetPhi2[trgPath] = ROOT.TH1D('h_genMetPhi2_' + trgPath, trgPath + ';GenMET #phi;Number of '
-                                                                                          'Events per #delta#phi=0.046',
-                                                      300, -6, 8)
-                self.addObject(self.h_genMetPhi2[trgPath])
+                # self.h_metPt2[trgPath] = ROOT.TH1D('h_metPt2_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
+                #                                                                   'per 1 GeV/c', 300, 0, 300)
+                # self.addObject(self.h_metPt2[trgPath])
+                # self.h_metPhi2[trgPath] = ROOT.TH1D('h_metPhi2_' + trgPath, trgPath + ';MET #phi;Number of Events per '
+                #                                                                     '#delta#phi = 0.046', 300, -6, 8)
+                # self.addObject(self.h_metPhi2[trgPath])
+                #
+                # self.h_genMetPt2[trgPath] = ROOT.TH1D('h_genMetPt2_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
+                #                                                                         'of Events per 1 GeV/c',
+                #                                      300, 0, 300)
+                # self.addObject(self.h_genMetPt2[trgPath])
+                # self.h_genMetPhi2[trgPath] = ROOT.TH1D('h_genMetPhi2_' + trgPath, trgPath + ';GenMET #phi;Number of '
+                #                                                                           'Events per #delta#phi=0.046',
+                #                                       300, -6, 8)
+                # self.addObject(self.h_genMetPhi2[trgPath])
 
         self.addObject(self.h_eventsPrg)
 
@@ -285,21 +285,23 @@ class HistogramMaker(Module):
         met = Object(event, "MET")
         genMet = Object(event, "GenMET")
 
+        metPt = getattr(met, "pt")
+        metPhi = getattr(met, "phi")
+        genMetPt = getattr(genMet, "pt")
+        genMetPhi = getattr(genMet, "pt")
+
         nJets = len(jets)
 
-        trigPath = {}
-
-        trigPath['IsoMu24'] = getattr(hltObj, 'IsoMu24')
-        trigPath['Ele32_WPTight_Gsf'] = getattr(hltObj, 'Ele32_WPTight_Gsf')
-        trigPath['Ele35_WPTight_Gsf'] = getattr(hltObj, 'Ele35_WPTight_Gsf')
-        trigPath['Ele38_WPTight_Gsf'] = getattr(hltObj, 'Ele38_WPTight_Gsf')
-        trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = getattr(hltObj, 'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
-        trigPath['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'] = getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5')
-
-        trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = False
-        trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = False
-        trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = False
-        trigPath['Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = False
+        trigPath = {'IsoMu24': getattr(hltObj, 'IsoMu24'), 'Ele32_WPTight_Gsf': getattr(hltObj, 'Ele32_WPTight_Gsf'),
+                    'Ele35_WPTight_Gsf': getattr(hltObj, 'Ele35_WPTight_Gsf'),
+                    'Ele38_WPTight_Gsf': getattr(hltObj, 'Ele38_WPTight_Gsf'),
+                    'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': getattr(hltObj,
+                                                                          'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'),
+                    'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5': getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'),
+                    'IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
+                    'Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
+                    'Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
+                    'Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False}
 
         if trigPath['IsoMu24'] is True:
             trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
@@ -323,21 +325,24 @@ class HistogramMaker(Module):
             for tg in self.trigLst[key]:
                 jetHt.update({tg: 0})
 
-        jetHt2 = {"notrig": 0}
-        for key in self.trigLst:
-            for tg in self.trigLst[key]:
-                jetHt2.update({tg: 0})
+        # jetHt2 = {"notrig": 0}
+        # for key in self.trigLst:
+        #     for tg in self.trigLst[key]:
+        #         jetHt2.update({tg: 0})
 
         nJetPass = 0
         nBtagPass = 0
         nMuonPass = 0
         nElPass = 0
 
+        #############################
+        #    Acceptance Criteria    #
+        #############################
         for nj, jet in enumerate(jets):
             # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
             # - Minimum 30GeV Pt on the jets
             # - Only look at jets within |eta| < 2.4
-            if jet.jetId < 2 or jet.pt < 30 or abs(jet.eta) > 2.4:
+            if jet.jetId < 2 or jet.pt < 30 or abs(jet.eta) > 2.4 or jet.cleanmask is False:
                 continue
             else:
                 nJetPass += 1
@@ -347,14 +352,24 @@ class HistogramMaker(Module):
                     nBtagPass += 1
 
         for nm, muon in enumerate(muons):
-            oneMuonPass = False
             if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
                 continue
             else:
                 nMuonPass += 1
-                if nMuonPass == 1: oneMuonPass = True
 
-            if nMuonPass == 1 and nJetPass > 5 and nBtagPass > 0:
+        for ne, el in enumerate(electrons):
+            if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
+                continue
+            if 1.4442 < abs(el.eta) < 1.566:
+                continue
+            else:
+                nElPass += 1
+
+        ##############################
+        #    Muon Trigger checks     #
+        ##############################
+        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0 and nElPass == 0:
+            for nm, muon in enumerate(muons):
                 for key in self.trigLst:
                     if not (key == "Electron" or key == "ElPJets"):
                         for tg in self.trigLst[key]:
@@ -368,38 +383,7 @@ class HistogramMaker(Module):
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
 
-        for ne, el in enumerate(electrons):
-            oneElPass = False
-            if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
-                continue
-            if 1.4442 < abs(el.eta) < 1.566:
-                continue
-            else:
-                nElPass += 1
-                if nElPass == 1: oneElPass = True
-
-            if nElPass == 1 and nJetPass > 5 and nBtagPass > 0:
-                for key in self.trigLst:
-                    if not (key == "Muon" or key == "MuPJets"):
-                        for tg in self.trigLst[key]:
-                            if trigPath[tg]:
-                                self.h_elPt[tg].Fill(el.pt)
-                                self.h_elEta[tg].Fill(el.eta)
-                                self.h_elPhi[tg].Fill(el.phi)
-                                self.h_elMap[tg].Fill(el.eta, el.phi)
-                self.h_elPt['no_trigger'].Fill(el.pt)
-                self.h_elEta['no_trigger'].Fill(el.eta)
-                self.h_elPhi['no_trigger'].Fill(el.phi)
-                self.h_elMap['no_trigger'].Fill(el.eta, el.phi)
-
-        metPt = getattr(met, "pt")
-        metPhi = getattr(met, "phi")
-        genMetPt = getattr(genMet, "pt")
-        genMetPhi = getattr(genMet, "pt")
-
-        # Muon Trigger checks
-        for nj, jet in enumerate(jets):
-            if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0:
+            for nj, jet in enumerate(jets):
                 for key in self.trigLst:
                     if not (key == "Electron" or key == "ElPJets"):
                         for tg in self.trigLst[key]:
@@ -413,7 +397,6 @@ class HistogramMaker(Module):
                 self.h_jetPhi['no_trigger'].Fill(jet.phi)
                 self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
-        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0:
             self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
             self.h_metPt['no_trigger'].Fill(metPt)
             self.h_metPhi['no_trigger'].Fill(metPhi)
@@ -437,40 +420,55 @@ class HistogramMaker(Module):
                             self.h_eventsPrg.Fill(2 + i)
                             i += 1
 
-        # Electron Trigger Checks
-        for nj, jet in enumerate(jets):
-            if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0:
-                for key in self.trigLst:
-                    if not (key == "Muon" or key == "MuPJets"):
-                        for tg in self.trigLst[key]:
-                            if trigPath[tg]:
-                                jetHt2[tg] += jet.pt
-                                self.h_jetEta2[tg].Fill(jet.eta)
-                                self.h_jetPhi2[tg].Fill(jet.phi)
-                                self.h_jetMap2[tg].Fill(jet.eta, jet.phi)
-                jetHt2["notrig"] += jet.pt
-                self.h_jetEta2['no_trigger'].Fill(jet.eta)
-                self.h_jetPhi2['no_trigger'].Fill(jet.phi)
-                self.h_jetMap2['no_trigger'].Fill(jet.eta, jet.phi)
-
-        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0:
-            self.h_jetHt2['no_trigger'].Fill(jetHt2["notrig"])
-            self.h_metPt2['no_trigger'].Fill(metPt)
-            self.h_metPhi2['no_trigger'].Fill(metPhi)
-            self.h_genMetPt2['no_trigger'].Fill(genMetPt)
-            self.h_genMetPhi2['no_trigger'].Fill(genMetPhi)
-            self.h_jetMult2['no_trigger'].Fill(nJets)
-            self.h_jetBMult2['no_trigger'].Fill(nBtagPass)
-            for key in self.trigLst:
-                if not (key == "Muon" or key == "MuPJets"):
-                    for tg in self.trigLst[key]:
-                        if trigPath[tg]:
-                            self.h_jetHt2[tg].Fill(jetHt[tg])
-                            self.h_metPt2[tg].Fill(metPt)
-                            self.h_metPhi2[tg].Fill(metPhi)
-                            self.h_genMetPt2[tg].Fill(genMetPt)
-                            self.h_genMetPhi2[tg].Fill(genMetPhi)
-                            self.h_jetMult2[tg].Fill(nJets)
-                            self.h_jetBMult2[tg].Fill(nBtagPass)
+        ###########################
+        # Electron Trigger Checks #
+        ###########################
+        # if nJetPass > 5 and nElPass == 0 and nMuonPass == 0 and nBtagPass > 0:
+        #
+        #     for nj, jet in enumerate(jets):
+        #         for key in self.trigLst:
+        #             if not (key == "Muon" or key == "MuPJets"):
+        #                 for tg in self.trigLst[key]:
+        #                     if trigPath[tg]:
+        #                         jetHt2[tg] += jet.pt
+        #                         self.h_jetEta2[tg].Fill(jet.eta)
+        #                         self.h_jetPhi2[tg].Fill(jet.phi)
+        #                         self.h_jetMap2[tg].Fill(jet.eta, jet.phi)
+        #         jetHt2["notrig"] += jet.pt
+        #         self.h_jetEta2['no_trigger'].Fill(jet.eta)
+        #         self.h_jetPhi2['no_trigger'].Fill(jet.phi)
+        #         self.h_jetMap2['no_trigger'].Fill(jet.eta, jet.phi)
+        #     for ne, el in enumerate(electrons):
+        #         for key in self.trigLst:
+        #             if not (key == "Muon" or key == "MuPJets"):
+        #                 for tg in self.trigLst[key]:
+        #                     if trigPath[tg]:
+        #                         self.h_elPt[tg].Fill(el.pt)
+        #                         self.h_elEta[tg].Fill(el.eta)
+        #                         self.h_elPhi[tg].Fill(el.phi)
+        #                         self.h_elMap[tg].Fill(el.eta, el.phi)
+        #         self.h_elPt['no_trigger'].Fill(el.pt)
+        #         self.h_elEta['no_trigger'].Fill(el.eta)
+        #         self.h_elPhi['no_trigger'].Fill(el.phi)
+        #         self.h_elMap['no_trigger'].Fill(el.eta, el.phi)
+        #
+        #     self.h_jetHt2['no_trigger'].Fill(jetHt2["notrig"])
+        #     self.h_metPt2['no_trigger'].Fill(metPt)
+        #     self.h_metPhi2['no_trigger'].Fill(metPhi)
+        #     self.h_genMetPt2['no_trigger'].Fill(genMetPt)
+        #     self.h_genMetPhi2['no_trigger'].Fill(genMetPhi)
+        #     self.h_jetMult2['no_trigger'].Fill(nJets)
+        #     self.h_jetBMult2['no_trigger'].Fill(nBtagPass)
+        #     for key in self.trigLst:
+        #         if not (key == "Muon" or key == "MuPJets"):
+        #             for tg in self.trigLst[key]:
+        #                 if trigPath[tg]:
+        #                     self.h_jetHt2[tg].Fill(jetHt[tg])
+        #                     self.h_metPt2[tg].Fill(metPt)
+        #                     self.h_metPhi2[tg].Fill(metPhi)
+        #                     self.h_genMetPt2[tg].Fill(genMetPt)
+        #                     self.h_genMetPhi2[tg].Fill(genMetPhi)
+        #                     self.h_jetMult2[tg].Fill(nJets)
+        #                     self.h_jetBMult2[tg].Fill(nBtagPass)
         
         return True

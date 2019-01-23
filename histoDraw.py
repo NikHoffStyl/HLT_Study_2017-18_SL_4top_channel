@@ -318,9 +318,10 @@ def main(argms):
     else:
         legString = "#splitline{CMS}{W #rightarrow jets}"
 
+    ROOT.gStyle.SetOptTitle(0)
+
     # - HT plots for mu Triggers ---------------------------------
     cv1 = triggerCanvas.cd(1)
-    h_jetHt["notrigger"].SetTitle("no trigger")
     h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -328,42 +329,13 @@ def main(argms):
                 h_jetHt[tg].Draw('E1 same')
     cv1.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     cv2 = triggerCanvas.cd(1)
-    i = 0
-    for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
-                h_TriggerRatio[tg].Sumw2()
-                h_TriggerRatio[tg].SetStats(0)
-                h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
-                xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_TriggerRatio[tg].SetName(tg)
-                if i == 0:
-                    h_TriggerRatio[tg].SetMinimum(0.)
-                    h_TriggerRatio[tg].SetMaximum(1.8)
-                    h_TriggerRatio[tg].Draw('E1')
-                    tX1 = 0.04 * (h_jetHt["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 0.95 * (h_TriggerRatio[tg].GetMaximum())
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('E1 same')
-                i += 1
-    cv2.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    triggerCanvas.Print("test.png")
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv21 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
@@ -373,74 +345,45 @@ def main(argms):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
                     xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
                     h_TriggerRatio[tg].SetName(tg)
                     h_TriggerRatio[tg].SetTitle(tg)
                     h_TriggerRatio[tg].SetLineColor(j)
                     j += 1
                     if i == 0:
                         h_TriggerRatio[tg].Draw('AP')
-                        cv21.Update()
+                        cv2.Update()
                         graph1 = h_TriggerRatio[tg].GetPaintedGraph()
                         graph1.SetMinimum(0)
-                        graph1.SetMaximum(1.7)
-                        cv21.Update()
-                        tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.55
+                        graph1.SetMaximum(1.2)
+                        cv2.Update()
+                        tX1 = 0.06*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv21.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv2.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     # - Jet Multiplicity plots ---------------------------------
-    cv17 = triggerCanvas.cd(1)
-    h_jetMult["notrigger"].SetTitle("")
+    cv3 = triggerCanvas.cd(1)
     h_jetMult["notrigger"].Draw('E1')
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetMult[tg].Draw('E1 same')
-    cv17.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv3.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    tX1 = 0.04 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.05 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv18 = triggerCanvas.cd(1)
-    i = 0
-    for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                h_TriggerRatio[tg] = h_jetMult[tg].Clone("h_jetMultRatio" + tg)
-                h_TriggerRatio[tg].Sumw2()
-                h_TriggerRatio[tg].SetStats(0)
-                h_TriggerRatio[tg].Divide(h_jetMult["notrigger"])
-                xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_TriggerRatio[tg].SetName(tg)
-                if i == 0:
-                    h_TriggerRatio[tg].SetMinimum(0.)
-                    h_TriggerRatio[tg].SetMaximum(1.8)
-                    h_TriggerRatio[tg].Draw('E1')
-                    tX1 = 0.04 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 0.95 * (h_TriggerRatio[tg].GetMaximum())
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('E1 same')
-                i += 1
-    cv18.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv22 = triggerCanvas.cd(1)
+    cv4 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
@@ -457,69 +400,40 @@ def main(argms):
                     j += 1
                     if i == 0:
                         h_TriggerRatio[tg].Draw('AP')
-                        cv21.Update()
+                        cv4.Update()
                         graph1 = h_TriggerRatio[tg].GetPaintedGraph()
                         graph1.SetMinimum(0)
-                        graph1.SetMaximum(1.8)
-                        cv21.Update()
-                        tX1 = 0.04 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.72
+                        graph1.SetMaximum(1.2)
+                        cv4.Update()
+                        tX1 = 0.05 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv22.BuildLegend(0.4, 0.22, 0.4, 0.22)
+    cv4.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     # - B tagged Jet Multiplicity plots ---------------------------
-    cv19 = triggerCanvas.cd(1)
-    h_jetBMult["notrigger"].SetTitle("")
+    cv5 = triggerCanvas.cd(1)
+    # h_jetBMult["notrigger"].SetTitle("")
     h_jetBMult["notrigger"].GetXaxis().SetRange(1, 10)
     h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetBMult[tg].Draw('E1 same')
-    cv19.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv5.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv20 = triggerCanvas.cd(1)
-    i = 0
-    for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                h_TriggerRatio[tg] = h_jetBMult[tg].Clone("h_jetBMultRatio" + tg)
-                h_TriggerRatio[tg].Sumw2()
-                h_TriggerRatio[tg].SetStats(0)
-                h_TriggerRatio[tg].Divide(h_jetBMult["notrigger"])
-                xTitle = h_jetBMult["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetBMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_TriggerRatio[tg].SetName(tg)
-                if i == 0:
-                    h_TriggerRatio[tg].SetMinimum(0.)
-                    h_TriggerRatio[tg].SetMaximum(1.8)
-                    h_TriggerRatio[tg].GetXaxis().SetRange(1, 10)
-                    h_TriggerRatio[tg].Draw('E1')
-                    tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 0.95 * (h_TriggerRatio[tg].GetMaximum())
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('E1 same')
-                i += 1
-    cv20.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv23 = triggerCanvas.cd(1)
+    cv6 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
@@ -536,69 +450,41 @@ def main(argms):
                     j += 1
                     if i == 0:
                         h_TriggerRatio[tg].Draw('AP')
-                        cv21.Update()
+                        cv6.Update()
                         graph1 = h_TriggerRatio[tg].GetPaintedGraph()
                         graph1.SetMinimum(0)
-                        graph1.SetMaximum(1.8)
-                        cv21.Update()
-                        tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.72
+                        graph1.SetMaximum(1.2)
+                        cv6.Update()
+                        tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv23.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv6.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     # - Muon pT plots ---------------------------------
-    cv3 = triggerCanvas.cd(1)
-    h_muonPt["notrigger"].SetTitle("")
+    cv7 = triggerCanvas.cd(1)
+    # h_muonPt["notrigger"].SetTitle("")
     h_muonPt["notrigger"].SetMinimum(0.)
     h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
-    tX1 = 0.04*(h_muonPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.05*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_muonPt[tg].Draw('E1 same')
-    cv3.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv7.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv4 = triggerCanvas.cd(1)
-    i = 0
-    for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                h_TriggerRatio[tg] = h_muonPt[tg].Clone("h_muonPtRatio" + tg)
-                h_TriggerRatio[tg].Sumw2()
-                h_TriggerRatio[tg].SetStats(0)
-                h_TriggerRatio[tg].Divide(h_muonPt["notrigger"])
-                xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_TriggerRatio[tg].SetName(tg)
-                if i == 0:
-                    h_TriggerRatio[tg].SetMinimum(0.)
-                    h_TriggerRatio[tg].SetMaximum(1.2)
-                    h_TriggerRatio[tg].Draw('E1')
-                    tX1 = 0.04 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 0.95 * (h_TriggerRatio[tg].GetMaximum())
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('E1 same')
-                i += 1
-    cv4.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv24 = triggerCanvas.cd(1)
+    cv8 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
@@ -615,69 +501,41 @@ def main(argms):
                     j += 1
                     if i == 0:
                         h_TriggerRatio[tg].Draw('AP')
-                        cv21.Update()
+                        cv8.Update()
                         graph1 = h_TriggerRatio[tg].GetPaintedGraph()
                         graph1.SetMinimum(0)
-                        graph1.SetMaximum(1.8)
-                        cv21.Update()
-                        tX1 = 0.04 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.72
+                        graph1.SetMaximum(1.2)
+                        cv8.Update()
+                        tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv24.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv8.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     # - MET pT plots ---------------------------------
-    cv13 = triggerCanvas.cd(1)
-    h_metPt["notrigger"].SetTitle("")
+    cv9 = triggerCanvas.cd(1)
+    # h_metPt["notrigger"].SetTitle("")
     h_metPt["notrigger"].SetMinimum(0.)
     h_metPt["notrigger"].SetMaximum(1800)
     h_metPt["notrigger"].Draw('E1')
-    tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.05 * (h_metPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_metPt[tg].Draw('E1 same')
-    cv13.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv9.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv14 = triggerCanvas.cd(1)
-    i = 0
-    for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                h_TriggerRatio[tg] = h_metPt[tg].Clone("h_metPtRatio" + tg)
-                h_TriggerRatio[tg].Sumw2()
-                h_TriggerRatio[tg].SetStats(0)
-                h_TriggerRatio[tg].Divide(h_metPt["notrigger"])
-                xTitle = h_metPt["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_metPt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_TriggerRatio[tg].SetName(tg)
-                if i == 0:
-                    h_TriggerRatio[tg].SetMinimum(0.)
-                    h_TriggerRatio[tg].SetMaximum(1.2)
-                    h_TriggerRatio[tg].Draw('E1')
-                    tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 0.95 * (h_TriggerRatio[tg].GetMaximum())
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('E1 same')
-                i += 1
-    cv14.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv25 = triggerCanvas.cd(1)
+    cv10 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
@@ -694,69 +552,41 @@ def main(argms):
                     j += 1
                     if i == 0:
                         h_TriggerRatio[tg].Draw('AP')
-                        cv21.Update()
+                        cv10.Update()
                         graph1 = h_TriggerRatio[tg].GetPaintedGraph()
                         graph1.SetMinimum(0)
-                        graph1.SetMaximum(1.8)
-                        cv21.Update()
-                        tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.72
+                        graph1.SetMaximum(1.2)
+                        cv10.Update()
+                        tX1 = 0.05 * (h_metPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv25.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv10.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     # - GenMET pT plots ---------------------------------
-    cv15 = triggerCanvas.cd(1)
-    h_genMetPt["notrigger"].SetTitle("")
+    cv11 = triggerCanvas.cd(1)
+    # h_genMetPt["notrigger"].SetTitle("")
     h_genMetPt["notrigger"].SetMinimum(0.)
     h_genMetPt["notrigger"].SetMaximum(2000)
     h_genMetPt["notrigger"].Draw('E1')
-    tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_genMetPt[tg].Draw('E1 same')
-    cv15.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv11.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv16 = triggerCanvas.cd(1)
-    i = 0
-    for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                h_TriggerRatio[tg] = h_genMetPt[tg].Clone("h_genMetPtRatio" + tg)
-                h_TriggerRatio[tg].Sumw2()
-                h_TriggerRatio[tg].SetStats(0)
-                h_TriggerRatio[tg].Divide(h_genMetPt["notrigger"])
-                xTitle = h_genMetPt["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_genMetPt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_TriggerRatio[tg].SetName(tg)
-                if i == 0:
-                    h_TriggerRatio[tg].SetMinimum(0.)
-                    h_TriggerRatio[tg].SetMaximum(1.2)
-                    h_TriggerRatio[tg].Draw('E1')
-                    tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 0.95 * (h_TriggerRatio[tg].GetMaximum())
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('E1 same')
-                i += 1
-    cv16.BuildLegend(0.4, 0.3, 0.4, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv26 = triggerCanvas.cd(1)
+    cv12 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
@@ -773,24 +603,24 @@ def main(argms):
                     j += 1
                     if i == 0:
                         h_TriggerRatio[tg].Draw('AP')
-                        cv21.Update()
+                        cv12.Update()
                         graph1 = h_TriggerRatio[tg].GetPaintedGraph()
                         graph1.SetMinimum(0)
-                        graph1.SetMaximum(1.8)
-                        cv21.Update()
-                        tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.72
+                        graph1.SetMaximum(1.2)
+                        cv12.Update()
+                        tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv26.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv12.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     # - Eta plots ------------------------------------------
-    cv7 = triggerCanvas.cd(1)
+    cv13 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
     h_jetEta["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
@@ -799,13 +629,13 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetEta[tg].Draw('E1 same')
-    cv7.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv13.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     # pdfCreator(argms, 1, triggerCanvas)
 
-    cv8 = triggerCanvas.cd(1)
+    cv14 = triggerCanvas.cd(1)
     # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_muonEta["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
@@ -814,13 +644,13 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_muonEta[tg].Draw('E1 same')
-    cv8.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv14.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     # pdfCreator(argms, 1, triggerCanvas)
 
-    cv27 = triggerCanvas.cd(1)
+    cv15 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
@@ -837,24 +667,24 @@ def main(argms):
                     j += 1
                     if i == 0:
                         h_TriggerRatio[tg].Draw('AP')
-                        cv21.Update()
+                        cv15.Update()
                         graph1 = h_TriggerRatio[tg].GetPaintedGraph()
                         graph1.SetMinimum(0)
-                        graph1.SetMaximum(1.8)
-                        cv21.Update()
-                        tX1 = 0.04 * (h_muonEta["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.72
+                        graph1.SetMaximum(1.2)
+                        cv15.Update()
+                        tX1 = 0.05 * (h_muonEta["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv27.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv15.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
     # - Phi plots ------------------------------------------
-    cv10 = triggerCanvas.cd(1)
+    cv16 = triggerCanvas.cd(1)
     # h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.3)
     h_jetPhi["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
@@ -863,13 +693,13 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetPhi[tg].Draw('E1 same')
-    cv10.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv16.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     # pdfCreator(argms, 1, triggerCanvas)
 
-    cv11 = triggerCanvas.cd(1)
+    cv17 = triggerCanvas.cd(1)
     # h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
     h_muonPhi["notrigger"].Draw('E1')
     tX1 = 0.94*(-6)
@@ -878,7 +708,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_muonPhi[tg].Draw('E1 same')
-    cv11.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv17.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -913,7 +743,7 @@ def main(argms):
                 h_jetHt2[tg].Draw('E1 same')
     cv31.BuildLegend(0.4, 0.3, 0.4, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    tX1 = 0.04 * (h_jetHt2["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.05 * (h_jetHt2["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetHt2["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
