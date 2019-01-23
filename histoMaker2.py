@@ -65,9 +65,9 @@ class HistogramMaker(Module):
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
         self.trigLst = trigLst
         self.trigLst["MuPJets"].append('IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
-        self.trigLst["ElPJets"].append('Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2',
-                                       'Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2',
-                                       'Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
+        self.trigLst["ElPJets"].append('Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
+        self.trigLst["ElPJets"].append('Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
+        self.trigLst["ElPJets"].append('Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
 
     def beginJob(self, histFile=None, histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
