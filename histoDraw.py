@@ -273,7 +273,7 @@ def main(argms):
             h_genMetPt[tg].SetLineColor(i)
             h_genMetPhi[tg].SetLineColor(i)
 
-            h_jetHt[tg].SetLineColor(i)
+            h_jetHt2[tg].SetLineColor(i)
             h_jetMult2[tg].SetLineColor(i)
             h_jetBMult2[tg].SetLineColor(i)
             h_jetEta2[tg].SetLineColor(i)
@@ -298,7 +298,8 @@ def main(argms):
     ltx = TLatex()
     ltx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
     ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > 5}")
-    ltx.DrawLatex(0.16, 0.60, "#bullet Muons: #bf{number >0 and has softId}")
+    ltx.DrawLatex(0.16, 0.60, "#bullet Muons: #bf{number >0}")
+    ltx.DrawLatex(0.16, 0.55, "#bullet Electrons: #bf{number >0}")
     ltx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
     ltx.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
     ltx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > 2 , p_{T} > 30 and |#eta|<2.4 (for at least 6)}")
@@ -319,13 +320,13 @@ def main(argms):
 
     # - HT plots for mu Triggers ---------------------------------
     cv1 = triggerCanvas.cd(1)
-    h_jetHt["notrigger"].SetTitle("")
+    h_jetHt["notrigger"].SetTitle("no trigger")
     h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetHt[tg].Draw('E1 same')
-    cv1.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    cv1.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
@@ -366,29 +367,30 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        for tg in trigList[key]:
-            if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
-                h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
-                xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
-                h_TriggerRatio[tg].SetName(tg)
-                h_TriggerRatio[tg].SetTitle(tg)
-                h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
-                if i == 0:
-                    h_TriggerRatio[tg].Draw('AP')
-                    cv21.Update()
-                    graph1 = h_TriggerRatio[tg].GetPaintedGraph()
-                    graph1.SetMinimum(0)
-                    graph1.SetMaximum(1.8)
-                    cv21.Update()
-                    tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 1.72
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('same')
-            i += 1
-    cv21.BuildLegend(0.4, 0.3, 0.4, 0.3)
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
+                    h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
+                    xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
+                    xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetName(tg)
+                    h_TriggerRatio[tg].SetTitle(tg)
+                    h_TriggerRatio[tg].SetLineColor(j)
+                    j += 1
+                    if i == 0:
+                        h_TriggerRatio[tg].Draw('AP')
+                        cv21.Update()
+                        graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                        graph1.SetMinimum(0)
+                        graph1.SetMaximum(1.7)
+                        cv21.Update()
+                        tX1 = 0.04*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.55
+                    if i > 0:
+                        h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv21.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -442,29 +444,30 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        for tg in trigList[key]:
-            if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
-                h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
-                xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
-                h_TriggerRatio[tg].SetName(tg)
-                h_TriggerRatio[tg].SetTitle(tg)
-                h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
-                if i == 0:
-                    h_TriggerRatio[tg].Draw('AP')
-                    cv21.Update()
-                    graph1 = h_TriggerRatio[tg].GetPaintedGraph()
-                    graph1.SetMinimum(0)
-                    graph1.SetMaximum(1.8)
-                    cv21.Update()
-                    tX1 = 0.04 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 1.72
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('same')
-            i += 1
-    cv22.BuildLegend(0.4, 0.3, 0.4, 0.3)
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
+                    h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
+                    xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
+                    xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetName(tg)
+                    h_TriggerRatio[tg].SetTitle(tg)
+                    h_TriggerRatio[tg].SetLineColor(j)
+                    j += 1
+                    if i == 0:
+                        h_TriggerRatio[tg].Draw('AP')
+                        cv21.Update()
+                        graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                        graph1.SetMinimum(0)
+                        graph1.SetMaximum(1.8)
+                        cv21.Update()
+                        tX1 = 0.04 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.72
+                    if i > 0:
+                        h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv22.BuildLegend(0.4, 0.22, 0.4, 0.22)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -520,29 +523,30 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        for tg in trigList[key]:
-            if ROOT.TEfficiency.CheckConsistency(h_jetBMult[tg], h_jetBMult["notrigger"]):
-                h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetBMult[tg], h_jetBMult["notrigger"])
-                xTitle = h_jetBMult["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetBMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
-                h_TriggerRatio[tg].SetName(tg)
-                h_TriggerRatio[tg].SetTitle(tg)
-                h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
-                if i == 0:
-                    h_TriggerRatio[tg].Draw('AP')
-                    cv21.Update()
-                    graph1 = h_TriggerRatio[tg].GetPaintedGraph()
-                    graph1.SetMinimum(0)
-                    graph1.SetMaximum(1.8)
-                    cv21.Update()
-                    tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 1.72
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('same')
-            i += 1
-    cv23.BuildLegend(0.4, 0.3, 0.4, 0.3)
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                if ROOT.TEfficiency.CheckConsistency(h_jetBMult[tg], h_jetBMult["notrigger"]):
+                    h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetBMult[tg], h_jetBMult["notrigger"])
+                    xTitle = h_jetBMult["notrigger"].GetXaxis().GetTitle()
+                    xBinWidth = h_jetBMult["notrigger"].GetXaxis().GetBinWidth(1)
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetName(tg)
+                    h_TriggerRatio[tg].SetTitle(tg)
+                    h_TriggerRatio[tg].SetLineColor(j)
+                    j += 1
+                    if i == 0:
+                        h_TriggerRatio[tg].Draw('AP')
+                        cv21.Update()
+                        graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                        graph1.SetMinimum(0)
+                        graph1.SetMaximum(1.8)
+                        cv21.Update()
+                        tX1 = 0.04 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.72
+                    if i > 0:
+                        h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv23.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -594,6 +598,39 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
+    cv24 = triggerCanvas.cd(1)
+    i = 0
+    j = 2
+    for key in trigList:
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                if ROOT.TEfficiency.CheckConsistency(h_muonPt[tg], h_muonPt["notrigger"]):
+                    h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonPt[tg], h_muonPt["notrigger"])
+                    xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
+                    xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetName(tg)
+                    h_TriggerRatio[tg].SetTitle(tg)
+                    h_TriggerRatio[tg].SetLineColor(j)
+                    j += 1
+                    if i == 0:
+                        h_TriggerRatio[tg].Draw('AP')
+                        cv21.Update()
+                        graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                        graph1.SetMinimum(0)
+                        graph1.SetMaximum(1.8)
+                        cv21.Update()
+                        tX1 = 0.04 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.72
+                    if i > 0:
+                        h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv24.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
     # - MET pT plots ---------------------------------
     cv13 = triggerCanvas.cd(1)
     h_metPt["notrigger"].SetTitle("")
@@ -635,6 +672,39 @@ def main(argms):
                     h_TriggerRatio[tg].Draw('E1 same')
                 i += 1
     cv14.BuildLegend(0.4, 0.3, 0.4, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv25 = triggerCanvas.cd(1)
+    i = 0
+    j = 2
+    for key in trigList:
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                if ROOT.TEfficiency.CheckConsistency(h_metPt[tg], h_metPt["notrigger"]):
+                    h_TriggerRatio[tg] = ROOT.TEfficiency(h_metPt[tg], h_metPt["notrigger"])
+                    xTitle = h_metPt["notrigger"].GetXaxis().GetTitle()
+                    xBinWidth = h_metPt["notrigger"].GetXaxis().GetBinWidth(1)
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetName(tg)
+                    h_TriggerRatio[tg].SetTitle(tg)
+                    h_TriggerRatio[tg].SetLineColor(j)
+                    j += 1
+                    if i == 0:
+                        h_TriggerRatio[tg].Draw('AP')
+                        cv21.Update()
+                        graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                        graph1.SetMinimum(0)
+                        graph1.SetMaximum(1.8)
+                        cv21.Update()
+                        tX1 = 0.04 * (h_metPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.72
+                    if i > 0:
+                        h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv25.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -686,6 +756,39 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
+    cv26 = triggerCanvas.cd(1)
+    i = 0
+    j = 2
+    for key in trigList:
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                if ROOT.TEfficiency.CheckConsistency(h_genMetPt[tg], h_genMetPt["notrigger"]):
+                    h_TriggerRatio[tg] = ROOT.TEfficiency(h_genMetPt[tg], h_genMetPt["notrigger"])
+                    xTitle = h_genMetPt["notrigger"].GetXaxis().GetTitle()
+                    xBinWidth = h_genMetPt["notrigger"].GetXaxis().GetBinWidth(1)
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetName(tg)
+                    h_TriggerRatio[tg].SetTitle(tg)
+                    h_TriggerRatio[tg].SetLineColor(j)
+                    j += 1
+                    if i == 0:
+                        h_TriggerRatio[tg].Draw('AP')
+                        cv21.Update()
+                        graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                        graph1.SetMinimum(0)
+                        graph1.SetMaximum(1.8)
+                        cv21.Update()
+                        tX1 = 0.04 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.72
+                    if i > 0:
+                        h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv26.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
+
     # - Eta plots ------------------------------------------
     cv7 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
@@ -716,6 +819,39 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     # pdfCreator(argms, 1, triggerCanvas)
+
+    cv27 = triggerCanvas.cd(1)
+    i = 0
+    j = 2
+    for key in trigList:
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                if ROOT.TEfficiency.CheckConsistency(h_muonEta[tg], h_muonEta["notrigger"]):
+                    h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonEta[tg], h_muonEta["notrigger"])
+                    xTitle = h_muonEta["notrigger"].GetXaxis().GetTitle()
+                    xBinWidth = h_muonEta["notrigger"].GetXaxis().GetBinWidth(1)
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetName(tg)
+                    h_TriggerRatio[tg].SetTitle(tg)
+                    h_TriggerRatio[tg].SetLineColor(j)
+                    j += 1
+                    if i == 0:
+                        h_TriggerRatio[tg].Draw('AP')
+                        cv21.Update()
+                        graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                        graph1.SetMinimum(0)
+                        graph1.SetMaximum(1.8)
+                        cv21.Update()
+                        tX1 = 0.04 * (h_muonEta["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.72
+                    if i > 0:
+                        h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv27.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas)
 
     # - Phi plots ------------------------------------------
     cv10 = triggerCanvas.cd(1)
