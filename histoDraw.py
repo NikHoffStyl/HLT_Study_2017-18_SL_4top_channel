@@ -370,6 +370,7 @@ def main(argms):
 
     # - Jet Multiplicity plots ---------------------------------
     cv3 = triggerCanvas.cd(1)
+    h_jetMult["notrigger"].GetXaxis().SetTitle("Number of Jets")
     h_jetMult["notrigger"].Draw('E1')
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -393,7 +394,7 @@ def main(argms):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
                     xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
-                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetTitle(";Number of Jets ;Trigger Efficiency per {0} GeV/c".format(xBinWidth))
                     h_TriggerRatio[tg].SetName(tg)
                     h_TriggerRatio[tg].SetTitle(tg)
                     h_TriggerRatio[tg].SetLineColor(j)
@@ -519,7 +520,7 @@ def main(argms):
 
     # - MET pT plots ---------------------------------
     cv9 = triggerCanvas.cd(1)
-    # h_metPt["notrigger"].SetTitle("")
+    h_metPt["notrigger"].GetXaxis().SetTitle("E^{Miss}_{T}")
     h_metPt["notrigger"].SetMinimum(0.)
     h_metPt["notrigger"].SetMaximum(1800)
     h_metPt["notrigger"].Draw('E1')
@@ -545,7 +546,7 @@ def main(argms):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_metPt[tg], h_metPt["notrigger"])
                     xTitle = h_metPt["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_metPt["notrigger"].GetXaxis().GetBinWidth(1)
-                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetTitle(";E^{Miss}_{T};Trigger Efficiency per %.2f GeV/c" % xBinWidth)
                     h_TriggerRatio[tg].SetName(tg)
                     h_TriggerRatio[tg].SetTitle(tg)
                     h_TriggerRatio[tg].SetLineColor(j)
@@ -570,7 +571,7 @@ def main(argms):
 
     # - GenMET pT plots ---------------------------------
     cv11 = triggerCanvas.cd(1)
-    # h_genMetPt["notrigger"].SetTitle("")
+    h_genMetPt["notrigger"].GetXaxis().SetTitle("Gen E^{Miss}_{T}")
     h_genMetPt["notrigger"].SetMinimum(0.)
     h_genMetPt["notrigger"].SetMaximum(2000)
     h_genMetPt["notrigger"].Draw('E1')
@@ -596,7 +597,7 @@ def main(argms):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_genMetPt[tg], h_genMetPt["notrigger"])
                     xTitle = h_genMetPt["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_genMetPt["notrigger"].GetXaxis().GetBinWidth(1)
-                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                    h_TriggerRatio[tg].SetTitle("; Gen E^{Miss}_{T};Trigger Efficiency per %.2f GeV/c" % xBinWidth)
                     h_TriggerRatio[tg].SetName(tg)
                     h_TriggerRatio[tg].SetTitle(tg)
                     h_TriggerRatio[tg].SetLineColor(j)
