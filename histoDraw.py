@@ -358,7 +358,7 @@ def main(argms):
                         graph1.SetMaximum(1.2)
                         cv2.Update()
                         tX1 = 0.06*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.15
+                        tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
@@ -405,7 +405,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv4.Update()
-                        tX1 = 0.05 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.05 * ((h_jetMult["notrigger"].GetXaxis().GetXmax())-5)+5
                         tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
