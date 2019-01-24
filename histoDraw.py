@@ -1098,7 +1098,7 @@ def main(argms):
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
-                ltx.DrawLatex((i + 2.5), tY1, tg)
+                ltx.DrawLatex((5.5 - i), tY1, tg)
                 i += 1
 
     # h.GetXAxis().SetBinLabel(binnumber,string)
