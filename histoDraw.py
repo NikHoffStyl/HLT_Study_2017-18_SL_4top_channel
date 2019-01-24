@@ -1096,9 +1096,10 @@ def main(argms):
     ltx.DrawLatex(1.5, tY1, "Post-selection")
     i = 0
     for key in trigList:
-        for tg in trigList[key]:
-            ltx.DrawLatex((i + 2.5), tY1, tg)
-            i += 1
+        if not (key == "Electron" or key == "ElPJets"):
+            for tg in trigList[key]:
+                ltx.DrawLatex((i + 2.5), tY1, tg)
+                i += 1
 
     # h.GetXAxis().SetBinLabel(binnumber,string)
     pdfCreator(argms, 2, triggerCanvas)
