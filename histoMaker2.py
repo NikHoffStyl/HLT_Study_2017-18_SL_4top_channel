@@ -402,7 +402,7 @@ class HistogramMaker(Module):
             self.h_metPhi['no_trigger'].Fill(metPhi)
             self.h_genMetPt['no_trigger'].Fill(genMetPt)
             self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
-            self.h_jetMult['no_trigger'].Fill(nJets)
+            self.h_jetMult['no_trigger'].Fill(nJetPass)
             self.h_jetBMult['no_trigger'].Fill(nBtagPass)
             self.h_eventsPrg.Fill(1)
             i = 0
@@ -415,7 +415,7 @@ class HistogramMaker(Module):
                             self.h_metPhi[tg].Fill(metPhi)
                             self.h_genMetPt[tg].Fill(genMetPt)
                             self.h_genMetPhi[tg].Fill(genMetPhi)
-                            self.h_jetMult[tg].Fill(nJets)
+                            self.h_jetMult[tg].Fill(nJetPass)
                             self.h_jetBMult[tg].Fill(nBtagPass)
                             self.h_eventsPrg.Fill(2 + i)
                             i += 1
