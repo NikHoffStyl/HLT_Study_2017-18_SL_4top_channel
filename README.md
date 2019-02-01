@@ -37,6 +37,7 @@ Jets are counted if the following criteria are satisfied:
 * Momentum pT of at least 30 GeV
 * Absolute value of pseudo-rapidity (eta) less than 2.4  
 * Implement jet cleaning (”cleanmask”) , with priority given to leptons
+
 If Jet passes above criteria it is counted as a b-tagged jet if:
 * At least one of these Jets that pass the above criteria are from b-quarks, checked by b-tagging algorithms, at the
 moment it required that the value given by the DeepFlavourB algorithm is larger than 0.7489 
@@ -55,22 +56,22 @@ certainty [(known as tightId)](https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideM
 
 ### Electron Acceptance Criteria
 Electrons are counted if the following criteria are satisfied:
-• Absolute value of pseudo-rapidity (eta) less than 2.4, but with a vetoed section from 1.4442 to 1.566;
-• i.e. Electrons are counted if in the regions : |η|<1.4442 and 1.566<|η|<2.4
+* Absolute value of pseudo-rapidity (eta) less than 2.4, but with a vetoed section from 1.4442 to 1.566;
+* i.e. Electrons are counted if in the regions : |η|<1.4442 and 1.566<|η|<2.4
 
 ### Denominator of “Trigger Efficiencies”
 Accepted Events:
-• Six or more jets pass the jet criteria,
-• Two of which are b-tagged,
-• One muon passes the muon criteria and • Zero electrons pass the electron criteria
+* Six or more jets pass the jet criteria,
+* Two of which are b-tagged,
+* One muon passes the muon criteria and • Zero electrons pass the electron criteria
 
 ### Numerator of “Trigger Efficiencies”
 Accepted Events:
-• If the Denominator criteria are satisfied and • thegivenTriggerstudiedis“True”.
+* If the Denominator criteria are satisfied and • thegivenTriggerstudiedis“True”.
 Un-Prescaled Triggers studied for μ + jets:
-• 'IsoMu24’
-• 'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2’
-• Combined Version: ' 'IsoMu24 _PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2’ • ‘Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5’
+* 'IsoMu24’
+* 'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2’
+* Combined Version: ' 'IsoMu24 _PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2’ • ‘Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5’
 
 <detail><summary> ### Instructions for Repeating Study:</summary>
  <br> To produce a text file of [triggers](https://twiki.cern.ch/twiki/bin/view/CMS/TriggerStudies)
@@ -79,6 +80,59 @@ Un-Prescaled Triggers studied for μ + jets:
 ```
     $ HLTnames.py | tee LeafNames.txt
 ```
+
+<details>
+<summary>How do I dropdown?</summary>
+<br>
+This is how you dropdown.
+<br><br>
+<pre>
+&lt;details&gt;
+&lt;summary&gt;How do I dropdown?&lt;/summary&gt;
+&lt;br&gt;
+This is how you dropdown.
+&lt;details&gt;
+</pre>
+</details>
+
+---
+
+<details open>
+<summary>Want to ruin the surprise?</summary>
+<br>
+Well, you asked for it!
+<br><br>
+<pre>
+&lt;details open&gt;
+&lt;summary&gt;Want to ruin the surprise?&lt;/summary&gt;
+&lt;br&gt;
+Well, you asked for it!
+&lt;details&gt;
+</pre>
+</details>
+
+<details>
+<summary>Heading</summary>
+<ul>
+<li> markdown list 1</li>
+<ul>
+<li> nested list 1</li>
+<li> nested list 2</li>
+</ul>
+<li> markdown list 2</li>
+</ul>
+</details>
+
+<details>
+<summary>Heading</summary>
+
++ markdown list 1
+    + nested list 1
+    + nested list 2
++ markdown list 2
+
+</details>
+
  </br>
 </details> 
 or 
