@@ -65,7 +65,9 @@ Accepted Events:
 * Two of which are b-tagged,
 * One muon passes the muon criteria and • Zero electrons pass the electron criteria
 
-### Numerator of “Trigger Efficiencies”
+<detail>
+ <summary> Numerator of “Trigger Efficiencies”</summary>
+ <br>
 Accepted Events:
 * If the Denominator criteria are satisfied and • thegivenTriggerstudiedis“True”.
 Un-Prescaled Triggers studied for μ + jets:
@@ -73,13 +75,70 @@ Un-Prescaled Triggers studied for μ + jets:
 * 'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2’
 * Combined Version: ' 'IsoMu24 _PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2’ • ‘Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5’
 
-<detail><summary> ### Instructions for Repeating Study:</summary>
- <br> To produce a text file of [triggers](https://twiki.cern.ch/twiki/bin/view/CMS/TriggerStudies)
+ </br>
+</detail>
+<detail>
+<summary>Instructions for Repeating Study:</summary>
+ <br> 
+ To produce a text file of [triggers](https://twiki.cern.ch/twiki/bin/view/CMS/TriggerStudies)
 ( and other unwanted stuff, which will be removed) do:
-
-```
+<pre>
     $ HLTnames.py | tee LeafNames.txt
-```
+</pre>
+or 
+<pre>
+    $ HLTnames.py > LeafNames.txt
+</pre>
+To produce histograms run:
+<pre>
+    $ python3 nsMain.py
+</pre>
+which imports histoMaker and adds HistogramMaker() as an argument to the postProcessor. 
+The choice of triggers is given here, along with the preselection criteria.
+
+The help message given for [`histoMain.py`](histoMain.py) is:
+<pre>
+usage: nsMain.py [-h] [-f {ttjets,tttt,tttt_weights,wjets}]
+                 [-r {xrd-global,xrdUS,xrdEU_Asia,eos,iihe,local}] [-nw]
+                 [-e EVENTLIMIT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f {ttjets,tttt,tttt_weights,wjets}, --inputLFN {ttjets,tttt,tttt_weights,wjets}
+                        Set list of input files (default: tttt)
+  -r {xrd-global,xrdUS,xrdEU_Asia,eos,iihe,local}, --redirector {xrd-global,xrdUS,xrdEU_Asia,eos,iihe,local}
+                        Sets redirector to query locations for LFN (default:
+                        local)
+  -nw, --noWriteFile    Does not output a ROOT file, which contains the
+                        histograms. (default: False)
+  -e EVENTLIMIT, --eventLimit EVENTLIMIT
+                        Set a limit to the number of events. (default: -1)
+</pre>
+___
+
+To produce [`histoDraw.py`](histoDraw.py) plots run:
+<pre>
+    $ python histoDraw.py
+</pre>
+
+The help nessage given for [`histoDraw.py`](histoDraw.py) is:
+<pre>
+usage: histoDraw.py [-h] [-f {ttjets,tttt,tttt_weights,wjets}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f {ttjets,tttt,tttt_weights,wjets}, --inputLFN {ttjets,tttt,tttt_weights,wjets}
+                        Set list of input files (default: tttt)
+</pre>
+
+I will try to introduce the option to input a trigger as an argument to some of these 
+and if argument is not given it will revert to search for a default trigger 
+and exit if trigger does not exist.
+At the moment it makes more sense not to introduce command line args for triggers as 
+this code is only used by me!
+
+</br>
+</detail>
 
 <details>
 <summary>How do I dropdown?</summary>
@@ -92,6 +151,7 @@ This is how you dropdown.
 &lt;br&gt;
 This is how you dropdown.
 &lt;details&gt;
+$ HLTnames.py | tee LeafNames.txt
 </pre>
 </details>
 
