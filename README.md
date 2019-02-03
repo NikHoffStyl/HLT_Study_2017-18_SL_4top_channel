@@ -3,8 +3,55 @@
 # [Nikos - Four Top Production Repository](https://github.com/NikHoffStyl/RemoteWork)
 Repository for Working in the Single Lepton tttt decay channel. 
 
-<details><summary> <h2>Standard Model</h2> </summary>
-<p>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+#myDIV {
+  width: 100%;
+  padding: 50px 0;
+  text-align: left;
+  margin-top: 20px;
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<p>Click the "Try it" button to toggle between hiding and showing the DIV element:</p>
+
+<div id="myDIV">
+This is my DIV element.
+</div>
+
+
+
+<button onclick="myFunction()">
+<div id="myDIV2">
+Show
+</div>
+</button>
+
+<p><b>Note:</b> The element will not take up any space when the display property set to "none".</p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myDIV");
+  var y = document.getElementById("myDIV2");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+    y.innerHTML = "Show";
+  } else {
+    x.style.display = "block";
+    y.innerHTML = "Hide";
+  }
+}
+</script>
+
+## The Standard Model
+<details> <summarry> </summary> blah </details>
+
+<details> <h2> <summary> Standard Model  </summary></h2> 
+
 The Standard Model of fundamental particle physics is our current best attempt at model that broadens the field of 
 knowledge of what our Universe consists of on the smallest scale. At first sight it seems to be a very successful and 
 thoroughly tested model, as it describes the existence, properties and possible interactions of most of the observed 
@@ -25,7 +72,7 @@ not predicting a unification of all forces, not predicting the masses or couplin
 CP problems. More particles and interactions would be required to explain these enigmas, hence some unknown
 particles are assumed to have not yet been observed.
 
-</p>
+
 </details>
 
 <details><summary> <h2>Theoretical Overview</h2> </summary>
@@ -38,8 +85,9 @@ particles are assumed to have not yet been observed.
 <details>
 
 ## Combining High-Level-Trigger (HLT) :high_brightness:
+
 <details><summary> <h3> Datasets </h3> </summary> 
-<p>
+
 Monte Carlo Datasets Studied in CMSSW_9_4_X, chosen according to the   
 <a href="https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable" target="_blank">Particle Performance Dataset (PPD) RunII Analysis
 Guideline</a>:
@@ -54,7 +102,6 @@ Guideline</a>:
     * /store/mc/RunIIFall17NanoAOD/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/
     PU2017_12Apr2018_94X_mc2017_realistic_v14-v1
     
-</p>
 </details>
 
 ## Combining High-Level-Trigger (HLT) :high_brightness:
@@ -72,7 +119,7 @@ Guideline](https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
     PU2017_12Apr2018_94X_mc2017_realistic_v14-v1
 
 <details><summary> <h3> HLTriggers </h3> </summary> 
-<p>
+
 This study is done using non-prescaled HLT triggers, which can be checked by searching the HLT menu at the 
 
 [CMS-HLT 
@@ -89,7 +136,7 @@ are:
 
 where if a combination is successful it will be called: IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 .
 
-</p>
+
 </details>
 
 ### HLTriggers
@@ -106,9 +153,8 @@ are:
 
 where if a combination is successful it will be called: IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 .
 
-### Jet Acceptance Criteria
-<details><summary> <h3> HLTriggers </h3> </summary> 
-<p>
+ 
+<details><summary> <h3> Jet Acceptance Criteria </h3> </summary> 
 
 Jets are counted if the following criteria are satisfied:
 * Must satisfy what is called a JetID > 2 (https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017),
@@ -121,7 +167,6 @@ If Jet passes above criteria it is counted as a b-tagged jet if:
 moment it required that the value given by the DeepFlavourB algorithm is larger than 0.7489 
 (https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X), which is recognised as a tight test.
 
-</p>
 </details>
  
 <details><summary> 
