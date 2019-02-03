@@ -3,7 +3,6 @@
 # [Nikos - Four Top Production Repository](https://github.com/NikHoffStyl/RemoteWork)
 Repository for Working in the Single Lepton tttt decay channel. 
 
-<head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 #myDIV {
@@ -13,44 +12,27 @@ Repository for Working in the Single Lepton tttt decay channel.
   margin-top: 20px;
   display: none;
 }
+button.link { background:none;border:none;cursor:pointer; }
 </style>
-</head>
-<body>
-
-<p>Click the "Try it" button to toggle between hiding and showing the DIV element:</p>
-
-<div id="myDIV">
-This is my DIV element.
-</div>
-
-
-
-<button onclick="myFunction()">
-<div id="myDIV2">
-Show
-</div>
-</button>
-
-<p><b>Note:</b> The element will not take up any space when the display property set to "none".</p>
 
 <script>
 function myFunction() {
   var x = document.getElementById("myDIV");
-  var y = document.getElementById("myDIV2");
   if (x.style.display === "block") {
     x.style.display = "none";
-    y.innerHTML = "Show";
   } else {
     x.style.display = "block";
-    y.innerHTML = "Hide";
   }
 }
 </script>
 
-## The Standard Model
-<details> <summarry> </summary> blah </details>
+<button class=link type="button" onclick="myFunction()"><h2>The Standard Model</h2></button>
 
-<details> <h2> <summary> Standard Model  </summary></h2> 
+<div id="myDIV">
+Summary of standard model here.
+</div>
+
+## The Standard Model
 
 The Standard Model of fundamental particle physics is our current best attempt at model that broadens the field of 
 knowledge of what our Universe consists of on the smallest scale. At first sight it seems to be a very successful and 
@@ -72,17 +54,6 @@ not predicting a unification of all forces, not predicting the masses or couplin
 CP problems. More particles and interactions would be required to explain these enigmas, hence some unknown
 particles are assumed to have not yet been observed.
 
-
-</details>
-
-<details><summary> <h2>Theoretical Overview</h2> </summary>
-    <details><summary> <h3> SM </h3> </summary> 
-        <p> Standard Model Intoduction... </p>
-    </details>
-    <details><summary> <h3> Top Quark Physics </h3> </summary>
-        <p> How is it produced at the LHC, how does it decay and how small are the cross section measurements? </p>
-    </details>
-<details>
 
 ## Combining High-Level-Trigger (HLT) :high_brightness:
 
@@ -222,7 +193,7 @@ Un-Prescaled Triggers studied for μ + jets:
 
 </details>
 
-<detail>
+<details>
 <summary> <h3> Instructions for Repeating Study </h3></summary>
  
  To produce a text file of [triggers](https://twiki.cern.ch/twiki/bin/view/CMS/TriggerStudies)
