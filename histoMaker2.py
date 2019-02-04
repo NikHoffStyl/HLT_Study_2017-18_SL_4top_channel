@@ -290,7 +290,7 @@ class HistogramMaker(Module):
         genMetPt = getattr(genMet, "pt")
         genMetPhi = getattr(genMet, "pt")
 
-        nJets = len(jets)
+        # nJets = len(jets)
 
         trigPath = {'IsoMu24': getattr(hltObj, 'IsoMu24'), 'Ele32_WPTight_Gsf': getattr(hltObj, 'Ele32_WPTight_Gsf'),
                     'Ele35_WPTight_Gsf': getattr(hltObj, 'Ele35_WPTight_Gsf'),
@@ -352,7 +352,9 @@ class HistogramMaker(Module):
                     nBtagPass += 1
 
         for nm, muon in enumerate(muons):
-            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
+            # if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
+            #     continue
+            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4:
                 continue
             else:
                 nMuonPass += 1
