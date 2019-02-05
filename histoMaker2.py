@@ -352,20 +352,20 @@ class HistogramMaker(Module):
                     nBtagPass += 1
 
         for nm, muon in enumerate(muons):
-            # if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
-            #     continue
-            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4:
+            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
                 continue
+            # if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4:
+            #     continue
             else:
                 nMuonPass += 1
 
-        for ne, el in enumerate(electrons):
-            if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
-                continue
-            if 1.4442 < abs(el.eta) < 1.566:
-                continue
-            else:
-                nElPass += 1
+        # for ne, el in enumerate(electrons):
+        #     if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
+        #         continue
+        #     if 1.4442 < abs(el.eta) < 1.566:
+        #         continue
+        #     else:
+        #         nElPass += 1
 
         ##############################
         #    Muon Trigger checks     #
