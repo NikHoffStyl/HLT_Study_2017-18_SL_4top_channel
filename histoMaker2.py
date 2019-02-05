@@ -106,6 +106,11 @@ class HistogramMaker(Module):
         #                                         150, -6, 6, 160, -3.2, 3.2)
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events '
                                                                       'per 1 GeV/c', 300, 0, 300)
+        self.h_muonPt['top_mother'] = ROOT.TH1D('h_muonPt_top_mother', 'top parent ;Muon P_{T} (GeV/c);Number of Events '
+                                                                       'per 1 GeV/c', 300, 0, 300)
+        self.h_muonPt['bottom_mother'] = ROOT.TH1D('h_muonPt_bottom_mother',
+                                                   'bottom parent ;Muon P_{T} (GeV/c);Number of Events '
+                                                   'per 1 GeV/c', 300, 0, 300)
         self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
@@ -150,6 +155,10 @@ class HistogramMaker(Module):
         # self.addObject(self.h_jetPhi2['no_trigger'])
         # self.addObject(self.h_jetMap2['no_trigger'])
         self.addObject(self.h_muonPt['no_trigger'])
+        self.addObject(self.h_muonPt['top_mother'])
+        self.addObject(self.h_muonPt['bottom_mother'])
+
+
         self.addObject(self.h_muonEta['no_trigger'])
         self.addObject(self.h_muonPhi['no_trigger'])
         self.addObject(self.h_muonMap['no_trigger'])
@@ -359,13 +368,13 @@ class HistogramMaker(Module):
             else:
                 nMuonPass += 1
 
-        # for ne, el in enumerate(electrons):
-        #     if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
-        #         continue
-        #     if 1.4442 < abs(el.eta) < 1.566:
-        #         continue
-        #     else:
-        #         nElPass += 1
+        for ne, el in enumerate(electrons):
+            if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
+                continue
+            if 1.4442 < abs(el.eta) < 1.566:
+                continue
+            else:
+                nElPass += 1
 
         ##############################
         #    Muon Trigger checks     #
@@ -384,6 +393,10 @@ class HistogramMaker(Module):
                 self.h_muonEta['no_trigger'].Fill(muon.eta)
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
+                if muon.genPartFlav == 6 or muon.genPartFlav == 24:
+                    self.h_muonPt['top_mother'].Fill(muon.pt)
+                if muon.genPartFlav == 5:
+                    self.h_muonPt['bottom_mother'].Fill(muon.pt)
 
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
