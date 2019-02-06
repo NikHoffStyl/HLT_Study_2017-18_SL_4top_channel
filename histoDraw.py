@@ -339,7 +339,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetHt[tg].Draw('E1 same')
-    cv1.BuildLegend(0.54, 0.58, 0.94, 0.78)
+    cv1.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
@@ -388,7 +388,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetMult[tg].Draw('E1 same')
-    cv3.BuildLegend(0.54, 0.58, 0.94, 0.78)
+    cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
@@ -438,7 +438,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetBMult[tg].Draw('E1 same')
-    cv5.BuildLegend(0.54, 0.58, 0.94, 0.78)
+    cv5.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
@@ -504,7 +504,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_muonPt[tg].Draw('E1 same')
-    cv7.BuildLegend(0.54, 0.58, 0.94, 0.78)
+    cv7.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -513,13 +513,13 @@ def main(argms):
     cv71 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].SetTitle("")
     h_muonPt["notrigger"].SetMinimum(0.)
-    h_muonPt["notrigger"].SetMaximum(3500)
+    # h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
     tX1 = 0.05*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     h_muonPt["top_mother"].Draw('E1 same')
     h_muonPt["bottom_mother"].Draw('E1 same')
-    cv71.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -570,7 +570,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_metPt[tg].Draw('E1 same')
-    cv9.BuildLegend(0.54, 0.58, 0.94, 0.78)
+    cv9.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -621,7 +621,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_genMetPt[tg].Draw('E1 same')
-    cv11.BuildLegend(0.54, 0.58, 0.94, 0.78)
+    cv11.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
