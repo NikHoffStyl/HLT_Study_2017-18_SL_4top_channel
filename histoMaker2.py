@@ -397,7 +397,7 @@ class HistogramMaker(Module):
                 self.h_muonEta['no_trigger'].Fill(muon.eta)
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
-                if muon.genPartFlav == 6 or muon.genPartFlav == 24:
+                if muon.genPartFlav == 1:
                     self.h_muonPt['top_mother'].Fill(muon.pt)
                 if muon.genPartFlav == 5:
                     self.h_muonPt['bottom_mother'].Fill(muon.pt)
