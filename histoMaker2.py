@@ -111,6 +111,8 @@ class HistogramMaker(Module):
         self.h_muonPt['bottom_mother'] = ROOT.TH1D('h_muonPt_bottom_mother',
                                                    'bottom parent ;Muon P_{T} (GeV/c);Number of Events '
                                                    'per 1 GeV/c', 300, 0, 300)
+        self.h_muonGenPartFlav = ROOT.TH1D('h_muonGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; Number of events', 16, 0, 16)
+        self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; Number of events', 182, -2, 180)
         self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
@@ -157,6 +159,8 @@ class HistogramMaker(Module):
         self.addObject(self.h_muonPt['no_trigger'])
         self.addObject(self.h_muonPt['top_mother'])
         self.addObject(self.h_muonPt['bottom_mother'])
+        self.addObject(self.h_muonGenPartFlav)
+        self.addObject(self.h_muonGenPartIdx)
 
 
         self.addObject(self.h_muonEta['no_trigger'])
@@ -397,6 +401,8 @@ class HistogramMaker(Module):
                     self.h_muonPt['top_mother'].Fill(muon.pt)
                 if muon.genPartFlav == 5:
                     self.h_muonPt['bottom_mother'].Fill(muon.pt)
+                self.h_muonGenPartFlav.Fill(muon.genPartFlav)
+                self.h_muonGenPartIdx.Fill(muon.genPartIdx)
 
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
