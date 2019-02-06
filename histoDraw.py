@@ -369,7 +369,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv2.Update()
-                        tX1 = 0.6*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                         tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -418,12 +418,12 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv4.Update()
-                        tX1 = 0.6 * ((h_jetMult["notrigger"].GetXaxis().GetXmax())-5)+5
-                        tY1 = 1.15
+                        tX1 = 0.05 * ((h_jetMult["notrigger"].GetXaxis().GetXmax())-5)+5
+                        tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv4.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv4.BuildLegend(0.5, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -468,12 +468,12 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv6.Update()
-                        tX1 = 0.6 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.15
+                        tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv6.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv6.BuildLegend(0.5, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -517,6 +517,7 @@ def main(argms):
     h_muonPt["notrigger"].Draw('E1')
     tX1 = 0.6*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
+    h_muonPt["top_mother"].SetTitle("prompt muons")
     h_muonPt["top_mother"].Draw('E1 same')
     h_muonPt["bottom_mother"].Draw('E1 same')
     cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -547,12 +548,12 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv8.Update()
-                        tX1 = 0.6 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.15
+                        tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv8.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv8.BuildLegend(0.5, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -598,12 +599,12 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv10.Update()
-                        tX1 = 0.6 * (h_metPt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.15
+                        tX1 = 0.05 * (h_metPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv10.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv10.BuildLegend(0.5, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -649,12 +650,12 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv12.Update()
-                        tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.15
+                        tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv12.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv12.BuildLegend(0.5, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -713,12 +714,12 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv15.Update()
-                        tX1 = 0.6 * (h_muonEta["notrigger"].GetXaxis().GetXmax())
-                        tY1 = 1.15
+                        tX1 = 0.05 * (h_muonEta["notrigger"].GetXaxis().GetXmax())
+                        tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv15.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv15.BuildLegend(0.5, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
