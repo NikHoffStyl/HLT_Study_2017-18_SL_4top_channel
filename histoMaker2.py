@@ -84,12 +84,16 @@ class HistogramMaker(Module):
         self.h_jetBMult['no_trigger'] = ROOT.TH1D('h_jetBMult_notrigger',
                                                   'no trigger ;B tag Multiplicity ;Number of Events per Number of Jets',
                                                   20, 0, 20)
+
+        # Histograms used for unit testing
         self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', 'no trigger ;Jet #eta;Number of Events per '
                                                                       '#delta#eta = 0.046', 300, -6, 8)
         self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', 'no trigger ;Jet #phi;Number of Events per '
                                                                       '#delta#phi = 0.046', 300, -6, 8)
         self.h_jetMap['no_trigger'] = ROOT.TH2F('h_jetMap_notrigger', 'no trigger ;Jet #eta;Jet #phi',
                                                 150, -6, 6, 160, -3.2, 3.2)
+
+
         # self.h_jetHt2['no_trigger'] = ROOT.TH1D('h_jetHt2_notrigger',
         #                                        'no trigger ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1, 3000)
         # self.h_jetMult2['no_trigger'] = ROOT.TH1D('h_jetMult2_notrigger',
@@ -104,21 +108,34 @@ class HistogramMaker(Module):
         #                                                               '#delta#phi = 0.046', 300, -6, 8)
         # self.h_jetMap2['no_trigger'] = ROOT.TH2F('h_jetMap2_notrigger', 'no trigger ;Jet #eta;Jet #phi',
         #                                         150, -6, 6, 160, -3.2, 3.2)
-        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events '
-                                                                      'per 1 GeV/c', 300, 0, 300)
-        self.h_muonPt['top_mother'] = ROOT.TH1D('h_muonPt_top_mother', 'top parent ;Muon P_{T} (GeV/c);Number of Events '
-                                                                       'per 1 GeV/c', 300, 0, 300)
+
+        ####################
+        # MUON HISTOGRAMS #
+        ##################
+        self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events'
+                                                                      ' per 1 GeV/c', 300, 0, 300)
+        self.h_muonPt['top_mother'] = ROOT.TH1D('h_muonPt_top_mother', 'top parent ;Muon P_{T} (GeV/c);Number of Events'
+                                                                       ' per 1 GeV/c', 300, 0, 300)
         self.h_muonPt['bottom_mother'] = ROOT.TH1D('h_muonPt_bottom_mother',
                                                    'bottom parent ;Muon P_{T} (GeV/c);Number of Events '
                                                    'per 1 GeV/c', 300, 0, 300)
-        self.h_muonGenPartFlav = ROOT.TH1D('h_muonGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; Number of events', 16, 0, 16)
-        self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; Number of events', 182, -2, 180)
+
+        # Histograms used for unit testing-- kind of
+        self.h_muonGenPartFlav = ROOT.TH1D('h_muonGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; '
+                                                                'Number of events', 16, 0, 16)
+        self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
+                                                              'Number of events', 182, -2, 180)
+        self.h_muonRelIso04_all = ROOT.TH1D('h_muonRelIso04_all', 'muonRelIso04_all;muonRelIso04_all;Number of Events',
+                                            110, 0, 55)
         self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
                                                                         '#delta#phi = 0.046', 300, -6, 8)
         self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;',
                                                  150, -6, 6, 160, -3.2, 3.2)
+        #######################
+        # ELECTRON HISTOGRAMS #
+        #######################
         self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', 'no trigger ;Electron P_{T} (GeV/c);Number of Events '
                                                                   'per 1 GeV/c', 300, 0, 300)
         self.h_elEta['no_trigger'] = ROOT.TH1D('h_elEta_notrigger', 'no trigger ;Electron #eta;Number of Events per '
@@ -127,6 +144,9 @@ class HistogramMaker(Module):
                                                                     '#delta#phi = 0.046', 300, -6, 8)
         self.h_elMap['no_trigger'] = ROOT.TH2F('h_elMap_notrigger', 'no trigger ;Electron #eta;Electron #phi',
                                                150, -6, 6, 160, -3.2, 3.2)
+        ##################
+        # MET HISTOGRAMS #
+        ##################
         self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
                                                                     ' 1 GeV/c', 300, 0, 300)
         self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
@@ -348,6 +368,11 @@ class HistogramMaker(Module):
         nMuonPass = 0
         nElPass = 0
 
+        # JetPassIdx = 0
+        # BtagPassIdx = 0
+        MuonPassIdx = 0
+        # ElPassIdx = 0
+
         #############################
         #    Acceptance Criteria    #
         #############################
@@ -365,12 +390,13 @@ class HistogramMaker(Module):
                     nBtagPass += 1
 
         for nm, muon in enumerate(muons):
-            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.miniPFRelIso_all > 0.15:
+            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.pfRelIso04_all > 0.15:
                 continue
             # if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4:
             #     continue
             else:
                 nMuonPass += 1
+                MuonPassIdx = nm
 
         for ne, el in enumerate(electrons):
             if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
@@ -379,31 +405,34 @@ class HistogramMaker(Module):
                 continue
             else:
                 nElPass += 1
+                ElPassIdx = ne
 
         ##############################
         #    Muon Trigger checks     #
         ##############################
         if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0 and nElPass == 0:
             for nm, muon in enumerate(muons):
-                for key in self.trigLst:
-                    if not (key == "Electron" or key == "ElPJets"):
-                        for tg in self.trigLst[key]:
-                            if trigPath[tg]:
-                                self.h_muonPt[tg].Fill(muon.pt)
-                                self.h_muonEta[tg].Fill(muon.eta)
-                                self.h_muonPhi[tg].Fill(muon.phi)
-                                self.h_muonMap[tg].Fill(muon.eta, muon.phi)
-                print(muon.miniPFRelIso_all)
-                self.h_muonPt['no_trigger'].Fill(muon.pt)
-                self.h_muonEta['no_trigger'].Fill(muon.eta)
-                self.h_muonPhi['no_trigger'].Fill(muon.phi)
-                self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
-                if muon.genPartFlav == 1:
-                    self.h_muonPt['top_mother'].Fill(muon.pt)
-                if muon.genPartFlav == 5:
-                    self.h_muonPt['bottom_mother'].Fill(muon.pt)
-                self.h_muonGenPartFlav.Fill(muon.genPartFlav)
-                self.h_muonGenPartIdx.Fill(muon.genPartIdx)
+                if MuonPassIdx == nm:
+                    self.h_muonRelIso04_all.Fill(muon.miniPFRelIso_all)
+                    self.h_muonGenPartFlav.Fill(muon.genPartFlav)
+                    self.h_muonGenPartIdx.Fill(muon.genPartIdx)
+                    self.h_muonEta['no_trigger'].Fill(muon.eta)
+                    self.h_muonPhi['no_trigger'].Fill(muon.phi)
+                    self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
+
+                    self.h_muonPt['no_trigger'].Fill(muon.pt)
+                    for key in self.trigLst:
+                        if not (key == "Electron" or key == "ElPJets"):
+                            for tg in self.trigLst[key]:
+                                if trigPath[tg]:
+                                    self.h_muonPt[tg].Fill(muon.pt)
+                                    self.h_muonEta[tg].Fill(muon.eta)
+                                    self.h_muonPhi[tg].Fill(muon.phi)
+                                    self.h_muonMap[tg].Fill(muon.eta, muon.phi)
+                    if muon.genPartFlav == 1:
+                        self.h_muonPt['top_mother'].Fill(muon.pt)
+                    if muon.genPartFlav == 5:
+                        self.h_muonPt['bottom_mother'].Fill(muon.pt)
 
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
