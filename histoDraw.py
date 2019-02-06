@@ -339,7 +339,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetHt[tg].Draw('E1 same')
-    cv1.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv1.BuildLegend(0.54, 0.58, 0.94, 0.78)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
@@ -388,7 +388,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetMult[tg].Draw('E1 same')
-    cv3.BuildLegend(0.6, 0.4, 1, 0.6)
+    cv3.BuildLegend(0.54, 0.58, 0.94, 0.78)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
@@ -438,7 +438,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetBMult[tg].Draw('E1 same')
-    cv5.BuildLegend(0.6, 0.4, 0.1, 0.6)
+    cv5.BuildLegend(0.54, 0.58, 0.94, 0.78)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
@@ -498,13 +498,13 @@ def main(argms):
     h_muonPt["notrigger"].SetMinimum(0.)
     # h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
-    tX1 = 0.05*(h_muonPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.90*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_muonPt[tg].Draw('E1 same')
-    cv7.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv7.BuildLegend(0.54, 0.58, 0.94, 0.78)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -562,7 +562,7 @@ def main(argms):
     cv9 = triggerCanvas.cd(1)
     h_metPt["notrigger"].GetXaxis().SetTitle("E^{Miss}_{T}")
     h_metPt["notrigger"].SetMinimum(0.)
-    h_metPt["notrigger"].SetMaximum(1800)
+    # h_metPt["notrigger"].SetMaximum(1800)
     h_metPt["notrigger"].Draw('E1')
     tX1 = 0.05 * (h_metPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
@@ -570,7 +570,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_metPt[tg].Draw('E1 same')
-    cv9.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv9.BuildLegend(0.54, 0.58, 0.94, 0.78)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -613,7 +613,7 @@ def main(argms):
     cv11 = triggerCanvas.cd(1)
     h_genMetPt["notrigger"].GetXaxis().SetTitle("Gen E^{Miss}_{T}")
     h_genMetPt["notrigger"].SetMinimum(0.)
-    h_genMetPt["notrigger"].SetMaximum(2000)
+    # h_genMetPt["notrigger"].SetMaximum(2000)
     h_genMetPt["notrigger"].Draw('E1')
     tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
@@ -621,7 +621,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_genMetPt[tg].Draw('E1 same')
-    cv11.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv11.BuildLegend(0.54, 0.58, 0.94, 0.78)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
