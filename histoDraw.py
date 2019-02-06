@@ -341,7 +341,7 @@ def main(argms):
                 h_jetHt[tg].Draw('E1 same')
     cv1.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.6*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -369,7 +369,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv2.Update()
-                        tX1 = 0.06*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.6*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                         tY1 = 1.1
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -390,7 +390,7 @@ def main(argms):
                 h_jetMult[tg].Draw('E1 same')
     cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    tX1 = 0.05 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.6 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -418,7 +418,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv4.Update()
-                        tX1 = 0.05 * ((h_jetMult["notrigger"].GetXaxis().GetXmax())-5)+5
+                        tX1 = 0.6 * ((h_jetMult["notrigger"].GetXaxis().GetXmax())-5)+5
                         tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -440,7 +440,7 @@ def main(argms):
                 h_jetBMult[tg].Draw('E1 same')
     cv5.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.6 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -468,7 +468,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv6.Update()
-                        tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.6 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
                         tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -498,7 +498,7 @@ def main(argms):
     h_muonPt["notrigger"].SetMinimum(0.)
     # h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
-    tX1 = 0.90*(h_muonPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.60*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -515,7 +515,7 @@ def main(argms):
     h_muonPt["notrigger"].SetMinimum(0.)
     # h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
-    tX1 = 0.05*(h_muonPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.6*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     h_muonPt["top_mother"].Draw('E1 same')
     h_muonPt["bottom_mother"].Draw('E1 same')
@@ -547,7 +547,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv8.Update()
-                        tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.6 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
                         tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -564,7 +564,7 @@ def main(argms):
     h_metPt["notrigger"].SetMinimum(0.)
     # h_metPt["notrigger"].SetMaximum(1800)
     h_metPt["notrigger"].Draw('E1')
-    tX1 = 0.05 * (h_metPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.6 * (h_metPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -598,7 +598,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv10.Update()
-                        tX1 = 0.05 * (h_metPt["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.6 * (h_metPt["notrigger"].GetXaxis().GetXmax())
                         tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -615,7 +615,7 @@ def main(argms):
     h_genMetPt["notrigger"].SetMinimum(0.)
     # h_genMetPt["notrigger"].SetMaximum(2000)
     h_genMetPt["notrigger"].Draw('E1')
-    tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+    tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -649,7 +649,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv12.Update()
-                        tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
                         tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -664,7 +664,7 @@ def main(argms):
     cv13 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
     h_jetEta["notrigger"].Draw('E1')
-    tX1 = 0.94*(-6)
+    tX1 = 0.6*(6)
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -679,7 +679,7 @@ def main(argms):
     cv14 = triggerCanvas.cd(1)
     # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_muonEta["notrigger"].Draw('E1')
-    tX1 = 0.94*(-6)
+    tX1 = 0.6*(6)
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -713,7 +713,7 @@ def main(argms):
                         graph1.SetMinimum(0)
                         graph1.SetMaximum(1.2)
                         cv15.Update()
-                        tX1 = 0.05 * (h_muonEta["notrigger"].GetXaxis().GetXmax())
+                        tX1 = 0.6 * (h_muonEta["notrigger"].GetXaxis().GetXmax())
                         tY1 = 1.15
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
@@ -728,7 +728,7 @@ def main(argms):
     cv16 = triggerCanvas.cd(1)
     # h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.3)
     h_jetPhi["notrigger"].Draw('E1')
-    tX1 = 0.94*(-6)
+    tX1 = 0.6*(6)
     tY1 = 0.95*(h_jetPhi["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
@@ -743,7 +743,7 @@ def main(argms):
     cv17 = triggerCanvas.cd(1)
     # h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
     h_muonPhi["notrigger"].Draw('E1')
-    tX1 = 0.94*(-6)
+    tX1 = 0.6*(6)
     tY1 = 0.97*(h_muonPhi["notrigger"].GetMaximum())
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
