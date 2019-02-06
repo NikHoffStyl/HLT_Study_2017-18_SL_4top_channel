@@ -150,8 +150,10 @@ def main(argms):
     # if not (h_jetMap2["notrigger"]):
     #     print("No trigger jet map histogram is empty")
 
+    h_muonPfRelIso04_all = ROOT.gDirectory.Get("h_muonRelIso04_all")
     h_muonGenPartFlav = ROOT.gDirectory.Get("h_muonGenPartFlav")
     h_muonGenPartIdx = ROOT.gDirectory.Get("h_muonGenPartIdx")
+
     h_muonPt["notrigger"] = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt["notrigger"].SetLineColor(1)
     if not (h_muonPt["notrigger"]):
@@ -477,6 +479,19 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas)
 
+    # - Muon test Plots-------------------------------
+    triggerCanvas.cd(1)
+    h_muonGenPartFlav.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
+
+    triggerCanvas.cd(1)
+    h_muonGenPartIdx.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
+
+    triggerCanvas.cd(1)
+    h_muonPfRelIso04_all.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
+    
     # - Muon pT plots ---------------------------------
     cv7 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].SetTitle("")
@@ -495,14 +510,6 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv72 = triggerCanvas.cd(1)
-    h_muonGenPartFlav.Draw()
-    pdfCreator(argms, 1, triggerCanvas)
-
-    cv73 = triggerCanvas.cd(1)
-    h_muonGenPartIdx.Draw()
-    pdfCreator(argms, 1, triggerCanvas)
-
     cv71 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].SetTitle("")
     h_muonPt["notrigger"].SetMinimum(0.)
@@ -517,8 +524,6 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
-
-
 
     cv8 = triggerCanvas.cd(1)
     i = 0
