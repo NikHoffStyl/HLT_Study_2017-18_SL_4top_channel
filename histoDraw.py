@@ -374,7 +374,7 @@ def main(argms):
                     if i > 0:
                         h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv2.BuildLegend(0.4, 0.2, 0.4, 0.2)
+    cv2.BuildLegend(0.5, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -388,7 +388,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetMult[tg].Draw('E1 same')
-    cv3.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv3.BuildLegend(0.6, 0.4, 1, 0.6)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
@@ -438,7 +438,7 @@ def main(argms):
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
                 h_jetBMult[tg].Draw('E1 same')
-    cv5.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv5.BuildLegend(0.6, 0.4, 0.1, 0.6)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.05 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
@@ -496,7 +496,7 @@ def main(argms):
     cv7 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].SetTitle("")
     h_muonPt["notrigger"].SetMinimum(0.)
-    h_muonPt["notrigger"].SetMaximum(3500)
+    # h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
     tX1 = 0.05*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
