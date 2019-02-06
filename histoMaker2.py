@@ -393,6 +393,7 @@ class HistogramMaker(Module):
                                 self.h_muonEta[tg].Fill(muon.eta)
                                 self.h_muonPhi[tg].Fill(muon.phi)
                                 self.h_muonMap[tg].Fill(muon.eta, muon.phi)
+                print(muon.miniPFRelIso_all)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
                 self.h_muonEta['no_trigger'].Fill(muon.eta)
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
