@@ -150,7 +150,7 @@ def main(argms):
     # if not (h_jetMap2["notrigger"]):
     #     print("No trigger jet map histogram is empty")
 
-    h_muonPfRelIso04_all = ROOT.gDirectory.Get("h_muonRelIso04_all")
+    # h_muonPfRelIso04_all = ROOT.gDirectory.Get("h_muonRelIso04_all")
     h_muonGenPartFlav = ROOT.gDirectory.Get("h_muonGenPartFlav")
     h_muonGenPartIdx = ROOT.gDirectory.Get("h_muonGenPartIdx")
 
@@ -488,9 +488,9 @@ def main(argms):
     h_muonGenPartIdx.Draw()
     pdfCreator(argms, 1, triggerCanvas)
 
-    triggerCanvas.cd(1)
-    h_muonPfRelIso04_all.Draw()
-    pdfCreator(argms, 1, triggerCanvas)
+    # triggerCanvas.cd(1)
+    # h_muonPfRelIso04_all.Draw()
+    # pdfCreator(argms, 1, triggerCanvas)
     
     # - Muon pT plots ---------------------------------
     cv7 = triggerCanvas.cd(1)
