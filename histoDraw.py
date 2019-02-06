@@ -150,18 +150,18 @@ def main(argms):
     # if not (h_jetMap2["notrigger"]):
     #     print("No trigger jet map histogram is empty")
 
+    h_muonGenPartFlav = ROOT.gDirectory.Get("h_muonGenPartFlav")
+    h_muonGenPartIdx = ROOT.gDirectory.Get("h_muonGenPartIdx")
     h_muonPt["notrigger"] = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt["notrigger"].SetLineColor(1)
     if not (h_muonPt["notrigger"]):
         print("No trigger muon Pt histogram is empty")
     h_muonPt["top_mother"] = ROOT.gDirectory.Get("h_muonPt_top_mother")
-    h_muonPt["top_mother"].SetLineColor(1)
-    h_muonPt["top_mother"].SetLineStyle(10)
+    h_muonPt["top_mother"].SetLineColor(4)
     if not (h_muonPt["top_mother"]):
         print("top Mother muon Pt histogram is empty")
     h_muonPt["bottom_mother"] = ROOT.gDirectory.Get("h_muonPt_bottom_mother")
-    h_muonPt["bottom_mother"].SetLineColor(1)
-    h_muonPt["top_mother"].SetLineStyle(2)
+    h_muonPt["bottom_mother"].SetLineColor(2)
     if not (h_muonPt["bottom_mother"]):
         print("Bottom mother muon Pt histogram is empty")
     h_muonEta["notrigger"] = ROOT.gDirectory.Get("h_muonEta_notrigger")
@@ -485,8 +485,6 @@ def main(argms):
     h_muonPt["notrigger"].Draw('E1')
     tX1 = 0.05*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
-    h_muonPt["top_mother"].Draw('E1 same')
-    h_muonPt["bottom_mother"].Draw('E1 same')
     for key in trigList:
         if not (key == "Electron" or key == "ElPJets"):
             for tg in trigList[key]:
@@ -496,6 +494,31 @@ def main(argms):
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
+
+    cv72 = triggerCanvas.cd(1)
+    h_muonGenPartFlav.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv73 = triggerCanvas.cd(1)
+    h_muonGenPartIdx.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
+
+    cv71 = triggerCanvas.cd(1)
+    # h_muonPt["notrigger"].SetTitle("")
+    h_muonPt["notrigger"].SetMinimum(0.)
+    h_muonPt["notrigger"].SetMaximum(3500)
+    h_muonPt["notrigger"].Draw('E1')
+    tX1 = 0.05*(h_muonPt["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
+    h_muonPt["top_mother"].Draw('E1 same')
+    h_muonPt["bottom_mother"].Draw('E1 same')
+    cv71.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    pdfCreator(argms, 1, triggerCanvas)
+
+
 
     cv8 = triggerCanvas.cd(1)
     i = 0
