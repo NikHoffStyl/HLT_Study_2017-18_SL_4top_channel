@@ -11,7 +11,7 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 
-class HistogramMaker(Module, unittest.TestCase):
+class TriggerStudy(Module, unittest.TestCase):
     """This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
     for different combinations of trigger paths."""
 
@@ -20,7 +20,7 @@ class HistogramMaker(Module, unittest.TestCase):
 
         self.eventCounter = 0
         self.comboCounter = 0
-        self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"]) + len(trigLst["stndlone"])
+        self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"])
         print("Number of Combined Triggers: %d" % self.numTriggers)
 
         self.h_jetHt = {}
@@ -407,7 +407,7 @@ class HistogramMaker(Module, unittest.TestCase):
                 continue
             if 1.4442 < abs(el.eta) < 1.566:
                 continue
-            #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1 or el.hoe <(0.046 + 1.16/(el.deltaEtaSC)+ 0.0324*()/(deltaEtaSC))
+            #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1 or el.hoe <(0.046 + 1.16/(el.EtaSC)+ 0.0324*(rho)/(EtaSC))
             else:
                 nElPass += 1
                 ElPassIdx = ne

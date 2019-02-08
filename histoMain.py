@@ -123,7 +123,7 @@ def main(argms):
     #         }
     trigList = {"MuPJets": [],
                 "ElPJets": [],
-                "stndlone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
+                "stndlone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],# HLT_Ele28_eta2p1_WPTight_Gsf_HT150_v
                 "Muon": ['IsoMu24'],
                 "Electron": ["Ele32_WPTight_Gsf", "Ele35_WPTight_Gsf", "Ele38_WPTight_Gsf"],
                 "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
