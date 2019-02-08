@@ -352,7 +352,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
@@ -386,7 +386,7 @@ def main(argms):
     h_jetMult["notrigger"].GetXaxis().SetTitle("Number of Jets")
     h_jetMult["notrigger"].Draw('E1')
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetMult[tg].Draw('E1 same')
     cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -401,7 +401,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
@@ -436,7 +436,7 @@ def main(argms):
     h_jetBMult["notrigger"].GetXaxis().SetRange(1, 10)
     h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetBMult[tg].Draw('E1 same')
     cv5.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -451,7 +451,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_jetBMult[tg], h_jetBMult["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetBMult[tg], h_jetBMult["notrigger"])
@@ -502,7 +502,7 @@ def main(argms):
     tX1 = 0.60*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonPt[tg].Draw('E1 same')
     cv7.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -531,7 +531,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_muonPt[tg], h_muonPt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonPt[tg], h_muonPt["notrigger"])
@@ -569,7 +569,7 @@ def main(argms):
     tX1 = 0.6 * (h_metPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_metPt[tg].Draw('E1 same')
     cv9.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -582,7 +582,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_metPt[tg], h_metPt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_metPt[tg], h_metPt["notrigger"])
@@ -620,7 +620,7 @@ def main(argms):
     tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_genMetPt[tg].Draw('E1 same')
     cv11.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -633,7 +633,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_genMetPt[tg], h_genMetPt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_genMetPt[tg], h_genMetPt["notrigger"])
@@ -669,7 +669,7 @@ def main(argms):
     tX1 = 0.6*(6)
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetEta[tg].Draw('E1 same')
     cv13.BuildLegend(0.4, 0.25, 0.4, 0.25)
@@ -684,7 +684,7 @@ def main(argms):
     tX1 = 0.6*(6)
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonEta[tg].Draw('E1 same')
     cv14.BuildLegend(0.4, 0.25, 0.4, 0.25)
@@ -697,7 +697,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_muonEta[tg], h_muonEta["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonEta[tg], h_muonEta["notrigger"])
@@ -733,7 +733,7 @@ def main(argms):
     tX1 = 0.6*(6)
     tY1 = 0.95*(h_jetPhi["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetPhi[tg].Draw('E1 same')
     cv16.BuildLegend(0.4, 0.2, 0.4, 0.2)
@@ -748,7 +748,7 @@ def main(argms):
     tX1 = 0.6*(6)
     tY1 = 0.97*(h_muonPhi["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonPhi[tg].Draw('E1 same')
     cv17.BuildLegend(0.4, 0.2, 0.4, 0.2)
@@ -762,7 +762,7 @@ def main(argms):
     h_jetMap["notrigger"].Draw('COLZ')  # CONT4Z
     # pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetMap[tg].Draw('COLZ')
                 # pdfCreator(argms, 1, triggerCanvas)
@@ -770,7 +770,7 @@ def main(argms):
     h_muonMap["notrigger"].Draw('COLZ')
     # pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonMap[tg].Draw('COLZ')  # E
                 # pdfCreator(argms, 1, triggerCanvas)

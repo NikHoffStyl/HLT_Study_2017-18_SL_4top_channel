@@ -334,6 +334,7 @@ class TriggerStudy(Module, unittest.TestCase):
                     'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': getattr(hltObj,
                                                                           'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'),
                     'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5': getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'),
+                    'Ele28_eta2p1_WPTight_Gsf_HT150': getattr(hltObj, 'Ele28_eta2p1_WPTight_Gsf_HT150'),
                     'IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
                     'Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
                     'Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
@@ -427,7 +428,7 @@ class TriggerStudy(Module, unittest.TestCase):
 
                     self.h_muonPt['no_trigger'].Fill(muon.pt)
                     for key in self.trigLst:
-                        if not (key == "Electron" or key == "ElPJets"):
+                        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                             for tg in self.trigLst[key]:
                                 if trigPath[tg]:
                                     self.h_muonPt[tg].Fill(muon.pt)
@@ -441,7 +442,7 @@ class TriggerStudy(Module, unittest.TestCase):
 
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
-                    if not (key == "Electron" or key == "ElPJets"):
+                    if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 jetHt[tg] += jet.pt
@@ -463,7 +464,7 @@ class TriggerStudy(Module, unittest.TestCase):
             self.h_eventsPrg.Fill(1)
             i = 0
             for key in self.trigLst:
-                if not (key == "Electron" or key == "ElPJets"):
+                if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
                             self.h_jetHt[tg].Fill(jetHt[tg])
@@ -482,7 +483,7 @@ class TriggerStudy(Module, unittest.TestCase):
         if nJetPass > 5 and nElPass == 0 and nMuonPass == 0 and nBtagPass > 0:
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
-                    if not (key == "Muon" or key == "MuPJets"):
+                    if not (key == "Muon" or key == "MuPJets" or key == "MuLone"):
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 jetHt2[tg] += jet.pt
@@ -496,7 +497,7 @@ class TriggerStudy(Module, unittest.TestCase):
             for ne, el in enumerate(electrons):
                 if ElPassIdx == ne:
                     for key in self.trigLst:
-                        if not (key == "Muon" or key == "MuPJets"):
+                        if not (key == "Muon" or key == "MuPJets" or key == "MuLone"):
                             for tg in self.trigLst[key]:
                                 if trigPath[tg]:
                                     self.h_elPt[tg].Fill(el.pt)
@@ -516,7 +517,7 @@ class TriggerStudy(Module, unittest.TestCase):
             self.h_jetMult2['no_trigger'].Fill(nJetPass)
             self.h_jetBMult2['no_trigger'].Fill(nBtagPass)
             for key in self.trigLst:
-                if not (key == "Muon" or key == "MuPJets"):
+                if not (key == "Muon" or key == "MuPJets" or key == "MuLone"):
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
                             self.h_jetHt2[tg].Fill(jetHt[tg])
