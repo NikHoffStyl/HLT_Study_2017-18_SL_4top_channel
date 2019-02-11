@@ -54,11 +54,11 @@ def main(argms):
     #             "t2": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
     trigList = {"MuPJets": ['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'],
-                "ElPJets": [],
+                # "ElPJets": [],
                 "MuLone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
-                "ElLone": ['Ele28_eta2p1_WPTight_Gsf_HT150'],
+                # "ElLone": ['Ele28_eta2p1_WPTight_Gsf_HT150'],
                 "Muon": ['IsoMu24'],
-                "Electron": ['Ele32_WPTight_Gsf', 'Ele35_WPTight_Gsf', 'Ele38_WPTight_Gsf'],
+                # "Electron": ['Ele32_WPTight_Gsf', 'Ele35_WPTight_Gsf', 'Ele38_WPTight_Gsf'],
                 "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
     h_jetHt = {}
