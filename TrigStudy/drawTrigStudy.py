@@ -691,7 +691,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
 
     cv15 = triggerCanvas.cd(1)
     i = 0
