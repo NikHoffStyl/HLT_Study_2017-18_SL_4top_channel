@@ -332,8 +332,8 @@ class TriggerStudy(Module):
                 jetHt2.update({tg: 0})
 
         nJetPass, nBtagPass = self.jetCriteria(jets)
-        nMuonPass, MuonPassIdx = self.jetCriteria(muons)
-        nElPass, ElPassIdx = self.jetCriteria(electrons)
+        nMuonPass, MuonPassIdx = self.muonCriteria(muons)
+        nElPass, ElPassIdx = self.electronCriteria(electrons)
 
         ##############################
         #    Muon Trigger checks     #
