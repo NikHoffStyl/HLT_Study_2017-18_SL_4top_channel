@@ -246,10 +246,10 @@ def main(argms):
     ltx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
     ltx.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
     ltx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
-                  % (selCriteria["minJetId"], selCriteria["minJetPt"], selCriteria["minObjEta"]))
+                  % (selCriteria["minJetId"], selCriteria["minJetPt"], selCriteria["maxObjEta"]))
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
-                  % (selCriteria["minObjEta"], selCriteria["maxPfRelIso"]))
+                  % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso"]))
     ltx.SetTextSize(0.015)
     pdfCreator(argms, 0, triggerCanvas)
 
