@@ -16,7 +16,7 @@ def process_arguments():
                         default="local", help="Sets redirector to query locations for LFN")
     parser.add_argument("-nw", "--noWriteFile", action="store_true",
                         help="Does not output a ROOT file, which contains the histograms.")
-    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
+    parser.add_argument("-e", "--eventLimit", type=int, default=1000000,
                         help="Set a limit to the number of events.")
     args = parser.parse_args()
     return args

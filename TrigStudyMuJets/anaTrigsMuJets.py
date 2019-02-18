@@ -295,34 +295,29 @@ class TriggerStudy(Module):
         genMetPt = getattr(genMet, "pt")
         genMetPhi = getattr(genMet, "pt")
 
-        trigPath = {'IsoMu24': getattr(hltObj, 'IsoMu24'), 'Ele32_WPTight_Gsf': getattr(hltObj, 'Ele32_WPTight_Gsf'),
-                    'Ele35_WPTight_Gsf': getattr(hltObj, 'Ele35_WPTight_Gsf'),
-                    'Ele38_WPTight_Gsf': getattr(hltObj, 'Ele38_WPTight_Gsf'),
-                    'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': getattr(hltObj,
-                                                                          'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'),
-                    'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5': getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'),
-                    'Ele28_eta2p1_WPTight_Gsf_HT150': getattr(hltObj, 'Ele28_eta2p1_WPTight_Gsf_HT150'),
-                    'IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
-                    'Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
-                    'Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
-                    'Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False}
+        trigPath = {}
+        for key in self.trigLst:
+            if key.find("_OR_") == -1:
+                for tg in self.trigLst[key]:
+                    trigPath.update({tg: getattr(hltObj, tg)})
+            else:
+                for tg in self.trigLst[key]:
+                    trigPath.update({tg: False})
+        #
+        # trigPath = {'IsoMu24': getattr(hltObj, 'IsoMu24'), 'Ele32_WPTight_Gsf': getattr(hltObj, 'Ele32_WPTight_Gsf'),
+        #             'Ele35_WPTight_Gsf': getattr(hltObj, 'Ele35_WPTight_Gsf'),
+        #             'Ele38_WPTight_Gsf': getattr(hltObj, 'Ele38_WPTight_Gsf'),
+        #             'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': getattr(hltObj,
+        #                                                                   'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'),
+        #             'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5': getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'),
+        #             'Ele28_eta2p1_WPTight_Gsf_HT150': getattr(hltObj, 'Ele28_eta2p1_WPTight_Gsf_HT150'),
+        #             'IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
+        #             'Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
+        #             'Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
+        #             'Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False}
 
-        if trigPath['IsoMu24'] is True:
+        if trigPath['IsoMu24'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
             trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        if trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-            trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['Ele32_WPTight_Gsf'] is True:
-        #     trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-        #     trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['Ele35_WPTight_Gsf'] is True:
-        #     trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-        #     trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['Ele38_WPTight_Gsf'] is True:
-        #     trigPath['Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-        #     trigPath['Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
 
         jetHt = {"notrig": 0}
         for key in self.trigLst:
@@ -356,7 +351,6 @@ class TriggerStudy(Module):
                     self.h_muonPt['no_trigger'].Fill(muon.pt)
                     for key in self.trigLst:
                         if not key.find("El") == -1: continue
-                        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 self.h_muonPt[tg].Fill(muon.pt)
@@ -371,7 +365,6 @@ class TriggerStudy(Module):
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
                     if not key.find("El") == -1: continue
-                    # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
                             jetHt[tg] += jet.pt
@@ -394,7 +387,6 @@ class TriggerStudy(Module):
             i = 0
             for key in self.trigLst:
                 if not key.find("El") == -1: continue
-                # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         self.h_jetHt[tg].Fill(jetHt[tg])

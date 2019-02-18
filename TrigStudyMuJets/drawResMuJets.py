@@ -78,7 +78,7 @@ def main(argms):
             trigList[key1] = val.split(", ")
 
     preSelCuts = {}
-    with open("preSelectionCuts.txt") as f:
+    with open("../preSelectionCuts.txt") as f:
         for line in f:
             if line.find(":") == -1: continue
             (key1, val) = line.split(": ")
@@ -94,7 +94,6 @@ def main(argms):
             c = len(val) - 1
             val = val[0:c]
             selCriteria[key1] = val
-
 
     h_jetHt = {}
     h_jetMult = {}

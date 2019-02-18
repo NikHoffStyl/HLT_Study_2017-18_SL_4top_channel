@@ -2,7 +2,7 @@ from __future__ import (division, print_function)
 # from importlib import import_module
 import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
-from trigStudy import TriggerStudy
+from anaTrigsElJets import TriggerStudy
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
@@ -124,9 +124,9 @@ def main(argms):
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList)],
-                        jsonInput=None,
+                        # jsonInput=None,
                         noOut=True,
-                        justcount=False,
+                        # justcount=False,
                         postfix=thePostFix,
                         histFileName=outputFile,
                         histDirName="plots",

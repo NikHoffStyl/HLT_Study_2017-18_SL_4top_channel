@@ -1,4 +1,5 @@
 minNJet: 5
+minNBJet: 0
 minJetPt: 30
 minJetId: 2
 jetCleanmask: Y
@@ -11,6 +12,9 @@ deepCSVtight:  0.8001
 deepCSVmedium:  0.4941
 deepCSVloose:  0.1522
 
+minNMuon: 0
 muonIdWP: tightId
 maxPfRelIso: 0.15
 maxObjEta: 2.4
+
+minNElectron: 0
