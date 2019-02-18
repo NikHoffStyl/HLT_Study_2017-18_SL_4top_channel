@@ -343,7 +343,7 @@ class TriggerStudy(Module):
         ##############################
         #    Muon Trigger checks     #
         ##############################
-        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 1 and nElPass == 0:
+        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0 and nElPass == 0:
             for nm, muon in enumerate(muons):
                 if MuonPassIdx == nm:
                     self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
