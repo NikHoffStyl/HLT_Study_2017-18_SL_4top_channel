@@ -305,9 +305,9 @@ def main(argms):
     h_jetMult["notrigger"].GetXaxis().SetTitle("Number of Jets")
     h_jetMult["notrigger"].Draw('E1')
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
-            for tg in trigList[key]:
-                h_jetMult[tg].Draw('E1 same')
+        if not key.find("El") == -1: continue
+        for tg in trigList[key]:
+            h_jetMult[tg].Draw('E1 same')
     cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
