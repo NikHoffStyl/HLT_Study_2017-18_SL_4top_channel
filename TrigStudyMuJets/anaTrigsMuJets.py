@@ -66,7 +66,10 @@ class TriggerStudy(Module):
                 (key, val) = line.split(": ")
                 c = len(val) - 1
                 val = val[0:c]
-                self.selCriteria[key] = val.split(", ")
+                if val.replace('.', '', 1).isdigit():
+                    self.selCriteria[key] = float(val)
+                else:
+                    self.selCriteria[key] = val
 
     def beginJob(self, histFile=None, histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -323,11 +326,13 @@ class TriggerStudy(Module):
 
         jetHt = {"notrig": 0}
         for key in self.trigLst:
+            if not key.find("El") == -1: continue
             for tg in self.trigLst[key]:
                 jetHt.update({tg: 0})
 
         jetHt2 = {"notrig": 0}
         for key in self.trigLst:
+            if not key.find("El") == -1: continue
             for tg in self.trigLst[key]:
                 jetHt2.update({tg: 0})
 

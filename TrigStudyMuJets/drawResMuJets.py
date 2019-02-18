@@ -72,10 +72,29 @@ def main(argms):
     with open("trigList.txt") as f:
         for line in f:
             if line.find(":") == -1: continue
-            (key, val) = line.split(": ")
+            (key1, val) = line.split(": ")
             c = len(val) - 1
             val = val[0:c]
-            trigList[key] = val.split(", ")
+            trigList[key1] = val.split(", ")
+
+    preSelCuts = {}
+    with open("preSelectionCuts.txt") as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            preSelCuts[key1] = val
+
+    selCriteria = {}
+    with open("selectionCriteria.txt") as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            selCriteria[key1] = val
+
 
     h_jetHt = {}
     h_jetMult = {}
@@ -222,14 +241,15 @@ def main(argms):
     triggerCanvas.cd(1)
     ltx = TLatex()
     ltx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
-    ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > 5}")
-    ltx.DrawLatex(0.16, 0.60, "#bullet Muons: #bf{number >0}")
-    ltx.DrawLatex(0.16, 0.55, "#bullet Electrons: #bf{number >0}")
+    ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preSelCuts["nJet"])
+    ltx.DrawLatex(0.16, 0.60, "#bullet Muons plus Electrons: #bf{number > %s }" % preSelCuts["nLepton"])
     ltx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
     ltx.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
-    ltx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > 2 , p_{T} > 30 and |#eta|<2.4 (for at least 6)}")
+    ltx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
+                  % (selCriteria["minJetId"], selCriteria["minJetPt"], selCriteria["minObjEta"]))
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
-    ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<2.4 and miniPFRelIso_all<0.15 (for at least 1)}")
+    ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
+                  % (selCriteria["minObjEta"], selCriteria["maxPfRelIso"]))
     ltx.SetTextSize(0.015)
     pdfCreator(argms, 0, triggerCanvas)
 
