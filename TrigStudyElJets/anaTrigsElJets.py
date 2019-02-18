@@ -1,7 +1,6 @@
 
 from __future__ import (division, print_function)
 
-import unittest
 import ROOT
 from ROOT import TLatex
 
@@ -11,16 +10,22 @@ from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collect
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 
-class HistogramMaker(Module, unittest.TestCase):
+class TriggerStudy(Module):
     """This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
     for different combinations of trigger paths."""
 
     def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None):
-        """ Initialise global variables """
+        """ Initialise global variables
+
+        Args:
+            writeHistFile (bool): True to write file, False otherwise
+            eventLimit (int): -1 for no event limit, value otherwise for limit
+            trigLst (dict): dictionary of trigger names
+        """
 
         self.eventCounter = 0
         self.comboCounter = 0
-        self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"]) + len(trigLst["stndlone"])
+        self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"])
         print("Number of Combined Triggers: %d" % self.numTriggers)
 
         self.h_jetHt = {}
@@ -69,6 +74,15 @@ class HistogramMaker(Module, unittest.TestCase):
         self.trigLst["ElPJets"].append('Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
         self.trigLst["ElPJets"].append('Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
         self.trigLst["ElPJets"].append('Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
+
+        self.selCriteria = {}
+        with open("selectionCriteria.txt") as f:
+            for line in f:
+                if line.find(":") == -1: continue
+                (key, val) = line.split(": ")
+                c = len(val) - 1
+                val = val[0:c]
+                self.selCriteria[key] = val.split(", ")
 
     def beginJob(self, histFile=None, histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
@@ -301,6 +315,81 @@ class HistogramMaker(Module, unittest.TestCase):
 
         self.addObject(self.h_eventsPrg)
 
+    def jetCriteria(self, jets):
+        """
+            Return the number of accepted jets and the number of accepted b-tagged jets
+
+            Args:
+                jets (Collection): Information of jets
+            Returns:
+                (tuple): tuple containing:
+                    nJetsPass (int): number of jets
+                    nBtagsPass (int): number of b-tagged jets
+        """
+        nJetsPass = 0
+        nBtagsPass = 0
+        for nj, jet in enumerate(jets):
+            # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
+            # - Minimum 30GeV Pt on the jets
+            # - Only look at jets within |eta| < 2.4
+            if jet.jetId < self.selCriteria["minJetId"] or jet.pt < self.selCriteria["minJetPt"]: continue
+            if abs(jet.eta) > self.selCriteria["maxObjEta"]: continue
+            if self.selCriteria["jetCleanmask"] == "Y" and jet.cleanmask is False: continue
+            nJetsPass += 1
+            # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
+            # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+            if jet.btagDeepFlavB > 0.7489:
+                nBtagsPass += 1
+        return nJetsPass, nBtagsPass
+
+    def muonCriteria(self, muons):
+        """
+                Return the number of accepted jets and the number of accepted b-tagged jets
+
+                Args:
+                    muons (Collection): Information of jets
+                Returns:
+                    tuple: tuple containing
+                        nMuonsPass (int): number of muons
+                        MuonsPassIdx (int): index of muon that passed
+        """
+        nMuonsPass = 0
+        MuonsPassIdx = 0
+        for nm, muon in enumerate(muons):
+            if (getattr(muon, "tightId") is False) or abs(muon.eta) > self.selCriteria["maxObjEta"]: continue
+            if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso"]: continue
+            # if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4:
+            #     continue
+            # if muon.dxy<0.2 or muon.dz<0.5 or muons.nStations > 1 or muon.nTrackerLayers > 5:
+            nMuonsPass += 1
+            MuonsPassIdx = nm
+
+        return nMuonsPass, MuonsPassIdx
+
+    def electronCriteria(self, electrons):
+        """
+            Return the number of accepted jets and the number of accepted b-tagged jets
+
+            Args:
+                electrons (Collection): Information of jets
+            Returns:
+                tuple: tuple containing
+                    nElsPass (int): number of muons
+                    ElsPassIdx (int): index of muon that passed
+        """
+        nElsPass = 0
+        ElsPassIdx = 0
+        for ne, el in enumerate(electrons):
+            if abs(el.eta) > self.selCriteria["maxObjEta"] or el.miniPFRelIso_all > self.selCriteria["maxPfRelIso"]:
+                continue
+            if 1.4442 < abs(el.eta) < 1.566: continue
+            #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1
+            #  or el.hoe <(0.046 + 1.16/(el.EtaSC)+ 0.0324*(rho)/(EtaSC))
+            nElsPass += 1
+            ElsPassIdx = ne
+
+        return  nElsPass, ElsPassIdx
+
     def analyze(self, event):
         """ process event, return True (go to next module) or False (fail, go to next event) """
 
@@ -326,14 +415,13 @@ class HistogramMaker(Module, unittest.TestCase):
         genMetPt = getattr(genMet, "pt")
         genMetPhi = getattr(genMet, "pt")
 
-        # nJets = len(jets)
-
         trigPath = {'IsoMu24': getattr(hltObj, 'IsoMu24'), 'Ele32_WPTight_Gsf': getattr(hltObj, 'Ele32_WPTight_Gsf'),
                     'Ele35_WPTight_Gsf': getattr(hltObj, 'Ele35_WPTight_Gsf'),
                     'Ele38_WPTight_Gsf': getattr(hltObj, 'Ele38_WPTight_Gsf'),
                     'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': getattr(hltObj,
                                                                           'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'),
                     'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5': getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'),
+                    'Ele28_eta2p1_WPTight_Gsf_HT150': getattr(hltObj, 'Ele28_eta2p1_WPTight_Gsf_HT150'),
                     'IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
                     'Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
                     'Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
@@ -366,56 +454,60 @@ class HistogramMaker(Module, unittest.TestCase):
             for tg in self.trigLst[key]:
                 jetHt2.update({tg: 0})
 
-        nJetPass = 0
-        nBtagPass = 0
-        nMuonPass = 0
-        nElPass = 0
+        # nJetPass = 0
+        # nBtagPass = 0
+        # nMuonPass = 0
+        # nElPass = 0
 
         # JetPassIdx = 0
         # BtagPassIdx = 0
-        MuonPassIdx = 0
-        ElPassIdx = 0
+        # MuonPassIdx = 0
+        # ElPassIdx = 0
 
         #############################
         #    Acceptance Criteria    #
         #############################
-        for nj, jet in enumerate(jets):
-            # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
-            # - Minimum 30GeV Pt on the jets
-            # - Only look at jets within |eta| < 2.4
-            if jet.jetId < 2 or jet.pt < 30 or abs(jet.eta) > 2.4 or jet.cleanmask is False:
-                continue
-            else:
-                nJetPass += 1
-                # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
-                # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-                if jet.btagDeepFlavB > 0.7489:
-                    nBtagPass += 1
+        # for nj, jet in enumerate(jets):
+        #     # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
+        #     # - Minimum 30GeV Pt on the jets
+        #     # - Only look at jets within |eta| < 2.4
+        #     if jet.jetId < 2 or jet.pt < 30 or abs(jet.eta) > 2.4 or jet.cleanmask is False:
+        #         continue
+        #     else:
+        #         nJetPass += 1
+        #         # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
+        #         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+        #         if jet.btagDeepFlavB > 0.7489:
+        #             nBtagPass += 1
 
-        for nm, muon in enumerate(muons):
-            if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.pfRelIso04_all > 0.15:
-                continue
-            # if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4:
-            #     continue
-            # if muon.dxy<0.2 or muon.dz<0.5 or muons.nStations > 1 or muon.nTrackerLayers > 5:
-            else:
-                nMuonPass += 1
-                MuonPassIdx = nm
+        # for nm, muon in enumerate(muons):
+        #     if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4 or muon.pfRelIso04_all > 0.15:
+        #         continue
+        #     # if (getattr(muon, "tightId") is False) or abs(muon.eta) > 2.4:
+        #     #     continue
+        #     # if muon.dxy<0.2 or muon.dz<0.5 or muons.nStations > 1 or muon.nTrackerLayers > 5:
+        #     else:
+        #         nMuonPass += 1
+        #         MuonPassIdx = nm
 
-        for ne, el in enumerate(electrons):
-            if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
-                continue
-            if 1.4442 < abs(el.eta) < 1.566:
-                continue
-            #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1 or el.hoe <(0.046 + 1.16/(el.deltaEtaSC)+ 0.0324*()/(deltaEtaSC))
-            else:
-                nElPass += 1
-                ElPassIdx = ne
+        # for ne, el in enumerate(electrons):
+        #     if abs(el.eta) > 2.4 or el.miniPFRelIso_all > 0.15:
+        #         continue
+        #     if 1.4442 < abs(el.eta) < 1.566:
+        #         continue
+        #     #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1 or el.hoe <(0.046 + 1.16/(el.EtaSC)+ 0.0324*(rho)/(EtaSC))
+        #     else:
+        #         nElPass += 1
+        #         ElPassIdx = ne
+
+        nJetPass, nBtagPass = self.jetCriteria(jets)
+        nMuonPass, MuonPassIdx = self.jetCriteria(muons)
+        nElPass, ElPassIdx = self.jetCriteria(electrons)
 
         ##############################
         #    Muon Trigger checks     #
         ##############################
-        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0 and nElPass == 0:
+        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 1 and nElPass == 0:
             for nm, muon in enumerate(muons):
                 if MuonPassIdx == nm:
                     self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
@@ -427,7 +519,7 @@ class HistogramMaker(Module, unittest.TestCase):
 
                     self.h_muonPt['no_trigger'].Fill(muon.pt)
                     for key in self.trigLst:
-                        if not (key == "Electron" or key == "ElPJets"):
+                        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                             for tg in self.trigLst[key]:
                                 if trigPath[tg]:
                                     self.h_muonPt[tg].Fill(muon.pt)
@@ -441,7 +533,7 @@ class HistogramMaker(Module, unittest.TestCase):
 
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
-                    if not (key == "Electron" or key == "ElPJets"):
+                    if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 jetHt[tg] += jet.pt
@@ -463,7 +555,7 @@ class HistogramMaker(Module, unittest.TestCase):
             self.h_eventsPrg.Fill(1)
             i = 0
             for key in self.trigLst:
-                if not (key == "Electron" or key == "ElPJets"):
+                if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
                             self.h_jetHt[tg].Fill(jetHt[tg])
@@ -479,10 +571,10 @@ class HistogramMaker(Module, unittest.TestCase):
         ###########################
         # Electron Trigger Checks #
         ###########################
-        if nJetPass > 5 and nElPass == 0 and nMuonPass == 0 and nBtagPass > 0:
+        if nJetPass > 5 and nElPass == 1 and nMuonPass == 0 and nBtagPass > 1:
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
-                    if not (key == "Muon" or key == "MuPJets"):
+                    if not (key == "Muon" or key == "MuPJets" or key == "MuLone"):
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 jetHt2[tg] += jet.pt
@@ -496,7 +588,7 @@ class HistogramMaker(Module, unittest.TestCase):
             for ne, el in enumerate(electrons):
                 if ElPassIdx == ne:
                     for key in self.trigLst:
-                        if not (key == "Muon" or key == "MuPJets"):
+                        if not (key == "Muon" or key == "MuPJets" or key == "MuLone"):
                             for tg in self.trigLst[key]:
                                 if trigPath[tg]:
                                     self.h_elPt[tg].Fill(el.pt)
@@ -516,7 +608,7 @@ class HistogramMaker(Module, unittest.TestCase):
             self.h_jetMult2['no_trigger'].Fill(nJetPass)
             self.h_jetBMult2['no_trigger'].Fill(nBtagPass)
             for key in self.trigLst:
-                if not (key == "Muon" or key == "MuPJets"):
+                if not (key == "Muon" or key == "MuPJets" or key == "MuLone"):
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
                             self.h_jetHt2[tg].Fill(jetHt[tg])

@@ -17,6 +17,13 @@ def process_arguments():
 
 
 def pdfCreator(parg, arg, canvas):
+    """
+        Create a pdf of histograms
+        Args:
+            parg (class): commandline arguments
+            arg (int): print argument
+            canvas (TCanvas): canvas which includes plot
+    """
     time_ = datetime.now()
     filename = time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf")
     if not os.path.exists(os.path.dirname(filename)):
@@ -37,13 +44,13 @@ def main(argms):
     """ This code merges histograms, only for specific root file """
 
     if argms.inputLFN == "ttjets":
-        inputFile = "OutFiles/Histograms/TT6jets2.root"
+        inputFile = "../OutFiles/Histograms/TT6jets2.root"
     elif argms.inputLFN == "tttt_weights":
-        inputFile = "OutFiles/Histograms/TTTTweights.root"
+        inputFile = "../OutFiles/Histograms/TTTTweights.root"
     elif argms.inputLFN == "wjets":
-        inputFile = "OutFiles/Histograms/Wjets.root"
+        inputFile = "../OutFiles/Histograms/Wjets.root"
     elif argms.inputLFN == "tttt":
-        inputFile = "OutFiles/Histograms/TTTT_6jets2.root"
+        inputFile = "../OutFiles/Histograms/TTTT_6jets2.root"
     else:
         return 0
     
@@ -54,11 +61,21 @@ def main(argms):
     #             "t2": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
     trigList = {"MuPJets": ['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'],
-                "ElPJets": [],
-                "stndlone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
+                # "ElPJets": [],
+                "MuLone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
+                # "ElLone": ['Ele28_eta2p1_WPTight_Gsf_HT150'],
                 "Muon": ['IsoMu24'],
-                "Electron": ['Ele32_WPTight_Gsf', 'Ele35_WPTight_Gsf', 'Ele38_WPTight_Gsf'],
+                # "Electron": ['Ele32_WPTight_Gsf', 'Ele35_WPTight_Gsf', 'Ele38_WPTight_Gsf'],
                 "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
+
+    trigList = {}
+    with open("trigList.txt") as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            trigList[key] = val.split(", ")
 
     h_jetHt = {}
     h_jetMult = {}
@@ -351,13 +368,13 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
                     xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
-                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                    h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1}GeV/c".format(xTitle, round(xBinWidth)))
                     h_TriggerRatio[tg].SetName(tg)
                     h_TriggerRatio[tg].SetTitle(tg)
                     h_TriggerRatio[tg].SetLineColor(j)
@@ -385,7 +402,7 @@ def main(argms):
     h_jetMult["notrigger"].GetXaxis().SetTitle("Number of Jets")
     h_jetMult["notrigger"].Draw('E1')
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetMult[tg].Draw('E1 same')
     cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -400,11 +417,11 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
-                    xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
+                    # xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
                     h_TriggerRatio[tg].SetTitle(";Number of Jets ;Trigger Efficiency per {0} GeV/c".format(xBinWidth))
                     h_TriggerRatio[tg].SetName(tg)
@@ -435,7 +452,7 @@ def main(argms):
     h_jetBMult["notrigger"].GetXaxis().SetRange(1, 10)
     h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetBMult[tg].Draw('E1 same')
     cv5.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -450,7 +467,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_jetBMult[tg], h_jetBMult["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetBMult[tg], h_jetBMult["notrigger"])
@@ -501,7 +518,7 @@ def main(argms):
     tX1 = 0.60*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonPt[tg].Draw('E1 same')
     cv7.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -530,7 +547,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_muonPt[tg], h_muonPt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonPt[tg], h_muonPt["notrigger"])
@@ -568,7 +585,7 @@ def main(argms):
     tX1 = 0.6 * (h_metPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_metPt[tg].Draw('E1 same')
     cv9.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -581,11 +598,11 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_metPt[tg], h_metPt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_metPt[tg], h_metPt["notrigger"])
-                    xTitle = h_metPt["notrigger"].GetXaxis().GetTitle()
+                    # xTitle = h_metPt["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_metPt["notrigger"].GetXaxis().GetBinWidth(1)
                     h_TriggerRatio[tg].SetTitle(";E^{Miss}_{T};Trigger Efficiency per %.2f GeV/c" % xBinWidth)
                     h_TriggerRatio[tg].SetName(tg)
@@ -619,7 +636,7 @@ def main(argms):
     tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_genMetPt[tg].Draw('E1 same')
     cv11.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -632,11 +649,11 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_genMetPt[tg], h_genMetPt["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_genMetPt[tg], h_genMetPt["notrigger"])
-                    xTitle = h_genMetPt["notrigger"].GetXaxis().GetTitle()
+                    # xTitle = h_genMetPt["notrigger"].GetXaxis().GetTitle()
                     xBinWidth = h_genMetPt["notrigger"].GetXaxis().GetBinWidth(1)
                     h_TriggerRatio[tg].SetTitle("; Gen E^{Miss}_{T};Trigger Efficiency per %.2f GeV/c" % xBinWidth)
                     h_TriggerRatio[tg].SetName(tg)
@@ -665,10 +682,10 @@ def main(argms):
     cv13 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
     h_jetEta["notrigger"].Draw('E1')
-    tX1 = 0.6*(6)
+    tX1 = 0.6*6
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetEta[tg].Draw('E1 same')
     cv13.BuildLegend(0.4, 0.25, 0.4, 0.25)
@@ -680,23 +697,23 @@ def main(argms):
     cv14 = triggerCanvas.cd(1)
     # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_muonEta["notrigger"].Draw('E1')
-    tX1 = 0.6*(6)
+    tX1 = 0.6*6
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonEta[tg].Draw('E1 same')
     cv14.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas)
 
     cv15 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 if ROOT.TEfficiency.CheckConsistency(h_muonEta[tg], h_muonEta["notrigger"]):
                     h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonEta[tg], h_muonEta["notrigger"])
@@ -729,10 +746,10 @@ def main(argms):
     cv16 = triggerCanvas.cd(1)
     # h_jetPhi["notrigger"].GetYaxis().SetTitleOffset(1.3)
     h_jetPhi["notrigger"].Draw('E1')
-    tX1 = 0.6*(6)
+    tX1 = 0.6*6
     tY1 = 0.95*(h_jetPhi["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetPhi[tg].Draw('E1 same')
     cv16.BuildLegend(0.4, 0.2, 0.4, 0.2)
@@ -744,10 +761,10 @@ def main(argms):
     cv17 = triggerCanvas.cd(1)
     # h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
     h_muonPhi["notrigger"].Draw('E1')
-    tX1 = 0.6*(6)
+    tX1 = 0.6*6
     tY1 = 0.97*(h_muonPhi["notrigger"].GetMaximum())
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonPhi[tg].Draw('E1 same')
     cv17.BuildLegend(0.4, 0.2, 0.4, 0.2)
@@ -761,7 +778,7 @@ def main(argms):
     h_jetMap["notrigger"].Draw('COLZ')  # CONT4Z
     # pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_jetMap[tg].Draw('COLZ')
                 # pdfCreator(argms, 1, triggerCanvas)
@@ -769,7 +786,7 @@ def main(argms):
     h_muonMap["notrigger"].Draw('COLZ')
     # pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
+        if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
             for tg in trigList[key]:
                 h_muonMap[tg].Draw('COLZ')  # E
                 # pdfCreator(argms, 1, triggerCanvas)

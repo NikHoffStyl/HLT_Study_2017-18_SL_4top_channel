@@ -1,0 +1,16 @@
+minNJet: 5
+minJetPt: 30
+minJetId: 2
+jetCleanmask: Y
+
+deepFlavBTagTight: 0.7489
+deepFlavBTagMedium:  0.3033
+deepFlavBTagLoose:  0.0521
+
+deepCSVtight:  0.8001
+deepCSVmedium:  0.4941
+deepCSVloose:  0.1522
+
+muonIdWP: tightId
+maxPfRelIso: 0.15
+maxObjEta: 2.4

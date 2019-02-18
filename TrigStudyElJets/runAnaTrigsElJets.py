@@ -99,21 +99,22 @@ def main(argms):
         # use just str(line) if problem appears
         files.append(redirector + str(line).replace('\n', ''))
 
-    # d = {}
-    # with open("TriggerList.txt") as f:
-    #     for line in f:
-    #         (key, val) = line.split()
-    #         d[int(key)] = val
-    #
-    # print(d)
+    trigList = {}
+    with open("trigList.txt") as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            trigList[key] = val.split(", ")
 
-    trigList = {"MuPJets": [],
-                "ElPJets": [],
-                "MuLone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
-                "ElLone": ['Ele28_eta2p1_WPTight_Gsf_HT150'],
-                "Muon": ['IsoMu24'],
-                "Electron": ["Ele32_WPTight_Gsf", "Ele35_WPTight_Gsf", "Ele38_WPTight_Gsf"],
-                "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
+    # trigList = {"MuPJets": [],
+    #             "ElPJets": [],
+    #             "MuLone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
+    #             "ElLone": ['Ele28_eta2p1_WPTight_Gsf_HT150'],
+    #             "Muon": ['IsoMu24'],
+    #             "Electron": ["Ele32_WPTight_Gsf", "Ele35_WPTight_Gsf", "Ele38_WPTight_Gsf"],
+    #             "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
 
     p99 = PostProcessor(".",
                         files,
