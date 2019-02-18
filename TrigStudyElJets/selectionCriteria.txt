@@ -1,5 +1,5 @@
 minNJet: 5
-minNBJet: 0
+minNBJet: 1
 minJetPt: 30
 minJetId: 2
 jetCleanmask: Y
@@ -17,4 +17,4 @@ muonIdWP: tightId
 maxPfRelIso: 0.15
 maxObjEta: 2.4
 
-minNElectron: 0
+minNElectron: 1
