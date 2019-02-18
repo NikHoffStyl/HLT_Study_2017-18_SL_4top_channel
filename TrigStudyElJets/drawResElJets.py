@@ -169,6 +169,7 @@ def main(argms):
 
     i = 2
     for key in trigList:
+        if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_jetHt[tg] = ROOT.gDirectory.Get("h_jetHt_" + tg)
             h_jetMult[tg] = ROOT.gDirectory.Get("h_jetMult_" + tg)
@@ -243,9 +244,9 @@ def main(argms):
     cv1 = triggerCanvas.cd(1)
     h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                h_jetHt[tg].Draw('E1 same')
+        if not key.find("Mu") == -1: continue
+        for tg in trigList[key]:
+            h_jetHt[tg].Draw('E1 same')
     cv1.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6*(h_jetHt["notrigger"].GetXaxis().GetXmax())
@@ -408,6 +409,7 @@ def main(argms):
     tX1 = 0.60*(h_elPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_elPt["notrigger"].GetMaximum())
     for key in trigList:
+        if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_elPt[tg].Draw('E1 same')
     cv7.BuildLegend(0.57, 0.54, 0.97, 0.74)
@@ -416,21 +418,21 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
 
-    cv71 = triggerCanvas.cd(1)
+    # cv71 = triggerCanvas.cd(1)
     # h_elPt["notrigger"].SetTitle("")
-    h_elPt["notrigger"].SetMinimum(0.)
+    # h_elPt["notrigger"].SetMinimum(0.)
     # h_elPt["notrigger"].SetMaximum(3500)
-    h_elPt["notrigger"].Draw('E1')
-    tX1 = 0.6*(h_elPt["notrigger"].GetXaxis().GetXmax())
-    tY1 = 0.95*(h_elPt["notrigger"].GetMaximum())
-    h_elPt["top_mother"].SetTitle("prompt muons")
-    h_elPt["top_mother"].Draw('E1 same')
-    h_elPt["bottom_mother"].Draw('E1 same')
-    cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
+    # h_elPt["notrigger"].Draw('E1')
+    # tX1 = 0.6*(h_elPt["notrigger"].GetXaxis().GetXmax())
+    # tY1 = 0.95*(h_elPt["notrigger"].GetMaximum())
+    # h_elPt["top_mother"].SetTitle("prompt muons")
+    # h_elPt["top_mother"].Draw('E1 same')
+    # h_elPt["bottom_mother"].Draw('E1 same')
+    # cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # pdfCreator(argms, 1, triggerCanvas)
 
     cv8 = triggerCanvas.cd(1)
     i = 0
