@@ -143,7 +143,7 @@ class TriggerStudy(Module):
         self.addObject(self.h_genMetPhi['no_trigger'])
 
         for key in self.trigLst:
-            if key.find("El") == 1: continue
+            if not key.find("El") == -1: continue
             for trgPath in self.trigLst[key]:
                 self.h_jetHt[trgPath] = ROOT.TH1D('h_jetHt_' + trgPath, trgPath + ';H_{T} (GeV/c);Number of Events'
                                                                                   ' per 10 GeV/c', 300, 1, 3000)
@@ -350,7 +350,7 @@ class TriggerStudy(Module):
 
                     self.h_muonPt['no_trigger'].Fill(muon.pt)
                     for key in self.trigLst:
-                        if key.find("El") == 1: continue
+                        if not key.find("El") == -1: continue
                         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
@@ -365,7 +365,7 @@ class TriggerStudy(Module):
 
             for nj, jet in enumerate(jets):
                 for key in self.trigLst:
-                    if key.find("El") == 1: continue
+                    if not key.find("El") == -1: continue
                     # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
@@ -388,7 +388,7 @@ class TriggerStudy(Module):
             self.h_eventsPrg.Fill(1)
             i = 0
             for key in self.trigLst:
-                if key.find("El") == 1: continue
+                if not key.find("El") == -1: continue
                 # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:

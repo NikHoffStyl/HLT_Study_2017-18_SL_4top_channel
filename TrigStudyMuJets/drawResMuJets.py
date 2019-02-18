@@ -176,7 +176,7 @@ def main(argms):
 
     i = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h_jetHt[tg] = ROOT.gDirectory.Get("h_jetHt_" + tg)
             h_jetMult[tg] = ROOT.gDirectory.Get("h_jetMult_" + tg)
@@ -249,7 +249,7 @@ def main(argms):
     cv1 = triggerCanvas.cd(1)
     h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets"):
         for tg in trigList[key]:
             h_jetHt[tg].Draw('E1 same')
@@ -265,7 +265,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
@@ -315,7 +315,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
@@ -351,7 +351,7 @@ def main(argms):
     h_jetBMult["notrigger"].GetXaxis().SetRange(1, 10)
     h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetBMult[tg].Draw('E1 same')
@@ -367,7 +367,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetBMult[tg], h_jetBMult["notrigger"]):
@@ -419,7 +419,7 @@ def main(argms):
     tX1 = 0.60*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonPt[tg].Draw('E1 same')
@@ -449,7 +449,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_muonPt[tg], h_muonPt["notrigger"]):
@@ -488,7 +488,7 @@ def main(argms):
     tX1 = 0.6 * (h_metPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_metPt[tg].Draw('E1 same')
@@ -502,7 +502,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_metPt[tg], h_metPt["notrigger"]):
@@ -541,7 +541,7 @@ def main(argms):
     tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_genMetPt[tg].Draw('E1 same')
@@ -555,7 +555,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_genMetPt[tg], h_genMetPt["notrigger"]):
@@ -592,7 +592,7 @@ def main(argms):
     tX1 = 0.6*6
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetEta[tg].Draw('E1 same')
@@ -608,7 +608,7 @@ def main(argms):
     tX1 = 0.6*6
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonEta[tg].Draw('E1 same')
@@ -622,7 +622,7 @@ def main(argms):
     i = 0
     j = 2
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_muonEta[tg], h_muonEta["notrigger"]):
@@ -659,7 +659,7 @@ def main(argms):
     tX1 = 0.6*6
     tY1 = 0.95*(h_jetPhi["notrigger"].GetMaximum())
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetPhi[tg].Draw('E1 same')
@@ -675,7 +675,7 @@ def main(argms):
     tX1 = 0.6*6
     tY1 = 0.97*(h_muonPhi["notrigger"].GetMaximum())
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonPhi[tg].Draw('E1 same')
@@ -690,7 +690,7 @@ def main(argms):
     h_jetMap["notrigger"].Draw('COLZ')  # CONT4Z
     # pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetMap[tg].Draw('COLZ')
@@ -699,7 +699,7 @@ def main(argms):
     h_muonMap["notrigger"].Draw('COLZ')
     # pdfCreator(argms, 1, triggerCanvas)
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonMap[tg].Draw('COLZ')  # E
@@ -718,7 +718,7 @@ def main(argms):
     ltx.DrawLatex(1.5, tY1, "Post-selection")
     i = 0
     for key in trigList:
-        if key.find("El") == 1: continue
+        if not key.find("El") == -1: continue
         # if not (key == "Electron" or key == "ElPJets"):
         for tg in trigList[key]:
             ltx.DrawLatex((5.5 - i), tY1, tg)
