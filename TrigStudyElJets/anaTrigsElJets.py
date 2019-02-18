@@ -53,13 +53,18 @@ class TriggerStudy(Module):
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
         self.trigLst = trigLst
         self.selCriteria = {}
+
+        self.selCriteria = {}
         with open("selectionCriteria.txt") as f:
             for line in f:
                 if line.find(":") == -1: continue
                 (key, val) = line.split(": ")
                 c = len(val) - 1
                 val = val[0:c]
-                self.selCriteria[key] = val.split(", ")
+                if val.replace('.', '', 1).isdigit():
+                    self.selCriteria[key] = float(val)
+                else:
+                    self.selCriteria[key] = val
 
     def beginJob(self, histFile=None, histDirName=None):
         """ Initialise histograms to be used and saved in output file. """
