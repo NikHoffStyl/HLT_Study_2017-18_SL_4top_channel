@@ -261,7 +261,7 @@ class TriggerStudy(Module):
         for ne, el in enumerate(electrons):
             if abs(el.eta) > self.selCriteria["maxObjEta"]: continue
             if el.miniPFRelIso_all > self.selCriteria["maxMiniPfRelIso"]: continue
-            if self.selCriteria["mva_WP"] == 90 and el.mvaFall17IsoWP90 is False: continue
+            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17Iso_WP90 is False: continue
             if 1.4442 < abs(el.eta) < 1.566: continue
 
             #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1
@@ -335,7 +335,7 @@ class TriggerStudy(Module):
                 and nMuonPass == self.selCriteria["minNMuon"] and nBtagPass > self.selCriteria["minNBJet"]:
             for ne, electron in enumerate(electrons):
                 if ElPassIdx == ne:
-                    self.h_elMiniPfRelIso_all.Fill(electron.pfRelIso04_all)
+                    self.h_elMiniPfRelIso_all.Fill(electron.miniPFRelIso_all)
                     self.h_elGenPartFlav.Fill(electron.genPartFlav)
                     self.h_elGenPartIdx.Fill(electron.genPartIdx)
                     self.h_elEta['no_trigger'].Fill(electron.eta)
@@ -344,7 +344,7 @@ class TriggerStudy(Module):
 
                     self.h_elPt['no_trigger'].Fill(electron.pt)
                     for key in self.trigLst:
-                        if not key.find("Mul") == -1: continue
+                        if not key.find("Mu") == -1: continue
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 self.h_elPt[tg].Fill(electron.pt)

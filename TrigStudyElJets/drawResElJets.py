@@ -235,8 +235,8 @@ def main(argms):
     ltx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
                   % (selCriteria["minJetId"], selCriteria["minJetPt"], selCriteria["maxObjEta"]))
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
-    ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
-                  % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso"]))
+    ltx.DrawLatex(0.16, 0.25, "#bullet Electrons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
+                  % (selCriteria["maxObjEta"], selCriteria["maxMiniPfRelIso"]))
     ltx.SetTextSize(0.015)
     pdfCreator(argms, 0, triggerCanvas)
 
