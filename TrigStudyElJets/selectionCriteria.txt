@@ -14,7 +14,9 @@ deepCSVloose:  0.1522
 
 minNMuon: 0
 muonIdWP: tightId
-maxPfRelIso: 0.15
+maxPfRelIso04: 0.15
 maxObjEta: 2.4
 
 minNElectron: 1
+maxMiniPfRelIso: 0.10
+mvaWP: 90

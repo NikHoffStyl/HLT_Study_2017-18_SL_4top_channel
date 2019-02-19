@@ -132,6 +132,18 @@ def main(argms):
     if not (h_jetMap["notrigger"]):
         print("No trigger jet map histogram is empty")
 
+    h_elMiniPfRelIso_all = ROOT.gDirectory.Get("h_elMiniPfRelIso_all")
+    h_elGenPartFlav = ROOT.gDirectory.Get("h_elGenPartFlav")
+    h_elGenPartIdx = ROOT.gDirectory.Get("h_elGenPartIdx")
+    h_elPt["prompt"] = ROOT.gDirectory.Get("h_elPt_prompt")
+    h_elPt["prompt"].SetLineColor(4)
+    if not (h_elPt["prompt"]):
+        print("Prompt Electron Pt histogram is empty")
+    h_elPt["non-prompt"] = ROOT.gDirectory.Get("h_elPt_non-prompt")
+    h_elPt["non-prompt"].SetLineColor(2)
+    if not (h_elPt["non-prompt"]):
+        print("Bottom mother muon Pt histogram is empty")
+
     h_elPt["notrigger"] = ROOT.gDirectory.Get("h_elPt_notrigger")
     h_elPt["notrigger"].SetLineColor(1)
     if not (h_elPt["notrigger"]):
@@ -388,17 +400,17 @@ def main(argms):
     pdfCreator(argms, 1, triggerCanvas)
 
     # # - Muon test Plots-------------------------------
-    # triggerCanvas.cd(1)
-    # h_muonGenPartFlav.Draw()
-    # pdfCreator(argms, 1, triggerCanvas)
-    #
-    # triggerCanvas.cd(1)
-    # h_muonGenPartIdx.Draw()
-    # pdfCreator(argms, 1, triggerCanvas)
-    #
-    # triggerCanvas.cd(1)
-    # h_muonPfRelIso04_all.Draw()
-    # pdfCreator(argms, 1, triggerCanvas)
+    triggerCanvas.cd(1)
+    h_elGenPartFlav.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
+
+    triggerCanvas.cd(1)
+    h_elGenPartIdx.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
+
+    triggerCanvas.cd(1)
+    h_elMiniPfRelIso_all.Draw()
+    pdfCreator(argms, 1, triggerCanvas)
 
     # - Muon pT plots ---------------------------------
     cv7 = triggerCanvas.cd(1)
@@ -418,21 +430,21 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     pdfCreator(argms, 1, triggerCanvas)
 
-    # cv71 = triggerCanvas.cd(1)
-    # h_elPt["notrigger"].SetTitle("")
-    # h_elPt["notrigger"].SetMinimum(0.)
-    # h_elPt["notrigger"].SetMaximum(3500)
-    # h_elPt["notrigger"].Draw('E1')
-    # tX1 = 0.6*(h_elPt["notrigger"].GetXaxis().GetXmax())
-    # tY1 = 0.95*(h_elPt["notrigger"].GetMaximum())
-    # h_elPt["top_mother"].SetTitle("prompt muons")
-    # h_elPt["top_mother"].Draw('E1 same')
-    # h_elPt["bottom_mother"].Draw('E1 same')
-    # cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
-    # ltx.SetTextSize(0.03)
-    # ltx.DrawLatex(tX1, tY1, legString)
-    # ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas)
+    cv71 = triggerCanvas.cd(1)
+    h_elPt["notrigger"].SetTitle("")
+    h_elPt["notrigger"].SetMinimum(0.)
+    h_elPt["notrigger"].SetMaximum(3500)
+    h_elPt["notrigger"].Draw('E1')
+    tX1 = 0.6*(h_elPt["notrigger"].GetXaxis().GetXmax())
+    tY1 = 0.95*(h_elPt["notrigger"].GetMaximum())
+    h_elPt["prompt"].SetTitle("prompt muons")
+    h_elPt["prompt"].Draw('E1 same')
+    h_elPt["non-prompt"].Draw('E1 same')
+    cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    pdfCreator(argms, 1, triggerCanvas)
 
     cv8 = triggerCanvas.cd(1)
     i = 0
@@ -695,10 +707,10 @@ def main(argms):
     ltx.DrawLatex(1.5, tY1, "Post-selection")
     i = 0
     for key in trigList:
-        if not (key == "Electron" or key == "ElPJets"):
-            for tg in trigList[key]:
-                ltx.DrawLatex((5.5 - i), tY1, tg)
-                i += 1
+        if not key.find("Mu") == -1: continue
+        for tg in trigList[key]:
+            ltx.DrawLatex((9.5 - i), tY1, tg)
+            i += 1
 
     # h.GetXAxis().SetBinLabel(binnumber,string)
     pdfCreator(argms, 2, triggerCanvas)

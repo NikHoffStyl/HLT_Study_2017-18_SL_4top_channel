@@ -325,11 +325,11 @@ class TriggerStudy(Module):
             for tg in self.trigLst[key]:
                 jetHt.update({tg: 0})
 
-        jetHt2 = {"notrig": 0}
-        for key in self.trigLst:
-            if not key.find("El") == -1: continue
-            for tg in self.trigLst[key]:
-                jetHt2.update({tg: 0})
+        # jetHt2 = {"notrig": 0}
+        # for key in self.trigLst:
+        #     if not key.find("El") == -1: continue
+        #     for tg in self.trigLst[key]:
+        #         jetHt2.update({tg: 0})
 
         nJetPass, nBtagPass = self.jetCriteria(jets)
         nMuonPass, MuonPassIdx = self.muonCriteria(muons)
