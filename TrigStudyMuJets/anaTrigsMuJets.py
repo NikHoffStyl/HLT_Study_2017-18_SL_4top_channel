@@ -52,7 +52,7 @@ class TriggerStudy(Module):
         self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
                                                               'Number of events', 182, -2, 180)
         self.h_muonRelIso04_all = ROOT.TH1D('h_muonRelIso04_all', 'muonRelIso04_all;muonRelIso04_all;Number of Events',
-                                            110, 0, 55)
+                                            100, -1, 2)
 
         self.writeHistFile = writeHistFile
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
@@ -100,11 +100,11 @@ class TriggerStudy(Module):
         ##################
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events'
                                                                       ' per 1 GeV/c', 300, 0, 300)
-        self.h_muonPt['top_mother'] = ROOT.TH1D('h_muonPt_top_mother', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                                       'Events per 1 GeV/c', 300, 0, 300)
-        self.h_muonPt['bottom_mother'] = ROOT.TH1D('h_muonPt_bottom_mother',
-                                                   'bottom parent ;Muon P_{T} (GeV/c);Number of Events '
-                                                   'per 1 GeV/c', 300, 0, 300)
+        self.h_muonPt['prompt'] = ROOT.TH1D('h_muonPt_prompt', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                               'Events per 1 GeV/c', 300, 0, 300)
+        self.h_muonPt['non-prompt'] = ROOT.TH1D('h_muonPt_non-prompt',
+                                                'non-prompt muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                'per 1 GeV/c', 300, 0, 300)
         self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
@@ -131,8 +131,8 @@ class TriggerStudy(Module):
         self.addObject(self.h_jetMap['no_trigger'])
 
         self.addObject(self.h_muonPt['no_trigger'])
-        self.addObject(self.h_muonPt['top_mother'])
-        self.addObject(self.h_muonPt['bottom_mother'])
+        self.addObject(self.h_muonPt['prompt'])
+        self.addObject(self.h_muonPt['non-prompt'])
         self.addObject(self.h_muonGenPartFlav)
         self.addObject(self.h_muonGenPartIdx)
         self.addObject(self.h_muonRelIso04_all)
@@ -163,7 +163,7 @@ class TriggerStudy(Module):
                 self.h_jetPhi[trgPath] = ROOT.TH1D('h_jetPhi_' + trgPath, trgPath + ';Jet #phi;Number of Events per'
                                                                                     ' #delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_jetPhi[trgPath])
-                self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath,  trgPath + ';Jet #eta;Jet #phi',
+                self.h_jetMap[trgPath] = ROOT.TH2F('h_jetMap_' + trgPath, trgPath + ';Jet #eta;Jet #phi',
                                                    150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_jetMap[trgPath])
 
@@ -176,7 +176,7 @@ class TriggerStudy(Module):
                 self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Number of Events per'
                                                                                       ' #delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_muonPhi[trgPath])
-                self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath,  trgPath + ';Muon #eta;Muon #phi',
+                self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath, trgPath + ';Muon #eta;Muon #phi',
                                                     150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
                 self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
@@ -210,6 +210,7 @@ class TriggerStudy(Module):
         """
         nJetsPass = 0
         nBtagsPass = 0
+        JetPassIdx = []
         for nj, jet in enumerate(jets):
             # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
             # - Minimum 30GeV Pt on the jets
@@ -218,11 +219,12 @@ class TriggerStudy(Module):
             if abs(jet.eta) > self.selCriteria["maxObjEta"]: continue
             if self.selCriteria["jetCleanmask"] == "Y" and jet.cleanmask is False: continue
             nJetsPass += 1
+            JetPassIdx.append(nj)
             # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
             # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             if jet.btagDeepFlavB > 0.7489:
                 nBtagsPass += 1
-        return nJetsPass, nBtagsPass
+        return nJetsPass, JetPassIdx, nBtagsPass
 
     def muonCriteria(self, muons):
         """
@@ -331,7 +333,7 @@ class TriggerStudy(Module):
         #     for tg in self.trigLst[key]:
         #         jetHt2.update({tg: 0})
 
-        nJetPass, nBtagPass = self.jetCriteria(jets)
+        nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
         nMuonPass, MuonPassIdx = self.muonCriteria(muons)
         nElPass, ElPassIdx = self.electronCriteria(electrons)
 
@@ -347,7 +349,6 @@ class TriggerStudy(Module):
                     self.h_muonEta['no_trigger'].Fill(muon.eta)
                     self.h_muonPhi['no_trigger'].Fill(muon.phi)
                     self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
-
                     self.h_muonPt['no_trigger'].Fill(muon.pt)
                     for key in self.trigLst:
                         if not key.find("El") == -1: continue
@@ -358,11 +359,12 @@ class TriggerStudy(Module):
                                 self.h_muonPhi[tg].Fill(muon.phi)
                                 self.h_muonMap[tg].Fill(muon.eta, muon.phi)
                     if muon.genPartFlav == 1:
-                        self.h_muonPt['top_mother'].Fill(muon.pt)
+                        self.h_muonPt['prompt'].Fill(muon.pt)
                     if muon.genPartFlav == 5:
-                        self.h_muonPt['bottom_mother'].Fill(muon.pt)
+                        self.h_muonPt['non-prompt'].Fill(muon.pt)
 
             for nj, jet in enumerate(jets):
+                if nj not in JetPassIdx: continue
                 for key in self.trigLst:
                     if not key.find("El") == -1: continue
                     for tg in self.trigLst[key]:
@@ -377,13 +379,16 @@ class TriggerStudy(Module):
                 self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
             self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
+            self.h_jetMult['no_trigger'].Fill(nJetPass)
+            self.h_jetBMult['no_trigger'].Fill(nBtagPass)
+
             self.h_metPt['no_trigger'].Fill(metPt)
             self.h_metPhi['no_trigger'].Fill(metPhi)
             self.h_genMetPt['no_trigger'].Fill(genMetPt)
             self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
-            self.h_jetMult['no_trigger'].Fill(nJetPass)
-            self.h_jetBMult['no_trigger'].Fill(nBtagPass)
+
             self.h_eventsPrg.Fill(1)
+
             i = 0
             for key in self.trigLst:
                 if not key.find("El") == -1: continue
@@ -398,5 +403,5 @@ class TriggerStudy(Module):
                         self.h_jetBMult[tg].Fill(nBtagPass)
                         self.h_eventsPrg.Fill(2 + i)
                         i += 1
-        
+
         return True

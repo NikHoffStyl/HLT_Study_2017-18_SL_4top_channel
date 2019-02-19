@@ -1,4 +1,3 @@
-
 from __future__ import (division, print_function)
 
 import ROOT
@@ -78,7 +77,9 @@ class TriggerStudy(Module):
         # - Run beginJob() of Module
         Module.beginJob(self, histFile, histDirName)  # pass histFile and histDirName first passed to the PostProcessor
 
-        # - Defining histograms to be saved to file
+        ##################
+        # JET HISTOGRAMS #
+        ##################
         self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger',
                                                'no trigger ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1, 3000)
         self.h_jetMult['no_trigger'] = ROOT.TH1D('h_jetMult_notrigger',
@@ -87,8 +88,6 @@ class TriggerStudy(Module):
         self.h_jetBMult['no_trigger'] = ROOT.TH1D('h_jetBMult_notrigger',
                                                   'no trigger ;B tag Multiplicity ;Number of Events per Number of Jets',
                                                   20, 0, 20)
-
-        # Histograms used for unit testing
         self.h_jetEta['no_trigger'] = ROOT.TH1D('h_jetEta_notrigger', 'no trigger ;Jet #eta;Number of Events per '
                                                                       '#delta#eta = 0.046', 300, -6, 8)
         self.h_jetPhi['no_trigger'] = ROOT.TH1D('h_jetPhi_notrigger', 'no trigger ;Jet #phi;Number of Events per '
@@ -101,10 +100,10 @@ class TriggerStudy(Module):
         #######################
         self.h_elPt['no_trigger'] = ROOT.TH1D('h_elPt_notrigger', 'no trigger ;Electron P_{T} (GeV/c);Number of Events '
                                                                   'per 1 GeV/c', 300, 0, 300)
-        self.h_elPt['prompt'] = ROOT.TH1D('h_elPt_prompt', 'prompt muons ;Electron P_{T} (GeV/c);Number of '
+        self.h_elPt['prompt'] = ROOT.TH1D('h_elPt_prompt', 'prompt electrons ;Electron P_{T} (GeV/c);Number of '
                                                            'Events per 1 GeV/c', 300, 0, 300)
         self.h_elPt['non-prompt'] = ROOT.TH1D('h_elPt_non-prompt',
-                                              'bottom parent ;Electron P_{T} (GeV/c);Number of Events '
+                                              'non-prompt electrons ;Electron P_{T} (GeV/c);Number of Events '
                                               'per 1 GeV/c', 300, 0, 300)
         self.h_elEta['no_trigger'] = ROOT.TH1D('h_elEta_notrigger', 'no trigger ;Electron #eta;Number of Events per '
                                                                     '#delta#eta = 0.046', 300, -6, 8)
@@ -123,6 +122,7 @@ class TriggerStudy(Module):
                                                                           'Events per 1GeV/c', 300, 0, 300)
         self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
                                                                             'per #delta#phi = 0.046', 300, -6, 8)
+
         self.addObject(self.h_jetHt['no_trigger'])
         self.addObject(self.h_jetMult['no_trigger'])
         self.addObject(self.h_jetBMult['no_trigger'])
@@ -139,6 +139,7 @@ class TriggerStudy(Module):
         self.addObject(self.h_elEta['no_trigger'])
         self.addObject(self.h_elPhi['no_trigger'])
         self.addObject(self.h_elMap['no_trigger'])
+
         self.addObject(self.h_metPt['no_trigger'])
         self.addObject(self.h_metPhi['no_trigger'])
         self.addObject(self.h_genMetPt['no_trigger'])
@@ -206,10 +207,12 @@ class TriggerStudy(Module):
             Returns:
                 (tuple): tuple containing:
                     nJetsPass (int): number of jets
+                    JetPassIdx (list): list of jet indices that passed cuts
                     nBtagsPass (int): number of b-tagged jets
         """
         nJetsPass = 0
         nBtagsPass = 0
+        JetsPassIdx = []
         for nj, jet in enumerate(jets):
             # - Check jet passes 2017 Tight Jet ID https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
             # - Minimum 30GeV Pt on the jets
@@ -218,11 +221,12 @@ class TriggerStudy(Module):
             if abs(jet.eta) > self.selCriteria["maxObjEta"]: continue
             if self.selCriteria["jetCleanmask"] == "Y" and jet.cleanmask is False: continue
             nJetsPass += 1
+            JetsPassIdx.append(nj)
             # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
             # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
             if jet.btagDeepFlavB > 0.7489:
                 nBtagsPass += 1
-        return nJetsPass, nBtagsPass
+        return nJetsPass, JetsPassIdx, nBtagsPass
 
     def muonCriteria(self, muons):
         """
@@ -318,13 +322,7 @@ class TriggerStudy(Module):
             for tg in self.trigLst[key]:
                 jetHt.update({tg: 0})
 
-        # jetHt2 = {"notrig": 0}
-        # for key in self.trigLst:
-        #     if not key.find("Mu") == -1: continue
-        #     for tg in self.trigLst[key]:
-        #         jetHt2.update({tg: 0})
-
-        nJetPass, nBtagPass = self.jetCriteria(jets)
+        nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
         nMuonPass, MuonPassIdx = self.muonCriteria(muons)
         nElPass, ElPassIdx = self.electronCriteria(electrons)
 
@@ -341,7 +339,6 @@ class TriggerStudy(Module):
                     self.h_elEta['no_trigger'].Fill(electron.eta)
                     self.h_elPhi['no_trigger'].Fill(electron.phi)
                     self.h_elMap['no_trigger'].Fill(electron.eta, electron.phi)
-
                     self.h_elPt['no_trigger'].Fill(electron.pt)
                     for key in self.trigLst:
                         if not key.find("Mu") == -1: continue
@@ -357,6 +354,7 @@ class TriggerStudy(Module):
                         self.h_elPt['non-prompt'].Fill(electron.pt)
 
             for nj, jet in enumerate(jets):
+                if nj not in JetPassIdx: continue
                 for key in self.trigLst:
                     if not key.find("Mu") == -1: continue
                     for tg in self.trigLst[key]:
@@ -392,54 +390,5 @@ class TriggerStudy(Module):
                         self.h_jetBMult[tg].Fill(nBtagPass)
                         self.h_eventsPrg.Fill(2 + i)
                         i += 1
-
-            # for nj, jet in enumerate(jets):
-            #     for key in self.trigLst:
-            #         if not key.find("Mu") == -1: continue
-            #         for tg in self.trigLst[key]:
-            #             if trigPath[tg]:
-            #                 jetHt2[tg] += jet.pt
-            #                 self.h_jetEta[tg].Fill(jet.eta)
-            #                 self.h_jetPhi[tg].Fill(jet.phi)
-            #                 self.h_jetMap[tg].Fill(jet.eta, jet.phi)
-            #     jetHt2["notrig"] += jet.pt
-            #     self.h_jetEta['no_trigger'].Fill(jet.eta)
-            #     self.h_jetPhi['no_trigger'].Fill(jet.phi)
-            #     self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
-            # for ne, el in enumerate(electrons):
-            #     if ElPassIdx == ne:
-            #         for key in self.trigLst:
-            #             if not key.find("Mu") == -1: continue
-            #             for tg in self.trigLst[key]:
-            #                 if trigPath[tg]:
-            #                     self.h_elPt[tg].Fill(el.pt)
-            #                     self.h_elEta[tg].Fill(el.eta)
-            #                     self.h_elPhi[tg].Fill(el.phi)
-            #                     self.h_elMap[tg].Fill(el.eta, el.phi)
-            #         self.h_elPt['no_trigger'].Fill(el.pt)
-            #         self.h_elEta['no_trigger'].Fill(el.eta)
-            #         self.h_elPhi['no_trigger'].Fill(el.phi)
-            #         self.h_elMap['no_trigger'].Fill(el.eta, el.phi)
-            #
-            # self.h_jetHt['no_trigger'].Fill(jetHt2["notrig"])
-            # self.h_metPt['no_trigger'].Fill(metPt)
-            # self.h_metPhi['no_trigger'].Fill(metPhi)
-            # self.h_genMetPt['no_trigger'].Fill(genMetPt)
-            # self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
-            # self.h_jetMult['no_trigger'].Fill(nJetPass)
-            # self.h_jetBMult['no_trigger'].Fill(nBtagPass)
-            # for key in self.trigLst:
-            #     if not key.find("Mu") == -1: continue
-            #     for tg in self.trigLst[key]:
-            #         if trigPath[tg]:
-            #             self.h_jetHt[tg].Fill(jetHt[tg])
-            #             self.h_metPt[tg].Fill(metPt)
-            #             self.h_metPhi[tg].Fill(metPhi)
-            #             self.h_genMetPt[tg].Fill(genMetPt)
-            #             self.h_genMetPhi[tg].Fill(genMetPhi)
-            #             self.h_jetMult[tg].Fill(nJetPass)
-            #             self.h_jetBMult[tg].Fill(nBtagPass)
-            #             self.h_eventsPrg.Fill(2 + i)
-            #             i += 1
         
         return True
