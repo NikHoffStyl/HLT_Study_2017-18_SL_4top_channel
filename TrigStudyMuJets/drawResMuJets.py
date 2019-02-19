@@ -139,13 +139,13 @@ def main(argms):
     h_muonPt["notrigger"].SetLineColor(1)
     if not (h_muonPt["notrigger"]):
         print("No trigger muon Pt histogram is empty")
-    h_muonPt["top_mother"] = ROOT.gDirectory.Get("h_muonPt_top_mother")
-    h_muonPt["top_mother"].SetLineColor(4)
-    if not (h_muonPt["top_mother"]):
+    h_muonPt["prompt"] = ROOT.gDirectory.Get("h_muonPt_prompt")
+    h_muonPt["prompt"].SetLineColor(4)
+    if not (h_muonPt["prompt"]):
         print("top Mother muon Pt histogram is empty")
-    h_muonPt["bottom_mother"] = ROOT.gDirectory.Get("h_muonPt_bottom_mother")
-    h_muonPt["bottom_mother"].SetLineColor(2)
-    if not (h_muonPt["bottom_mother"]):
+    h_muonPt["non-prompt"] = ROOT.gDirectory.Get("h_muonPt_non-prompt")
+    h_muonPt["non-prompt"].SetLineColor(2)
+    if not (h_muonPt["non-prompt"]):
         print("Bottom mother muon Pt histogram is empty")
     h_muonEta["notrigger"] = ROOT.gDirectory.Get("h_muonEta_notrigger")
     h_muonEta["notrigger"].SetLineColor(1)
@@ -234,7 +234,7 @@ def main(argms):
                   % (selCriteria["minJetId"], selCriteria["minJetPt"], selCriteria["maxObjEta"]))
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
-                  % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso"]))
+                  % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso04"]))
     ltx.SetTextSize(0.015)
     pdfCreator(argms, 0, triggerCanvas)
 
@@ -441,9 +441,9 @@ def main(argms):
     h_muonPt["notrigger"].Draw('E1')
     tX1 = 0.6*(h_muonPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_muonPt["notrigger"].GetMaximum())
-    h_muonPt["top_mother"].SetTitle("prompt muons")
-    h_muonPt["top_mother"].Draw('E1 same')
-    h_muonPt["bottom_mother"].Draw('E1 same')
+    h_muonPt["prompt"].SetTitle("prompt muons")
+    h_muonPt["prompt"].Draw('E1 same')
+    h_muonPt["non-prompt"].Draw('E1 same')
     cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)

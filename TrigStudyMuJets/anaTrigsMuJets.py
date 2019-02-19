@@ -242,7 +242,7 @@ class TriggerStudy(Module):
         for nm, muon in enumerate(muons):
             # - Check muon criteria 2017 https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
             if (getattr(muon, "tightId") is False) or abs(muon.eta) > self.selCriteria["maxObjEta"]: continue
-            if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso"]: continue
+            if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
             nMuonsPass += 1
             MuonsPassIdx = nm
 
@@ -262,9 +262,11 @@ class TriggerStudy(Module):
         nElsPass = 0
         ElsPassIdx = 0
         for ne, el in enumerate(electrons):
-            if abs(el.eta) > self.selCriteria["maxObjEta"] or el.miniPFRelIso_all > self.selCriteria["maxPfRelIso"]:
-                continue
+            if abs(el.eta) > self.selCriteria["maxObjEta"]: continue
+            if el.miniPFRelIso_all > self.selCriteria["maxMiniPfRelIso"]: continue
+            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17Iso_WP90 is False: continue
             if 1.4442 < abs(el.eta) < 1.566: continue
+
             #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1
             #  or el.hoe <(0.046 + 1.16/(el.EtaSC)+ 0.0324*(rho)/(EtaSC))
             nElsPass += 1
