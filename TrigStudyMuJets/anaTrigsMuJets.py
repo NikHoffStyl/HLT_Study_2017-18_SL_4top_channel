@@ -57,7 +57,6 @@ class TriggerStudy(Module):
         self.writeHistFile = writeHistFile
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
         self.trigLst = trigLst
-        # self.trigLst["MuPJets"].append('IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2')
 
         self.selCriteria = {}
         with open("selectionCriteria.txt") as f:
@@ -344,26 +343,26 @@ class TriggerStudy(Module):
         ##############################
         if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0 and nElPass == 0:
             for nm, muon in enumerate(muons):
-                if MuonPassIdx == nm:
-                    self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
-                    self.h_muonGenPartFlav.Fill(muon.genPartFlav)
-                    self.h_muonGenPartIdx.Fill(muon.genPartIdx)
-                    self.h_muonEta['no_trigger'].Fill(muon.eta)
-                    self.h_muonPhi['no_trigger'].Fill(muon.phi)
-                    self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
-                    self.h_muonPt['no_trigger'].Fill(muon.pt)
-                    for key in self.trigLst:
-                        if not key.find("El") == -1: continue
-                        for tg in self.trigLst[key]:
-                            if trigPath[tg]:
-                                self.h_muonPt[tg].Fill(muon.pt)
-                                self.h_muonEta[tg].Fill(muon.eta)
-                                self.h_muonPhi[tg].Fill(muon.phi)
-                                self.h_muonMap[tg].Fill(muon.eta, muon.phi)
-                    if muon.genPartFlav == 1:
-                        self.h_muonPt['prompt'].Fill(muon.pt)
-                    if muon.genPartFlav == 5:
-                        self.h_muonPt['non-prompt'].Fill(muon.pt)
+                if not MuonPassIdx == nm: continue
+                self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
+                self.h_muonGenPartFlav.Fill(muon.genPartFlav)
+                self.h_muonGenPartIdx.Fill(muon.genPartIdx)
+                self.h_muonEta['no_trigger'].Fill(muon.eta)
+                self.h_muonPhi['no_trigger'].Fill(muon.phi)
+                self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
+                self.h_muonPt['no_trigger'].Fill(muon.pt)
+                for key in self.trigLst:
+                    if not key.find("El") == -1: continue
+                    for tg in self.trigLst[key]:
+                        if trigPath[tg]:
+                            self.h_muonPt[tg].Fill(muon.pt)
+                            self.h_muonEta[tg].Fill(muon.eta)
+                            self.h_muonPhi[tg].Fill(muon.phi)
+                            self.h_muonMap[tg].Fill(muon.eta, muon.phi)
+                if muon.genPartFlav == 1:
+                    self.h_muonPt['prompt'].Fill(muon.pt)
+                if muon.genPartFlav == 5:
+                    self.h_muonPt['non-prompt'].Fill(muon.pt)
 
             for nj, jet in enumerate(jets):
                 if nj not in JetPassIdx: continue
