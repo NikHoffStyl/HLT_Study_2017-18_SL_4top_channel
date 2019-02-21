@@ -37,13 +37,13 @@ def main(argms):
         redirector = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
     elif argms.redirector == "local":
         if argms.inputLFN == "ttjets":
-            redirector = "../../myInFiles/TTjets/"
+            redirector = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
         elif argms.inputLFN == "tttt_weights":
             redirector = "../../myInFiles/TTTTweights/"
         elif argms.inputLFN == "wjets":
             redirector = "../../myInFiles/Wjets/"
         elif argms.inputLFN == "tttt":
-            redirector = "../../myInFiles/TTTT/"
+            redirector = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
         else:
             return 0
     else:
@@ -54,9 +54,9 @@ def main(argms):
     # you may want to change path to suit your file ordering
     if argms.inputLFN == "ttjets":  # tt + jets MC
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTjets/TTjets_files.txt", "r")
+            inputLFNList = open("../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTjets_files.txt", "r")
+            inputLFNList = open("../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
             # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
             #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
@@ -77,9 +77,9 @@ def main(argms):
         outputFile = "../OutFiles/Histograms/Wjets.root"
     elif argms.inputLFN == "tttt":  # tttt MC
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTTT/TTTT_files.txt", "r")
+            inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTT_files.txt", "r")
+            inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
         outputFile = "../OutFiles/Histograms/TTTT_6jets2.root"
     else:

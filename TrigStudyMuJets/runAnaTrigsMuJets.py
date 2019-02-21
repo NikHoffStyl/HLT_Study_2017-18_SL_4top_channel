@@ -43,7 +43,7 @@ def main(argms):
         elif argms.inputLFN == "wjets":
             redirector = "../../myInFiles/Wjets/"
         elif argms.inputLFN == "tttt":
-            redirector = "../../myInFiles/TTTT/"
+            redirector = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
         else:
             return 0
     else:
