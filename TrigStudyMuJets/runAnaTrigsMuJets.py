@@ -37,7 +37,7 @@ def main(argms):
         redirector = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
     elif argms.redirector == "local":
         if argms.inputLFN == "ttjets":
-            redirector = "../../myInFiles/TTjets/"
+            redirector = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
         elif argms.inputLFN == "tttt_weights":
             redirector = "../../myInFiles/TTTTweights/"
         elif argms.inputLFN == "wjets":
@@ -54,13 +54,11 @@ def main(argms):
     # you may want to change path to suit your file ordering
     if argms.inputLFN == "ttjets":  # tt + jets MC
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTjets/TTjets_files.txt", "r")
+            inputLFNList = open("../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTjets_files.txt", "r")
-            # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
-            #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
+            inputLFNList = open("../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
-        outputFile = "../OutFiles/Histograms/TT6jets2.root"
+        outputFile = "../OutFiles/Histograms/TT6Jets1Mu.root"
     elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
@@ -77,11 +75,11 @@ def main(argms):
         outputFile = "../OutFiles/Histograms/Wjets.root"
     elif argms.inputLFN == "tttt":  # tttt MC
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTTT/TTTT_files.txt", "r")
+            inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNamess.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTT_files.txt", "r")
+            inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
-        outputFile = "../OutFiles/Histograms/TTTT_6jets2.root"
+        outputFile = "../OutFiles/Histograms/TTTT6Jets1Mu.root"
     else:
         return 0
 
@@ -90,13 +88,10 @@ def main(argms):
     else:
         writeFile = True
 
-    iterat = 0
-    for line in inputLFNList:
-        iterat += 1
-        if iterat > 5:
-            break
-        # .replace('\n','') protects against new line characters at end of filenames,
-        # use just str(line) if problem appears
+    # iterat = 0
+    for counter, line in enumerate(inputLFNList):
+        counter += 1
+        if counter > 5: break
         files.append(redirector + str(line).replace('\n', ''))
 
     trigList = {}
@@ -108,19 +103,10 @@ def main(argms):
             val = val[0:c]
             trigList[key] = val.split(", ")
 
-    # trigList = {"MuPJets": [],
-    #             "ElPJets": [],
-    #             "MuLone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
-    #             "ElLone": ['Ele28_eta2p1_WPTight_Gsf_HT150'],
-    #             "Muon": ['IsoMu24'],
-    #             "Electron": ["Ele32_WPTight_Gsf", "Ele35_WPTight_Gsf", "Ele38_WPTight_Gsf"],
-    #             "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
-
     p99 = PostProcessor(".",
                         files,
                         # files[0],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) " 
-                            "&& Muon_softId == 1",
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) ",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList)],

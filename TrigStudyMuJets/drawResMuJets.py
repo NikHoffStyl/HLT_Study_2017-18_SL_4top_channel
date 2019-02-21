@@ -44,13 +44,13 @@ def main(argms):
     """ This code merges histograms, only for specific root file """
 
     if argms.inputLFN == "ttjets":
-        inputFile = "../OutFiles/Histograms/TT6jets2.root"
+        inputFile = "../OutFiles/Histograms/TT6jets1Mu.root"
     elif argms.inputLFN == "tttt_weights":
         inputFile = "../OutFiles/Histograms/TTTTweights.root"
     elif argms.inputLFN == "wjets":
         inputFile = "../OutFiles/Histograms/Wjets.root"
     elif argms.inputLFN == "tttt":
-        inputFile = "../OutFiles/Histograms/TTTT_6jets2.root"
+        inputFile = "../OutFiles/Histograms/TTTT6jets1Mu.root"
     else:
         return 0
 
