@@ -90,13 +90,10 @@ def main(argms):
     else:
         writeFile = True
 
-    iterat = 0
-    for line in inputLFNList:
+    # iterat = 0
+    for iterat, line in enumerate(inputLFNList):
         iterat += 1
-        if iterat > 5:
-            break
-        # .replace('\n','') protects against new line characters at end of filenames,
-        # use just str(line) if problem appears
+        if iterat > 5: break
         files.append(redirector + str(line).replace('\n', ''))
 
     trigList = {}
