@@ -109,8 +109,8 @@ def main(argms):
                         postfix=thePostFix,
                         histFileName=outputFile,
                         histDirName="plots",
-                        branchsel="../myInFiles/kd_branchsel.txt",
-                        outputbranchsel="../myInFiles/kd_branchsel.txt",
+                        branchsel="myInFiles/kd_branchsel.txt",
+                        outputbranchsel="myInFiles/kd_branchsel.txt",
                         )
     t0 = time.clock()
     p99.run()
