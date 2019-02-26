@@ -1,3 +1,8 @@
+"""
+Created on Jan 2019
+
+@author: NikHoffStyl
+"""
 import os
 import errno
 import ROOT

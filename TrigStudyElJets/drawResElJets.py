@@ -1,3 +1,8 @@
+"""
+Created on Jan 2019
+
+@author: NikHoffStyl
+"""
 import os
 import errno
 import ROOT
@@ -412,7 +417,7 @@ def main(argms):
     h_elMiniPfRelIso_all.Draw()
     pdfCreator(argms, 1, triggerCanvas)
 
-    # - Muon pT plots ---------------------------------
+    # - Electron pT plots ---------------------------------
     cv7 = triggerCanvas.cd(1)
     # h_elPt["notrigger"].SetTitle("")
     h_elPt["notrigger"].SetMinimum(0.)
@@ -433,7 +438,7 @@ def main(argms):
     cv71 = triggerCanvas.cd(1)
     h_elPt["notrigger"].SetTitle("")
     h_elPt["notrigger"].SetMinimum(0.)
-    h_elPt["notrigger"].SetMaximum(3500)
+    # h_elPt["notrigger"].SetMaximum(3500)
     h_elPt["notrigger"].Draw('E1')
     tX1 = 0.6*(h_elPt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_elPt["notrigger"].GetMaximum())

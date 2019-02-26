@@ -1,3 +1,8 @@
+"""
+Created on Jan 2019
+
+@author: NikHoffStyl
+"""
 from __future__ import (division, print_function)
 # from importlib import import_module
 import time
