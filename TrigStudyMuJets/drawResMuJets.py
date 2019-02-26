@@ -49,13 +49,13 @@ def main(argms):
     """ This code merges histograms, only for specific root file """
 
     if argms.inputLFN == "ttjets":
-        inputFile = "../OutFiles/Histograms/TT6jets1Mu.root"
+        inputFile = "../OutFiles/Histograms/TT6Jets1Mu.root"
     elif argms.inputLFN == "tttt_weights":
         inputFile = "../OutFiles/Histograms/TTTTweights.root"
     elif argms.inputLFN == "wjets":
         inputFile = "../OutFiles/Histograms/Wjets.root"
     elif argms.inputLFN == "tttt":
-        inputFile = "../OutFiles/Histograms/TTTT6jets1Mu.root"
+        inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu.root"
     else:
         return 0
 
@@ -69,7 +69,7 @@ def main(argms):
             trigList[key1] = val.split(", ")
 
     preSelCuts = {}
-    with open("../preSelectionCuts.txt") as f:
+    with open("../myInFiles/preSelectionCuts.txt") as f:
         for line in f:
             if line.find(":") == -1: continue
             (key1, val) = line.split(": ")
