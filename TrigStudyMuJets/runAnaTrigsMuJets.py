@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on Jan 2019
 
@@ -80,7 +81,7 @@ def main(argms):
         outputFile = "../OutFiles/Histograms/Wjets.root"
     elif argms.inputLFN == "tttt":  # tttt MC
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNamess.txt", "r")
+            inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:
             inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
