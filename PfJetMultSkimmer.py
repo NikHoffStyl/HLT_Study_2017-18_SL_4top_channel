@@ -84,21 +84,21 @@ class PfJetsSkimmer(Module):
 
         self.out.fillBranch("nMuon", len(allmuons))
         self.out.fillBranch("nElectron", len(allelectrons))
-        self.out.fillBranch("nJet", len(allrecojets))
+        self.out.fillBranch("nJets", len(allrecojets))
         for muon in allmuons:
             self.out.fillBranch("Muon_eta", muon.p4().Eta)
             self.out.fillBranch("Muon_phi", muon.p4().Phi)
-            self.out.fillBranch("Muon_phi", muon.p4().Pt)
+            self.out.fillBranch("Muon_pt", muon.p4().Pt)
 
         for electron in allelectrons:
             self.out.fillBranch("Electron_eta", electron.p4().Eta)
             self.out.fillBranch("Electron_phi", electron.p4().Phi)
-            self.out.fillBranch("Electron_phi", electron.p4().Pt)
+            self.out.fillBranch("Electron_pt", electron.p4().Pt)
 
         for jet in allrecojets:
-            self.out.fillBranch("Electron_eta", jet.p4().Eta)
-            self.out.fillBranch("Electron_phi", jet.p4().Phi)
-            self.out.fillBranch("Electron_phi", jet.p4().Pt)
+            self.out.fillBranch("Jet_eta", jet.p4().Eta)
+            self.out.fillBranch("Jet_phi", jet.p4().Phi)
+            self.out.fillBranch("Jet_pt", jet.p4().Pt)
 
         return True
 
