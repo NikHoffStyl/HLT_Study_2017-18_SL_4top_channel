@@ -44,13 +44,13 @@ def main(argms):
         redirector = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
     elif argms.redirector == "local":
         if argms.inputLFN == "ttjets":
-            redirector = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
+            redirector = "../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
         elif argms.inputLFN == "tttt_weights":
-            redirector = "../../myInFiles/TTTTweights/"
+            redirector = "../myInFiles/TTTTweights/"
         elif argms.inputLFN == "wjets":
-            redirector = "../../myInFiles/Wjets/"
+            redirector = "../myInFiles/Wjets/"
         elif argms.inputLFN == "tttt":
-            redirector = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
+            redirector = "../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
         else:
             return 0
     else:
@@ -61,32 +61,32 @@ def main(argms):
     # you may want to change path to suit your file ordering
     if argms.inputLFN == "ttjets":  # tt + jets MC
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
+            inputLFNList = open("../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
+            inputLFNList = open("myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
-        outputFile = "../OutFiles/Skimmed/TT6Jets1Mu.root"
+        outputFile = "OutFiles/Skimmed/TT6Jets1Mu.root"
     elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
+            inputLFNList = open("../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTTweights_files.txt", "r")
+            inputLFNList = open("myInFiles/TTTTweights_files.txt", "r")
         thePostFix = "TTTT_PSWeights"
-        outputFile = "../OutFiles/Skimmed/TTTTweights.root"
+        outputFile = "OutFiles/Skimmed/TTTTweights.root"
     elif argms.inputLFN == "wjets":  # W (to Lep + Nu) + jets
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/Wjets/Wjets_files.txt", "r")
+            inputLFNList = open("../myInFiles/Wjets/Wjets_files.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/Wjets_files.txt", "r")
+            inputLFNList = open("myInFiles/Wjets_files.txt", "r")
         thePostFix = "WJetsToLNu"
-        outputFile = "../OutFiles/Skimmed/Wjets.root"
+        outputFile = "OutFiles/Skimmed/Wjets.root"
     elif argms.inputLFN == "tttt":  # tttt MC
         if argms.redirector == "local":
-            inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
+            inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
+            inputLFNList = open("myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
-        outputFile = "../OutFiles/Skimmed/TTTT6Jets1Mu.root"
+        outputFile = "OutFiles/Skimmed/TTTT6Jets1Mu.root"
     else:
         return 0
 
