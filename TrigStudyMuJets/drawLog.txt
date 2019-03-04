@@ -1,0 +1,91 @@
+[?1034h **********
+ **    1 **SET PRINT           2
+ **********
+ **********
+ **    2 **SET NOGRAD
+ **********
+ PARAMETER DEFINITIONS:
+    NO.   NAME         VALUE      STEP SIZE      LIMITS
+     1 saturation_Y   7.00000e-01  2.10000e-01    4.00000e-01  8.00000e-01
+ MINUIT WARNING IN PARAMETR
+ ============== VARIABLE1 BROUGHT BACK INSIDE LIMITS.
+     2 slope        4.50000e-03  1.35000e-03    0.00000e+00  9.90000e-01
+     3 x_turnON     1.00000e+02  3.00000e+01   -1.00000e+02  3.00000e+02
+     4 initY        1.40000e-01  4.20000e-02   -1.00000e-01  2.00000e-01
+     5 p4           0.00000e+00  1.00000e-02     no limits
+ **********
+ **    3 **SET ERR         0.5
+ **********
+ **********
+ **    4 **SET PRINT           2
+ **********
+ **********
+ **    5 **SET STR           1
+ **********
+ NOW USING STRATEGY  1: TRY TO BALANCE SPEED AGAINST RELIABILITY
+ **********
+ **    6 **MIGRAD        1625        0.01
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-05
+ FCN=59.4145 FROM MIGRAD    STATUS=INITIATE      210 CALLS         211 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  saturation_Y   7.00000e-01   2.10000e-01   0.00000e+00   2.77941e+02
+   2  slope        2.45804e-03   1.35000e-03   0.00000e+00   4.14064e+03
+   3  x_turnON     1.00000e+02   3.00000e+01   0.00000e+00  -3.15488e+01
+   4  initY        1.40000e-01   4.20000e-02   0.00000e+00   2.03454e+02
+   5  p4           0.00000e+00   1.00000e-02   0.00000e+00   0.00000e+00
+                               ERR DEF= 0.5
+NO ERROR MATRIX       
+ FCN=56.869 FROM MIGRAD    STATUS=PROGRESS      222 CALLS         223 TOTAL
+                     EDM=3.4801    STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  saturation_Y   6.98722e-01   2.10000e-01  -7.36025e-03   4.62129e+01
+   2  slope        2.44430e-03   1.35000e-03  -2.79342e-04  -4.86654e+02
+   3  x_turnON     1.01697e+02   3.00000e+01   8.48654e-03   3.86424e+01
+   4  initY        1.39027e-01   4.20000e-02  -8.08609e-03   1.28730e+01
+   5  p4           0.00000e+00   1.00000e-02  -0.00000e+00   0.00000e+00
+                               ERR DEF= 0.5
+ FCN=35.9028 FROM MIGRAD    STATUS=PROGRESS      351 CALLS         352 TOTAL
+                     EDM=0.887055    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   0.4 per cent
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  saturation_Y   6.70749e-01   3.15762e-03  -1.13071e-02  -1.92281e+02
+   2  slope        3.89231e-03   3.24679e-04   3.96042e-03  -2.37606e+03
+   3  x_turnON     1.36147e+02   2.85924e+01   6.60575e-02   4.83425e+01
+   4  initY        1.07879e-01   4.85784e-03  -2.65942e-02  -1.56215e+02
+   5  p4           0.00000e+00   1.00000e+00  -0.00000e+00   0.00000e+00
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ FCN=31.7584 FROM MIGRAD    STATUS=CONVERGED     438 CALLS         439 TOTAL
+                     EDM=4.3207e-07    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   0.3 per cent
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  saturation_Y   6.69409e-01   1.93591e-03  -6.91625e-06  -4.96278e-02
+   2  slope        5.09480e-03   5.31627e-04   8.81076e-06   2.97220e-01
+   3  x_turnON     2.00505e+02   2.70766e+01   3.81933e-05  -1.99109e-03
+   4  initY        9.70002e-02   4.82176e-03  -4.69300e-05   6.15798e-02
+   5  p4           0.00000e+00   1.00000e+00  -0.00000e+00   0.00000e+00
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  3.748e-06 -9.913e-09  8.715e-03 -3.738e-07  0.000e+00 
+ -9.913e-09  2.826e-07  1.348e-02 -2.412e-06  0.000e+00 
+  8.715e-03  1.348e-02  7.392e+02 -1.065e-01  0.000e+00 
+ -3.738e-07 -2.412e-06 -1.065e-01  2.326e-05  0.000e+00 
+  0.000e+00  0.000e+00  0.000e+00  0.000e+00  1.000e+00 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.67647   1.000 -0.010  0.166 -0.040  0.000
+        2  0.99089  -0.010  1.000  0.932 -0.941  0.000
+        3  0.97367   0.166  0.932  1.000 -0.812  0.000
+        4  0.97041  -0.040 -0.941 -0.812  1.000  0.000
+        5  0.00000   0.000  0.000  0.000  0.000  1.000
+ EXTERNAL ERROR MATRIX.    NDIM=   5    NPAR=  5    ERR DEF=0.5
+  3.748e-06 -9.913e-09  8.715e-03 -3.738e-07  0.000e+00 
+ -9.913e-09  2.826e-07  1.348e-02 -2.412e-06  0.000e+00 
+  8.715e-03  1.348e-02  7.392e+02 -1.065e-01  0.000e+00 
+ -3.738e-07 -2.412e-06 -1.065e-01  2.326e-05  0.000e+00 
+  0.000e+00  0.000e+00  0.000e+00  0.000e+00  1.000e+00 

@@ -46,7 +46,7 @@ def pdfCreator(parg, arg, canvas):
         canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf)"), "pdf")
 
 
-def fitf(x=None, par=None):
+def fitf(x, par):
     """
         Write sigmoid function for TF1 class
 
@@ -57,10 +57,10 @@ def fitf(x=None, par=None):
         Returns:
             fitval : function
     """
-    if x is None or par is None:
-        fitval = None
-    else:
-        fitval = 1 / (1 + math.exp(-par[1] * (x[0]-par[2])))
+    #if x is None or par is None:
+     #   fitval = None
+    #else:
+    fitval =( par[0] / (1 + math.exp(-par[1] * (x[0]-par[2])))) + par[3]
     return fitval
 
 
@@ -137,6 +137,8 @@ def main(argms):
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100, 600)
+    triggerCanvas.SetFrameFillColor(41)
+    triggerCanvas.SetGrid()
 
     # - Open file and sub folder
     histFile = ROOT.TFile.Open(inputFile)
@@ -249,14 +251,22 @@ def main(argms):
             h_metPhi[tg].SetLineColor(i)
             h_genMetPt[tg].SetLineColor(i)
             h_genMetPhi[tg].SetLineColor(i)
-            i += 1
 
-            f_jetHt[tg] = ROOT.TF1('f_jetHt' + tg, fitf, 300, 1, 3000)
+            f_jetHt[tg] = ROOT.TF1('f_jetHt' + tg, fitf, 400, 1100, 5)
+            f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
+            f_jetHt[tg].SetParameters(0.7, 0.0045, 100, 0.14)
+            f_jetHt[tg].SetParLimits(0,0.4,0.8)
+            #f_jetHt[tg].SetParameters(0,1)
+            f_jetHt[tg].SetParLimits(1,0,0.99)
+            #f_jetHt[tg].SetParameters(1,300)
+            f_jetHt[tg].SetParLimits(2, -100, 300)
+            #f_jetHt[tg].SetParameters(2, 0)
+            f_jetHt[tg].SetParLimits(3,-0.1,0.2)
             f_jetMult[tg] = ROOT.TF1('f_jetMult' + tg, fitf, 20, 0, 20)
             f_jetBMult[tg] = ROOT.TF1('f_jetBMult' + tg, fitf, 20, 0, 20)
             f_jetEta[tg] = ROOT.TF1('f_jetEta' + tg, fitf, 300, -6, 8)
             f_jetPhi[tg] = ROOT.TF1('f_jetPhi' + tg, fitf, 300, -6, 8)
-            f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, 300, 0, 300)
+            f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, fitf, 300, 0, 300)
             f_muonEta[tg] = ROOT.TF1('f_muonEta' + tg, fitf, 300, -6, 8)
             f_muonPhi[tg] = ROOT.TF1('f_muonPhi' + tg, fitf, 300, -6, 8)
             f_metPt[tg] = ROOT.TF1('f_metPt' + tg, fitf, 300, 0, 300)
@@ -276,6 +286,7 @@ def main(argms):
             f_metPhi[tg].SetLineStyle(style[i - 2])
             f_genMetPt[tg].SetLineStyle(style[i - 2])
             f_genMetPhi[tg].SetLineStyle(style[i - 2])
+            i += 1
 
     # - Events histogram
     h_eventsPrg = ROOT.gDirectory.Get("h_eventsPrg")
@@ -346,7 +357,8 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_TriggerRatio[tg].Fit(f_jetHt[tg])
+                    h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
+                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -356,6 +368,7 @@ def main(argms):
                     tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
                 elif i > 0:
+                    #h_TriggerRatio[tg].Fit(f_jetHt[tg], 'R')
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
     cv2.BuildLegend(0.5, 0.1, 0.9, 0.3)
