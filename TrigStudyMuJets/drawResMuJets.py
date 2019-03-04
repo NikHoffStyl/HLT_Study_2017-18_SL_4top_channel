@@ -7,6 +7,7 @@ import os
 import errno
 import ROOT
 from ROOT import TLatex
+import math
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime
 
@@ -43,6 +44,24 @@ def pdfCreator(parg, arg, canvas):
         canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf"), "pdf")
     if arg == 2:
         canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf)"), "pdf")
+
+
+def fitf(x=None, par=None):
+    """
+        Write sigmoid function for TF1 class
+
+        Args:
+            x (list):  list of the dimension
+            par (list): list of the parameters
+
+        Returns:
+            fitval : function
+    """
+    if x is None or par is None:
+        fitval = None
+    else:
+        fitval = 1 / (1 + math.exp(-par[1] * (x[0]-par[2])))
+    return fitval
 
 
 def main(argms):
@@ -102,6 +121,19 @@ def main(argms):
     h_genMetPhi = {}
 
     h_TriggerRatio = {}
+
+    f_jetHt = {}
+    f_jetMult = {}
+    f_jetBMult = {}
+    f_jetEta = {}
+    f_jetPhi = {}
+    f_muonPt = {}
+    f_muonEta = {}
+    f_muonPhi = {}
+    f_metPt = {}
+    f_metPhi = {}
+    f_genMetPt = {}
+    f_genMetPhi = {}
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100, 600)
@@ -184,6 +216,7 @@ def main(argms):
         print("No trigger genMet Phi histogram is empty")
 
     i = 2
+    style = [1, 8, 9, 10]
     for key in trigList:
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
@@ -217,6 +250,32 @@ def main(argms):
             h_genMetPt[tg].SetLineColor(i)
             h_genMetPhi[tg].SetLineColor(i)
             i += 1
+
+            f_jetHt[tg] = ROOT.TF1('f_jetHt' + tg, fitf, 300, 1, 3000)
+            f_jetMult[tg] = ROOT.TF1('f_jetMult' + tg, fitf, 20, 0, 20)
+            f_jetBMult[tg] = ROOT.TF1('f_jetBMult' + tg, fitf, 20, 0, 20)
+            f_jetEta[tg] = ROOT.TF1('f_jetEta' + tg, fitf, 300, -6, 8)
+            f_jetPhi[tg] = ROOT.TF1('f_jetPhi' + tg, fitf, 300, -6, 8)
+            f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, 300, 0, 300)
+            f_muonEta[tg] = ROOT.TF1('f_muonEta' + tg, fitf, 300, -6, 8)
+            f_muonPhi[tg] = ROOT.TF1('f_muonPhi' + tg, fitf, 300, -6, 8)
+            f_metPt[tg] = ROOT.TF1('f_metPt' + tg, fitf, 300, 0, 300)
+            f_metPhi[tg] = ROOT.TF1('f_metPhi' + tg, fitf, 300, -6, 8)
+            f_genMetPt[tg] = ROOT.TF1('f_genMetPt' + tg, fitf, 300, 0, 300)
+            f_genMetPhi[tg] = ROOT.TF1('f_genMetPhi' + tg, fitf, 300, -6, 8)
+
+            f_jetHt[tg].SetLineStyle(style[i-2])
+            f_jetMult[tg].SetLineStyle(style[i - 2])
+            f_jetBMult[tg].SetLineStyle(style[i - 2])
+            f_jetEta[tg].SetLineStyle(style[i - 2])
+            f_jetPhi[tg].SetLineStyle(style[i - 2])
+            f_muonPt[tg].SetLineStyle(style[i - 2])
+            f_muonPhi[tg].SetLineStyle(style[i-2])
+            f_muonEta[tg].SetLineStyle(style[i - 2])
+            f_metPt[tg].SetLineStyle(style[i - 2])
+            f_metPhi[tg].SetLineStyle(style[i - 2])
+            f_genMetPt[tg].SetLineStyle(style[i - 2])
+            f_genMetPhi[tg].SetLineStyle(style[i - 2])
 
     # - Events histogram
     h_eventsPrg = ROOT.gDirectory.Get("h_eventsPrg")
@@ -276,7 +335,6 @@ def main(argms):
     j = 2
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetHt[tg], h_jetHt["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetHt[tg], h_jetHt["notrigger"])
@@ -288,6 +346,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
+                    h_TriggerRatio[tg].Fit(f_jetHt[tg])
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
