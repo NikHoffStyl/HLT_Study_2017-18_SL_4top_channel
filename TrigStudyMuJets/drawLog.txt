@@ -89,3 +89,6 @@ NO ERROR MATRIX
   8.715e-03  1.348e-02  7.392e+02 -1.065e-01  0.000e+00 
  -3.738e-07 -2.412e-06 -1.065e-01  2.326e-05  0.000e+00 
   0.000e+00  0.000e+00  0.000e+00  0.000e+00  1.000e+00 
+
+Info in <TMinuitMinimizer::Minimize>: Finished to run MIGRAD - status 0
+Info in <TBinomialEfficiencyFitter::result>:  chi2 63.516762 ndf 0 
