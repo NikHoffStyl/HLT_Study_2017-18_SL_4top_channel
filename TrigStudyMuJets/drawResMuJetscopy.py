@@ -78,18 +78,22 @@ def turnOnFit(x, par):
     return fitval
 
 
-def fitInfo(fit=ROOT.TF1()):
+def fitInfo(fit=ROOT.TF1(), printEqn=""):
     """
-        Print fit parameter values and their errors along with the statistics
 
-    :param fit: function fitted to histogram
-    :return:
+    Args:
+        fit: fitted function
+        printEqn: name of equation
+
+    Returns:
+
     """
     try:
         file = open("fitInfo.txt", "a+")
         with file:
-            file.write("Equation given by: \r \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \r \t"
-                       "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \r")
+            if printEqn == "t":
+                file.write("Equation given by: \r \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \r \t"
+                           "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \r")
             file.write("Chi2, NDF, prob, par1, par2, par3, par4 \r")
             file.write(
                 "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\r " .format

@@ -74,24 +74,29 @@ def turnOnFit(x, par):
         fitval: function
 
     """
-    subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0]))
+    subFunc = (x[0] - par[2]) / (par[1] * math.sqrt(x[0]))
     fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3]
     return fitval
 
 
-def fitInfo(fit=ROOT.TF1()):
+def fitInfo(fit=ROOT.TF1(), printEqn=""):
     """
-        Print fit parameter values and their errors along with the statistics
 
-    :param fit: function fitted to histogram
-    :return:
+    Args:
+        fit: fitted function
+        printEqn: name of equation
+
+    Returns:
+
     """
     try:
         file = open("fitInfo.txt", "a+")
         with file:
-            file.write("Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
-                       "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n")
-            file.write("Chi2, NDF, prob, par1, par2, par3, par4 \n")
+            if printEqn == "t":
+                file.write(fit.Print())
+                file.write("Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
+                           "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n")
+                file.write("Chi2, NDF, prob, par1, par2, par3, par4 \n")
             file.write(
                 "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\n " .format
                 (fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0), fit.GetParError(0), fit.GetParameter(1),
@@ -173,7 +178,7 @@ def main(argms):
     f_genMetPhi = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 700, 500)  # 1100 600
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
     triggerCanvas.SetFillColor(18)
     triggerCanvas.SetFrameFillColor(17)
     triggerCanvas.SetGrid()
@@ -290,38 +295,17 @@ def main(argms):
             h_genMetPt[tg].SetLineColor(i)
             h_genMetPhi[tg].SetLineColor(i)
 
-            f_jetHt[tg] = ROOT.TF1('f_jetHt' + tg, sigmoidFit, 200, 1500, 4)
+            f_jetHt[tg] = ROOT.TF1('jetHt' + tg, sigmoidFit, 200, 2500, 4)
             f_jetHt[tg].SetLineColor(1)
             f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
-            f_jetHt[tg].SetParameters(0.7, 0.0045, 100, 0.14)
-            f_jetHt[tg].SetParLimits(0, 0.4, 0.8)
-            f_jetHt[tg].SetParLimits(1, 0, 0.99)
-            f_jetHt[tg].SetParLimits(2, -100, 500)
-            f_jetHt[tg].SetParLimits(3, -0.1, 0.3)
-            f_jetMult[tg] = ROOT.TF1('f_jetMult' + tg, sigmoidFit, 20, 0, 20)
-            f_jetBMult[tg] = ROOT.TF1('f_jetBMult' + tg, sigmoidFit, 20, 0, 20)
-            f_jetEta[tg] = ROOT.TF1('f_jetEta' + tg, sigmoidFit, 300, -6, 8)
-            f_jetPhi[tg] = ROOT.TF1('f_jetPhi' + tg, sigmoidFit, 300, -6, 8)
+
             f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, sigmoidFit, 300, 0, 300)
-            f_muonEta[tg] = ROOT.TF1('f_muonEta' + tg, sigmoidFit, 300, -6, 8)
-            f_muonPhi[tg] = ROOT.TF1('f_muonPhi' + tg, sigmoidFit, 300, -6, 8)
-            f_metPt[tg] = ROOT.TF1('f_metPt' + tg, sigmoidFit, 300, 0, 300)
-            f_metPhi[tg] = ROOT.TF1('f_metPhi' + tg, sigmoidFit, 300, -6, 8)
-            f_genMetPt[tg] = ROOT.TF1('f_genMetPt' + tg, sigmoidFit, 300, 0, 300)
-            f_genMetPhi[tg] = ROOT.TF1('f_genMetPhi' + tg, sigmoidFit, 300, -6, 8)
+            f_muonPt[tg].SetLineColor(1)
+            f_muonPt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
 
             f_jetHt[tg].SetLineStyle(style[i-2])
-            f_jetMult[tg].SetLineStyle(style[i - 2])
-            f_jetBMult[tg].SetLineStyle(style[i - 2])
-            f_jetEta[tg].SetLineStyle(style[i - 2])
-            f_jetPhi[tg].SetLineStyle(style[i - 2])
             f_muonPt[tg].SetLineStyle(style[i - 2])
-            f_muonPhi[tg].SetLineStyle(style[i-2])
-            f_muonEta[tg].SetLineStyle(style[i - 2])
-            f_metPt[tg].SetLineStyle(style[i - 2])
-            f_metPhi[tg].SetLineStyle(style[i - 2])
-            f_genMetPt[tg].SetLineStyle(style[i - 2])
-            f_genMetPhi[tg].SetLineStyle(style[i - 2])
+
             i += 1
 
     # - Events histogram
@@ -346,7 +330,7 @@ def main(argms):
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
                   % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso04"]))
-    ltx.SetTextSize(0.015)
+    ltx.SetTextSize(0.01)
     pdfCreator(argms, 0, triggerCanvas)
 
     # - Create text for legend
@@ -369,7 +353,7 @@ def main(argms):
         # if not (key == "Electron" or key == "ElPJets"):
         for tg in trigList[key]:
             h_jetHt[tg].Draw('E1 same')
-    cv1.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv1.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
@@ -393,9 +377,9 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    #h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
+                    # h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
+                    f_jetHt[tg].SetParameters(0.8, 0.0046, 135, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
-                    #p0 = f_jetHt[tg].GetParameter(0)
                     fitInfo(f_jetHt[tg])
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
@@ -406,11 +390,14 @@ def main(argms):
                     tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
                 elif i > 0:
+                    if i == 1: f_jetHt[tg].SetParameters(0.8, 0.0116, 500, 0)
+                    elif i == 2: f_jetHt[tg].SetParameters(0.8, 0.008, 330, 0.17)
+                    elif i == 3: f_jetHt[tg].SetParameters(0.8, 0.02, 500, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')
                     fitInfo(f_jetHt[tg])
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv2.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -424,7 +411,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h_jetMult[tg].Draw('E1 same')
-    cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv3.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
@@ -460,7 +447,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv4.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv4.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -476,7 +463,7 @@ def main(argms):
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetBMult[tg].Draw('E1 same')
-    cv5.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv5.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
@@ -512,7 +499,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv6.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv6.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -544,7 +531,7 @@ def main(argms):
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonPt[tg].Draw('E1 same')
-    cv7.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv7.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -560,7 +547,7 @@ def main(argms):
     h_muonPt["prompt"].SetTitle("prompt muons")
     h_muonPt["prompt"].Draw('E1 same')
     h_muonPt["non-prompt"].Draw('E1 same')
-    cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv71.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -583,6 +570,9 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
+                    f_muonPt[tg].SetParameters(0.9, 0.95, 24, 0.05)
+                    h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
+                    fitInfo(f_muonPt[tg])
                     h_TriggerRatio[tg].Draw('AP')
                     cv8.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -592,9 +582,14 @@ def main(argms):
                     tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
                 if i > 0:
+                    if i == 1: f_muonPt[tg].SetParameters(0.05, 0.5, 24, 0.8)
+                    elif i == 2: f_muonPt[tg].SetParameters(0.18, 0.95, 24, 0.8)
+                    elif i == 3: f_muonPt[tg].SetParameters(0.75, 0.95, 15, 0.15)
+                    h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LVR')
+                    fitInfo(f_muonPt[tg])
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv8.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv8.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -613,7 +608,7 @@ def main(argms):
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_metPt[tg].Draw('E1 same')
-    cv9.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv9.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -647,7 +642,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv10.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv10.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -666,7 +661,7 @@ def main(argms):
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_genMetPt[tg].Draw('E1 same')
-    cv11.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv11.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -700,7 +695,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv12.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv12.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -710,7 +705,7 @@ def main(argms):
     cv13 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
     h_jetEta["notrigger"].Draw('E1')
-    tX1 = 0.6*6
+    tX1 = 0.6*14
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
@@ -767,7 +762,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv15.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv15.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
