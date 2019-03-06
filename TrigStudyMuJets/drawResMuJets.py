@@ -89,13 +89,13 @@ def fitInfo(fit=ROOT.TF1()):
     try:
         file = open("fitInfo.txt", "a+")
         with file:
-            file.write("Equation given by: \r \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \r \t"
-                       "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \r")
-            file.write("Chi2, NDF, prob, par1, par2, par3, par4 \r")
+            file.write("Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
+                       "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n")
+            file.write("Chi2, NDF, prob, par1, par2, par3, par4 \n")
             file.write(
-                "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\r " .format
-                (fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.Parameter(0), fit.ParError(0), fit.Parameter(1),
-                 fit.ParError(1), fit.Parameter(2), fit.ParError(2), fit.Parameter(3), fit.ParError(3)))
+                "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\n " .format
+                (fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0), fit.GetParError(0), fit.GetParameter(1),
+                 fit.GetParError(1), fit.GetParameter(2), fit.GetParError(2), fit.GetParameter(3), fit.GetParError(3)))
             file.close()
     except OSError:
         print("Could not open file!")
@@ -393,8 +393,9 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
+                    #h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
+                    #p0 = f_jetHt[tg].GetParameter(0)
                     fitInfo(f_jetHt[tg])
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
@@ -406,6 +407,7 @@ def main(argms):
                     tY1 = 1.1
                 elif i > 0:
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')
+                    fitInfo(f_jetHt[tg])
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
     cv2.BuildLegend(0.5, 0.1, 0.9, 0.3)
