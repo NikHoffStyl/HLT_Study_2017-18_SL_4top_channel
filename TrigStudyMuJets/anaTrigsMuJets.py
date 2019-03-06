@@ -20,7 +20,8 @@ class TriggerStudy(Module):
     for different combinations of trigger paths."""
 
     def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None):
-        """ Initialise global variables
+        """
+        Initialise global variables
 
         Args:
             writeHistFile (bool): True to write file, False otherwise
@@ -204,14 +205,14 @@ class TriggerStudy(Module):
 
     def jetCriteria(self, jets):
         """
-            Return the number of accepted jets and the number of accepted b-tagged jets
+        Return the number of accepted jets and the number of accepted b-tagged jets
 
-            Args:
-                jets (Collection): Information of jets
-            Returns:
-                (tuple): tuple containing:
-                    nJetsPass (int): number of jets
-                    nBtagsPass (int): number of b-tagged jets
+        Args:
+            jets (Collection): Information of jets
+        Returns:
+            (tuple): tuple containing:
+                nJetsPass (int): number of jets
+                nBtagsPass (int): number of b-tagged jets
         """
         nJetsPass = 0
         nBtagsPass = 0
@@ -233,14 +234,14 @@ class TriggerStudy(Module):
 
     def muonCriteria(self, muons):
         """
-                Return the number of accepted jets and the number of accepted b-tagged jets
+        Return the number of accepted jets and the number of accepted b-tagged jets
 
-                Args:
-                    muons (Collection): Information of jets
-                Returns:
-                    tuple: tuple containing
-                        nMuonsPass (int): number of muons
-                        MuonsPassIdx (int): index of muon that passed
+        Args:
+            muons (Collection): Information of jets
+        Returns:
+            tuple: tuple containing
+                nMuonsPass (int): number of muons
+                MuonsPassIdx (int): index of muon that passed
         """
         nMuonsPass = 0
         MuonsPassIdx = 0
@@ -255,14 +256,14 @@ class TriggerStudy(Module):
 
     def electronCriteria(self, electrons):
         """
-            Return the number of accepted jets and the number of accepted b-tagged jets
+        Return the number of accepted jets and the number of accepted b-tagged jets
 
-            Args:
-                electrons (Collection): Information of jets
-            Returns:
-                tuple: tuple containing
-                    nElsPass (int): number of muons
-                    ElsPassIdx (int): index of muon that passed
+        Args:
+            electrons (Collection): Information of jets
+        Returns:
+            tuple: tuple containing
+                nElsPass (int): number of muons
+                ElsPassIdx (int): index of muon that passed
         """
         nElsPass = 0
         ElsPassIdx = 0
@@ -312,18 +313,6 @@ class TriggerStudy(Module):
             else:
                 for tg in self.trigLst[key]:
                     trigPath.update({tg: False})
-        #
-        # trigPath = {'IsoMu24': getattr(hltObj, 'IsoMu24'), 'Ele32_WPTight_Gsf': getattr(hltObj, 'Ele32_WPTight_Gsf'),
-        #             'Ele35_WPTight_Gsf': getattr(hltObj, 'Ele35_WPTight_Gsf'),
-        #             'Ele38_WPTight_Gsf': getattr(hltObj, 'Ele38_WPTight_Gsf'),
-        #             'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': getattr(hltObj,
-        #                                                                   'PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'),
-        #             'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5': getattr(hltObj, 'Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'),
-        #             'Ele28_eta2p1_WPTight_Gsf_HT150': getattr(hltObj, 'Ele28_eta2p1_WPTight_Gsf_HT150'),
-        #             'IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
-        #             'Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
-        #             'Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False,
-        #             'Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2': False}
 
         if trigPath['IsoMu24'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
             trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
@@ -333,12 +322,6 @@ class TriggerStudy(Module):
             if not key.find("El") == -1: continue
             for tg in self.trigLst[key]:
                 jetHt.update({tg: 0})
-
-        # jetHt2 = {"notrig": 0}
-        # for key in self.trigLst:
-        #     if not key.find("El") == -1: continue
-        #     for tg in self.trigLst[key]:
-        #         jetHt2.update({tg: 0})
 
         nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
         nMuonPass, MuonPassIdx = self.muonCriteria(muons)

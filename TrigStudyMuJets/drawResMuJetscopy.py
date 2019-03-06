@@ -46,7 +46,7 @@ def pdfCreator(parg, arg, canvas):
         canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf)"), "pdf")
 
 
-def fitf(x, par):
+def sigmoidFit(x, par):
     """
         Write sigmoid function for TF1 class
 
@@ -61,22 +61,43 @@ def fitf(x, par):
     return fitval
 
 
-def fitInfo(fileName="fitInfo", fit=ROOT.TF1()):
+def turnOnFit(x, par):
+    """
+    Write turn-on efficiency fit function
+
+    Args:
+        x: list of the dimensions
+        par: list of the parameters
+
+    Returns:
+        fitval: function
+
+    """
+    subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0]))
+    fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3]
+    return fitval
+
+
+def fitInfo(fit=ROOT.TF1()):
     """
         Print fit parameter values and their errors along with the statistics
 
-    :param fileName: where info will be printed
     :param fit: function fitted to histogram
     :return:
     """
     try:
-        file = open(fileName + ".csv", "a+")
+        file = open("fitInfo.txt", "a+")
         with file:
+            file.write("Equation given by: \r \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \r \t"
+                       "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \r")
+            file.write("Chi2, NDF, prob, par1, par2, par3, par4 \r")
             file.write(
-                "{0}, {1}, {2}, {3}, {4} \r ".format(fit.GetChisquare(), fit.GetParameter(0), fit.GetParameter(1),
-                                                     fit.GetParameter(2), fit.GetParameter(3)))
+                "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\r " .format
+                (fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.Parameter(0), fit.ParError(0), fit.Parameter(1),
+                 fit.ParError(1), fit.Parameter(2), fit.ParError(2), fit.Parameter(3), fit.ParError(3)))
+            file.close()
     except OSError:
-        print("Could not open file! Please close Excel!")
+        print("Could not open file!")
 
 
 def main(argms):
@@ -124,10 +145,12 @@ def main(argms):
     h_TriggerRatio = {}  # TEfficiency class
     f = {}  # TF1 class
 
+    fitFunction = turnOnFit  # sigmoidFit
+
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 700, 500)  # 1100 600
-    triggerCanvas.SetFillColor(33)
-    triggerCanvas.SetFrameFillColor(41)
+    triggerCanvas.SetFillColor(18)
+    triggerCanvas.SetFrameFillColor(17)
     triggerCanvas.SetGrid()
 
     # - Open file and sub folder
@@ -198,23 +221,23 @@ def main(argms):
                     if not histo:
                         print("Histogram %s is empty" % hName)
 
-            f["jetHt_" + tg] = ROOT.TF1('f_jetHt' + tg, fitf, 200, 1500, 4)
+            f["jetHt_" + tg] = ROOT.TF1('f_jetHt' + tg, fitFunction, 200, 1500, 4)
             f["jetHt_" + tg].SetParameters(0.7, 0.0045, 100, 0.14)
             f["jetHt_" + tg].SetParLimits(0, 0.4, 0.8)
             f["jetHt_" + tg].SetParLimits(1, 0, 0.99)
             f["jetHt_" + tg].SetParLimits(2, -100, 500)
             f["jetHt_" + tg].SetParLimits(3, -0.1, 0.2)
-            f["jetMult_" + tg] = ROOT.TF1('f_jetMult' + tg, fitf, 20, 0, 20)
-            f["jetBMult_" + tg] = ROOT.TF1('f_jetBMult' + tg, fitf, 20, 0, 20)
-            f["jetEta_" + tg] = ROOT.TF1('f_jetEta' + tg, fitf, 300, -6, 8)
-            f["jetPhi_" + tg] = ROOT.TF1('f_jetPhi' + tg, fitf, 300, -6, 8)
-            f["muonPt_" + tg] = ROOT.TF1('f_muonPt' + tg, fitf, 300, 0, 300)
-            f["muonEta_" + tg] = ROOT.TF1('f_muonEta' + tg, fitf, 300, -6, 8)
-            f["muonPhi_" + tg] = ROOT.TF1('f_muonPhi' + tg, fitf, 300, -6, 8)
-            f["metPt_" + tg] = ROOT.TF1('f_metPt' + tg, fitf, 300, 0, 300)
-            f["metPhi_" + tg] = ROOT.TF1('f_metPhi' + tg, fitf, 300, -6, 8)
-            f["genMetPt_" + tg] = ROOT.TF1('f_genMetPt' + tg, fitf, 300, 0, 300)
-            f["genMetPhi_" + tg] = ROOT.TF1('f_genMetPhi' + tg, fitf, 300, -6, 8)
+            f["jetMult_" + tg] = ROOT.TF1('f_jetMult' + tg, fitFunction, 20, 0, 20)
+            f["jetBMult_" + tg] = ROOT.TF1('f_jetBMult' + tg, fitFunction, 20, 0, 20)
+            f["jetEta_" + tg] = ROOT.TF1('f_jetEta' + tg, fitFunction, 300, -6, 8)
+            f["jetPhi_" + tg] = ROOT.TF1('f_jetPhi' + tg, fitFunction, 300, -6, 8)
+            f["muonPt_" + tg] = ROOT.TF1('f_muonPt' + tg, fitFunction, 300, 0, 300)
+            f["muonEta_" + tg] = ROOT.TF1('f_muonEta' + tg, fitFunction, 300, -6, 8)
+            f["muonPhi_" + tg] = ROOT.TF1('f_muonPhi' + tg, fitFunction, 300, -6, 8)
+            f["metPt_" + tg] = ROOT.TF1('f_metPt' + tg, fitFunction, 300, 0, 300)
+            f["metPhi_" + tg] = ROOT.TF1('f_metPhi' + tg, fitFunction, 300, -6, 8)
+            f["genMetPt_" + tg] = ROOT.TF1('f_genMetPt' + tg, fitFunction, 300, 0, 300)
+            f["genMetPhi_" + tg] = ROOT.TF1('f_genMetPhi' + tg, fitFunction, 300, -6, 8)
 
             for fName in f:
                 if not fName.find(tg) == -1: continue
@@ -269,7 +292,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h["jetHt_" + tg].Draw('E1 same')
-    cv1.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv1.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6*(h["jetHt_notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h["jetHt_notrigger"].GetMaximum())
@@ -295,6 +318,7 @@ def main(argms):
                 if i == 0:
                     h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f["jetHt_" + tg])
                     h_TriggerRatio[tg].Fit(f["jetHt_" + tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
+                    fitInfo(f["jetHt_" + tg])
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -307,7 +331,7 @@ def main(argms):
                     h_TriggerRatio[tg].Fit(f["jetHt_" + tg], 'LVR')
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv2.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -321,7 +345,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h["jetMult_" + tg].Draw('E1 same')
-    cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv3.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6 * (h["jetMult_notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h["jetMult_notrigger"].GetMaximum())
@@ -356,7 +380,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv4.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv4.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -371,7 +395,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h["jetBMult_" + tg].Draw('E1 same')
-    cv5.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv5.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6 * (h["jetBMult_notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h["jetBMult_notrigger"].GetMaximum())
@@ -406,7 +430,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv6.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv6.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -438,7 +462,7 @@ def main(argms):
         # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h["muonPt_" + tg].Draw('E1 same')
-    cv7.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv7.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -454,7 +478,7 @@ def main(argms):
     h["muonPt_prompt"].SetTitle("prompt muons")
     h["muonPt_prompt"].Draw('E1 same')
     h["muonPt_non-prompt"].Draw('E1 same')
-    cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv71.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -487,7 +511,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv8.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv8.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -505,7 +529,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h["metPt_" + tg].Draw('E1 same')
-    cv9.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv9.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -538,7 +562,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv10.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv10.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -556,7 +580,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h["genMetPt_" + tg].Draw('E1 same')
-    cv11.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv11.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -589,7 +613,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv12.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv12.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -653,7 +677,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv15.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv15.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)

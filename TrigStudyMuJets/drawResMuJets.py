@@ -19,17 +19,17 @@ def process_arguments():
     parser.add_argument("-f", "--inputLFN", choices=["ttjets", "tttt", "tttt_weights", "wjets"],
                         default="tttt", help="Set list of input files")
     args = parser.parse_args()
-    # TODO: Add more args!
     return args
 
 
 def pdfCreator(parg, arg, canvas):
     """
-        Create a pdf of histograms
-        Args:
-            parg (class): commandline arguments
-            arg (int): print argument
-            canvas (TCanvas): canvas which includes plot
+    Create a pdf of histograms
+
+    Args:
+        parg (class): commandline arguments
+        arg (int): print argument
+        canvas (TCanvas): canvas which includes plot
     """
     time_ = datetime.now()
     filename = time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf")
@@ -47,19 +47,58 @@ def pdfCreator(parg, arg, canvas):
         canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf)"), "pdf")
 
 
-def fitf(x, par):
+def sigmoidFit(x, par):
     """
-        Write sigmoid function for TF1 class
+    Write sigmoid function for TF1 class
 
-        Args:
-            x (list):  list of the dimension
-            par (list): list of the parameters
+    Args:
+        x (list):  list of the dimension
+        par (list): list of the parameters
 
-        Returns:
-            fitval : function
+    Returns:
+        fitval : function
     """
-    fitval = ( par[0] / (1 + math.exp(-par[1] * (x[0]-par[2])))) + par[3]
+    fitval = (par[0] / (1 + math.exp(-par[1] * (x[0]-par[2])))) + par[3]
     return fitval
+
+
+def turnOnFit(x, par):
+    """
+    Write turn-on efficiency fit function
+
+    Args:
+        x: list of the dimensions
+        par: list of the parameters
+
+    Returns:
+        fitval: function
+
+    """
+    subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0]))
+    fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3]
+    return fitval
+
+
+def fitInfo(fit=ROOT.TF1()):
+    """
+        Print fit parameter values and their errors along with the statistics
+
+    :param fit: function fitted to histogram
+    :return:
+    """
+    try:
+        file = open("fitInfo.txt", "a+")
+        with file:
+            file.write("Equation given by: \r \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \r \t"
+                       "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \r")
+            file.write("Chi2, NDF, prob, par1, par2, par3, par4 \r")
+            file.write(
+                "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\r " .format
+                (fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.Parameter(0), fit.ParError(0), fit.Parameter(1),
+                 fit.ParError(1), fit.Parameter(2), fit.ParError(2), fit.Parameter(3), fit.ParError(3)))
+            file.close()
+    except OSError:
+        print("Could not open file!")
 
 
 def main(argms):
@@ -134,9 +173,9 @@ def main(argms):
     f_genMetPhi = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 700, 500) # 1100 600
-    triggerCanvas.SetFillColor(33)
-    triggerCanvas.SetFrameFillColor(41)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 700, 500)  # 1100 600
+    triggerCanvas.SetFillColor(18)
+    triggerCanvas.SetFrameFillColor(17)
     triggerCanvas.SetGrid()
 
     # - Open file and sub folder
@@ -251,7 +290,7 @@ def main(argms):
             h_genMetPt[tg].SetLineColor(i)
             h_genMetPhi[tg].SetLineColor(i)
 
-            f_jetHt[tg] = ROOT.TF1('f_jetHt' + tg, fitf, 200, 1500, 4)
+            f_jetHt[tg] = ROOT.TF1('f_jetHt' + tg, sigmoidFit, 200, 1500, 4)
             f_jetHt[tg].SetLineColor(1)
             f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
             f_jetHt[tg].SetParameters(0.7, 0.0045, 100, 0.14)
@@ -259,17 +298,17 @@ def main(argms):
             f_jetHt[tg].SetParLimits(1, 0, 0.99)
             f_jetHt[tg].SetParLimits(2, -100, 500)
             f_jetHt[tg].SetParLimits(3, -0.1, 0.3)
-            f_jetMult[tg] = ROOT.TF1('f_jetMult' + tg, fitf, 20, 0, 20)
-            f_jetBMult[tg] = ROOT.TF1('f_jetBMult' + tg, fitf, 20, 0, 20)
-            f_jetEta[tg] = ROOT.TF1('f_jetEta' + tg, fitf, 300, -6, 8)
-            f_jetPhi[tg] = ROOT.TF1('f_jetPhi' + tg, fitf, 300, -6, 8)
-            f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, fitf, 300, 0, 300)
-            f_muonEta[tg] = ROOT.TF1('f_muonEta' + tg, fitf, 300, -6, 8)
-            f_muonPhi[tg] = ROOT.TF1('f_muonPhi' + tg, fitf, 300, -6, 8)
-            f_metPt[tg] = ROOT.TF1('f_metPt' + tg, fitf, 300, 0, 300)
-            f_metPhi[tg] = ROOT.TF1('f_metPhi' + tg, fitf, 300, -6, 8)
-            f_genMetPt[tg] = ROOT.TF1('f_genMetPt' + tg, fitf, 300, 0, 300)
-            f_genMetPhi[tg] = ROOT.TF1('f_genMetPhi' + tg, fitf, 300, -6, 8)
+            f_jetMult[tg] = ROOT.TF1('f_jetMult' + tg, sigmoidFit, 20, 0, 20)
+            f_jetBMult[tg] = ROOT.TF1('f_jetBMult' + tg, sigmoidFit, 20, 0, 20)
+            f_jetEta[tg] = ROOT.TF1('f_jetEta' + tg, sigmoidFit, 300, -6, 8)
+            f_jetPhi[tg] = ROOT.TF1('f_jetPhi' + tg, sigmoidFit, 300, -6, 8)
+            f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, sigmoidFit, 300, 0, 300)
+            f_muonEta[tg] = ROOT.TF1('f_muonEta' + tg, sigmoidFit, 300, -6, 8)
+            f_muonPhi[tg] = ROOT.TF1('f_muonPhi' + tg, sigmoidFit, 300, -6, 8)
+            f_metPt[tg] = ROOT.TF1('f_metPt' + tg, sigmoidFit, 300, 0, 300)
+            f_metPhi[tg] = ROOT.TF1('f_metPhi' + tg, sigmoidFit, 300, -6, 8)
+            f_genMetPt[tg] = ROOT.TF1('f_genMetPt' + tg, sigmoidFit, 300, 0, 300)
+            f_genMetPhi[tg] = ROOT.TF1('f_genMetPhi' + tg, sigmoidFit, 300, -6, 8)
 
             f_jetHt[tg].SetLineStyle(style[i-2])
             f_jetMult[tg].SetLineStyle(style[i - 2])
@@ -356,6 +395,7 @@ def main(argms):
                 if i == 0:
                     h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
+                    fitInfo(f_jetHt[tg])
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
