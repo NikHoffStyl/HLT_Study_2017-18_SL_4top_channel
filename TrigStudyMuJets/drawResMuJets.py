@@ -4,6 +4,7 @@ Created on Jan 2019
 @author: NikHoffStyl
 """
 import os
+import sys
 import errno
 import ROOT
 from ROOT import TLatex
@@ -89,19 +90,24 @@ def fitInfo(fit=ROOT.TF1(), printEqn=""):
     Returns:
 
     """
+    #originalStdout = sys.stdout
     try:
-        file = open("fitInfo.txt", "a+")
-        with file:
+        #file = open("fitInfo.txt", "a+")
+        with open("fitInfo.txt", "a+") as fitFile:
             if printEqn == "t":
-                file.write(fit.Print())
-                file.write("Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
+                #sys.stdout = fitFile
+                #balaha=fit.Print("V")
+                #print(balaha)
+                #sys.stdout = originalStdout
+                #print(fileFitPrint, file=fitFile)
+                fitFile.write("Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
                            "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n")
-                file.write("Chi2, NDF, prob, par1, par2, par3, par4 \n")
-            file.write(
+                fitFile.write("Chi2, NDF, prob, par1, par2, par3, par4 \n")
+            fitFile.write(
                 "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\n " .format
                 (fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0), fit.GetParError(0), fit.GetParameter(1),
                  fit.GetParError(1), fit.GetParameter(2), fit.GetParError(2), fit.GetParameter(3), fit.GetParError(3)))
-            file.close()
+            fitFile.close()
     except OSError:
         print("Could not open file!")
 
@@ -298,8 +304,12 @@ def main(argms):
             f_jetHt[tg] = ROOT.TF1('jetHt' + tg, sigmoidFit, 200, 2500, 4)
             f_jetHt[tg].SetLineColor(1)
             f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
+            f_jetHt[tg].SetParLimits(0, 0.4, 0.8)
+            f_jetHt[tg].SetParLimits(1, 0, 0.99)
+            f_jetHt[tg].SetParLimits(2, -100, 500)
+            f_jetHt[tg].SetParLimits(3, -0.1, 0.3)
 
-            f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, sigmoidFit, 300, 0, 300)
+            f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, sigmoidFit, 0, 250, 4)
             f_muonPt[tg].SetLineColor(1)
             f_muonPt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
 
@@ -379,8 +389,8 @@ def main(argms):
                 if i == 0:
                     # h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     f_jetHt[tg].SetParameters(0.8, 0.0046, 135, 0)
-                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(f_jetHt[tg])
+                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
+                    fitInfo(f_jetHt[tg], "t")
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
