@@ -4,7 +4,6 @@ Created on Jan 2019
 @author: NikHoffStyl
 """
 import os
-import sys
 import errno
 import ROOT
 from ROOT import TLatex
@@ -80,34 +79,52 @@ def turnOnFit(x, par):
     return fitval
 
 
-def fitInfo(fit=ROOT.TF1(), printEqn=""):
+def chooseFitFunction(x, par, funcName):
     """
 
     Args:
+        x: list of dimensions
+        par: list of parameters
+        funcName:
+
+    Returns: fit function
+
+    """
+    if funcName == "s":
+        return sigmoidFit(x, par)
+    elif funcName == "t":
+        return turnOnFit(x, par)
+    else:
+        return None
+
+
+def fitInfo(fitFile, fit, printEqn, fitName):
+    """
+
+    Args:
+        fitFile: file to save fit info
         fit: fitted function
         printEqn: name of equation
+        fitName: fit name
 
     Returns:
 
     """
-    #originalStdout = sys.stdout
     try:
-        #file = open("fitInfo.txt", "a+")
-        with open("fitInfo.txt", "a+") as fitFile:
-            if printEqn == "t":
-                #sys.stdout = fitFile
-                #balaha=fit.Print("V")
-                #print(balaha)
-                #sys.stdout = originalStdout
-                #print(fileFitPrint, file=fitFile)
-                fitFile.write("Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
-                           "fitval = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n")
+        with fitFile:
+            if printEqn == "s":
+                fitFile.write("\n Equation given by: \n \t "
+                              "y = (par[0] / (1 + math.exp(-par[1] * (x[0]-par[2])))) + par[3] \n\n")
                 fitFile.write("Chi2, NDF, prob, par1, par2, par3, par4 \n")
-            fitFile.write(
-                "{0}, {1}, {2}, {3} +/- {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}\n " .format
-                (fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0), fit.GetParError(0), fit.GetParameter(1),
-                 fit.GetParError(1), fit.GetParameter(2), fit.GetParError(2), fit.GetParameter(3), fit.GetParError(3)))
-            fitFile.close()
+            if printEqn == "t":
+                fitFile.write("\n Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
+                              "y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n\n")
+                fitFile.write("fitName, Chi2, NDF, prob, par1, par2, par3, par4 \n ")
+            fitFile.write("{0}, {1}, {2}, {3}, {4} +/- {5}, {6} +/- {7}, {8} +/- {9}, {10} +/- {11}\n " .format
+                          (fitName, fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0),
+                           fit.GetParError(0), fit.GetParameter(1), fit.GetParError(1), fit.GetParameter(2),
+                           fit.GetParError(2), fit.GetParameter(3), fit.GetParError(3)))
+
     except OSError:
         print("Could not open file!")
 
@@ -153,6 +170,8 @@ def main(argms):
             val = val[0:c]
             selCriteria[key1] = val
 
+    fitfile = open("fitInfo.txt", "a+")
+
     h_jetHt = {}
     h_jetMult = {}
     h_jetBMult = {}
@@ -171,22 +190,12 @@ def main(argms):
     h_TriggerRatio = {}
 
     f_jetHt = {}
-    f_jetMult = {}
-    f_jetBMult = {}
-    f_jetEta = {}
-    f_jetPhi = {}
     f_muonPt = {}
-    f_muonEta = {}
-    f_muonPhi = {}
-    f_metPt = {}
-    f_metPhi = {}
-    f_genMetPt = {}
-    f_genMetPhi = {}
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
-    triggerCanvas.SetFillColor(18)
-    triggerCanvas.SetFrameFillColor(17)
+    triggerCanvas.SetFillColor(17)
+    # triggerCanvas.SetFrameFillColor(17)
     triggerCanvas.SetGrid()
 
     # - Open file and sub folder
@@ -312,6 +321,10 @@ def main(argms):
             f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, sigmoidFit, 0, 250, 4)
             f_muonPt[tg].SetLineColor(1)
             f_muonPt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
+            f_muonPt[tg].SetParLimits(0, 0.4, 0.8)
+            f_muonPt[tg].SetParLimits(1, 0, 0.99)
+            f_muonPt[tg].SetParLimits(2, -10, 50)
+            f_muonPt[tg].SetParLimits(3, -0.1, 0.3)
 
             f_jetHt[tg].SetLineStyle(style[i-2])
             f_muonPt[tg].SetLineStyle(style[i - 2])
@@ -340,7 +353,7 @@ def main(argms):
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
                   % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso04"]))
-    ltx.SetTextSize(0.01)
+    ltx.SetTextSize(0.006)
     pdfCreator(argms, 0, triggerCanvas)
 
     # - Create text for legend
@@ -360,7 +373,6 @@ def main(argms):
     h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets"):
         for tg in trigList[key]:
             h_jetHt[tg].Draw('E1 same')
     cv1.BuildLegend(0.47, 0.54, 0.97, 0.74)
@@ -390,7 +402,7 @@ def main(argms):
                     # h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     f_jetHt[tg].SetParameters(0.8, 0.0046, 135, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(f_jetHt[tg], "t")
+                    fitInfo(fitFile=fitfile, fit=f_jetHt[tg], printEqn="s", fitName=("jetHt" + tg))
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -403,8 +415,8 @@ def main(argms):
                     if i == 1: f_jetHt[tg].SetParameters(0.8, 0.0116, 500, 0)
                     elif i == 2: f_jetHt[tg].SetParameters(0.8, 0.008, 330, 0.17)
                     elif i == 3: f_jetHt[tg].SetParameters(0.8, 0.02, 500, 0)
-                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')
-                    fitInfo(f_jetHt[tg])
+                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')
+                    fitInfo(fitFile=fitfile, fit=f_jetHt[tg], printEqn="s", fitName=("jetHt" + tg))
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
     cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
@@ -434,7 +446,6 @@ def main(argms):
     j = 2
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
@@ -486,7 +497,6 @@ def main(argms):
     j = 2
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_jetBMult[tg], h_jetBMult["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetBMult[tg], h_jetBMult["notrigger"])
@@ -582,7 +592,7 @@ def main(argms):
                 if i == 0:
                     f_muonPt[tg].SetParameters(0.9, 0.95, 24, 0.05)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(f_muonPt[tg])
+                    fitInfo(fitFile=fitfile, fit=f_muonPt[tg], printEqn="s", fitName=("muonPt" + tg))
                     h_TriggerRatio[tg].Draw('AP')
                     cv8.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -596,7 +606,7 @@ def main(argms):
                     elif i == 2: f_muonPt[tg].SetParameters(0.18, 0.95, 24, 0.8)
                     elif i == 3: f_muonPt[tg].SetParameters(0.75, 0.95, 15, 0.15)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LVR')
-                    fitInfo(f_muonPt[tg])
+                    fitInfo(fitFile=fitfile, fit=f_muonPt[tg], printEqn="s", fitName=("muonPt" + tg))
                     h_TriggerRatio[tg].Draw('same')
             i += 1
     cv8.BuildLegend(0.4, 0.1, 0.9, 0.3)
