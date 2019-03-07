@@ -102,7 +102,6 @@ def fitInfo(fit, printEqn, fitName):
     """
 
     Args:
-        fitFile: file to save fit info
         fit: fitted function
         printEqn: name of equation
         fitName: fit name
@@ -315,9 +314,9 @@ def main(argms):
             f_jetHt[tg].SetLineColor(1)
             f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
             f_jetHt[tg].SetParLimits(0, 0.4, 1)
-            f_jetHt[tg].SetParLimits(1, 0.05, 100)
+            f_jetHt[tg].SetParLimits(1, 2, 25)
             f_jetHt[tg].SetParLimits(2, -100, 500)
-            f_jetHt[tg].SetParLimits(3, -0.1, 0.3)
+            f_jetHt[tg].SetParLimits(3, -0.1, 0.1)
 
             f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, turnOnFit, 0, 250, 4)
             f_muonPt[tg].SetLineColor(1)
@@ -401,7 +400,7 @@ def main(argms):
                 j += 1
                 if i == 0:
                     # h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
-                    f_jetHt[tg].SetParameters(0.8, 10, 135, 0)
+                    f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
                     fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg))
                     h_TriggerRatio[tg].Draw('AP')
@@ -413,9 +412,9 @@ def main(argms):
                     tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
                 elif i > 0:
-                    if i == 1: f_jetHt[tg].SetParameters(0.8, 10, 500, 0)
+                    if i == 1: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
                     elif i == 2: f_jetHt[tg].SetParameters(0.8, 10, 330, 0.17)
-                    elif i == 3: f_jetHt[tg].SetParameters(0.8, 10, 500, 0)
+                    elif i == 3: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')
                     fitInfo(fit=f_jetHt[tg], printEqn="n", fitName=("jetHt" + tg))
                     h_TriggerRatio[tg].Draw('same')
@@ -482,7 +481,6 @@ def main(argms):
     h_jetBMult["notrigger"].Draw('E1')
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetBMult[tg].Draw('E1 same')
     cv5.BuildLegend(0.47, 0.54, 0.97, 0.74)
@@ -579,7 +577,6 @@ def main(argms):
     j = 2
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_muonPt[tg], h_muonPt["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonPt[tg], h_muonPt["notrigger"])
@@ -593,7 +590,7 @@ def main(argms):
                 if i == 0:
                     f_muonPt[tg].SetParameters(0.9, 0.95, 24, 0.05)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(fit=f_muonPt[tg], printEqn="t", fitName=("muonPt" + tg))
+                    # fitInfo(fit=f_muonPt[tg], printEqn="t", fitName=("muonPt" + tg))
                     h_TriggerRatio[tg].Draw('AP')
                     cv8.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -607,7 +604,7 @@ def main(argms):
                     elif i == 2: f_muonPt[tg].SetParameters(0.18, 0.95, 24, 0.8)
                     elif i == 3: f_muonPt[tg].SetParameters(0.75, 0.95, 15, 0.15)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')
-                    fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg))
+                    # fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg))
                     h_TriggerRatio[tg].Draw('same')
             i += 1
     cv8.BuildLegend(0.4, 0.1, 0.9, 0.3)
