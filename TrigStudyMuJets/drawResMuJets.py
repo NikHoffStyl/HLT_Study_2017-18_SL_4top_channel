@@ -413,7 +413,7 @@ def main(argms):
                     tY1 = 1.1
                 elif i > 0:
                     if i == 1: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
-                    elif i == 2: f_jetHt[tg].SetParameters(0.8, 10, 330, 0.17)
+                    elif i == 2: f_jetHt[tg].SetParameters(0.8, 10, 330, 0)
                     elif i == 3: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')
                     fitInfo(fit=f_jetHt[tg], printEqn="n", fitName=("jetHt" + tg))
