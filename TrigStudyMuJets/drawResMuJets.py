@@ -22,7 +22,7 @@ def process_arguments():
     return args
 
 
-def pdfCreator(parg, arg, canvas):
+def pdfCreator(parg, arg, canvas, selCrit):
     """
     Create a pdf of histograms
 
@@ -30,9 +30,10 @@ def pdfCreator(parg, arg, canvas):
         parg (class): commandline arguments
         arg (int): print argument
         canvas (TCanvas): canvas which includes plot
+        selCrit:
     """
     time_ = datetime.now()
-    filename = time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf")
+    filename = time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] + "jetPt.pdf")
     if not os.path.exists(os.path.dirname(filename)):
         try:
             os.makedirs(os.path.dirname(filename))
@@ -40,11 +41,14 @@ def pdfCreator(parg, arg, canvas):
             if exc.errno != errno.EEXIST:
                 raise
     if arg == 0:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf("), "pdf")
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] +
+                                    "jetPt.pdf("), "pdf")
     if arg == 1:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf"), "pdf")
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] +
+                                    "jetPt.pdf"), "pdf")
     if arg == 2:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/%w%a_" + parg.inputLFN + ".pdf)"), "pdf")
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] +
+                                    "jetPt.pdf)"), "pdf")
 
 
 def sigmoidFit(x, par):
@@ -351,7 +355,7 @@ def main(argms):
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
                   % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso04"]))
-    pdfCreator(argms, 0, triggerCanvas)
+    pdfCreator(argms, 0, triggerCanvas, selCriteria["minJetPt"])
 
     # - Create text for legend
     if argms.inputLFN == "ttjets":
@@ -378,7 +382,7 @@ def main(argms):
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv2 = triggerCanvas.cd(1)
     i = 0
@@ -420,7 +424,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - Jet Multiplicity plots ---------------------------------
     cv3 = triggerCanvas.cd(1)
@@ -436,7 +440,7 @@ def main(argms):
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv4 = triggerCanvas.cd(1)
     i = 0
@@ -469,7 +473,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - B tagged Jet Multiplicity plots ---------------------------
     cv5 = triggerCanvas.cd(1)
@@ -486,7 +490,7 @@ def main(argms):
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv6 = triggerCanvas.cd(1)
     i = 0
@@ -519,20 +523,20 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - Muon test Plots-------------------------------
     triggerCanvas.cd(1)
     h_muonGenPartFlav.Draw()
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     triggerCanvas.cd(1)
     h_muonGenPartIdx.Draw()
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     triggerCanvas.cd(1)
     h_muonPfRelIso04_all.Draw()
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - Muon pT plots ---------------------------------
     cv7 = triggerCanvas.cd(1)
@@ -551,7 +555,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv71 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].SetTitle("")
@@ -567,7 +571,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv8 = triggerCanvas.cd(1)
     i = 0
@@ -608,7 +612,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - MET pT plots ---------------------------------
     cv9 = triggerCanvas.cd(1)
@@ -620,21 +624,19 @@ def main(argms):
     tY1 = 0.95 * (h_metPt["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_metPt[tg].Draw('E1 same')
     cv9.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv10 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_metPt[tg], h_metPt["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_metPt[tg], h_metPt["notrigger"])
@@ -661,7 +663,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - GenMET pT plots ---------------------------------
     cv11 = triggerCanvas.cd(1)
@@ -673,21 +675,19 @@ def main(argms):
     tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_genMetPt[tg].Draw('E1 same')
     cv11.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv12 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_genMetPt[tg], h_genMetPt["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_genMetPt[tg], h_genMetPt["notrigger"])
@@ -714,7 +714,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - Eta plots ------------------------------------------
     cv13 = triggerCanvas.cd(1)
@@ -731,7 +731,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas)
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv14 = triggerCanvas.cd(1)
     # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
@@ -740,21 +740,19 @@ def main(argms):
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonEta[tg].Draw('E1 same')
     cv14.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv15 = triggerCanvas.cd(1)
     i = 0
     j = 2
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             if ROOT.TEfficiency.CheckConsistency(h_muonEta[tg], h_muonEta["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonEta[tg], h_muonEta["notrigger"])
@@ -781,7 +779,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - Phi plots ------------------------------------------
     cv16 = triggerCanvas.cd(1)
@@ -791,14 +789,13 @@ def main(argms):
     tY1 = 0.95*(h_jetPhi["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetPhi[tg].Draw('E1 same')
     cv16.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas)
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     cv17 = triggerCanvas.cd(1)
     # h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
@@ -807,34 +804,31 @@ def main(argms):
     tY1 = 0.97*(h_muonPhi["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonPhi[tg].Draw('E1 same')
     cv17.BuildLegend(0.4, 0.2, 0.4, 0.2)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas)
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     # - Eta-Phi Map plots ------------------------------------------
     triggerCanvas.cd(1)
     h_jetMap["notrigger"].Draw('COLZ')  # CONT4Z
-    # pdfCreator(argms, 1, triggerCanvas)
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetMap[tg].Draw('COLZ')
-            # pdfCreator(argms, 1, triggerCanvas)
+            # pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     h_muonMap["notrigger"].Draw('COLZ')
-    # pdfCreator(argms, 1, triggerCanvas)
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_muonMap[tg].Draw('COLZ')  # E
-            # pdfCreator(argms, 1, triggerCanvas)
+            # pdfCreator(argms, 1, triggerCanvas, selCriteria["minJetPt"])
 
     #############################################################################
     # - Test Event numbers along steps ----------
@@ -850,13 +844,12 @@ def main(argms):
     i = 0
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets"):
         for tg in trigList[key]:
             ltx.DrawLatex((5.5 - i), tY1, tg)
             i += 1
 
     # h.GetXAxis().SetBinLabel(binnumber,string)
-    pdfCreator(argms, 2, triggerCanvas)
+    pdfCreator(argms, 2, triggerCanvas, selCriteria["minJetPt"])
 
     histFile.Close()
 
