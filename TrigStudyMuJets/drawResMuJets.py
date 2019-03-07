@@ -132,17 +132,6 @@ def fitInfo(fit, printEqn, fitName):
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
-    if argms.inputLFN == "ttjets":
-        inputFile = "../OutFiles/Histograms/TT6Jets1Mu.root"
-    elif argms.inputLFN == "tttt_weights":
-        inputFile = "../OutFiles/Histograms/TTTTweights.root"
-    elif argms.inputLFN == "wjets":
-        inputFile = "../OutFiles/Histograms/Wjets.root"
-    elif argms.inputLFN == "tttt":
-        inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu.root"
-    else:
-        return 0
-
     trigList = {}
     with open("trigList.txt") as f:
         for line in f:
@@ -170,7 +159,16 @@ def main(argms):
             val = val[0:c]
             selCriteria[key1] = val
 
-    #fitfile = open("fitInfo.txt", "a+")
+    if argms.inputLFN == "ttjets":
+        inputFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tttt_weights":
+        inputFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "wjets":
+        inputFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tttt":
+        inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
+    else:
+        return 0
 
     h_jetHt = {}
     h_jetMult = {}
@@ -317,6 +315,7 @@ def main(argms):
             f_jetHt[tg].SetParLimits(1, 2, 25)
             f_jetHt[tg].SetParLimits(2, -100, 500)
             f_jetHt[tg].SetParLimits(3, -0.1, 0.1)
+            f_jetHt[tg].SetLineStyle(style[i - 2])
 
             f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, turnOnFit, 0, 250, 4)
             f_muonPt[tg].SetLineColor(1)
@@ -325,8 +324,6 @@ def main(argms):
             f_muonPt[tg].SetParLimits(1, 0, 0.99)
             f_muonPt[tg].SetParLimits(2, -10, 50)
             f_muonPt[tg].SetParLimits(3, -0.1, 0.3)
-
-            f_jetHt[tg].SetLineStyle(style[i-2])
             f_muonPt[tg].SetLineStyle(style[i - 2])
 
             i += 1
@@ -343,6 +340,7 @@ def main(argms):
     # - Canvas Details
     triggerCanvas.cd(1)
     ltx = TLatex()
+    ltx.SetTextSize(0.005)
     ltx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
     ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preSelCuts["nJet"])
     ltx.DrawLatex(0.16, 0.60, "#bullet Muons plus Electrons: #bf{number > %s }" % preSelCuts["nLepton"])
@@ -353,7 +351,6 @@ def main(argms):
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
                   % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso04"]))
-    ltx.SetTextSize(0.006)
     pdfCreator(argms, 0, triggerCanvas)
 
     # - Create text for legend
