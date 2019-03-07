@@ -22,7 +22,7 @@ def process_arguments():
     return args
 
 
-def pdfCreator(parg, arg, canvas, selCrit):
+def pdfCreator(parg, arg, canvas, minPt):
     """
     Create a pdf of histograms
 
@@ -33,7 +33,7 @@ def pdfCreator(parg, arg, canvas, selCrit):
         selCrit:
     """
     time_ = datetime.now()
-    filename = time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] + "jetPt.pdf")
+    filename = time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt + "jetPt.pdf")
     if not os.path.exists(os.path.dirname(filename)):
         try:
             os.makedirs(os.path.dirname(filename))
@@ -41,13 +41,13 @@ def pdfCreator(parg, arg, canvas, selCrit):
             if exc.errno != errno.EEXIST:
                 raise
     if arg == 0:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] +
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt +
                                     "jetPt.pdf("), "pdf")
     if arg == 1:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] +
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt +
                                     "jetPt.pdf"), "pdf")
     if arg == 2:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + selCrit["minJetPt"] +
+        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt +
                                     "jetPt.pdf)"), "pdf")
 
 
