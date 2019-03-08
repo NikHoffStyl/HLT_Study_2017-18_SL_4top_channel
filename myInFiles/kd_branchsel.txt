@@ -1,4 +1,10 @@
 # Comment format
+# drop *
+# keep Electron*
+# keep Muon*
+# keep Jet*
+# keep MET*
+
 drop Tau*
 drop GenVisTau*
 drop Photon*
