@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Created on Jan 2019
@@ -309,10 +310,6 @@ def main(argms):
             f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, turnOnFit, 0, 250, 4)
             f_muonPt[tg].SetLineColor(1)
             f_muonPt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
-            f_muonPt[tg].SetParLimits(0, 0.4, 0.8)
-            f_muonPt[tg].SetParLimits(1, 0, 0.99)
-            f_muonPt[tg].SetParLimits(2, -10, 50)
-            f_muonPt[tg].SetParLimits(3, -0.1, 0.3)
             f_muonPt[tg].SetLineStyle(style[i - 2])
 
             i += 1
@@ -573,7 +570,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    f_muonPt[tg].SetParameters(0.9, 0.95, 24, 0.05)
+                    f_muonPt[tg].SetParameters(0.8, 0.95, 24, 0.05)
                     f_muonPt[tg].SetParLimits(0, 0.7, 0.9)
                     f_muonPt[tg].SetParLimits(1, 0, 5)
                     f_muonPt[tg].SetParLimits(2, 20, 40)
@@ -590,7 +587,7 @@ def main(argms):
                     tY1 = 1.1
                 if i > 0:
                     if i == 1:
-                        f_muonPt[tg].SetParameters(0.05, 0.5, 24, 0.8)
+                        f_muonPt[tg].SetParameters(0.05, 1000, 24, 0.8)
                         f_muonPt[tg].SetParLimits(0, 0, 0.1)
                         f_muonPt[tg].SetParLimits(1, 100, 2000)
                         f_muonPt[tg].SetParLimits(2, 20, 40)
@@ -612,6 +609,35 @@ def main(argms):
                     h_TriggerRatio[tg].Draw('same')
             i += 1
     cv8.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+
+    cv81 = triggerCanvas.cd(1)
+    i = 0
+    for key in trigList:
+        if not key.find("El") == -1: continue
+        for tg in trigList[key]:
+            h_TriggerRatio[tg] = h_muonPt[tg].Clone("h_muonPtRatio" + tg)
+            h_TriggerRatio[tg].Sumw2()
+            h_TriggerRatio[tg].SetStats(0)
+            h_TriggerRatio[tg].Divide(h_muonPt["notrigger"])
+            h_TriggerRatio[tg].Rebin(300)
+            xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
+            xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
+            h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_TriggerRatio[tg].SetName(tg)
+            if i == 0:
+                h_TriggerRatio[tg].SetMinimum(0.)
+                h_TriggerRatio[tg].SetMaximum(1.8)
+                h_TriggerRatio[tg].Draw('E1')
+                tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
+                tY1 = 1.1
+            if i > 0:
+                h_TriggerRatio[tg].Draw('E1 same')
+            i += 1
+    cv81.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -739,7 +765,7 @@ def main(argms):
     cv14 = triggerCanvas.cd(1)
     # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_muonEta["notrigger"].Draw('E1')
-    tX1 = 0.6*14
+    tX1 = (0.6*14)-6
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
