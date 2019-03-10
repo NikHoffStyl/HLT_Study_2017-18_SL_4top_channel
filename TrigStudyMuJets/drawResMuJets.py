@@ -623,7 +623,7 @@ def main(argms):
             h_TriggerRatio[tg].Sumw2()
             h_TriggerRatio[tg].SetStats(0)
             h_TriggerRatio[tg].Divide(h_muonPt["notrigger"])
-            h_TriggerRatio[tg].Rebin(300)
+            h_TriggerRatio[tg].Rebin(150)
             xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
@@ -631,11 +631,11 @@ def main(argms):
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
                 h_TriggerRatio[tg].SetMaximum(1.8)
-                h_TriggerRatio[tg].Draw('E1')
+                h_TriggerRatio[tg].Draw()
                 tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
                 tY1 = 1.1
             if i > 0:
-                h_TriggerRatio[tg].Draw('E1 same')
+                h_TriggerRatio[tg].Draw('same')
             i += 1
     cv81.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
