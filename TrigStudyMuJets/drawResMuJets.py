@@ -623,14 +623,14 @@ def main(argms):
             h_TriggerRatio[tg].Sumw2()
             h_TriggerRatio[tg].SetStats(0)
             h_TriggerRatio[tg].Divide(h_muonPt["notrigger"])
-            h_TriggerRatio[tg].Rebin(2)
+            h_TriggerRatio[tg].Rebin(299)
             xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
             h_TriggerRatio[tg].SetName(tg)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
-                h_TriggerRatio[tg].SetMaximum(1.8)
+                # h_TriggerRatio[tg].SetMaximum(1.8)
                 h_TriggerRatio[tg].Draw()
                 tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
                 tY1 = 1.1
