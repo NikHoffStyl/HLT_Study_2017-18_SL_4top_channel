@@ -133,6 +133,53 @@ def inclusiveEfficiency(info):
         print("Could not open file!")
 
 
+def cutInfoPage(lx, selCrit, preCuts):
+    """
+
+    Args:
+        lx: latex string
+        selCrit: selection criteria
+        preCuts: pre selection criteria
+
+    Returns:
+
+    """
+    # lx = TLatex()
+    lx.SetTextSize(0.04)
+    lx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
+    lx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preCuts["nJet"])
+    lx.DrawLatex(0.16, 0.60, "#bullet Muons plus Electrons: #bf{number > %s }" % preCuts["nLepton"])
+    lx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
+    lx.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
+    lx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
+                 % (selCrit["minJetId"], selCrit["minJetPt"], selCrit["maxObjEta"]))
+    lx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
+    lx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
+                 % (selCrit["maxObjEta"], selCrit["maxPfRelIso04"]))
+
+
+def cmsPlotString(args):
+    """
+
+    Args:
+        args: command line arguments
+
+    Returns:
+        legStr: string containing channel details
+
+    """
+    if args.inputLFN == "ttjets":
+        legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif args.inputLFN == "tttt":
+        legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif args.inputLFN == "tttt_weights":
+        legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    else:
+        legStr = "#splitline{CMS}{W #rightarrow jets}"
+
+    return legStr
+
+
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
@@ -340,28 +387,11 @@ def main(argms):
     # - Canvas Details
     triggerCanvas.cd(1)
     ltx = TLatex()
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
-    ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preSelCuts["nJet"])
-    ltx.DrawLatex(0.16, 0.60, "#bullet Muons plus Electrons: #bf{number > %s }" % preSelCuts["nLepton"])
-    ltx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
-    ltx.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
-    ltx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
-                  % (selCriteria["minJetId"], selCriteria["minJetPt"], selCriteria["maxObjEta"]))
-    ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
-    ltx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
-                  % (selCriteria["maxObjEta"], selCriteria["maxPfRelIso04"]))
+    cutInfoPage(ltx, selCriteria, preSelCuts)
     pdfCreator(argms, 0, triggerCanvas, selCriteria)
 
     # - Create text for legend
-    if argms.inputLFN == "ttjets":
-        legString = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif argms.inputLFN == "tttt":
-        legString = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif argms.inputLFN == "tttt_weights":
-        legString = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    else:
-        legString = "#splitline{CMS}{W #rightarrow jets}"
+    legString = cmsPlotString(argms)
 
     ROOT.gStyle.SetOptTitle(0)
 
