@@ -121,6 +121,8 @@ def fitInfo(fit, printEqn, fitName, args):
 
 def inclusiveEfficiency(info):
     """
+    Args:
+        info (string): information to be written to file
 
     Returns:
 
@@ -137,14 +139,13 @@ def cutInfoPage(lx, selCrit, preCuts):
     """
 
     Args:
-        lx: latex string
-        selCrit: selection criteria
-        preCuts: pre selection criteria
+        lx (TLatex): latex string
+        selCrit (dictionary): selection criteria
+        preCuts (dictionary): pre selection criteria
 
     Returns:
 
     """
-    # lx = TLatex()
     lx.SetTextSize(0.04)
     lx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
     lx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preCuts["nJet"])
@@ -162,17 +163,17 @@ def cmsPlotString(args):
     """
 
     Args:
-        args: command line arguments
+        args (string): command line arguments
 
     Returns:
-        legStr: string containing channel details
+        legStr (string): string containing channel details
 
     """
-    if args.inputLFN == "ttjets":
+    if args == "ttjets":
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args.inputLFN == "tttt":
+    elif args == "tttt":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args.inputLFN == "tttt_weights":
+    elif args == "tttt_weights":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     else:
         legStr = "#splitline{CMS}{W #rightarrow jets}"
@@ -180,46 +181,97 @@ def cmsPlotString(args):
     return legStr
 
 
+def getFileContents(fileName):
+    """
+
+    Args:
+        fileName (string): path/to/file
+
+    Returns:
+        fileContents (dictionary): file contents given as a dictionary
+
+    """
+    fileContents = {}
+    with open(fileName) as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            if not val.find(",") == -1:
+                fileContents[key1] = val.split(", ")
+            else:
+                fileContents[key1] = val
+    return fileContents
+
+
+def inputFileName(arg, selCrit):
+    """
+
+    Args:
+        arg (string): string that specifies decay and decay channel
+        selCrit (dictionary): dictionary of content selectionCriteria.txt
+
+    Returns:
+        inputFile (string): input file name
+
+    """
+
+    if arg == "ttjets":
+        inputFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "tttt_weights":
+        inputFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "wjets":
+        inputFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "tttt":
+        inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    else:
+        inputFile = None
+
+    return inputFile
+
+
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
-    trigList = {}
-    with open("trigList.txt") as f:
-        for line in f:
-            if line.find(":") == -1: continue
-            (key1, val) = line.split(": ")
-            c = len(val) - 1
-            val = val[0:c]
-            trigList[key1] = val.split(", ")
+    trigList = getFileContents("trigList.txt")
+    # with open("trigList.txt") as f:
+    #     for line in f:
+    #         if line.find(":") == -1: continue
+    #         (key1, val) = line.split(": ")
+    #         c = len(val) - 1
+    #         val = val[0:c]
+    #         trigList[key1] = val.split(", ")
 
-    preSelCuts = {}
-    with open("../myInFiles/preSelectionCuts.txt") as f:
-        for line in f:
-            if line.find(":") == -1: continue
-            (key1, val) = line.split(": ")
-            c = len(val) - 1
-            val = val[0:c]
-            preSelCuts[key1] = val
+    preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt")
+    # with open("../myInFiles/preSelectionCuts.txt") as f:
+    #     for line in f:
+    #         if line.find(":") == -1: continue
+    #         (key1, val) = line.split(": ")
+    #         c = len(val) - 1
+    #         val = val[0:c]
+    #         preSelCuts[key1] = val
 
-    selCriteria = {}
-    with open("selectionCriteria.txt") as f:
-        for line in f:
-            if line.find(":") == -1: continue
-            (key1, val) = line.split(": ")
-            c = len(val) - 1
-            val = val[0:c]
-            selCriteria[key1] = val
+    selCriteria = getFileContents("selectionCriteria.txt")
+    # with open("selectionCriteria.txt") as f:
+    #     for line in f:
+    #         if line.find(":") == -1: continue
+    #         (key1, val) = line.split(": ")
+    #         c = len(val) - 1
+    #         val = val[0:c]
+    #         selCriteria[key1] = val
 
-    if argms.inputLFN == "ttjets":
-        inputFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "tttt_weights":
-        inputFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "wjets":
-        inputFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "tttt":
-        inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
-    else:
-        return 0
+    # if argms.inputLFN == "ttjets":
+    #     inputFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
+    # elif argms.inputLFN == "tttt_weights":
+    #     inputFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCriteria["minJetPt"])
+    # elif argms.inputLFN == "wjets":
+    #     inputFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCriteria["minJetPt"])
+    # elif argms.inputLFN == "tttt":
+    #     inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
+    # else:
+    #     return 0
+    inputFile = inputFileName(argms.inputLFN, selCriteria)
 
     h_jetHt = {}
     h_jetMult = {}
@@ -391,7 +443,7 @@ def main(argms):
     pdfCreator(argms, 0, triggerCanvas, selCriteria)
 
     # - Create text for legend
-    legString = cmsPlotString(argms)
+    legString = cmsPlotString(argms.inputLFN)
 
     ROOT.gStyle.SetOptTitle(0)
 
