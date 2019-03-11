@@ -181,11 +181,12 @@ def cmsPlotString(args):
     return legStr
 
 
-def getFileContents(fileName):
+def getFileContents(fileName, elmList):
     """
 
     Args:
         fileName (string): path/to/file
+        elmList (bool): if true then dictionary elements are lists else strings
 
     Returns:
         fileContents (dictionary): file contents given as a dictionary
@@ -198,10 +199,10 @@ def getFileContents(fileName):
             (key1, val) = line.split(": ")
             c = len(val) - 1
             val = val[0:c]
-            if not val.find(",") == -1:
-                fileContents[key1] = val.split(", ")
-            else:
+            if elmList == False:
                 fileContents[key1] = val
+            else:
+                fileContents[key1] = val.split(", ")
     return fileContents
 
 
@@ -234,43 +235,10 @@ def inputFileName(arg, selCrit):
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
-    trigList = getFileContents("trigList.txt")
-    # with open("trigList.txt") as f:
-    #     for line in f:
-    #         if line.find(":") == -1: continue
-    #         (key1, val) = line.split(": ")
-    #         c = len(val) - 1
-    #         val = val[0:c]
-    #         trigList[key1] = val.split(", ")
-
-    preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt")
-    # with open("../myInFiles/preSelectionCuts.txt") as f:
-    #     for line in f:
-    #         if line.find(":") == -1: continue
-    #         (key1, val) = line.split(": ")
-    #         c = len(val) - 1
-    #         val = val[0:c]
-    #         preSelCuts[key1] = val
-
-    selCriteria = getFileContents("selectionCriteria.txt")
-    # with open("selectionCriteria.txt") as f:
-    #     for line in f:
-    #         if line.find(":") == -1: continue
-    #         (key1, val) = line.split(": ")
-    #         c = len(val) - 1
-    #         val = val[0:c]
-    #         selCriteria[key1] = val
-
-    # if argms.inputLFN == "ttjets":
-    #     inputFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
-    # elif argms.inputLFN == "tttt_weights":
-    #     inputFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCriteria["minJetPt"])
-    # elif argms.inputLFN == "wjets":
-    #     inputFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCriteria["minJetPt"])
-    # elif argms.inputLFN == "tttt":
-    #     inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
-    # else:
-    #     return 0
+    trigList = getFileContents("trigList.txt", True)
+    preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", False)
+    selCriteria = getFileContents("selectionCriteria.txt", False)
+    
     inputFile = inputFileName(argms.inputLFN, selCriteria)
 
     h_jetHt = {}
