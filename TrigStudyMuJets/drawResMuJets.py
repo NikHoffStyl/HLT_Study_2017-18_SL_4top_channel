@@ -213,22 +213,22 @@ def inputFileName(arg, selCrit):
         selCrit (dictionary): dictionary of content selectionCriteria.txt
 
     Returns:
-        inputFile (string): input file name
+        inFile (string): input file name
 
     """
 
     if arg == "ttjets":
-        inputFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "tttt_weights":
-        inputFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "wjets":
-        inputFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "tttt":
-        inputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     else:
-        inputFile = None
+        inFile = None
 
-    return inputFile
+    return inFile
 
 
 def main(argms):
