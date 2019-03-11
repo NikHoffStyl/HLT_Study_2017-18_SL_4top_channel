@@ -119,6 +119,20 @@ def fitInfo(fit, printEqn, fitName, args):
         print("Could not open file!")
 
 
+def inclusiveEfficiency(info):
+    """
+
+    Returns:
+
+    """
+    fitFile = open("fitInfo.txt", "a+")
+    try:
+        with fitFile:
+            fitFile.write(info)
+    except OSError:
+        print("Could not open file!")
+
+
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
@@ -394,6 +408,7 @@ def main(argms):
                     cv2.Update()
                     tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
+                    assymGraph = h_TriggerRatio[tg].CreateGraph()
                 elif i > 0:
                     if i == 1: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
                     elif i == 2: f_jetHt[tg].SetParameters(0.8, 10, 330, 0)
@@ -403,6 +418,40 @@ def main(argms):
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
     cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+
+    cv82 = triggerCanvas.cd(1)
+    i = 0
+    for key in trigList:
+        if not key.find("El") == -1: continue
+        for tg in trigList[key]:
+            h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
+            h_TriggerRatio[tg].Sumw2()
+            h_TriggerRatio[tg].SetStats(0)
+            h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
+            h_TriggerRatio[tg].Rebin(300)
+            print(h_TriggerRatio[tg].GetBinContent(1))
+            inEff = h_TriggerRatio[tg].GetBinContent(1) / 300
+            print(h_TriggerRatio[tg].GetBinError(1))
+            inErEff = h_TriggerRatio[tg].GetBinError(1) / 300
+            inclusiveEfficiency(" Jet HT Eff = {0} +/- {1} , {2}".format(inEff, inErEff, tg))
+            xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
+            xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
+            h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_TriggerRatio[tg].SetName(tg)
+            if i == 0:
+                h_TriggerRatio[tg].SetMinimum(0.)
+                h_TriggerRatio[tg].SetMaximum(301.8)
+                h_TriggerRatio[tg].Draw()
+                tX1 = 0.05 * (h_jetHt["notrigger"].GetXaxis().GetXmax())
+                tY1 = 1.1
+            if i > 0:
+                h_TriggerRatio[tg].Draw('same')
+            i += 1
+    cv82.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -625,7 +674,10 @@ def main(argms):
             h_TriggerRatio[tg].Divide(h_muonPt["notrigger"])
             h_TriggerRatio[tg].Rebin(300)
             print(h_TriggerRatio[tg].GetBinContent(1))
+            inEff = h_TriggerRatio[tg].GetBinContent(1)/300
             print(h_TriggerRatio[tg].GetBinError(1))
+            inErEff = h_TriggerRatio[tg].GetBinError(1)/300
+            inclusiveEfficiency("Muon Pt Eff = {0} +/- {1} , {2}" .format(inEff, inErEff, tg))
             xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
