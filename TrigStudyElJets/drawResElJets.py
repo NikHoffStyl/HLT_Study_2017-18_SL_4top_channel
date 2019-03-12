@@ -180,44 +180,6 @@ def main(argms):
 
     inputFile = inputFileName(argms.inputLFN, selCriteria)
 
-    # if argms.inputLFN == "ttjets":
-    #     inputFile = "../OutFiles/Histograms/TT6jets2.root"
-    # elif argms.inputLFN == "tttt_weights":
-    #     inputFile = "../OutFiles/Histograms/TTTTweights.root"
-    # elif argms.inputLFN == "wjets":
-    #     inputFile = "../OutFiles/Histograms/Wjets.root"
-    # elif argms.inputLFN == "tttt":
-    #     inputFile = "../OutFiles/Histograms/TTTT_6jets2.root"
-    # else:
-    #     return 0
-    #
-    # trigList = {}
-    # with open("trigList.txt") as f:
-    #     for line in f:
-    #         if line.find(":") == -1: continue
-    #         (key1, val) = line.split(": ")
-    #         c = len(val) - 1
-    #         val = val[0:c]
-    #         trigList[key1] = val.split(", ")
-    #
-    # preSelCuts = {}
-    # with open("../myInFiles/preSelectionCuts.txt") as f:
-    #     for line in f:
-    #         if line.find(":") == -1: continue
-    #         (key1, val) = line.split(": ")
-    #         c = len(val) - 1
-    #         val = val[0:c]
-    #         preSelCuts[key1] = val
-    #
-    # selCriteria = {}
-    # with open("selectionCriteria.txt") as f:
-    #     for line in f:
-    #         if line.find(":") == -1: continue
-    #         (key1, val) = line.split(": ")
-    #         c = len(val) - 1
-    #         val = val[0:c]
-    #         selCriteria[key1] = val
-
     h_jetHt = {}
     h_jetMult = {}
     h_jetBMult = {}
@@ -240,7 +202,10 @@ def main(argms):
     f_elPt = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1100, 600)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)
+    triggerCanvas.SetFillColor(10)
+    triggerCanvas.SetFrameFillColor(17)
+    triggerCanvas.SetGrid()
 
     # - Open file and sub folder
     histFile = ROOT.TFile.Open(inputFile)
