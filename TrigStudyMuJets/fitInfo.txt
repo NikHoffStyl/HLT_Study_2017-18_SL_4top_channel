@@ -344,3 +344,93 @@ fitName, Chi2, NDF, prob, par1, par2, par3, par4
  tttt, muonPtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 338.385459905, 244, 5.91994304168e-05, 0.145921180772 +/- 0.00249641784238, 0.290246791977 +/- 0.046743385291, 24.283845871 +/- 0.0908472735139, 0.83965047396 +/- 0.00246003738068
  tttt, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 1572.96996001, 244, 9.47785844933e-193, 0.743513361951 +/- 0.00372813844765, 0.131545014078 +/- 0.00804784991196, 15.0819249359 +/- 0.0274147094314, 0.173656862302 +/- 0.00364135294984
  Muon Pt Eff = 0.846267051495 +/- 0.00793433799326 , IsoMu24Muon Pt Eff = 0.846742600395 +/- 0.00762260381049 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2Muon Pt Eff = 0.967871662383 +/- 0.00840208462879 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2Muon Pt Eff = 0.904291532802 +/- 0.00819327098535 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+fitName, Chi2, NDF, prob, par1, par2, par3, par4 
+ 
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+fitName, Chi2, NDF, prob, par1, par2, par3, par4 
+ tttt, jetHtIsoMu24, 257.448, 223.000, 0.056, 0.793 +/- 0.014, 19.630 +/- 0.865, 170.434 +/- 14.054, -0.007 +/- 0.014
+ tttt, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 475.541, 223.000, 0.000, 0.930 +/- 0.008, 9.589 +/- 0.205, 419.679 +/- 3.350, -0.032 +/- 0.008
+ tttt, jetHtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 304.372, 223.000, 0.000, 1.000 +/- 0.080, 11.096 +/- 0.255, 270.379 +/- 5.460, -0.022 +/- 0.001
+ tttt, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 318.815, 223.000, 0.000, 0.858 +/- 0.007, 3.443 +/- 0.087, 490.096 +/- 1.205, 0.039 +/- 0.006
+  Jet HT Eff = 0.703 +/- 0.010 , IsoMu24 
+ Jet HT Eff = 0.773 +/- 0.010 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.881 +/- 0.012 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.759 +/- 0.010 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+fitName, Chi2, NDF, prob, par1, par2, par3, par4 
+ tttt, muonPtIsoMu24, 1114.329, 244.000, 0.000, 0.869 +/- 0.001, 0.143 +/- 0.007, 24.160 +/- 0.018, 0.034 +/- 0.001
+ tttt, muonPtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 296.513, 244.000, 0.012, 0.089 +/- 0.002, 100.000 +/- 5.094, 40.000 +/- 4.374, 0.800 +/- 0.002
+ tttt, muonPtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 338.385, 244.000, 0.000, 0.146 +/- 0.002, 0.290 +/- 0.047, 24.284 +/- 0.091, 0.840 +/- 0.002
+ tttt, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 1572.970, 244.000, 0.000, 0.744 +/- 0.004, 0.132 +/- 0.008, 15.082 +/- 0.027, 0.174 +/- 0.004
+ Muon Pt Eff = 0.846 +/- 0.008 , IsoMu24 
+Muon Pt Eff = 0.847 +/- 0.008 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.968 +/- 0.008 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.904 +/- 0.008 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+fitName, Chi2, NDF, prob, par1, par2, par3, par4 
+ tttt, jetHtIsoMu24, 226.578, 226.000, 0.477, 0.790 +/- 0.014, 18.621 +/- 0.716, 214.191 +/- 11.627, -0.010 +/- 0.014
+ tttt, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 392.402, 226.000, 0.000, 0.899 +/- 0.007, 9.495 +/- 0.167, 478.941 +/- 2.617, -0.011 +/- 0.006
+ tttt, jetHtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 256.046, 226.000, 0.083, 0.875 +/- 0.001, 11.454 +/- 0.213, 328.172 +/- 4.231, 0.100 +/- 0.040
+ tttt, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 900.364, 226.000, 0.000, 0.894 +/- 0.001, 5.236 +/- 0.076, 500.000 +/- 0.026, 0.001 +/- 0.001
+  Jet HT Eff = 0.697 +/- 0.010 , IsoMu24 
+ Jet HT Eff = 0.748 +/- 0.009 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.871 +/- 0.012 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.746 +/- 0.009 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+fitName, Chi2, NDF, prob, par1, par2, par3, par4 
+ tttt, muonPtIsoMu24, 1172.321, 244.000, 0.000, 0.869 +/- 0.001, 0.144 +/- 0.007, 24.161 +/- 0.018, 0.034 +/- 0.001
+ tttt, muonPtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 490.173, 244.000, 0.000, 0.037 +/- 0.002, 100.000 +/- 3.532, 40.000 +/- 2.341, 0.800 +/- 0.001
+ tttt, muonPtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 393.710, 244.000, 0.000, 0.183 +/- 0.000, 0.254 +/- 0.036, 24.283 +/- 0.069, 0.800 +/- 0.000
+ tttt, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 1893.612, 244.000, 0.000, 0.735 +/- 0.004, 0.136 +/- 0.008, 15.106 +/- 0.026, 0.170 +/- 0.003
+ Muon Pt Eff = 0.846 +/- 0.008 , IsoMu24 
+Muon Pt Eff = 0.823 +/- 0.007 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.962 +/- 0.008 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.897 +/- 0.008 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+fitName, Chi2, NDF, prob, par1, par2, par3, par4 
+ ttjets, jetHtIsoMu24, 243.503, 196.000, 0.012, 0.908 +/- 0.003, 9.080 +/- 0.452, 161.928 +/- 5.094, -0.100 +/- 0.134
+ ttjets, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 1132.112, 196.000, 0.000, 0.400 +/- 0.000, 5.130 +/- 0.073, 500.000 +/- 0.029, 0.000 +/- 0.000
+ ttjets, jetHtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 242.896, 196.000, 0.013, 1.000 +/- 0.099, 16.647 +/- 0.644, 134.149 +/- 4.265, -0.088 +/- 0.006
+ ttjets, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 1652.785, 196.000, 0.000, 0.838 +/- 0.003, 2.566 +/- 0.038, 500.000 +/- 0.009, 0.002 +/- 0.000
+  Jet HT Eff = 0.536 +/- 0.027 , IsoMu24 
+ Jet HT Eff = 0.272 +/- 0.024 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.592 +/- 0.030 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.497 +/- 0.029 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+fitName, Chi2, NDF, prob, par1, par2, par3, par4 
+ ttjets, muonPtIsoMu24, 928.193, 244.000, 0.000, 0.900 +/- 0.000, 0.026 +/- 0.034, 24.410 +/- 0.116, 0.012 +/- 0.001
+ ttjets, muonPtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 181962.539, 244.000, 0.000, 0.000 +/- 0.000, 1985.139 +/- 1195.603, 39.785 +/- 4.498, 0.800 +/- 0.000
+ ttjets, muonPtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 32580.579, 244.000, 0.000, 0.136 +/- 0.001, 0.862 +/- 0.068, 30.056 +/- 0.406, 0.800 +/- 0.000
+ ttjets, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 13124.236, 244.000, 0.000, 0.500 +/- 0.000, 10.000 +/- 0.002, 30.000 +/- 0.002, 0.100 +/- 0.000
+ Muon Pt Eff = 0.857 +/- 0.023 , IsoMu24 
+Muon Pt Eff = 0.159 +/- 0.008 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.874 +/- 0.023 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.555 +/- 0.021 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 

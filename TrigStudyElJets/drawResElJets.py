@@ -94,7 +94,7 @@ def fitInfo(fit, printEqn, fitName, args):
                 fitFile.write("\n Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
                               "y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n\n")
                 fitFile.write("fitName, Chi2, NDF, prob, par1, par2, par3, par4 \n ")
-            fitFile.write("{0:.3f}, {1:.3f}, {2:.3f}, {3:.3f}, {4:.3f}, {5:.3f} +/- {6:.3f}, {7:.3f} +/- {8:.3f}, "
+            fitFile.write("{0}, {1}, {2:.3f}, {3:.3f}, {4:.3f}, {5:.3f} +/- {6:.3f}, {7:.3f} +/- {8:.3f}, "
                           "{9:.3f} +/- {10:.3f}, {11:.3f} +/- {12:.3f}\n " .format
                           (args.inputLFN, fitName, fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0),
                            fit.GetParError(0), fit.GetParameter(1), fit.GetParError(1), fit.GetParameter(2),
@@ -164,7 +164,7 @@ def inputFileName(arg, selCrit):
     elif arg == "wjets":
         inFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "tttt":
-        inFile = "../OutFiles/Histograms/TTTT6Jets1El{0}jPt.root" .format(selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTTT_6Jets1El{0}jPt.root" .format(selCrit["minJetPt"])
     else:
         inFile = None
 
@@ -469,7 +469,7 @@ def main(argms):
     cv82 = triggerCanvas.cd(1)
     i = 0
     for key in trigList:
-        if not key.find("El") == -1: continue
+        if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
             h_TriggerRatio[tg].Sumw2()
@@ -709,7 +709,7 @@ def main(argms):
     cv81 = triggerCanvas.cd(1)
     i = 0
     for key in trigList:
-        if not key.find("El") == -1: continue
+        if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_TriggerRatio[tg] = h_elPt[tg].Clone("h_elPtRatio" + tg)
             h_TriggerRatio[tg].Sumw2()

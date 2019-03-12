@@ -110,7 +110,7 @@ def fitInfo(fit, printEqn, fitName, args):
                 fitFile.write("\n Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
                               "y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n\n")
                 fitFile.write("fitName, Chi2, NDF, prob, par1, par2, par3, par4 \n ")
-            fitFile.write("{0:.3f}, {1:.3f}, {2:.3f}, {3:.3f}, {4:.3f}, {5:.3f} +/- {6:.3f}, {7:.3f} +/- {8:.3f}, "
+            fitFile.write("{0}, {1}, {2:.3f}, {3:.3f}, {4:.3f}, {5:.3f} +/- {6:.3f}, {7:.3f} +/- {8:.3f}, "
                           "{9:.3f} +/- {10:.3f}, {11:.3f} +/- {12:.3f}\n " .format
                           (args.inputLFN, fitName, fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0),
                            fit.GetParError(0), fit.GetParameter(1), fit.GetParError(1), fit.GetParameter(2),
