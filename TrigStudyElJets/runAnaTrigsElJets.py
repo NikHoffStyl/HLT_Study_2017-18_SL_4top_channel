@@ -56,6 +56,24 @@ def main(argms):
         return 0
     files = []
 
+    preSelCuts = {}
+    with open("../myInFiles/preSelectionCuts.txt") as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            preSelCuts[key1] = val
+
+    selCriteria = {}
+    with open("selectionCriteria.txt") as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            selCriteria[key1] = val
+
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
     # you may want to change path to suit your file ordering
     if argms.inputLFN == "ttjets":  # tt + jets MC
@@ -66,7 +84,7 @@ def main(argms):
             # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
             #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTJets_SL"
-        outputFile = "../OutFiles/Histograms/TT6jets2.root"
+        outputFile = "../OutFiles/Histograms/TT6Jets1El{0}jPt.root".format(selCriteria["minJetPt"])
     elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
@@ -87,7 +105,7 @@ def main(argms):
         else:
             inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
-        outputFile = "../OutFiles/Histograms/TTTT_6jets2.root"
+        outputFile = "../OutFiles/Histograms/TTTT_6Jets1El{0}jPt.root".format(selCriteria["minJetPt"])
     else:
         return 0
 

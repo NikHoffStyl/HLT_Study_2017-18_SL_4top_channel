@@ -110,7 +110,8 @@ def fitInfo(fit, printEqn, fitName, args):
                 fitFile.write("\n Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
                               "y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n\n")
                 fitFile.write("fitName, Chi2, NDF, prob, par1, par2, par3, par4 \n ")
-            fitFile.write("{0}, {1}, {2}, {3}, {4}, {5} +/- {6}, {7} +/- {8}, {9} +/- {10}, {11} +/- {12}\n " .format
+            fitFile.write("{0:.3f}, {1:.3f}, {2:.3f}, {3:.3f}, {4:.3f}, {5:.3f} +/- {6:.3f}, {7:.3f} +/- {8:.3f}, "
+                          "{9:.3f} +/- {10:.3f}, {11:.3f} +/- {12:.3f}\n " .format
                           (args.inputLFN, fitName, fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(0),
                            fit.GetParError(0), fit.GetParameter(1), fit.GetParError(1), fit.GetParameter(2),
                            fit.GetParError(2), fit.GetParameter(3), fit.GetParError(3)))
@@ -199,7 +200,7 @@ def getFileContents(fileName, elmList):
             (key1, val) = line.split(": ")
             c = len(val) - 1
             val = val[0:c]
-            if elmList == False:
+            if elmList is False:
                 fileContents[key1] = val
             else:
                 fileContents[key1] = val.split(", ")
@@ -240,6 +241,10 @@ def main(argms):
     selCriteria = getFileContents("selectionCriteria.txt", False)
     
     inputFile = inputFileName(argms.inputLFN, selCriteria)
+
+    # h = {}  # TH1D class
+    # h_TriggerRatio = {}  # TEfficiency class
+    # f = {}  # TF1 class
 
     h_jetHt = {}
     h_jetMult = {}
@@ -458,7 +463,7 @@ def main(argms):
                     cv2.Update()
                     tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
-                    assymGraph = h_TriggerRatio[tg].CreateGraph()
+                    # assymGraph = h_TriggerRatio[tg].CreateGraph()
                 elif i > 0:
                     if i == 1: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
                     elif i == 2: f_jetHt[tg].SetParameters(0.8, 10, 330, 0)
@@ -487,7 +492,7 @@ def main(argms):
             inEff = h_TriggerRatio[tg].GetBinContent(1) / 300
             print(h_TriggerRatio[tg].GetBinError(1))
             inErEff = h_TriggerRatio[tg].GetBinError(1) / 300
-            inclusiveEfficiency(" Jet HT Eff = {0} +/- {1} , {2}".format(inEff, inErEff, tg))
+            inclusiveEfficiency(" Jet HT Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg))
             xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
@@ -532,8 +537,8 @@ def main(argms):
             if ROOT.TEfficiency.CheckConsistency(h_jetMult[tg], h_jetMult["notrigger"]):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_jetMult[tg], h_jetMult["notrigger"])
                 # xTitle = h_jetMult["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";Number of Jets ;Trigger Efficiency per {0} GeV/c".format(xBinWidth))
+                # xBinWidth = h_jetMult["notrigger"].GetXaxis().GetBinWidth(1)
+                h_TriggerRatio[tg].SetTitle(";Number of Jets ;Trigger Efficiency per Number of Jets")
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetTitle(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
@@ -727,10 +732,10 @@ def main(argms):
             inEff = h_TriggerRatio[tg].GetBinContent(1)/300
             print(h_TriggerRatio[tg].GetBinError(1))
             inErEff = h_TriggerRatio[tg].GetBinError(1)/300
-            inclusiveEfficiency("Muon Pt Eff = {0} +/- {1} , {2}" .format(inEff, inErEff, tg))
+            inclusiveEfficiency("Muon Pt Eff = {0:.3f} +/- {1:.3f} , {2} \n" .format(inEff, inErEff, tg))
             xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
-            h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1:.2f} GeV/c".format(xTitle, xBinWidth))
             h_TriggerRatio[tg].SetName(tg)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
@@ -857,17 +862,15 @@ def main(argms):
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("El") == -1: continue
-        # if not (key == "Electron" or key == "ElPJets" or key == "ElLone"):
         for tg in trigList[key]:
             h_jetEta[tg].Draw('E1 same')
     cv13.BuildLegend(0.4, 0.25, 0.4, 0.25)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv14 = triggerCanvas.cd(1)
-    # h_muonEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_muonEta["notrigger"].Draw('E1')
     tX1 = (0.6*14)-6
     tY1 = 0.95*(h_muonEta["notrigger"].GetMaximum())
@@ -891,7 +894,7 @@ def main(argms):
                 h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonEta[tg], h_muonEta["notrigger"])
                 xTitle = h_muonEta["notrigger"].GetXaxis().GetTitle()
                 xBinWidth = h_muonEta["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, xBinWidth))
+                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1:.3f} GeV/c".format(xTitle, xBinWidth))
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetTitle(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
