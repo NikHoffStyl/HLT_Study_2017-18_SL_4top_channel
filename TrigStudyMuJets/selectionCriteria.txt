@@ -5,7 +5,7 @@ minNElectron: 0
 
 maxObjEta: 2.4
 
-minJetPt: 30
+minJetPt: 20
 minJetId: 2
 jetCleanmask: Y
 
