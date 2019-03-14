@@ -109,13 +109,15 @@ def fitInfo(fit, printEqn, fitName, args):
             if printEqn == "t":
                 fitFile.write("\n Equation given by: \n \t subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) \n \t"
                               "y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] \n\n")
-                fitFile.write("Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Chi2, NDF, prob, Slope, Slope Error, Initial Plateau, Initial Plateau Error \n ")
+                fitFile.write("Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Chi2, NDF,"
+                              "prob, Slope, Slope Error, Initial Plateau, Initial Plateau Error \n ")
             plateau = fit.GetParameter(0) + fit.GetParameter(3)
             plateauError = fit.GetParError(0) + fit.GetParError(3)
             fitFile.write("{0}, {1}, {2:.3f}, +/-, {3:.3f}, {4:.3f}, +/-, {5:.3f}, {6:.3f}, {7:.3f}, {8}, "
                           "{9:.3f}, +/- ,{10:.3f}, {11:.3f}, +/-, {12:.3f}\n " .format
-                          (args.inputLFN, fitName, plateau, plateauError, fit.GetParameter(2), fit.GetParError(2), fit.GetChisquare(), 
-                           fit.GetNDF(), fit.GetProb(), fit.GetParameter(1), fit.GetParError(1), fit.GetParameter(3), fit.GetParError(3)))
+                          (args.inputLFN, fitName, plateau, plateauError, fit.GetParameter(2), fit.GetParError(2),
+                           fit.GetChisquare(), fit.GetNDF(), fit.GetProb(), fit.GetParameter(1), fit.GetParError(1),
+                           fit.GetParameter(3), fit.GetParError(3)))
 
     except OSError:
         print("Could not open file!")
