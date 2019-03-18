@@ -18,7 +18,7 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["ttjets", "tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets"],
                         default="tttt", help="Set list of input files")
     args = parser.parse_args()
     return args
@@ -173,7 +173,9 @@ def cmsPlotString(args):
         legStr (string): string containing channel details
 
     """
-    if args == "ttjets":
+    if args == "tt_semilep":
+        legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif args == "ttjets":
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     elif args == "tttt":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
@@ -221,8 +223,9 @@ def inputFileName(arg, selCrit):
         inFile (string): input file name
 
     """
-
-    if arg == "ttjets":
+    if arg == "tt_semilep":
+        inFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg == "ttjets":
         inFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "tttt_weights":
         inFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCrit["minJetPt"])

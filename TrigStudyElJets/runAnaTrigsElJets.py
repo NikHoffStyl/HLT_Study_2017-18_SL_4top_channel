@@ -16,10 +16,10 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["ttjets", "tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets"],
                         default="tttt", help="Set list of input files")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
-                        default="local", help="Sets redirector to query locations for LFN")
+                        default="xrd-global", help="Sets redirector to query locations for LFN")
     parser.add_argument("-nw", "--noWriteFile", action="store_true",
                         help="Does not output a ROOT file, which contains the histograms.")
     parser.add_argument("-e", "--eventLimit", type=int, default=-1,
@@ -76,7 +76,13 @@ def main(argms):
 
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
     # you may want to change path to suit your file ordering
-    if argms.inputLFN == "ttjets":  # tt + jets MC
+    if argms.inputLFN == "tt_semilep":  # tt + jets MC
+        inputLFNList = open("../myInFiles/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8.txt", "r")
+        # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
+        #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
+        thePostFix = "TTJets_SL"
+        outputFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1El{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "ttjets":  # tt + jets MC
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
