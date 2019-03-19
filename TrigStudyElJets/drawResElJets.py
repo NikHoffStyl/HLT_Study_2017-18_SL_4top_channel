@@ -160,7 +160,7 @@ def inputFileName(arg, selCrit):
 
     """
     if arg == "tt_semilep":
-        inFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
     elif arg == "ttjets":
         inFile = "../OutFiles/Histograms/TT6Jets1El{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "tttt_weights":
@@ -351,6 +351,7 @@ def main(argms):
     # - Canvas Details
     triggerCanvas.cd(1)
     ltx = TLatex()
+    ltx.SetTextSize(0.04)
     ltx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
     ltx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preSelCuts["nJet"])
     ltx.DrawLatex(0.16, 0.60, "#bullet Muons plus Electrons: #bf{number > %s }" % preSelCuts["nLepton"])
@@ -361,11 +362,10 @@ def main(argms):
     ltx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     ltx.DrawLatex(0.16, 0.25, "#bullet Electrons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
                   % (selCriteria["maxObjEta"], selCriteria["maxMiniPfRelIso"]))
-    ltx.SetTextSize(0.015)
     pdfCreator(argms, 0, triggerCanvas, selCriteria)
 
     # - Create text for legend
-    if argms == "tt_semilep":
+    if argms.inputLFN == "tt_semilep":
         legString = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     elif argms.inputLFN == "ttjets":
         legString = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
