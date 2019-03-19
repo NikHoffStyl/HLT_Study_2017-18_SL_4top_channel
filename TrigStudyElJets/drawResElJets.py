@@ -327,8 +327,8 @@ def main(argms):
             f_jetHt[tg].SetLineColor(1)
             f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
             f_jetHt[tg].SetParLimits(0, 0.4, 1)
-            f_jetHt[tg].SetParLimits(1, 2, 25)
-            f_jetHt[tg].SetParLimits(2, -100, 600)
+            f_jetHt[tg].SetParLimits(1, 1, 25)
+            f_jetHt[tg].SetParLimits(2, 0, 600)
             f_jetHt[tg].SetParLimits(3, -0.1, 0.1)
             f_jetHt[tg].SetLineStyle(style[i - 2])
 
@@ -409,7 +409,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
+                    f_jetHt[tg].SetParameters(0.8, 20, 500, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
                     fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
@@ -633,13 +633,14 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    f_elPt[tg].SetParameters(0.1, 1000, 30, 0.8)
-                    f_elPt[tg].SetParLimits(0, 0, 0.3)
-                    f_elPt[tg].SetParLimits(1, 100, 2000)
-                    f_elPt[tg].SetParLimits(2, 20, 50)
-                    f_elPt[tg].SetParLimits(3, 0.7, 0.9)
-                    h_TriggerRatio[tg].Fit(f_elPt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(fit=f_elPt[tg], printEqn="t", fitName=("muonPt" + tg), args=argms)
+                    # f_elPt[tg].SetParameters(0.1, 1000, 30, 0.8)
+                    # f_elPt[tg].SetParLimits(0, 0, 0.3)
+                    # f_elPt[tg].SetParLimits(1, 100, 2000)
+                    # f_elPt[tg].SetParLimits(2, 20, 50)
+                    # if argms.inputLFN == "tttt": f_elPt[tg].SetParLimits(3, 0.7, 0.9)
+                    # if argms.inputLFN == "tt": f_elPt[tg].SetParLimits(3, 0.1, 0.5)
+                    # h_TriggerRatio[tg].Fit(f_elPt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
+                    # fitInfo(fit=f_elPt[tg], printEqn="t", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
                     cv8.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()

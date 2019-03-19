@@ -457,7 +457,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    # h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
+                    h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
                     fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
@@ -704,16 +704,16 @@ def main(argms):
                         f_muonPt[tg].SetParLimits(3, 0.8, 0.9)
                     elif i == 2:
                         f_muonPt[tg].SetParameters(0.18, 0.95, 24, 0.8)
-                        f_muonPt[tg].SetParLimits(0, 0.1, 0.2)
+                        f_muonPt[tg].SetParLimits(0, 0.1, 0.4)
                         f_muonPt[tg].SetParLimits(1, 0, 10)
                         f_muonPt[tg].SetParLimits(2, 20, 40)
-                        f_muonPt[tg].SetParLimits(3, 0.8, 0.9)
+                        f_muonPt[tg].SetParLimits(3, 0, 0.9)
                     elif i == 3:
                         f_muonPt[tg].SetParameters(0.75, 0.95, 15, 0.15)
                         f_muonPt[tg].SetParLimits(0, 0.5, 0.9)
                         f_muonPt[tg].SetParLimits(1, 0, 10)
                         f_muonPt[tg].SetParLimits(2, 0, 30)
-                        f_muonPt[tg].SetParLimits(3, 0.1, 0.3)
+                        f_muonPt[tg].SetParLimits(3, 0, 0.3)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')
                     fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
