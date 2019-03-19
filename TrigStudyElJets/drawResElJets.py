@@ -385,7 +385,7 @@ def main(argms):
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_jetHt[tg].Draw('E1 same')
-    cv1.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv1.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6*(h_jetHt["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
@@ -431,7 +431,7 @@ def main(argms):
                     fitInfo(fit=f_jetHt[tg], printEqn="n", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv2.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -461,7 +461,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetMaximum(301.8)
                 h_TriggerRatio[tg].Draw()
                 tX1 = 0.05 * (h_jetHt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 1.1
+                tY1 = 0.1
             if i > 0:
                 h_TriggerRatio[tg].Draw('same')
             i += 1
@@ -479,7 +479,7 @@ def main(argms):
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_jetMult[tg].Draw('E1 same')
-    cv3.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv3.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6 * (h_jetMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
@@ -514,7 +514,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv4.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv4.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -529,7 +529,7 @@ def main(argms):
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_jetBMult[tg].Draw('E1 same')
-    cv5.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv5.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6 * (h_jetBMult["notrigger"].GetXaxis().GetXmax())
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
@@ -564,7 +564,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv6.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv6.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -595,7 +595,7 @@ def main(argms):
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_elPt[tg].Draw('E1 same')
-    cv7.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv7.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -611,7 +611,7 @@ def main(argms):
     h_elPt["prompt"].SetTitle("prompt muons")
     h_elPt["prompt"].Draw('E1 same')
     h_elPt["non-prompt"].Draw('E1 same')
-    cv71.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv71.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -671,7 +671,7 @@ def main(argms):
                     fitInfo(fit=f_elPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv8.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv8.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -698,10 +698,10 @@ def main(argms):
             h_TriggerRatio[tg].SetName(tg)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
-                h_TriggerRatio[tg].SetMaximum(301.8)
+                # h_TriggerRatio[tg].SetMaximum(301.8)
                 h_TriggerRatio[tg].Draw()
                 tX1 = 0.05 * (h_elPt["notrigger"].GetXaxis().GetXmax())
-                tY1 = 1.1
+                tY1 = 0.1
             if i > 0:
                 h_TriggerRatio[tg].Draw('same')
             i += 1
@@ -723,7 +723,7 @@ def main(argms):
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_metPt[tg].Draw('E1 same')
-    cv9.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv9.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -756,7 +756,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv10.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv10.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -774,7 +774,7 @@ def main(argms):
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_genMetPt[tg].Draw('E1 same')
-    cv11.BuildLegend(0.57, 0.54, 0.97, 0.74)
+    cv11.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -807,7 +807,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv12.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv12.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -817,13 +817,13 @@ def main(argms):
     cv13 = triggerCanvas.cd(1)
     # h_jetEta["notrigger"].GetYaxis().SetTitleOffset(1.1)
     h_jetEta["notrigger"].Draw('E1')
-    tX1 = 0.6*6
+    tX1 = (0.6*14)-6
     tY1 = 0.95*(h_jetEta["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_jetEta[tg].Draw('E1 same')
-    cv13.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv13.BuildLegend(0.5, 0.24, 0.5, 0.24)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -832,13 +832,13 @@ def main(argms):
     cv14 = triggerCanvas.cd(1)
     # h_elEta["notrigger"].GetYaxis().SetTitleOffset(1.2)
     h_elEta["notrigger"].Draw('E1')
-    tX1 = 0.6*6
+    tX1 = (0.6*14)-6
     tY1 = 0.95*(h_elEta["notrigger"].GetMaximum())
     for key in trigList:
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
             h_elEta[tg].Draw('E1 same')
-    cv14.BuildLegend(0.4, 0.25, 0.4, 0.25)
+    cv14.BuildLegend(0.4, 0.24, 0.4, 0.24)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -871,7 +871,7 @@ def main(argms):
                 if i > 0:
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv15.BuildLegend(0.5, 0.1, 0.9, 0.3)
+    cv15.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
@@ -941,7 +941,7 @@ def main(argms):
     for key in trigList:
         if not key.find("Mu") == -1: continue
         for tg in trigList[key]:
-            ltx.DrawLatex((9.5 - i), tY1, tg)
+            ltx.DrawLatex((5.5 - i), tY1, tg)
             i += 1
 
     # h.GetXAxis().SetBinLabel(binnumber,string)
