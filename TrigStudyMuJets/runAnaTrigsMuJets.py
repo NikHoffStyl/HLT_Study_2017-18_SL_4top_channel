@@ -16,13 +16,14 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets",
+                                                     "data_HTMHT"],
                         default="tttt", help="Set list of input files")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
                         default="xrd-global", help="Sets redirector to query locations for LFN")
     parser.add_argument("-nw", "--noWriteFile", action="store_true",
                         help="Does not output a ROOT file, which contains the histograms.")
-    parser.add_argument("-e", "--eventLimit", type=int, default=1000000,
+    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
                         help="Set a limit to the number of events.")
     args = parser.parse_args()
     return args
@@ -113,7 +114,11 @@ def main(argms):
 
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
     # you may want to change path to suit your file ordering
-    if argms.inputLFN == "tt_semilep":  # tt + jets MC
+    if argms.inputLFN == "data_HTMHT":  # tt + jets MC
+        inputLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
+        thePostFix = "data_HTMHT"
+        outputFile = "../OutFiles/Histograms/dataHTMHT_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tt_semilep":  # tt + jets MC
         inputLFNList = open("../myInFiles/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8.txt", "r")
         # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
         #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
@@ -171,9 +176,9 @@ def main(argms):
             trigList[key] = val.split(", ")
 
     p99 = PostProcessor(".",
-                        files,
-                        # files[0],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) ",
+                        # files,
+                        files[0],
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && (HLT_PFHT250 == True || HLT_Mu20 == True)",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList)],
