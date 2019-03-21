@@ -151,7 +151,7 @@ def main(argms):
         else:
             inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
         thePostFix = "TTTT"
-        outputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
+        outputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt_test.root" .format(selCriteria["minJetPt"])
     else:
         return 0
 
@@ -176,9 +176,9 @@ def main(argms):
             trigList[key] = val.split(", ")
 
     p99 = PostProcessor(".",
-                        # files,
-                        files[0],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && (HLT_PFHT250 == True || HLT_Mu20 == True)",
+                        files,
+                        # files[0],
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && (HLT_PFHT250 == 1 || HLT_Mu20 == 1)",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList)],

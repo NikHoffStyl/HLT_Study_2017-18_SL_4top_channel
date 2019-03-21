@@ -270,7 +270,7 @@ class TriggerStudy(Module):
         for ne, el in enumerate(electrons):
             if abs(el.eta) > self.selCriteria["maxObjEta"]: continue
             if el.miniPFRelIso_all > self.selCriteria["maxMiniPfRelIso"]: continue
-            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17Iso_WP90 is False: continue
+            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17V2Iso_WP90 is False: continue
             if 1.4442 < abs(el.eta) < 1.566: continue
 
             #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1
@@ -298,12 +298,12 @@ class TriggerStudy(Module):
         jets = Collection(event, "Jet")
         hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
         met = Object(event, "MET")
-        genMet = Object(event, "GenMET")
+        #genMet = Object(event, "GenMET")
 
         metPt = getattr(met, "pt")
         metPhi = getattr(met, "phi")
-        genMetPt = getattr(genMet, "pt")
-        genMetPhi = getattr(genMet, "pt")
+        #genMetPt = getattr(genMet, "pt")
+        #genMetPhi = getattr(genMet, "phi")
 
         trigPath = {}
         for key in self.trigLst:
@@ -334,8 +334,8 @@ class TriggerStudy(Module):
             for nm, muon in enumerate(muons):
                 if not MuonPassIdx == nm: continue
                 self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
-                self.h_muonGenPartFlav.Fill(muon.genPartFlav)
-                self.h_muonGenPartIdx.Fill(muon.genPartIdx)
+                #self.h_muonGenPartFlav.Fill(muon.genPartFlav)
+                #self.h_muonGenPartIdx.Fill(muon.genPartIdx)
                 self.h_muonEta['no_trigger'].Fill(muon.eta)
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
@@ -348,10 +348,10 @@ class TriggerStudy(Module):
                             self.h_muonEta[tg].Fill(muon.eta)
                             self.h_muonPhi[tg].Fill(muon.phi)
                             self.h_muonMap[tg].Fill(muon.eta, muon.phi)
-                if muon.genPartFlav == 1:
-                    self.h_muonPt['prompt'].Fill(muon.pt)
-                if muon.genPartFlav == 5:
-                    self.h_muonPt['non-prompt'].Fill(muon.pt)
+                #if muon.genPartFlav == 1:
+                 #   self.h_muonPt['prompt'].Fill(muon.pt)
+                #if muon.genPartFlav == 5:
+                 #   self.h_muonPt['non-prompt'].Fill(muon.pt)
 
             for nj, jet in enumerate(jets):
                 if nj not in JetPassIdx: continue
@@ -374,8 +374,8 @@ class TriggerStudy(Module):
 
             self.h_metPt['no_trigger'].Fill(metPt)
             self.h_metPhi['no_trigger'].Fill(metPhi)
-            self.h_genMetPt['no_trigger'].Fill(genMetPt)
-            self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
+            #self.h_genMetPt['no_trigger'].Fill(genMetPt)
+            #self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
 
             self.h_eventsPrg.Fill(1)
 
@@ -387,8 +387,8 @@ class TriggerStudy(Module):
                         self.h_jetHt[tg].Fill(jetHt[tg])
                         self.h_metPt[tg].Fill(metPt)
                         self.h_metPhi[tg].Fill(metPhi)
-                        self.h_genMetPt[tg].Fill(genMetPt)
-                        self.h_genMetPhi[tg].Fill(genMetPhi)
+                        #self.h_genMetPt[tg].Fill(genMetPt)
+                        #self.h_genMetPhi[tg].Fill(genMetPhi)
                         self.h_jetMult[tg].Fill(nJetPass)
                         self.h_jetBMult[tg].Fill(nBtagPass)
                         self.h_eventsPrg.Fill(2 + i)

@@ -602,3 +602,10 @@ Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Ch
 Muon Pt Eff = 0.156 +/- 0.011 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.860 +/- 0.024 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.532 +/- 0.022 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Chi2, NDF,prob, Slope, Slope Error, Initial Plateau, Initial Plateau Error 
+ 
