@@ -49,8 +49,8 @@ class TriggerStudy(Module):
         self.h_metPt = {}
         self.h_metPhi = {}
 
-        self.h_genMetPt = {}
-        self.h_genMetPhi = {}
+        # self.h_genMetPt = {}
+        # self.h_genMetPhi = {}
 
         self.nJet = None
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';Cuts and Triggers;Total Number of Accepted Events', 16, 0, 16)
@@ -124,10 +124,10 @@ class TriggerStudy(Module):
                                                                     ' 1 GeV/c', 300, 0, 300)
         self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
                                                                       '#delta#phi = 0.046', 300, -6, 8)
-        self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
-                                                                          'Events per 1GeV/c', 300, 0, 300)
-        self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
-                                                                            'per #delta#phi = 0.046', 300, -6, 8)
+        # self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
+        #                                                                   'Events per 1GeV/c', 300, 0, 300)
+        # self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
+        #                                                                     'per #delta#phi = 0.046', 300, -6, 8)
 
         self.addObject(self.h_jetHt['no_trigger'])
         self.addObject(self.h_jetMult['no_trigger'])
@@ -148,8 +148,8 @@ class TriggerStudy(Module):
 
         self.addObject(self.h_metPt['no_trigger'])
         self.addObject(self.h_metPhi['no_trigger'])
-        self.addObject(self.h_genMetPt['no_trigger'])
-        self.addObject(self.h_genMetPhi['no_trigger'])
+        # self.addObject(self.h_genMetPt['no_trigger'])
+        # self.addObject(self.h_genMetPhi['no_trigger'])
 
         for key in self.trigLst:
             if not key.find("El") == -1: continue
@@ -192,14 +192,14 @@ class TriggerStudy(Module):
                                                                                     '#delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_metPhi[trgPath])
 
-                self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
-                                                                                        'of Events per 1 GeV/c',
-                                                     300, 0, 300)
-                self.addObject(self.h_genMetPt[trgPath])
-                self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
-                                                                                          'Events per #delta#phi=0.046',
-                                                      300, -6, 8)
-                self.addObject(self.h_genMetPhi[trgPath])
+                # self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
+                #                                                                         'of Events per 1 GeV/c',
+                #                                      300, 0, 300)
+                # self.addObject(self.h_genMetPt[trgPath])
+                # self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
+                #                                                                           'Events per #delta#phi=0.046',
+                #                                       300, -6, 8)
+                # self.addObject(self.h_genMetPhi[trgPath])
 
         self.addObject(self.h_eventsPrg)
 

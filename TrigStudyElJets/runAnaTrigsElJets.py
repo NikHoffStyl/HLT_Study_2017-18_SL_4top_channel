@@ -16,7 +16,9 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+                                                     "tt_semilep102", "ttjets102", "tttt102",
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
                         default="tttt", help="Set list of input files")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
                         default="xrd-global", help="Sets redirector to query locations for LFN")
@@ -76,42 +78,63 @@ def main(argms):
 
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
     # you may want to change path to suit your file ordering
-    if argms.inputLFN == "tt_semilep":  # tt + jets MC
-        inputLFNList = open("../myInFiles/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8.txt", "r")
+    if argms.inputLFN == "dataHTMHT17F":
+        inputLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
+        thePostFix = "dataHTMHT17F"
+        outputFile = "../OutFiles/Histograms/dataHTMHT17F_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "dataSMu17F":
+        inputLFNList = open("../myInFiles/data/SingleMuon_Run2017F-Nano14Dec2018-v1.txt", "r")
+        thePostFix = "dataSMu17F"
+        outputFile = "../OutFiles/Histograms/dataSMu17F_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "dataSEl17F":
+        inputLFNList = open("../myInFiles/data/SingleElectron_Run2017F-Nano14Dec2018-v1.txt", "r")
+        thePostFix = "dataSEl17F"
+        outputFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tt_semilep94":
+        inputLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
         # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
         #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
-        thePostFix = "TTJets_SL"
-        outputFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1El{0}jPt.root".format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "ttjets":  # tt + jets MC
+        thePostFix = "TTToSemiLep94X"
+        outputFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tt_semilep102":
+        inputLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
+        thePostFix = "TTToSemiLep102X"
+        outputFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "ttjets94":
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
-            # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
-            #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
-        thePostFix = "TTJets_SL"
-        outputFile = "../OutFiles/Histograms/TT6Jets1El{0}jPt.root".format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
+            inputLFNList = open("../myInFiles/mc/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_94X.txt", "r")
+        thePostFix = "TTJets_SL_94"
+        outputFile = "../OutFiles/Histograms/TT94_6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tttt_weights":
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTTweights_files.txt", "r")
+            inputLFNList = open("../myInFiles/mc/TTTTweights_files.txt", "r")
         thePostFix = "TTTT_PSWeights"
         outputFile = "../OutFiles/Histograms/TTTTweights.root"
     elif argms.inputLFN == "wjets":  # W (to Lep + Nu) + jets
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/Wjets/Wjets_files.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/Wjets_files.txt", "r")
+            inputLFNList = open("../myInFiles/mc/Wjets_files.txt", "r")
         thePostFix = "WJetsToLNu"
         outputFile = "../OutFiles/Histograms/Wjets.root"
-    elif argms.inputLFN == "tttt":  # tttt MC
+    elif argms.inputLFN == "tttt94":
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
-        thePostFix = "TTTT"
-        outputFile = "../OutFiles/Histograms/TTTT_6Jets1El{0}jPt.root".format(selCriteria["minJetPt"])
+            inputLFNList = open("../myInFiles/mc/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_94X.txt", "r")
+        thePostFix = "TTTT94"
+        outputFile = "../OutFiles/Histograms/TTTT94X_6Jets1Mu{0}jPt_test.root" .format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tttt102":
+        if argms.redirector == "local":
+            inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
+        else:
+            inputLFNList = open("../myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
+        thePostFix = "TTTT102"
+        outputFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root" .format(selCriteria["minJetPt"])
     else:
         return 0
 
@@ -120,7 +143,6 @@ def main(argms):
     else:
         writeFile = True
 
-    # iterat = 0
     for iterat, line in enumerate(inputLFNList):
         iterat += 1
         if iterat > 5: break
@@ -135,19 +157,10 @@ def main(argms):
             val = val[0:c]
             trigList[key] = val.split(", ")
 
-    # trigList = {"MuPJets": [],
-    #             "ElPJets": [],
-    #             "MuLone": ['Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5'],
-    #             "ElLone": ['Ele28_eta2p1_WPTight_Gsf_HT150'],
-    #             "Muon": ['IsoMu24'],
-    #             "Electron": ["Ele32_WPTight_Gsf", "Ele35_WPTight_Gsf", "Ele38_WPTight_Gsf"],
-    #             "Jet": ['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2']}
-
     p99 = PostProcessor(".",
                         files,
                         # files[0],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) " 
-                            "&& Muon_softId == 1",
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) ",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList)],
@@ -164,6 +177,5 @@ def main(argms):
     p99.run()
     t1 = time.clock()
     print("Elapsed time %7.1fs" % (t1-t0))
-
 
 main(process_arguments())

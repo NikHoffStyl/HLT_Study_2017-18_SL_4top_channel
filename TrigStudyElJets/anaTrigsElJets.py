@@ -46,18 +46,18 @@ class TriggerStudy(Module):
         self.h_elPhi = {}
         self.h_elMap = {}
 
-        self.h_metPt = {}
-        self.h_metPhi = {}
-
-        self.h_genMetPt = {}
-        self.h_genMetPhi = {}
+        # self.h_metPt = {}
+        # self.h_metPhi = {}
+        #
+        # self.h_genMetPt = {}
+        # self.h_genMetPhi = {}
 
         self.nJet = None
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';Cuts and Triggers;Total Number of Accepted Events', 16, 0, 16)
-        self.h_elGenPartFlav = ROOT.TH1D('h_elGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; '
-                                                            'Number of events', 16, 0, 16)
-        self.h_elGenPartIdx = ROOT.TH1D('h_elGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
-                                                          'Number of events', 182, -2, 180)
+        # self.h_elGenPartFlav = ROOT.TH1D('h_elGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; '
+        #                                                     'Number of events', 16, 0, 16)
+        # self.h_elGenPartIdx = ROOT.TH1D('h_elGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
+        #                                                   'Number of events', 182, -2, 180)
         self.h_elMiniPfRelIso_all = ROOT.TH1D('h_elMiniPfRelIso_all', 'elMiniPfRelIso_all;elMiniPfRelIso_all;'
                                                                       'Number of Events', 110, 0, 55)
 
@@ -121,14 +121,14 @@ class TriggerStudy(Module):
         ##################
         # MET HISTOGRAMS #
         ##################
-        self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
-                                                                    ' 1 GeV/c', 300, 0, 300)
-        self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
-                                                                      '#delta#phi = 0.046', 300, -6, 8)
-        self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
-                                                                          'Events per 1GeV/c', 300, 0, 300)
-        self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
-                                                                            'per #delta#phi = 0.046', 300, -6, 8)
+        # self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
+        #                                                             ' 1 GeV/c', 300, 0, 300)
+        # self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
+        #                                                               '#delta#phi = 0.046', 300, -6, 8)
+        # self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
+        #                                                                   'Events per 1GeV/c', 300, 0, 300)
+        # self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
+        #                                                                     'per #delta#phi = 0.046', 300, -6, 8)
 
         self.addObject(self.h_jetHt['no_trigger'])
         self.addObject(self.h_jetMult['no_trigger'])
@@ -137,8 +137,8 @@ class TriggerStudy(Module):
         self.addObject(self.h_jetPhi['no_trigger'])
         self.addObject(self.h_jetMap['no_trigger'])
 
-        self.addObject(self.h_elGenPartFlav)
-        self.addObject(self.h_elGenPartIdx)
+        # self.addObject(self.h_elGenPartFlav)
+        # self.addObject(self.h_elGenPartIdx)
         self.addObject(self.h_elMiniPfRelIso_all)
         self.addObject(self.h_elPt['no_trigger'])
         self.addObject(self.h_elPt['prompt'])
@@ -147,10 +147,10 @@ class TriggerStudy(Module):
         self.addObject(self.h_elPhi['no_trigger'])
         self.addObject(self.h_elMap['no_trigger'])
 
-        self.addObject(self.h_metPt['no_trigger'])
-        self.addObject(self.h_metPhi['no_trigger'])
-        self.addObject(self.h_genMetPt['no_trigger'])
-        self.addObject(self.h_genMetPhi['no_trigger'])
+        # self.addObject(self.h_metPt['no_trigger'])
+        # self.addObject(self.h_metPhi['no_trigger'])
+        # self.addObject(self.h_genMetPt['no_trigger'])
+        # self.addObject(self.h_genMetPhi['no_trigger'])
 
         for key in self.trigLst:
             if not key.find("Mu") == -1: continue
@@ -187,21 +187,21 @@ class TriggerStudy(Module):
                                                   150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_elMap[trgPath])
 
-                self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
-                                                                                  'per 1 GeV/c', 300, 0, 300)
-                self.addObject(self.h_metPt[trgPath])
-                self.h_metPhi[trgPath] = ROOT.TH1D('h_metPhi_' + trgPath, trgPath + ';MET #phi;Number of Events per '
-                                                                                    '#delta#phi = 0.046', 300, -6, 8)
-                self.addObject(self.h_metPhi[trgPath])
-
-                self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
-                                                                                        'of Events per 1 GeV/c',
-                                                     300, 0, 300)
-                self.addObject(self.h_genMetPt[trgPath])
-                self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
-                                                                                          'Events per #delta#phi=0.046',
-                                                      300, -6, 8)
-                self.addObject(self.h_genMetPhi[trgPath])
+                # self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
+                #                                                                   'per 1 GeV/c', 300, 0, 300)
+                # self.addObject(self.h_metPt[trgPath])
+                # self.h_metPhi[trgPath] = ROOT.TH1D('h_metPhi_' + trgPath, trgPath + ';MET #phi;Number of Events per '
+                #                                                                     '#delta#phi = 0.046', 300, -6, 8)
+                # self.addObject(self.h_metPhi[trgPath])
+                #
+                # self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
+                #                                                                         'of Events per 1 GeV/c',
+                #                                      300, 0, 300)
+                # self.addObject(self.h_genMetPt[trgPath])
+                # self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
+                #                                                                           'Events per #delta#phi=0.046',
+                #                                       300, -6, 8)
+                # self.addObject(self.h_genMetPhi[trgPath])
 
         self.addObject(self.h_eventsPrg)
 
@@ -272,7 +272,7 @@ class TriggerStudy(Module):
         for ne, el in enumerate(electrons):
             if abs(el.eta) > self.selCriteria["maxObjEta"]: continue
             if el.miniPFRelIso_all > self.selCriteria["maxMiniPfRelIso"]: continue
-            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17Iso_WP90 is False: continue
+            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17V2Iso_WP90 is False: continue
             if 1.4442 < abs(el.eta) < 1.566: continue
 
             #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1
@@ -299,13 +299,13 @@ class TriggerStudy(Module):
         electrons = Collection(event, "Electron")
         jets = Collection(event, "Jet")
         hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
-        met = Object(event, "MET")
-        genMet = Object(event, "GenMET")
+        # met = Object(event, "MET")
+        # genMet = Object(event, "GenMET")
 
-        metPt = getattr(met, "pt")
-        metPhi = getattr(met, "phi")
-        genMetPt = getattr(genMet, "pt")
-        genMetPhi = getattr(genMet, "pt")
+        # metPt = getattr(met, "pt")
+        # metPhi = getattr(met, "phi")
+        # genMetPt = getattr(genMet, "pt")
+        # genMetPhi = getattr(genMet, "pt")
 
         trigPath = {}
         for key in self.trigLst:
@@ -318,10 +318,6 @@ class TriggerStudy(Module):
 
         if trigPath['Ele32_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
             trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-          #  trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-        # if trigPath['Ele38_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-          #  trigPath['Ele38_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
 
         jetHt = {"notrig": 0}
         for key in self.trigLst:
@@ -341,8 +337,8 @@ class TriggerStudy(Module):
             for ne, electron in enumerate(electrons):
                 if ElPassIdx == ne:
                     self.h_elMiniPfRelIso_all.Fill(electron.miniPFRelIso_all)
-                    self.h_elGenPartFlav.Fill(electron.genPartFlav)
-                    self.h_elGenPartIdx.Fill(electron.genPartIdx)
+                    # self.h_elGenPartFlav.Fill(electron.genPartFlav)
+                    # self.h_elGenPartIdx.Fill(electron.genPartIdx)
                     self.h_elEta['no_trigger'].Fill(electron.eta)
                     self.h_elPhi['no_trigger'].Fill(electron.phi)
                     self.h_elMap['no_trigger'].Fill(electron.eta, electron.phi)
@@ -355,10 +351,10 @@ class TriggerStudy(Module):
                                 self.h_elEta[tg].Fill(electron.eta)
                                 self.h_elPhi[tg].Fill(electron.phi)
                                 self.h_elMap[tg].Fill(electron.eta, electron.phi)
-                    if electron.genPartFlav == 1:
-                        self.h_elPt['prompt'].Fill(electron.pt)
-                    else:
-                        self.h_elPt['non-prompt'].Fill(electron.pt)
+                    # if electron.genPartFlav == 1:
+                    #     self.h_elPt['prompt'].Fill(electron.pt)
+                    # else:
+                    #     self.h_elPt['non-prompt'].Fill(electron.pt)
 
             for nj, jet in enumerate(jets):
                 if nj not in JetPassIdx: continue
@@ -376,10 +372,10 @@ class TriggerStudy(Module):
                 self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
             self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
-            self.h_metPt['no_trigger'].Fill(metPt)
-            self.h_metPhi['no_trigger'].Fill(metPhi)
-            self.h_genMetPt['no_trigger'].Fill(genMetPt)
-            self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
+            # self.h_metPt['no_trigger'].Fill(metPt)
+            # self.h_metPhi['no_trigger'].Fill(metPhi)
+            # self.h_genMetPt['no_trigger'].Fill(genMetPt)
+            # self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
             self.h_jetMult['no_trigger'].Fill(nJetPass)
             self.h_jetBMult['no_trigger'].Fill(nBtagPass)
             self.h_eventsPrg.Fill(1)
@@ -389,10 +385,10 @@ class TriggerStudy(Module):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         self.h_jetHt[tg].Fill(jetHt[tg])
-                        self.h_metPt[tg].Fill(metPt)
-                        self.h_metPhi[tg].Fill(metPhi)
-                        self.h_genMetPt[tg].Fill(genMetPt)
-                        self.h_genMetPhi[tg].Fill(genMetPhi)
+                        # self.h_metPt[tg].Fill(metPt)
+                        # self.h_metPhi[tg].Fill(metPhi)
+                        # self.h_genMetPt[tg].Fill(genMetPt)
+                        # self.h_genMetPhi[tg].Fill(genMetPhi)
                         self.h_jetMult[tg].Fill(nJetPass)
                         self.h_jetBMult[tg].Fill(nBtagPass)
                         self.h_eventsPrg.Fill(2 + i)

@@ -22,7 +22,8 @@ def process_arguments():
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
-                                                     "tt_semilep102", "ttjets102", "tttt102", "data_HTMHT"],
+                                                     "tt_semilep102", "ttjets102", "tttt102",
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
                         default="tttt", help="Set list of input files")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
                         default="xrd-global", help="Sets redirector to query locations for LFN")
@@ -30,6 +31,8 @@ def process_arguments():
                         help="Does not output a ROOT file, which contains the histograms.")
     parser.add_argument("-e", "--eventLimit", type=int, default=-1,
                         help="Set a limit to the number of events.")
+    parser.add_argument("-lf", "--fileLimit", type=int, default=-1,
+                        help="Set a limit to the number of files to run through.")
     args = parser.parse_args()
     return args
 
@@ -103,10 +106,18 @@ def main(argms):
 
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
     # you may want to change path to suit your file ordering
-    if argms.inputLFN == "data_HTMHT":  
+    if argms.inputLFN == "dataHTMHT17F":
         inputLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
-        thePostFix = "data_HTMHT"
-        outputFile = "../OutFiles/Histograms/dataHTMHT_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+        thePostFix = "dataHTMHT17F"
+        outputFile = "../OutFiles/Histograms/dataHTMHT17F_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "dataSMu17F":
+        inputLFNList = open("../myInFiles/data/SingleMuon_Run2017F-Nano14Dec2018-v1.txt", "r")
+        thePostFix = "dataSMu17F"
+        outputFile = "../OutFiles/Histograms/dataSMu17F_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "dataSEl17F":
+        inputLFNList = open("../myInFiles/data/SingleElectron_Run2017F-Nano14Dec2018-v1.txt", "r")
+        thePostFix = "dataSEl17F"
+        outputFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
     elif argms.inputLFN == "tt_semilep94":  # tt + jets MC
         inputLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
         # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
@@ -162,7 +173,8 @@ def main(argms):
 
     for counter, line in enumerate(inputLFNList):
         counter += 1
-        if counter > 5: break
+        if not argms.fileLimit == -1:
+            if counter > argms.fileLimit: break
         files.append(redirector + str(line).replace('\n', ''))
 
     trigList = {}

@@ -17,7 +17,9 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+                                                     "tt_semilep102", "ttjets102", "tttt102",
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
                         default="tttt", help="Set list of input files")
     args = parser.parse_args()
     return args
@@ -159,16 +161,26 @@ def inputFileName(arg, selCrit):
         inFile (string): input file name
 
     """
-    if arg == "tt_semilep":
-        inFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
-    elif arg == "ttjets":
-        inFile = "../OutFiles/Histograms/TT6Jets1El{0}jPt.root" .format(selCrit["minJetPt"])
+    if arg == "tttt94":
+        inFile = "../OutFiles/Histograms/TTTT94X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+    elif arg == "tttt102":
+        inFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+    elif arg == "ttjets94":
+        inFile = "../OutFiles/Histograms/TT94_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "tttt_weights":
         inFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "wjets":
         inFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
-    elif arg == "tttt":
-        inFile = "../OutFiles/Histograms/TTTT_6Jets1El{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "tt_semilep94":
+        inFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "tt_semilep102":
+        inFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "dataHTMHT17F":
+        inFile = "../OutFiles/Histograms/dataHTMHT17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg == "dataSMu17F":
+        inFile = "../OutFiles/Histograms/dataSMu17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg == "dataSEl17F":
+        inFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     else:
         inFile = None
 
@@ -367,12 +379,20 @@ def main(argms):
     # - Create text for legend
     if argms.inputLFN == "tt_semilep":
         legString = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif argms.inputLFN == "ttjets":
+    if argms.inputLFN  == "tt_semilep94" or "tt_semilep102":
         legString = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif argms.inputLFN == "tttt":
+    elif argms.inputLFN  == "ttjets94" or "ttjets102":
+        legString = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif argms.inputLFN  == "tttt94" or "tttt102":
         legString = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif argms.inputLFN == "tttt_weights":
+    elif argms.inputLFN  == "tttt_weights":
         legString = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif argms.inputLFN  == "dataHTMHT17F":
+        legString = "#splitline{CMS}{HT Data}"
+    elif argms.inputLFN  == "dataSMu17F":
+        legString = "#splitline{CMS}{Single Muon Data}"
+    elif argms.inputLFN  == "dataSEl17F":
+        legString = "#splitline{CMS}{Single Electron Data}"
     else:
         legString = "#splitline{CMS}{W #rightarrow jets}"
 

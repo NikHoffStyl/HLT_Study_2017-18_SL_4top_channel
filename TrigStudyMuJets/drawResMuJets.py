@@ -18,7 +18,9 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets"],
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+                                                     "tt_semilep102", "ttjets102", "tttt102",
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
                         default="tttt", help="Set list of input files")
     args = parser.parse_args()
     return args
@@ -173,14 +175,20 @@ def cmsPlotString(args):
         legStr (string): string containing channel details
 
     """
-    if args == "tt_semilep":
+    if args == "tt_semilep94" or "tt_semilep102":
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args == "ttjets":
+    elif args == "ttjets94" or "ttjets102":
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args == "tttt":
+    elif args == "tttt94" or "tttt102":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     elif args == "tttt_weights":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
+    elif args == "dataHTMHT17F":
+        legStr = "#splitline{CMS}{HT Data}"
+    elif args == "dataSMu17F":
+        legStr = "#splitline{CMS}{Single Muon Data}"
+    elif args == "dataSEl17F":
+        legStr = "#splitline{CMS}{Single Electron Data}"
     else:
         legStr = "#splitline{CMS}{W #rightarrow jets}"
 
@@ -223,16 +231,26 @@ def inputFileName(arg, selCrit):
         inFile (string): input file name
 
     """
-    if arg == "tt_semilep":
-        inFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
-    elif arg == "ttjets":
-        inFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    if arg == "tttt94":
+        inFile = "../OutFiles/Histograms/TTTT94X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+    elif arg == "tttt102":
+        inFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+    elif arg == "ttjets94":
+        inFile = "../OutFiles/Histograms/TT94_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "tttt_weights":
         inFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "wjets":
         inFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
-    elif arg == "tttt":
-        inFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "tt_semilep94":
+        inFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "tt_semilep102":
+        inFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    elif arg == "dataHTMHT17F":
+        inFile = "../OutFiles/Histograms/dataHTMHT17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg == "dataSMu17F":
+        inFile = "../OutFiles/Histograms/dataSMu17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg == "dataSEl17F":
+        inFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     else:
         inFile = None
 
@@ -264,8 +282,8 @@ def main(argms):
     h_muonMap = {}
     h_metPt = {}
     h_metPhi = {}
-    h_genMetPt = {}
-    h_genMetPhi = {}
+    # h_genMetPt = {}
+    # h_genMetPhi = {}
 
     h_TriggerRatio = {}
 
@@ -309,8 +327,8 @@ def main(argms):
         print("No trigger jet map histogram is empty")
 
     h_muonPfRelIso04_all = ROOT.gDirectory.Get("h_muonRelIso04_all")
-    h_muonGenPartFlav = ROOT.gDirectory.Get("h_muonGenPartFlav")
-    h_muonGenPartIdx = ROOT.gDirectory.Get("h_muonGenPartIdx")
+    # h_muonGenPartFlav = ROOT.gDirectory.Get("h_muonGenPartFlav")
+    # h_muonGenPartIdx = ROOT.gDirectory.Get("h_muonGenPartIdx")
 
     h_muonPt["notrigger"] = ROOT.gDirectory.Get("h_muonPt_notrigger")
     h_muonPt["notrigger"].SetLineColor(1)
@@ -346,14 +364,14 @@ def main(argms):
     if not (h_metPhi["notrigger"]):
         print("No trigger met Phi histogram is empty")
 
-    h_genMetPt["notrigger"] = ROOT.gDirectory.Get("h_genMetPt_notrigger")
-    h_genMetPt["notrigger"].SetLineColor(1)
-    if not (h_genMetPt["notrigger"]):
-        print("No trigger genMet Pt histogram is empty")
-    h_genMetPhi["notrigger"] = ROOT.gDirectory.Get("h_genMetPhi_notrigger")
-    h_genMetPhi["notrigger"].SetLineColor(1)
-    if not (h_genMetPhi["notrigger"]):
-        print("No trigger genMet Phi histogram is empty")
+    # h_genMetPt["notrigger"] = ROOT.gDirectory.Get("h_genMetPt_notrigger")
+    # h_genMetPt["notrigger"].SetLineColor(1)
+    # if not (h_genMetPt["notrigger"]):
+    #     print("No trigger genMet Pt histogram is empty")
+    # h_genMetPhi["notrigger"] = ROOT.gDirectory.Get("h_genMetPhi_notrigger")
+    # h_genMetPhi["notrigger"].SetLineColor(1)
+    # if not (h_genMetPhi["notrigger"]):
+    #     print("No trigger genMet Phi histogram is empty")
 
     i = 2
     style = [1, 8, 9, 10]
@@ -374,8 +392,8 @@ def main(argms):
 
             h_metPt[tg] = ROOT.gDirectory.Get("h_metPt_" + tg)
             h_metPhi[tg] = ROOT.gDirectory.Get("h_metPhi_" + tg)
-            h_genMetPt[tg] = ROOT.gDirectory.Get("h_genMetPt_" + tg)
-            h_genMetPhi[tg] = ROOT.gDirectory.Get("h_genMetPhi_" + tg)
+            # h_genMetPt[tg] = ROOT.gDirectory.Get("h_genMetPt_" + tg)
+            # h_genMetPhi[tg] = ROOT.gDirectory.Get("h_genMetPhi_" + tg)
 
             h_jetHt[tg].SetLineColor(i)
             h_jetMult[tg].SetLineColor(i)
@@ -387,8 +405,8 @@ def main(argms):
             h_muonPhi[tg].SetLineColor(i)
             h_metPt[tg].SetLineColor(i)
             h_metPhi[tg].SetLineColor(i)
-            h_genMetPt[tg].SetLineColor(i)
-            h_genMetPhi[tg].SetLineColor(i)
+            # h_genMetPt[tg].SetLineColor(i)
+            # h_genMetPhi[tg].SetLineColor(i)
 
             f_jetHt[tg] = ROOT.TF1('jetHt' + tg, turnOnFit, 200, 2500, 4)
             f_jetHt[tg].SetLineColor(1)
@@ -618,13 +636,13 @@ def main(argms):
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - Muon test Plots-------------------------------
-    triggerCanvas.cd(1)
-    h_muonGenPartFlav.Draw()
-    pdfCreator(argms, 1, triggerCanvas, selCriteria)
-
-    triggerCanvas.cd(1)
-    h_muonGenPartIdx.Draw()
-    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    # triggerCanvas.cd(1)
+    # h_muonGenPartFlav.Draw()
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    #
+    # triggerCanvas.cd(1)
+    # h_muonGenPartIdx.Draw()
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     triggerCanvas.cd(1)
     h_muonPfRelIso04_all.Draw()
@@ -811,53 +829,53 @@ def main(argms):
 
     # - GenMET pT plots ---------------------------------
     cv11 = triggerCanvas.cd(1)
-    h_genMetPt["notrigger"].GetXaxis().SetTitle("Gen E^{Miss}_{T}")
-    h_genMetPt["notrigger"].SetMinimum(0.)
-    # h_genMetPt["notrigger"].SetMaximum(2000)
-    h_genMetPt["notrigger"].Draw('E1')
-    tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
-    tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
-    for key in trigList:
-        if not key.find("El") == -1: continue
-        for tg in trigList[key]:
-            h_genMetPt[tg].Draw('E1 same')
-    cv11.BuildLegend(0.47, 0.54, 0.97, 0.74)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    # h_genMetPt["notrigger"].GetXaxis().SetTitle("Gen E^{Miss}_{T}")
+    # h_genMetPt["notrigger"].SetMinimum(0.)
+    # # h_genMetPt["notrigger"].SetMaximum(2000)
+    # h_genMetPt["notrigger"].Draw('E1')
+    # tX1 = 0.6 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+    # tY1 = 0.95 * (h_genMetPt["notrigger"].GetMaximum())
+    # for key in trigList:
+    #     if not key.find("El") == -1: continue
+    #     for tg in trigList[key]:
+    #         h_genMetPt[tg].Draw('E1 same')
+    # cv11.BuildLegend(0.47, 0.54, 0.97, 0.74)
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
-    cv12 = triggerCanvas.cd(1)
-    i = 0
-    j = 2
-    for key in trigList:
-        if not key.find("El") == -1: continue
-        for tg in trigList[key]:
-            if ROOT.TEfficiency.CheckConsistency(h_genMetPt[tg], h_genMetPt["notrigger"]):
-                h_TriggerRatio[tg] = ROOT.TEfficiency(h_genMetPt[tg], h_genMetPt["notrigger"])
-                # xTitle = h_genMetPt["notrigger"].GetXaxis().GetTitle()
-                xBinWidth = h_genMetPt["notrigger"].GetXaxis().GetBinWidth(1)
-                h_TriggerRatio[tg].SetTitle("; Gen E^{Miss}_{T};Trigger Efficiency per %.2f GeV/c" % xBinWidth)
-                h_TriggerRatio[tg].SetName(tg)
-                h_TriggerRatio[tg].SetTitle(tg)
-                h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
-                if i == 0:
-                    h_TriggerRatio[tg].Draw('AP')
-                    cv12.Update()
-                    graph1 = h_TriggerRatio[tg].GetPaintedGraph()
-                    graph1.SetMinimum(0)
-                    graph1.SetMaximum(1.2)
-                    cv12.Update()
-                    tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
-                    tY1 = 1.1
-                if i > 0:
-                    h_TriggerRatio[tg].Draw('same')
-            i += 1
-    cv12.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
+    # cv12 = triggerCanvas.cd(1)
+    # i = 0
+    # j = 2
+    # for key in trigList:
+    #     if not key.find("El") == -1: continue
+    #     for tg in trigList[key]:
+    #         if ROOT.TEfficiency.CheckConsistency(h_genMetPt[tg], h_genMetPt["notrigger"]):
+    #             h_TriggerRatio[tg] = ROOT.TEfficiency(h_genMetPt[tg], h_genMetPt["notrigger"])
+    #             # xTitle = h_genMetPt["notrigger"].GetXaxis().GetTitle()
+    #             xBinWidth = h_genMetPt["notrigger"].GetXaxis().GetBinWidth(1)
+    #             h_TriggerRatio[tg].SetTitle("; Gen E^{Miss}_{T};Trigger Efficiency per %.2f GeV/c" % xBinWidth)
+    #             h_TriggerRatio[tg].SetName(tg)
+    #             h_TriggerRatio[tg].SetTitle(tg)
+    #             h_TriggerRatio[tg].SetLineColor(j)
+    #             j += 1
+    #             if i == 0:
+    #                 h_TriggerRatio[tg].Draw('AP')
+    #                 cv12.Update()
+    #                 graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+    #                 graph1.SetMinimum(0)
+    #                 graph1.SetMaximum(1.2)
+    #                 cv12.Update()
+    #                 tX1 = 0.05 * (h_genMetPt["notrigger"].GetXaxis().GetXmax())
+    #                 tY1 = 1.1
+    #             if i > 0:
+    #                 h_TriggerRatio[tg].Draw('same')
+    #         i += 1
+    # cv12.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - Eta plots ------------------------------------------
