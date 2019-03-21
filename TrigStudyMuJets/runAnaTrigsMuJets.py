@@ -13,7 +13,12 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
 def process_arguments():
-    """ Process command-line arguments """
+    """
+    Processes command line arguments
+    Returns:
+        args: list of commandline arguments
+
+    """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets",
@@ -31,10 +36,12 @@ def process_arguments():
 
 def chooseRedirector(arg):
     """
+    Sets redirector using keyword given in commandline arguments
     Args:
-        arg:
+        arg: command line argument list
 
     Returns:
+        redir: redirector, where redirector + LFN = PFN
 
     """
     if arg.redirector == "xrd-global":
@@ -64,32 +71,14 @@ def chooseRedirector(arg):
 
 
 def main(argms):
-    """ This is where the input files are chosen and the PostProcessor runs """
+    """
+    This is where the input files are chosen and the PostProcessor runs
+    Args:
+        argms: command line arguments
 
-    # if argms.redirector == "xrd-global":
-    #     redirector = "root://cms-xrd-global.cern.ch/"
-    # elif argms.redirector == "xrdUS":
-    #     redirector = "root://cmsxrootd.fnal.gov/"
-    # elif argms.redirector == "xrdEU_Asia":
-    #     redirector = "root://xrootd-cms.infn.it/"
-    # elif argms.redirector == "eos":
-    #     redirector = "root://cmseos.fnal.gov/"
-    # elif argms.redirector == "iihe":
-    #     redirector = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
-    # elif argms.redirector == "local":
-    #     if argms.inputLFN == "ttjets":
-    #         redirector = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
-    #     elif argms.inputLFN == "tttt_weights":
-    #         redirector = "../../myInFiles/TTTTweights/"
-    #     elif argms.inputLFN == "wjets":
-    #         redirector = "../../myInFiles/Wjets/"
-    #     elif argms.inputLFN == "tttt":
-    #         redirector = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
-    #     else:
-    #         return 0
-    # else:
-    #     return 0
+    Returns:
 
+    """
     redirector = chooseRedirector(argms)
 
     files = []
@@ -118,40 +107,51 @@ def main(argms):
         inputLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
         thePostFix = "data_HTMHT"
         outputFile = "../OutFiles/Histograms/dataHTMHT_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "tt_semilep":  # tt + jets MC
-        inputLFNList = open("../myInFiles/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8.txt", "r")
+    elif argms.inputLFN == "tt_semilep94":  # tt + jets MC
+        inputLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
         # inputLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
         #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
-        thePostFix = "TTJets_SL"
-        outputFile = "../OutFiles/Histograms/TTToSemiLep_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "ttjets":  # tt + jets MC
+        thePostFix = "TTToSemiLep94X"
+        outputFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tt_semilep102":  # tt + jets MC
+        inputLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
+        thePostFix = "TTToSemiLep102X"
+        outputFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "ttjets94":  # tt + jets MC
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
-        thePostFix = "TTJets_SL"
-        outputFile = "../OutFiles/Histograms/TT6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
+            inputLFNList = open("../myInFiles/mc/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_94X.txt", "r")
+        thePostFix = "TTJets_SL_94"
+        outputFile = "../OutFiles/Histograms/TT94_6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
     elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTTweights_files.txt", "r")
+            inputLFNList = open("../myInFiles/mc/TTTTweights_files.txt", "r")
         thePostFix = "TTTT_PSWeights"
         outputFile = "../OutFiles/Histograms/TTTTweights.root"
     elif argms.inputLFN == "wjets":  # W (to Lep + Nu) + jets
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/Wjets/Wjets_files.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/Wjets_files.txt", "r")
+            inputLFNList = open("../myInFiles/mc/Wjets_files.txt", "r")
         thePostFix = "WJetsToLNu"
         outputFile = "../OutFiles/Histograms/Wjets.root"
-    elif argms.inputLFN == "tttt":  # tttt MC
+    elif argms.inputLFN == "tttt94":  # tttt MC
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:
-            inputLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt", "r")
-        thePostFix = "TTTT"
-        outputFile = "../OutFiles/Histograms/TTTT6Jets1Mu{0}jPt_test.root" .format(selCriteria["minJetPt"])
+            inputLFNList = open("../myInFiles/mc/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_94X.txt", "r")
+        thePostFix = "TTTT94"
+        outputFile = "../OutFiles/Histograms/TTTT94X_6Jets1Mu{0}jPt_test.root" .format(selCriteria["minJetPt"])
+    elif argms.inputLFN == "tttt102":  # tttt MC
+        if argms.redirector == "local":
+            inputLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
+        else:
+            inputLFNList = open("../myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
+        thePostFix = "TTTT102"
+        outputFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root" .format(selCriteria["minJetPt"])
     else:
         return 0
 
@@ -160,7 +160,6 @@ def main(argms):
     else:
         writeFile = True
 
-    # iterat = 0
     for counter, line in enumerate(inputLFNList):
         counter += 1
         if counter > 5: break
