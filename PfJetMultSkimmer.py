@@ -5,7 +5,7 @@ Created on Jan 2019
 @author: NikHoffStyl
 """
 from __future__ import (division, print_function)
-from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 
@@ -85,20 +85,20 @@ class PfJetsSkimmer(Module):
         self.out.fillBranch("nMuon", len(allmuons))
         self.out.fillBranch("nElectron", len(allelectrons))
         self.out.fillBranch("nJets", len(allrecojets))
-        for muon in allmuons:
-            self.out.fillBranch("Muon_eta", muon.p4().Eta)
-            self.out.fillBranch("Muon_phi", muon.p4().Phi)
-            self.out.fillBranch("Muon_pt", muon.p4().Pt)
+        #for muon in allmuons:
+            #self.out.fillBranch("Muon_eta", muon.p4().Eta())
+            #self.out.fillBranch("Muon_phi", muon.phi)
+            #self.out.fillBranch("Muon_pt", muon.pt)
 
-        for electron in allelectrons:
-            self.out.fillBranch("Electron_eta", electron.p4().Eta)
-            self.out.fillBranch("Electron_phi", electron.p4().Phi)
-            self.out.fillBranch("Electron_pt", electron.p4().Pt)
+        #for electron in allelectrons:
+            #self.out.fillBranch("Electron_eta", electron.p4().Eta)
+            #self.out.fillBranch("Electron_phi", electron.phi)
+            #self.out.fillBranch("Electron_pt", electron.pt)
 
-        for jet in allrecojets:
-            self.out.fillBranch("Jet_eta", jet.p4().Eta)
-            self.out.fillBranch("Jet_phi", jet.p4().Phi)
-            self.out.fillBranch("Jet_pt", jet.p4().Pt)
+        #for jet in allrecojets:
+            #self.out.fillBranch("Jet_eta", jet.eta)
+            #self.out.fillBranch("Jet_phi", jet.phi)
+            #self.out.fillBranch("Jet_pt", jet.pt)
 
         return True
 

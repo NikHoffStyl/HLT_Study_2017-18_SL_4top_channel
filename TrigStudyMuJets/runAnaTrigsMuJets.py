@@ -21,8 +21,8 @@ def process_arguments():
     """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep", "ttjets", "tttt", "tttt_weights", "wjets",
-                                                     "data_HTMHT"],
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+                                                     "tt_semilep102", "ttjets102", "tttt102", "data_HTMHT"],
                         default="tttt", help="Set list of input files")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
                         default="xrd-global", help="Sets redirector to query locations for LFN")
@@ -103,7 +103,7 @@ def main(argms):
 
     # Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
     # you may want to change path to suit your file ordering
-    if argms.inputLFN == "data_HTMHT":  # tt + jets MC
+    if argms.inputLFN == "data_HTMHT":  
         inputLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
         thePostFix = "data_HTMHT"
         outputFile = "../OutFiles/Histograms/dataHTMHT_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
@@ -113,18 +113,18 @@ def main(argms):
         #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         thePostFix = "TTToSemiLep94X"
         outputFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "tt_semilep102":  # tt + jets MC
+    elif argms.inputLFN == "tt_semilep102": 
         inputLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
         thePostFix = "TTToSemiLep102X"
         outputFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root".format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "ttjets94":  # tt + jets MC
+    elif argms.inputLFN == "ttjets94": 
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
             inputLFNList = open("../myInFiles/mc/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_94X.txt", "r")
         thePostFix = "TTJets_SL_94"
         outputFile = "../OutFiles/Histograms/TT94_6Jets1Mu{0}jPt.root" .format(selCriteria["minJetPt"])
-    elif argms.inputLFN == "tttt_weights":  # tttt MC PSWeights
+    elif argms.inputLFN == "tttt_weights":
         if argms.redirector == "local":
             inputLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
         else:
