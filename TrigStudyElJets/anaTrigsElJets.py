@@ -147,8 +147,8 @@ class TriggerStudy(Module):
         self.addObject(self.h_elPhi['no_trigger'])
         self.addObject(self.h_elMap['no_trigger'])
 
-        # self.addObject(self.h_metPt['no_trigger'])
-        # self.addObject(self.h_metPhi['no_trigger'])
+        self.addObject(self.h_metPt['no_trigger'])
+        self.addObject(self.h_metPhi['no_trigger'])
         # self.addObject(self.h_genMetPt['no_trigger'])
         # self.addObject(self.h_genMetPhi['no_trigger'])
 
@@ -187,12 +187,12 @@ class TriggerStudy(Module):
                                                   150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_elMap[trgPath])
 
-                # self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
-                #                                                                   'per 1 GeV/c', 300, 0, 300)
-                # self.addObject(self.h_metPt[trgPath])
-                # self.h_metPhi[trgPath] = ROOT.TH1D('h_metPhi_' + trgPath, trgPath + ';MET #phi;Number of Events per '
-                #                                                                     '#delta#phi = 0.046', 300, -6, 8)
-                # self.addObject(self.h_metPhi[trgPath])
+                self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
+                                                                                  'per 1 GeV/c', 300, 0, 300)
+                self.addObject(self.h_metPt[trgPath])
+                self.h_metPhi[trgPath] = ROOT.TH1D('h_metPhi_' + trgPath, trgPath + ';MET #phi;Number of Events per '
+                                                                                    '#delta#phi = 0.046', 300, -6, 8)
+                self.addObject(self.h_metPhi[trgPath])
                 #
                 # self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
                 #                                                                         'of Events per 1 GeV/c',
@@ -299,11 +299,11 @@ class TriggerStudy(Module):
         electrons = Collection(event, "Electron")
         jets = Collection(event, "Jet")
         hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
-        # met = Object(event, "MET")
+        met = Object(event, "MET")
         # genMet = Object(event, "GenMET")
 
-        # metPt = getattr(met, "pt")
-        # metPhi = getattr(met, "phi")
+        metPt = getattr(met, "pt")
+        metPhi = getattr(met, "phi")
         # genMetPt = getattr(genMet, "pt")
         # genMetPhi = getattr(genMet, "pt")
 

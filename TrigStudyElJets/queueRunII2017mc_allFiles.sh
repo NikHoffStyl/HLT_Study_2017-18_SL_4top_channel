@@ -11,6 +11,6 @@ cd $pwd
 export X509_USER_PROXY=/user/$USER/x509up_u23075 # $(#id -u $USER)
 
 cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets
+python runAnaTrigsMuJets.py -f tt_semilep102
 python runAnaTrigsMuJets.py -f tttt102
-
-# python drawResMuJets.py -f tttt102
+# python drawResMuJets.py -f tt_semilep102

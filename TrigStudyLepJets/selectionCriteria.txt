@@ -1,7 +1,7 @@
 minNJet: 5
 minNBJet: 1
 minNMuon: 1
-minNElectron: 0
+minNElectron: 1
 
 maxObjEta: 2.4
 
