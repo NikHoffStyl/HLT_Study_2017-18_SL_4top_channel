@@ -237,7 +237,7 @@ def inputFileName(arg, selCrit):
     """
     if arg.find("tttt") != -1 and arg.find("tttt_") == -1:
         version = arg.replace("tttt", '')
-        inFile = "../OutFiles/Histograms/TTTT{0}X_6Jets1Mu{1}jPt_test.root".format(version, selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTTT{0}X_6Jets1Lep{1}jPt_test.root".format(version, selCrit["minJetPt"])
     # elif arg == "tttt102":
     #     inFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
     elif not arg.find("ttjets") == -1:
@@ -488,7 +488,7 @@ def main(argms):
                     h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
+#                    fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
