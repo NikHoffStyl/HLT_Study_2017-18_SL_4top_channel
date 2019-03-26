@@ -20,8 +20,12 @@ def process_arguments():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
                                                      "tt_semilep102", "ttjets102", "tttt102",
+                                                     "dataHTMHT17B", "dataSMu17B", "dataSEl17B",
+                                                     "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
+                                                     "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
+                                                     "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
                                                      "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
-                        default="tttt", help="Set list of input files")
+                        default="tttt102", help="Set list of input files")
     args = parser.parse_args()
     return args
 
@@ -175,19 +179,19 @@ def cmsPlotString(args):
         legStr (string): string containing channel details
 
     """
-    if args == "tt_semilep94" or "tt_semilep102":
+    if not args.find("tt_semilep") == -1:
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args == "ttjets94" or "ttjets102":
+    elif not args.find("ttjets") == -1:
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args == "tttt94" or "tttt102":
+    elif args.find("tttt") != -1 and args.find("tttt_") == -1:
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     elif args == "tttt_weights":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args == "dataHTMHT17F":
+    elif not args.find("dataHTMHT17") == -1:
         legStr = "#splitline{CMS}{HT Data}"
-    elif args == "dataSMu17F":
+    elif not args.find("dataSMu17") == -1:
         legStr = "#splitline{CMS}{Single Muon Data}"
-    elif args == "dataSEl17F":
+    elif not args.find("dataSEl17") == -1:
         legStr = "#splitline{CMS}{Single Electron Data}"
     else:
         legStr = "#splitline{CMS}{W #rightarrow jets}"
@@ -231,26 +235,32 @@ def inputFileName(arg, selCrit):
         inFile (string): input file name
 
     """
-    if arg == "tttt94":
-        inFile = "../OutFiles/Histograms/TTTT94X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
-    elif arg == "tttt102":
-        inFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
-    elif arg == "ttjets94":
-        inFile = "../OutFiles/Histograms/TT94_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    if arg.find("tttt") != -1 and arg.find("tttt_") == -1:
+        version = arg.replace("tttt", '')
+        inFile = "../OutFiles/Histograms/TTTT{0}X_6Jets1Mu{1}jPt_test.root".format(version, selCrit["minJetPt"])
+    # elif arg == "tttt102":
+    #     inFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+    elif not arg.find("ttjets") == -1:
+        version = arg.replace("ttjets", '')
+        inFile = "../OutFiles/Histograms/TT{0}_6Jets1Mu{1}jPt.root" .format(version, selCrit["minJetPt"])
     elif arg == "tttt_weights":
         inFile = "../OutFiles/Histograms/TTTTweights{0}jPt.root" .format(selCrit["minJetPt"])
     elif arg == "wjets":
         inFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
-    elif arg == "tt_semilep94":
-        inFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
-    elif arg == "tt_semilep102":
-        inFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
-    elif arg == "dataHTMHT17F":
-        inFile = "../OutFiles/Histograms/dataHTMHT17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
-    elif arg == "dataSMu17F":
-        inFile = "../OutFiles/Histograms/dataSMu17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
-    elif arg == "dataSEl17F":
-        inFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+    elif not arg.find("tt_semilep") == -1:
+        version = arg.replace("tt_semilep", '')
+        inFile = "../OutFiles/Histograms/TTToSemiLep{0}X_6Jets1Mu{1}jPt.root" .format(version, selCrit["minJetPt"])
+    # elif arg == "tt_semilep102":
+    #     inFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
+    elif not arg.find("dataHTMHT17") == -1:
+        version = arg.replace("dataHTMHT17", '')
+        inFile = "../OutFiles/Histograms/dataHTMHT17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
+    elif not arg.find("dataSMu17") == -1:
+        version = arg.replace("dataSMu17", '')
+        inFile = "../OutFiles/Histograms/dataSMu17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
+    elif not arg.find("dataSEl17") == -1:
+        version = arg.replace("dataSEl17", '')
+        inFile = "../OutFiles/Histograms/dataSEl17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
     else:
         inFile = None
 

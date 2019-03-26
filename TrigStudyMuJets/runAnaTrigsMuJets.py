@@ -9,68 +9,68 @@ from __future__ import (division, print_function)
 import time
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from anaTrigsMuJets import *
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+# from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
-def process_arguments():
-    """
-    Processes command line arguments
-    Returns:
-        args: list of commandline arguments
+# def process_arguments():
+#     """
+#     Processes command line arguments
+#     Returns:
+#         args: list of commandline arguments
+#
+#     """
+#
+#     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+#     parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+#                                                      "tt_semilep102", "ttjets102", "tttt102",
+#                                                      "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
+#                         default="tttt", help="Set list of input files")
+#     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
+#                         default="xrd-global", help="Sets redirector to query locations for LFN")
+#     parser.add_argument("-nw", "--noWriteFile", action="store_true",
+#                         help="Does not output a ROOT file, which contains the histograms.")
+#     parser.add_argument("-e", "--eventLimit", type=int, default=-1,
+#                         help="Set a limit to the number of events.")
+#     parser.add_argument("-lf", "--fileLimit", type=int, default=-1,
+#                         help="Set a limit to the number of files to run through.")
+#     args = parser.parse_args()
+#     return args
 
-    """
 
-    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
-                                                     "tt_semilep102", "ttjets102", "tttt102",
-                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
-                        default="tttt", help="Set list of input files")
-    parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
-                        default="xrd-global", help="Sets redirector to query locations for LFN")
-    parser.add_argument("-nw", "--noWriteFile", action="store_true",
-                        help="Does not output a ROOT file, which contains the histograms.")
-    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
-                        help="Set a limit to the number of events.")
-    parser.add_argument("-lf", "--fileLimit", type=int, default=-1,
-                        help="Set a limit to the number of files to run through.")
-    args = parser.parse_args()
-    return args
-
-
-def chooseRedirector(arg):
-    """
-    Sets redirector using keyword given in commandline arguments
-    Args:
-        arg: command line argument list
-
-    Returns:
-        redir: redirector, where redirector + LFN = PFN
-
-    """
-    if arg.redirector == "xrd-global":
-        redir = "root://cms-xrd-global.cern.ch/"
-    elif arg.redirector == "xrdUS":
-        redir = "root://cmsxrootd.fnal.gov/"
-    elif arg.redirector == "xrdEU_Asia":
-        redir = "root://xrootd-cms.infn.it/"
-    elif arg.redirector == "eos":
-        redir = "root://cmseos.fnal.gov/"
-    elif arg.redirector == "iihe":
-        redir = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
-    elif arg.redirector == "local":
-        if arg.inputLFN == "ttjets":
-            redir = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
-        elif arg.inputLFN == "tttt_weights":
-            redir = "../../myInFiles/TTTTweights/"
-        elif arg.inputLFN == "wjets":
-            redir = "../../myInFiles/Wjets/"
-        elif arg.inputLFN == "tttt":
-            redir = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
-        else:
-            return ""
-    else:
-        return ""
-    return redir
+# def chooseRedirector(arg):
+#     """
+#     Sets redirector using keyword given in commandline arguments
+#     Args:
+#         arg: command line argument list
+#
+#     Returns:
+#         redir: redirector, where redirector + LFN = PFN
+#
+#     """
+#     if arg.redirector == "xrd-global":
+#         redir = "root://cms-xrd-global.cern.ch/"
+#     elif arg.redirector == "xrdUS":
+#         redir = "root://cmsxrootd.fnal.gov/"
+#     elif arg.redirector == "xrdEU_Asia":
+#         redir = "root://xrootd-cms.infn.it/"
+#     elif arg.redirector == "eos":
+#         redir = "root://cmseos.fnal.gov/"
+#     elif arg.redirector == "iihe":
+#         redir = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
+#     elif arg.redirector == "local":
+#         if arg.inputLFN == "ttjets":
+#             redir = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
+#         elif arg.inputLFN == "tttt_weights":
+#             redir = "../../myInFiles/TTTTweights/"
+#         elif arg.inputLFN == "wjets":
+#             redir = "../../myInFiles/Wjets/"
+#         elif arg.inputLFN == "tttt":
+#             redir = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
+#         else:
+#             return ""
+#     else:
+#         return ""
+#     return redir
 
 
 def main(argms):
