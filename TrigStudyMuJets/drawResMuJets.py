@@ -254,7 +254,7 @@ def inputFileName(arg, selCrit):
     #     inFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     elif not arg.find("dataHTMHT17") == -1:
         version = arg.replace("dataHTMHT17", '')
-        inFile = "../OutFiles/Histograms/dataHTMHT17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/dataHTMHT17{0}_6Jets1Lep{1}jPt.root".format(version, selCrit["minJetPt"])
     elif not arg.find("dataSMu17") == -1:
         version = arg.replace("dataSMu17", '')
         inFile = "../OutFiles/Histograms/dataSMu17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
