@@ -508,74 +508,74 @@ def ioFiles(arg, selCrit):
     if arg.inputLFN == "dataHTMHT17B":
         inLFNList = open("../myInFiles/data/HTMHT_Run2017B-Nano14Dec2018-v1.txt", "r")
         postFix = "dataHTMHT17B"
-        outFile = "../OutFiles/Histograms/dataHTMHT17B_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataHTMHT17B_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17B":
         inLFNList = open("../myInFiles/data/SingleMuon_Run2017B-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSMu17B"
-        outFile = "../OutFiles/Histograms/dataSMu17B_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSMu17B_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17B":
         inLFNList = open("../myInFiles/data/SingleElectron_Run2017B-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSEl17B"
-        outFile = "../OutFiles/Histograms/dataSEl17B_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSEl17B_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17C":
         inLFNList = open("../myInFiles/data/HTMHT_Run2017C-Nano14Dec2018-v1.txt", "r")
         postFix = "dataHTMHT17C"
-        outFile = "../OutFiles/Histograms/dataHTMHT17C_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataHTMHT17C_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17C":
         inLFNList = open("../myInFiles/data/SingleMuon_Run2017C-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSMu17C"
-        outFile = "../OutFiles/Histograms/dataSMu17C_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSMu17C_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17C":
         inLFNList = open("../myInFiles/data/SingleElectron_Run2017C-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSEl17C"
-        outFile = "../OutFiles/Histograms/dataSEl17C_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSEl17C_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17D":
         inLFNList = open("../myInFiles/data/HTMHT_Run2017D-Nano14Dec2018-v1.txt", "r")
         postFix = "dataHTMHT17D"
-        outFile = "../OutFiles/Histograms/dataHTMHT17D_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataHTMHT17D_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17D":
         inLFNList = open("../myInFiles/data/SingleMuon_Run2017D-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSMu17D"
-        outFile = "../OutFiles/Histograms/dataSMu17D_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSMu17D_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17D":
         inLFNList = open("../myInFiles/data/SingleElectron_Run2017D-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSEl17D"
-        outFile = "../OutFiles/Histograms/dataSEl17D_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSEl17D_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17E":
         inLFNList = open("../myInFiles/data/HTMHT_Run2017E-Nano14Dec2018-v1.txt", "r")
         postFix = "dataHTMHT17E"
-        outFile = "../OutFiles/Histograms/dataHTMHT17E_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataHTMHT17E_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17E":
         inLFNList = open("../myInFiles/data/SingleMuon_Run2017E-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSMu17E"
-        outFile = "../OutFiles/Histograms/dataSMu17E_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSMu17E_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17E":
         inLFNList = open("../myInFiles/data/SingleElectron_Run2017E-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSEl17E"
-        outFile = "../OutFiles/Histograms/dataSEl17E_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSEl17E_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17F":
         inLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
         postFix = "dataHTMHT17F"
-        outFile = "../OutFiles/Histograms/dataHTMHT17F_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataHTMHT17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17F":
         inLFNList = open("../myInFiles/data/SingleMuon_Run2017F-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSMu17F"
-        outFile = "../OutFiles/Histograms/dataSMu17F_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSMu17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17F":
         inLFNList = open("../myInFiles/data/SingleElectron_Run2017F-Nano14Dec2018-v1.txt", "r")
         postFix = "dataSEl17F"
-        outFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
 
     elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
         inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
         # inLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
         #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         postFix = "TTToSemiLep94X"
-        outFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "tt_semilep102":
         inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
         postFix = "TTToSemiLep102X"
-        outFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "ttjets94":
         if arg.redirector == "local":
             inLFNList = open(
@@ -583,7 +583,7 @@ def ioFiles(arg, selCrit):
         else:
             inLFNList = open("../myInFiles/mc/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_94X.txt", "r")
         postFix = "TTJets_SL_94"
-        outFile = "../OutFiles/Histograms/TT94_6Jets1Lep{0}jPt.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/TT94_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "tttt_weights":
         if arg.redirector == "local":
             inLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
@@ -604,14 +604,14 @@ def ioFiles(arg, selCrit):
         else:
             inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_94X.txt", "r")
         postFix = "TTTT94"
-        outFile = "../OutFiles/Histograms/TTTT94X_6Jets1Lep{0}jPt_test.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/TTTT94X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "tttt102":  # tttt MC
         if arg.redirector == "local":
             inLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:
             inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
         postFix = "TTTT102"
-        outFile = "../OutFiles/Histograms/TTTT102X_6Jets1Lep{0}jPt_test.root".format(selCrit["minJetPt"])
+        outFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
     else:
         inLFNList = None
         postFix = None

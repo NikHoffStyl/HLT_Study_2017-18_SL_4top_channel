@@ -455,7 +455,9 @@ def main(argms):
     ROOT.gStyle.SetOptTitle(0)
 
     # - HT plots for mu Triggers ---------------------------------
+
     cv1 = triggerCanvas.cd(1)
+    """ HT distribution for different triggers """
     h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
         if not key.find("El") == -1: continue
@@ -470,6 +472,7 @@ def main(argms):
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv2 = triggerCanvas.cd(1)
+    """ Trigger efficiency vs total HT """
     i = 0
     j = 2
     for key in trigList:
@@ -513,24 +516,31 @@ def main(argms):
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv82 = triggerCanvas.cd(1)
+    """ Trigger inclussive efficiency vs total HT """
     i = 0
     for key in trigList:
         if not key.find("El") == -1: continue
+        numBins =  h_jetHt["notrigger"].GetNbinsX()
+        h_jetHt["notrigger"].RebinX(numBins, "")
         for tg in trigList[key]:
+            numBins = h_jetHt[tg].GetNbinsX()
+            h_jetHt[tg].RebinX(numBins, "")
             h_TriggerRatio[tg] = h_jetHt[tg].Clone("h_jetHtRatio" + tg)
             h_TriggerRatio[tg].Sumw2()
             h_TriggerRatio[tg].SetStats(0)
             h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
-            h_TriggerRatio[tg].Rebin(300)
-            print(h_TriggerRatio[tg].GetBinContent(1))
-            inEff = h_TriggerRatio[tg].GetBinContent(1) / 300
-            print(h_TriggerRatio[tg].GetBinError(1))
-            inErEff = h_TriggerRatio[tg].GetBinError(1) / 300
+            # h_TriggerRatio[tg].Rebin(numBins)
+            # print(h_TriggerRatio[tg].GetBinContent(1))
+            inEff = h_TriggerRatio[tg].GetBinContent(1) #/ numBins
+            # print(h_TriggerRatio[tg].GetBinError(1))
+            inErEff = h_TriggerRatio[tg].GetBinError(1) #/ 300
             inclusiveEfficiency(" Jet HT Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg))
             xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
             h_TriggerRatio[tg].SetName(tg)
+            h_TriggerRatio[tg].SetBinContent(1, inEff)
+            h_TriggerRatio[tg].SetBinError(1, inErEff)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
                 h_TriggerRatio[tg].SetMaximum(301.8)
@@ -898,7 +908,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h_jetEta[tg].Draw('E1 same')
-    cv13.BuildLegend(0.5, 0.24, 0.5, 0.24)
+    cv13.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -912,7 +922,7 @@ def main(argms):
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
             h_muonEta[tg].Draw('E1 same')
-    cv14.BuildLegend(0.5, 0.23, 0.5, 0.23)
+    cv14.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
