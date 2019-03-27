@@ -2,7 +2,12 @@ import uproot
 
 tree = uproot.open('root://cms-xrd-global.cern.ch//store/mc/RunIIFall17NanoAOD/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/70000/C6AABB0E-33AC-E811-8B63-0CC47A7C3404.root')
 # if tree['Events'].keys().find("PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2") != -1:
-print(tree['Events'].keys().find("PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"))
+l = tree['Events'].keys()
+trig = "PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
+if trig in enumerate(l):
+    print("In")
+else: print("Out")
+# print(tree['Events'].keys().find("PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"))
 
 # tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/A6A7DF24-1C78-FB4D-930D-4165EECC45A3.root')
 # print(tree['Events'].keys())
