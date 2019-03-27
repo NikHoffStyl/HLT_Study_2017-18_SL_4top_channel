@@ -50,7 +50,8 @@ fileList = ['/store/mc/RunIIFall17NanoAOD/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/NA
 
 allFileNames = "AllFiles.txt"
 
-for fileName in allFileNames:
+for nf, fileName in enumerate(allFileNames):
+    print(nf)
     tree = uproot.open("root://cms-xrd-global.cern.ch/" + fileName)
     l = tree['Events'].keys()
     nm = 0
