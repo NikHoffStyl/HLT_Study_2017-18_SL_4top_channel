@@ -1,31 +1,61 @@
 import uproot
 
-tree = uproot.open('root://cms-xrd-global.cern.ch//store/mc/RunIIFall17NanoAOD/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/70000/C6AABB0E-33AC-E811-8B63-0CC47A7C3404.root')
-# if tree['Events'].keys().find("PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2") != -1:
-l = tree['Events'].keys()
-trig = "PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
-if trig in enumerate(l):
-    print("In")
-else: print("Out")
-# print(tree['Events'].keys().find("PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"))
 
-# tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/A6A7DF24-1C78-FB4D-930D-4165EECC45A3.root')
-# print(tree['Events'].keys())
-#
-# tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/A62E19E6-841B-1E48-BB46-338F8DB37FE2.root')
-# print(tree['Events'].keys())
-#
-# tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/A62E19E6-841B-1E48-BB46-338F8DB37FE2.root')
-# print(tree['Events'].keys())
-#
-# tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/97DA481E-BB89-CA4A-AA94-90878473D991.root')
-# print(tree['Events'].keys())
-#
-# tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/29CE5E03-A67E-8040-9377-1070B0BB503C.root')
-# print(tree['Events'].keys())
-#
-# tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/1BA6BB8B-DD88-4344-8725-5BB7F8E94ABE.root')
-# print(tree['Events'].keys())
-#
-# tree = uproot.open('root://cms-xrd-global.cern.ch//store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/FDE7F720-98DB-B944-887C-A6BE211E45DD.root')
-# print(tree['Events'].keys())
+trigList = ["HLT_Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5",
+            "HLT_Ele28_eta2p1_WPTight_Gsf_HT150",
+            "HLT_IsoMu24",
+            "HLT_Ele32_WPTight_Gsf",
+            "HLT_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
+            ]
+fileList = ['/store/mc/RunIIFall17NanoAOD/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/70000/C6AABB0E-33AC-E811-8B63-0CC47A7C3404.root',
+            '/store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/FDE7F720-98DB-B944-887C-A6BE211E45DD.root',
+            #'/store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/D495C954-7645-BC40-B6D3-3E02CFDB459D.root'
+            '/store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/A6A7DF24-1C78-FB4D-930D-4165EECC45A3.root',
+            '/store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/A62E19E6-841B-1E48-BB46-338F8DB37FE2.root',
+            '/store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/97DA481E-BB89-CA4A-AA94-90878473D991.root',
+            '/store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/29CE5E03-A67E-8040-9377-1070B0BB503C.root',
+            '/store/data/Run2017C/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/1BA6BB8B-DD88-4344-8725-5BB7F8E94ABE.root',
+            '/store/data/Run2017B/HTMHT/NANOAOD/Nano14Dec2018-v1/20000/FA4C59AC-84A5-0D40-8B50-F1E431F5D8BA.root',
+            '/store/data/Run2017B/HTMHT/NANOAOD/Nano14Dec2018-v1/20000/94C14A97-7E00-8D45-85B1-ACF04E3BA47D.root',
+            '/store/data/Run2017B/HTMHT/NANOAOD/Nano14Dec2018-v1/20000/7643D6B1-813A-8E43-910F-5C9C15A7F9E5.root',
+            '/store/data/Run2017B/HTMHT/NANOAOD/Nano14Dec2018-v1/20000/3BDBC62F-7FEC-3A48-B09D-0E3D9B837F2B.root',
+            '/store/data/Run2017D/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/9F389A2A-98C9-114F-9497-2C5F8C5F0E55.root',
+            '/store/data/Run2017D/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/7294DB23-4963-E048-886D-C9FC51272F2F.root',
+            '/store/data/Run2017D/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/0B5552E9-497B-614C-9BA4-496F55FA736E.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/D1C5FE52-C9B2-A843-86EF-B51044944B7C.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/BA0C37C5-322D-3141-A176-7E2A8A9E53B9.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/AE7DB65D-F461-074F-B664-C14BAF8F6FB1.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/90E8E431-6EA8-304A-B735-EA1174339548.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/82097E8D-37BE-9045-937C-9A60D0E15761.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/7409AD13-F2F7-C141-B49B-8CD20C73235E.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/1DA0A2A3-4366-3C4B-B49F-E63715384DBA.root',
+            '/store/data/Run2017E/HTMHT/NANOAOD/Nano14Dec2018-v1/80000/170D9E95-1C90-BB40-BD68-6B9AA6A4A1ED.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/F4B38FD9-2E92-D146-B510-288BFBE5EDB8.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/D576DA08-CECA-AA42-A3DE-F7C40E365A0D.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/C5EBE043-607D-AE41-9A9C-EAB424ED3309.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/BE045D87-B2D0-6E4E-BE67-0350B59D2348.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/8825EEEB-41AE-0946-B2BB-413E0FA37F1C.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/842DD021-1268-0746-8CF5-B392DCBD62C2.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/83E3C5B6-BAB7-2347-8ECA-A0866D0099C0.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/673B94D2-8FDE-AB44-B1CD-B8A49246325B.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/6455327A-3514-344F-9065-009E379202FD.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/5A9F5CA1-DE52-024E-ADD2-9916D2F9C4DF.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/4672BA34-ABEE-5143-8DF1-C04A650EA735.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/3FF044B6-7B4A-484F-943A-0AAE5AA910A9.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/3C23B804-5A6D-C341-9BA9-8ACE0D914DDF.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/2037FFA2-3876-CA41-B735-25E67F3817B9.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/1BB96BC9-B03D-FE4F-83D6-C791BE3C08A8.root',
+            '/store/data/Run2017F/HTMHT/NANOAOD/Nano14Dec2018-v1/10000/156F9111-AEB7-6A43-9DB3-325CB38A724C.root'
+            ]
+
+allFileNames = "AllFiles.txt"
+
+for fileName in allFileNames:
+    tree = uproot.open("root://cms-xrd-global.cern.ch/" + fileName)
+    l = tree['Events'].keys()
+    nm = 0
+    for trig in trigList:
+        if not trig in l:
+            nm += 1
+            if nm == 1: print("\n For %s : \n "  % fileName)
+            print(trig + " ====> Trigger Does not Exists.  ")
