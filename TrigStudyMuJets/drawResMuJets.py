@@ -238,7 +238,7 @@ def inputFileName(arg, selCrit):
     """
     if arg.find("tttt") != -1 and arg.find("tttt_") == -1:
         version = arg.replace("tttt", '')
-        inFile = "../OutFiles/Histograms/TTTT{0}X_6Jets1Lep{1}jPt_test.root".format(version, selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTTT{0}X_6Jets1Mu{1}jPt_test.root".format(version, selCrit["minJetPt"])
     # elif arg == "tttt102":
     #     inFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
     elif not arg.find("ttjets") == -1:
@@ -250,12 +250,12 @@ def inputFileName(arg, selCrit):
         inFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
     elif not arg.find("tt_semilep") == -1:
         version = arg.replace("tt_semilep", '')
-        inFile = "../OutFiles/Histograms/TTToSemiLep{0}X_6Jets1Mu{1}jPt.root" .format(version, selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTToSemiMu{0}X_6Jets1Mu{1}jPt.root" .format(version, selCrit["minJetPt"])
     # elif arg == "tt_semilep102":
     #     inFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     elif not arg.find("dataHTMHT17") == -1:
         version = arg.replace("dataHTMHT17", '')
-        inFile = "../OutFiles/Histograms/dataHTMHT17{0}_6Jets1Lep{1}jPt.root".format(version, selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/dataHTMHT17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
     elif not arg.find("dataSMu17") == -1:
         version = arg.replace("dataSMu17", '')
         inFile = "../OutFiles/Histograms/dataSMu17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
