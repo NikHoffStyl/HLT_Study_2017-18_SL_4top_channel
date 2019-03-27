@@ -24,7 +24,8 @@ def process_arguments():
                                                      "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
                                                      "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
                                                      "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
-                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F",
+                                                     "dataHT", "dataSMu", "dataSEl"],
                         default="tttt102", help="Set list of input files")
     args = parser.parse_args()
     return args
@@ -307,8 +308,11 @@ def main(argms):
     triggerCanvas.SetGrid()
 
     # - Open file and sub folder
+    # histFile = ROOT.TFile.Open(inputFile)
+    # histFile.cd("plots")
     histFile = ROOT.TFile.Open(inputFile)
     histFile.cd("plots")
+
 
     # - Histograms
     h_jetHt["notrigger"] = ROOT.gDirectory.Get("h_jetHt_notrigger")
@@ -539,8 +543,8 @@ def main(argms):
             xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
             h_TriggerRatio[tg].SetName(tg)
-            h_TriggerRatio[tg].SetBinContent(1, inEff)
-            h_TriggerRatio[tg].SetBinError(1, inErEff)
+            # h_TriggerRatio[tg].SetBinContent(1, inEff)
+            # h_TriggerRatio[tg].SetBinError(1, inErEff)
             if i == 0:
                 h_TriggerRatio[tg].SetMinimum(0.)
                 h_TriggerRatio[tg].SetMaximum(301.8)
