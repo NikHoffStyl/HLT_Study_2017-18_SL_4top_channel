@@ -38,7 +38,7 @@ def main(argms):
     p99 = PostProcessor(".",
                         files,
                         # files[0],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && (HLT_PFHT250 == 1 || HLT_Mu20 == 1)",
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList)],
