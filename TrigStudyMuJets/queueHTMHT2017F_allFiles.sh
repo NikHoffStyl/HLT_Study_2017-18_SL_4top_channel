@@ -15,7 +15,7 @@ cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets
 #python runAnaTrigsMuJets.py -f dataHTMHT17C
 #python runAnaTrigsMuJets.py -f dataHTMHT17D
 #python runAnaTrigsMuJets.py -f dataHTMHT17E
-python runAnaTrigsMuJets.py -f dataHTMHT17F
+#python runAnaTrigsMuJets.py -f dataHTMHT17F
 #
 #python runAnaTrigsMuJets.py -f dataSMu17B
 #python runAnaTrigsMuJets.py -f dataSMu17C
@@ -26,5 +26,5 @@ python runAnaTrigsMuJets.py -f dataHTMHT17F
 #python runAnaTrigsMuJets.py -f dataSEl17B
 #python runAnaTrigsMuJets.py -f dataSEl17C
 #python runAnaTrigsMuJets.py -f dataSEl17D
-#python runAnaTrigsMuJets.py -f dataSEl17E
+python runAnaTrigsMuJets.py -f dataSEl17E
 #python runAnaTrigsMuJets.py -f dataSEl17F

@@ -641,3 +641,24 @@ Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Ch
 Muon Pt Eff = 0.822 +/- 0.004 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.965 +/- 0.005 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.901 +/- 0.005 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataHTMHT17F, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.430, +/-, 0.299, 500.000, +/-, 76.572, 28.343, 20.000, 0.101519768569, 16.260, +/- ,17.754, -0.100, +/-, 0.153
+ dataHTMHT17F, jetHtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 1.100, +/-, 0.646, 438.927, +/-, 99.389, 20.012, 20.000, 0.45720437276, 25.000, +/- ,21.740, 0.100, +/-, 0.110
+ dataHTMHT17F, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.824, +/-, 0.249, 500.000, +/-, 68.163, 16.162, 20.000, 0.706522111422, 2.000, +/- ,1.636, -0.100, +/-, 0.171
+  Jet HT Eff = 0.060 +/- 0.019 , IsoMu24 
+ Jet HT Eff = 0.027 +/- 0.013 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.067 +/- 0.021 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff = 0.060 +/- 0.020 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Chi2, NDF,prob, Slope, Slope Error, Initial Plateau, Initial Plateau Error 
+ dataHTMHT17F, muonPtIsoMu24, 0.925, +/-, 0.170, 40.000, +/-, 3.278, 13.087, 20.000, 0.873621561469, 0.993, +/- ,0.794, 0.025, +/-, 0.021
+ dataHTMHT17F, muonPtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.800, +/-, 0.018, 39.999, +/-, 4.597, 58.737, 20.000, 1.11476423744e-05, 665.661, +/- ,455.743, 0.800, +/-, 0.006
+ dataHTMHT17F, muonPtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 1.037, +/-, 0.129, 40.000, +/-, 2.012, 12.383, 20.000, 0.902277682994, 1.894, +/- ,1.575, 0.637, +/-, 0.079
+ dataHTMHT17F, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.836, +/-, 0.284, 0.000, +/-, 15.254, 26.862, 20.000, 0.139192739362, 10.000, +/- ,7.510, 0.000, +/-, 0.192
+ Muon Pt Eff = 0.060 +/- 0.019 , IsoMu24 
+Muon Pt Eff = 0.025 +/- 0.013 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.067 +/- 0.021 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = 0.058 +/- 0.019 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
