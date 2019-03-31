@@ -20,7 +20,7 @@ class TriggerStudy(Module):
     """This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
     for different combinations of trigger paths."""
 
-    def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None):
+    def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None, era=None):
         """
         Initialise global variables
 
@@ -30,6 +30,7 @@ class TriggerStudy(Module):
             trigLst (dict): dictionary of trigger names
         """
 
+        self.era = era
         self.eventCounter = 0
         self.comboCounter = 0
         # self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"])
@@ -315,8 +316,18 @@ class TriggerStudy(Module):
                 for tg in self.trigLst[key]:
                     trigPath.update({tg: False})
 
-        if trigPath['IsoMu24'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-            trigPath['IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+        if self.era == "17AB":
+            if trigPath['IsoMu24'] is True or trigPath['PFHT380_SixJet32_DoubleBTagCSV_p075'] is True:
+                trigPath['IsoMu24_PFHT380_SixJet32_DoubleBTagCSV_p075'] = True
+        elif self.era == "17C":
+            if trigPath['IsoMu27'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] is True:
+                trigPath['IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] = True
+        elif self.era == "17DEF":
+            if trigPath['IsoMu27'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
+                trigPath['IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+        else:
+            print("No era specified. Stopped Analysis.")
+            return False
 
         jetHt = {"notrig": 0}
         for key in self.trigLst:
@@ -408,7 +419,9 @@ def process_arguments():
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
-                                                     "tt_semilep102", "ttjets102", "tttt102",
+                                                     "tt_semilep102_17B", "tttt102_17B",
+                                                     "tt_semilep102_17C", "tttt102_17C",
+                                                     "tt_semilep102_17DEF", "tttt102_17DEF",
                                                      "dataHTMHT17B", "dataSMu17B", "dataSEl17B",
                                                      "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
                                                      "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
@@ -566,16 +579,17 @@ def ioFiles(arg, selCrit):
         postFix = "dataSEl17F"
         outFile = "../OutFiles/Histograms/dataSEl17F_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
 
+    elif not arg.inputLFN.find("tt_semilep102_17") == -1:
+        inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
+        postFix = "TTToSemiLep102X"
+        outFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+
     elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
         inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
         # inLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
         #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
         postFix = "TTToSemiLep94X"
         outFile = "../OutFiles/Histograms/TTToSemiLep94X_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
-    elif arg.inputLFN == "tt_semilep102":
-        inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
-        postFix = "TTToSemiLep102X"
-        outFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
     elif arg.inputLFN == "ttjets94":
         if arg.redirector == "local":
             inLFNList = open(
@@ -605,7 +619,7 @@ def ioFiles(arg, selCrit):
             inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_94X.txt", "r")
         postFix = "TTTT94"
         outFile = "../OutFiles/Histograms/TTTT94X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
-    elif arg.inputLFN == "tttt102":  # tttt MC
+    elif not arg.inputLFN.find("tttt102_17") == -1:  # tttt MC
         if arg.redirector == "local":
             inLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:

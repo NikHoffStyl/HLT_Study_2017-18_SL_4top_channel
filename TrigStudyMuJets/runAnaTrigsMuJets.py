@@ -20,7 +20,19 @@ def main(argms):
 
     """
     redirector = chooseRedirector(argms)
-    trigList = getFileContents("../myInFiles/trigList.txt", True)
+    if not argms.inputLFN.find("17B") == -1:
+        trigList = getFileContents("../myInFiles/2017ABtrigList.txt", True)
+        era2017 = "17AB"
+    elif not argms.inputLFN.find("17C") == -1:
+        trigList = getFileContents("../myInFiles/2017CtrigList.txt", True)
+        era2017 = "17C"
+    elif not argms.inputLFN.find("17D") or argms.inputLFN.find("17E") or argms.inputLFN.find("17F") == -1:
+        trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", True)
+        era2017 = "17DEF"
+    else:
+        trigList = getFileContents("../myInFiles/trigList.txt", True)
+        era2017 = "original"
+
     preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", False)
     selCriteria = getFileContents("selectionCriteria.txt", False)
     inputLFNList, thePostFix, outputFile = ioFiles(argms, selCriteria)
@@ -41,7 +53,8 @@ def main(argms):
                         cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
-                                              trigLst=trigList)],
+                                              trigLst=trigList,
+                                              era=era2017)],
                         # jsonInput=None,
                         noOut=True,
                         # justcount=False,
