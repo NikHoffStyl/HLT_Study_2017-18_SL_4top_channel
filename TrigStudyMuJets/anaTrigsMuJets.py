@@ -582,7 +582,12 @@ def ioFiles(arg, selCrit):
     elif not arg.inputLFN.find("tt_semilep102_17") == -1:
         inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
         postFix = "TTToSemiLep102X"
-        outFile = "OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tt_semilep102_17B":
+            outFile = "OutFiles/Histograms/TTToSemiLep102X_17B_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tt_semilep102_17C":
+            outFile = "OutFiles/Histograms/TTToSemiLep102X_17C_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tt_semilep102_17DEF":
+            outFile = "OutFiles/Histograms/TTToSemiLep102X_17DEF_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
 
     elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
         inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
@@ -625,7 +630,13 @@ def ioFiles(arg, selCrit):
         else:
             inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
         postFix = "TTTT102"
-        outFile = "OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tttt102_17B":
+            outFile = "OutFiles/Histograms/TTTT102X_17B_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tttt102_17C":
+            outFile = "OutFiles/Histograms/TTTT102X_17C_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tttt102_17DEF":
+            outFile = "OutFiles/Histograms/TTTT102X_17DEF_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
+
     else:
         inLFNList = None
         postFix = None

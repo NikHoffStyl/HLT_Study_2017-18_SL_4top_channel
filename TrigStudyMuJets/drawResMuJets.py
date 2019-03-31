@@ -19,7 +19,9 @@ def process_arguments():
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
-                                                     "tt_semilep102", "ttjets102", "tttt102",
+                                                     "tt_semilep102_17B", "tttt102_17B",
+                                                     "tt_semilep102_17C", "tttt102_17C",
+                                                     "tt_semilep102_17DEF", "tttt102_17DEF",
                                                      "dataHTMHT17B", "dataSMu17B", "dataSEl17B",
                                                      "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
                                                      "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
