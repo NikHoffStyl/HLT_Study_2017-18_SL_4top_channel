@@ -5,13 +5,14 @@ minNElectron: 1
 
 maxObjEta: 2.4
 
-minJetPt: 20
+minJetPt: 30
 minJetId: 2
 jetCleanmask: Y
 
 deepFlavBTagTight: 0.7489
 deepFlavBTagMedium:  0.3033
 deepFlavBTagLoose:  0.0521
+
 deepCSVtight:  0.8001
 deepCSVmedium:  0.4941
 deepCSVloose:  0.1522

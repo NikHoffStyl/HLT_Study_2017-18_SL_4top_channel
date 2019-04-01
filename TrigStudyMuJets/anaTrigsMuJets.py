@@ -584,9 +584,9 @@ def ioFiles(arg, selCrit):
         postFix = "TTToSemiLep102X"
         if arg.inputLFN == "tt_semilep102_17B":
             outFile = "OutFiles/Histograms/TTToSemiLep102X_17B_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tt_semilep102_17C":
+        elif arg.inputLFN == "tt_semilep102_17C":
             outFile = "OutFiles/Histograms/TTToSemiLep102X_17C_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tt_semilep102_17DEF":
+        elif arg.inputLFN == "tt_semilep102_17DEF":
             outFile = "OutFiles/Histograms/TTToSemiLep102X_17DEF_6Jets1Mu{0}jPt.root".format(selCrit["minJetPt"])
 
     elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
@@ -632,9 +632,9 @@ def ioFiles(arg, selCrit):
         postFix = "TTTT102"
         if arg.inputLFN == "tttt102_17B":
             outFile = "OutFiles/Histograms/TTTT102X_17B_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tttt102_17C":
+        elif arg.inputLFN == "tttt102_17C":
             outFile = "OutFiles/Histograms/TTTT102X_17C_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tttt102_17DEF":
+        elif arg.inputLFN == "tttt102_17DEF":
             outFile = "OutFiles/Histograms/TTTT102X_17DEF_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
 
     else:

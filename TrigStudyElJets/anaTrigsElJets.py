@@ -14,13 +14,14 @@ from ROOT import TLatex
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
 class TriggerStudy(Module):
     """This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
     for different combinations of trigger paths."""
 
-    def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None):
+    def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None, era=None):
         """ Initialise global variables
 
         Args:
@@ -29,6 +30,7 @@ class TriggerStudy(Module):
             trigLst (dict): dictionary of trigger names
         """
 
+        self.era = era
         self.eventCounter = 0
         self.comboCounter = 0
         # self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"])
@@ -46,8 +48,8 @@ class TriggerStudy(Module):
         self.h_elPhi = {}
         self.h_elMap = {}
 
-        # self.h_metPt = {}
-        # self.h_metPhi = {}
+        self.h_metPt = {}
+        self.h_metPhi = {}
         #
         # self.h_genMetPt = {}
         # self.h_genMetPhi = {}
@@ -64,7 +66,6 @@ class TriggerStudy(Module):
         self.writeHistFile = writeHistFile
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
         self.trigLst = trigLst
-        self.selCriteria = {}
 
         self.selCriteria = {}
         with open("selectionCriteria.txt") as f:
@@ -121,10 +122,10 @@ class TriggerStudy(Module):
         ##################
         # MET HISTOGRAMS #
         ##################
-        # self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
-        #                                                             ' 1 GeV/c', 300, 0, 300)
-        # self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
-        #                                                               '#delta#phi = 0.046', 300, -6, 8)
+        self.h_metPt['no_trigger'] = ROOT.TH1D('h_metPt_notrigger', 'no trigger ;MET P_{T} (GeV/c);Number of Events per'
+                                                                    ' 1 GeV/c', 300, 0, 300)
+        self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
+                                                                      '#delta#phi = 0.046', 300, -6, 8)
         # self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
         #                                                                   'Events per 1GeV/c', 300, 0, 300)
         # self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
@@ -316,8 +317,18 @@ class TriggerStudy(Module):
                 for tg in self.trigLst[key]:
                     trigPath.update({tg: False})
 
-        if trigPath['Ele32_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-            trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+        if self.era == "17AB":
+            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixJet32_DoubleBTagCSV_p075'] is True:
+                trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_p075'] = True
+        elif self.era == "17C":
+            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] is True:
+                trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] = True
+        elif self.era == "17DEF":
+            if trigPath['Ele32_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
+                trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+        else:
+            print("No era specified. Stopped Analysis.")
+            return False
 
         jetHt = {"notrig": 0}
         for key in self.trigLst:
@@ -335,26 +346,26 @@ class TriggerStudy(Module):
         if nJetPass > self.selCriteria["minNJet"] and nElPass == self.selCriteria["minNElectron"] \
                 and nMuonPass == self.selCriteria["minNMuon"] and nBtagPass > self.selCriteria["minNBJet"]:
             for ne, electron in enumerate(electrons):
-                if ElPassIdx == ne:
-                    self.h_elMiniPfRelIso_all.Fill(electron.miniPFRelIso_all)
-                    # self.h_elGenPartFlav.Fill(electron.genPartFlav)
-                    # self.h_elGenPartIdx.Fill(electron.genPartIdx)
-                    self.h_elEta['no_trigger'].Fill(electron.eta)
-                    self.h_elPhi['no_trigger'].Fill(electron.phi)
-                    self.h_elMap['no_trigger'].Fill(electron.eta, electron.phi)
-                    self.h_elPt['no_trigger'].Fill(electron.pt)
-                    for key in self.trigLst:
-                        if not key.find("Mu") == -1: continue
-                        for tg in self.trigLst[key]:
-                            if trigPath[tg]:
-                                self.h_elPt[tg].Fill(electron.pt)
-                                self.h_elEta[tg].Fill(electron.eta)
-                                self.h_elPhi[tg].Fill(electron.phi)
-                                self.h_elMap[tg].Fill(electron.eta, electron.phi)
-                    # if electron.genPartFlav == 1:
-                    #     self.h_elPt['prompt'].Fill(electron.pt)
-                    # else:
-                    #     self.h_elPt['non-prompt'].Fill(electron.pt)
+                if not ElPassIdx == ne: continue
+                self.h_elMiniPfRelIso_all.Fill(electron.miniPFRelIso_all)
+                # self.h_elGenPartFlav.Fill(electron.genPartFlav)
+                # self.h_elGenPartIdx.Fill(electron.genPartIdx)
+                self.h_elEta['no_trigger'].Fill(electron.eta)
+                self.h_elPhi['no_trigger'].Fill(electron.phi)
+                self.h_elMap['no_trigger'].Fill(electron.eta, electron.phi)
+                self.h_elPt['no_trigger'].Fill(electron.pt)
+                for key in self.trigLst:
+                    if not key.find("Mu") == -1: continue
+                    for tg in self.trigLst[key]:
+                        if trigPath[tg]:
+                            self.h_elPt[tg].Fill(electron.pt)
+                            self.h_elEta[tg].Fill(electron.eta)
+                            self.h_elPhi[tg].Fill(electron.phi)
+                            self.h_elMap[tg].Fill(electron.eta, electron.phi)
+                # if electron.genPartFlav == 1:
+                #     self.h_elPt['prompt'].Fill(electron.pt)
+                # else:
+                #     self.h_elPt['non-prompt'].Fill(electron.pt)
 
             for nj, jet in enumerate(jets):
                 if nj not in JetPassIdx: continue
@@ -372,8 +383,8 @@ class TriggerStudy(Module):
                 self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
 
             self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
-            # self.h_metPt['no_trigger'].Fill(metPt)
-            # self.h_metPhi['no_trigger'].Fill(metPhi)
+            self.h_metPt['no_trigger'].Fill(metPt)
+            self.h_metPhi['no_trigger'].Fill(metPhi)
             # self.h_genMetPt['no_trigger'].Fill(genMetPt)
             # self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
             self.h_jetMult['no_trigger'].Fill(nJetPass)
@@ -385,8 +396,8 @@ class TriggerStudy(Module):
                 for tg in self.trigLst[key]:
                     if trigPath[tg]:
                         self.h_jetHt[tg].Fill(jetHt[tg])
-                        # self.h_metPt[tg].Fill(metPt)
-                        # self.h_metPhi[tg].Fill(metPhi)
+                        self.h_metPt[tg].Fill(metPt)
+                        self.h_metPhi[tg].Fill(metPhi)
                         # self.h_genMetPt[tg].Fill(genMetPt)
                         # self.h_genMetPhi[tg].Fill(genMetPhi)
                         self.h_jetMult[tg].Fill(nJetPass)
@@ -395,3 +406,239 @@ class TriggerStudy(Module):
                         i += 1
         
         return True
+
+
+def process_arguments():
+    """
+    Processes command line arguments
+    Returns:
+        args: list of commandline arguments
+
+    """
+
+    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+                                                     "tt_semilep102_17B", "tttt102_17B",
+                                                     "tt_semilep102_17C", "tttt102_17C",
+                                                     "tt_semilep102_17DEF", "tttt102_17DEF",
+                                                     "dataHTMHT17B", "dataSMu17B", "dataSEl17B",
+                                                     "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
+                                                     "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
+                                                     "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
+                        default="tttt102", help="Set list of input files")
+    parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
+                        default="xrd-global", help="Sets redirector to query locations for LFN")
+    parser.add_argument("-nw", "--noWriteFile", action="store_true",
+                        help="Does not output a ROOT file, which contains the histograms.")
+    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
+                        help="Set a limit to the number of events.")
+    parser.add_argument("-lf", "--fileLimit", type=int, default=-1,
+                        help="Set a limit to the number of files to run through.")
+    args = parser.parse_args()
+    return args
+
+
+def chooseRedirector(arg):
+    """
+    Sets redirector using keyword given in commandline arguments
+    Args:
+        arg: command line argument list
+
+    Returns:
+        redir: redirector, where redirector + LFN = PFN
+
+    """
+    if arg.redirector == "xrd-global":
+        redir = "root://cms-xrd-global.cern.ch/"
+    elif arg.redirector == "xrdUS":
+        redir = "root://cmsxrootd.fnal.gov/"
+    elif arg.redirector == "xrdEU_Asia":
+        redir = "root://xrootd-cms.infn.it/"
+    elif arg.redirector == "eos":
+        redir = "root://cmseos.fnal.gov/"
+    elif arg.redirector == "iihe":
+        redir = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
+    elif arg.redirector == "local":
+        if arg.inputLFN == "ttjets":
+            redir = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
+        elif arg.inputLFN == "tttt_weights":
+            redir = "../../myInFiles/TTTTweights/"
+        elif arg.inputLFN == "wjets":
+            redir = "../../myInFiles/Wjets/"
+        elif arg.inputLFN == "tttt":
+            redir = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
+        else:
+            return ""
+    else:
+        return ""
+    return redir
+
+
+def getFileContents(fileName, elmList):
+    """
+
+    Args:
+        fileName (string): path/to/file
+        elmList (bool): if true then dictionary elements are lists else strings
+
+    Returns:
+        fileContents (dictionary): file contents given as a dictionary
+
+    """
+    fileContents = {}
+    with open(fileName) as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            if elmList is False:
+                fileContents[key1] = val
+            else:
+                fileContents[key1] = val.split(", ")
+    return fileContents
+
+
+def ioFiles(arg, selCrit):
+    """
+    Input and Output file
+
+    Args:
+        arg : command line arguments
+        selCrit (dictionary): selection criteria
+
+    Returns:
+        inLFNList (string): list of file datasets
+        postFix (string): string added to output file
+        outFile (string): output file name
+
+    Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
+    you may want to change path to suit your file ordering
+
+    """
+    if arg.inputLFN == "dataHTMHT17B":
+        inLFNList = open("../myInFiles/data/HTMHT_Run2017B-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataHTMHT17B"
+        outFile = "OutFiles/Histograms/dataHTMHT17B_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSMu17B":
+        inLFNList = open("../myInFiles/data/SingleMuon_Run2017B-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSMu17B"
+        outFile = "OutFiles/Histograms/dataSMu17B_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSEl17B":
+        inLFNList = open("../myInFiles/data/SingleElectron_Run2017B-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSEl17B"
+        outFile = "OutFiles/Histograms/dataSEl17B_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataHTMHT17C":
+        inLFNList = open("../myInFiles/data/HTMHT_Run2017C-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataHTMHT17C"
+        outFile = "OutFiles/Histograms/dataHTMHT17C_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSMu17C":
+        inLFNList = open("../myInFiles/data/SingleMuon_Run2017C-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSMu17C"
+        outFile = "OutFiles/Histograms/dataSMu17C_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSEl17C":
+        inLFNList = open("../myInFiles/data/SingleElectron_Run2017C-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSEl17C"
+        outFile = "OutFiles/Histograms/dataSEl17C_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataHTMHT17D":
+        inLFNList = open("../myInFiles/data/HTMHT_Run2017D-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataHTMHT17D"
+        outFile = "OutFiles/Histograms/dataHTMHT17D_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSMu17D":
+        inLFNList = open("../myInFiles/data/SingleMuon_Run2017D-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSMu17D"
+        outFile = "OutFiles/Histograms/dataSMu17D_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSEl17D":
+        inLFNList = open("../myInFiles/data/SingleElectron_Run2017D-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSEl17D"
+        outFile = "OutFiles/Histograms/dataSEl17D_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataHTMHT17E":
+        inLFNList = open("../myInFiles/data/HTMHT_Run2017E-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataHTMHT17E"
+        outFile = "OutFiles/Histograms/dataHTMHT17E_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSMu17E":
+        inLFNList = open("../myInFiles/data/SingleMuon_Run2017E-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSMu17E"
+        outFile = "OutFiles/Histograms/dataSMu17E_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSEl17E":
+        inLFNList = open("../myInFiles/data/SingleElectron_Run2017E-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSEl17E"
+        outFile = "OutFiles/Histograms/dataSEl17E_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataHTMHT17F":
+        inLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataHTMHT17F"
+        outFile = "OutFiles/Histograms/dataHTMHT17F_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSMu17F":
+        inLFNList = open("../myInFiles/data/SingleMuon_Run2017F-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSMu17F"
+        outFile = "OutFiles/Histograms/dataSMu17F_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "dataSEl17F":
+        inLFNList = open("../myInFiles/data/SingleElectron_Run2017F-Nano14Dec2018-v1.txt", "r")
+        postFix = "dataSEl17F"
+        outFile = "OutFiles/Histograms/dataSEl17F_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+
+    elif not arg.inputLFN.find("tt_semilep102_17") == -1:
+        inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
+        postFix = "TTToSemiLep102X"
+        if arg.inputLFN == "tt_semilep102_17B":
+            outFile = "OutFiles/Histograms/TTToSemiLep102X_17B_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tt_semilep102_17C":
+            outFile = "OutFiles/Histograms/TTToSemiLep102X_17C_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tt_semilep102_17DEF":
+            outFile = "OutFiles/Histograms/TTToSemiLep102X_17DEF_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+
+    elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
+        inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
+        # inLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
+        #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
+        postFix = "TTToSemiLep94X"
+        outFile = "OutFiles/Histograms/TTToSemiLep94X_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "ttjets94":
+        if arg.redirector == "local":
+            inLFNList = open(
+                "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
+        else:
+            inLFNList = open("../myInFiles/mc/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_94X.txt", "r")
+        postFix = "TTJets_SL_94"
+        outFile = "OutFiles/Histograms/TT94_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+    elif arg.inputLFN == "tttt_weights":
+        if arg.redirector == "local":
+            inLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
+        else:
+            inLFNList = open("../myInFiles/mc/TTTTweights_files.txt", "r")
+        postFix = "TTTT_PSWeights"
+        outFile = "OutFiles/Histograms/TTTTweights.root"
+    elif arg.inputLFN == "wjets":  # W (to Lep + Nu) + jets
+        if arg.redirector == "local":
+            inLFNList = open("../../myInFiles/Wjets/Wjets_files.txt", "r")
+        else:
+            inLFNList = open("../myInFiles/mc/Wjets_files.txt", "r")
+        postFix = "WJetsToLNu"
+        outFile = "OutFiles/Histograms/Wjets.root"
+    elif arg.inputLFN == "tttt94":  # tttt MC
+        if arg.redirector == "local":
+            inLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
+        else:
+            inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_94X.txt", "r")
+        postFix = "TTTT94"
+        outFile = "OutFiles/Histograms/TTTT94X_6Jets1El{0}jPt_test.root".format(selCrit["minJetPt"])
+    elif not arg.inputLFN.find("tttt102_17") == -1:  # tttt MC
+        if arg.redirector == "local":
+            inLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
+        else:
+            inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
+        postFix = "TTTT102"
+        if arg.inputLFN == "tttt102_17B":
+            outFile = "OutFiles/Histograms/TTTT102X_17B_6Jets1El{0}jPt_test.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tttt102_17C":
+            outFile = "OutFiles/Histograms/TTTT102X_17C_6Jets1El{0}jPt_test.root".format(selCrit["minJetPt"])
+        if arg.inputLFN == "tttt102_17DEF":
+            outFile = "OutFiles/Histograms/TTTT102X_17DEF_6Jets1El{0}jPt_test.root".format(selCrit["minJetPt"])
+
+    else:
+        inLFNList = None
+        postFix = None
+        outFile = None
+
+    return inLFNList, postFix, outFile
