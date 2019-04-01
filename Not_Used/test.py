@@ -6,9 +6,9 @@ from ROOT import TLatex
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
-
-class NTupleMaker(Module):
+class TestStudy(Module):
     """
     This class NTupleMaker() fills ntuples with values of required variables of jets, muons, electrons and MET;
     for different combinations of trigger paths.
@@ -24,7 +24,7 @@ class NTupleMaker(Module):
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
         self.trigLst = trigLst
         self.selCriteria = {}
-        with open("selectionCriteria.txt") as f:
+        with open("../myInFiles/selectionCriteria.txt") as f:
             for line in f:
                 if line.find(":") == -1: continue
                 (key, val) = line.split(": ")
@@ -114,7 +114,7 @@ class NTupleMaker(Module):
         for ne, el in enumerate(electrons):
             if abs(el.eta) > self.selCriteria["maxObjEta"]: continue
             if el.miniPFRelIso_all > self.selCriteria["maxMiniPfRelIso"]: continue
-            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17V2Iso_WP90 is False: continue
+            if self.selCriteria["mvaWP"] == 90 and el.mvaFall17Iso_WP90 is False: continue
             if 1.4442 < abs(el.eta) < 1.566: continue
 
             #  el.convVeto or el.sieie<0.0106 or el.lostHits<=1
@@ -152,3 +152,92 @@ class NTupleMaker(Module):
                 self.nJet.Fill(jet.pt, jet.eta, jet.phi)
         
         return True
+
+def process_arguments():
+    """
+    Processes command line arguments
+    Returns:
+        args: list of commandline arguments
+
+    """
+
+    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+                                                     "tt_semilep102", "ttjets102", "tttt102",
+                                                     "dataHTMHT17B", "dataSMu17B", "dataSEl17B",
+                                                     "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
+                                                     "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
+                                                     "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
+                        default="tttt102", help="Set list of input files")
+    parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
+                        default="xrd-global", help="Sets redirector to query locations for LFN")
+    parser.add_argument("-nw", "--noWriteFile", action="store_true",
+                        help="Does not output a ROOT file, which contains the histograms.")
+    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
+                        help="Set a limit to the number of events.")
+    parser.add_argument("-lf", "--fileLimit", type=int, default=-1,
+                        help="Set a limit to the number of files to run through.")
+    args = parser.parse_args()
+    return args
+
+
+def chooseRedirector(arg):
+    """
+    Sets redirector using keyword given in commandline arguments
+    Args:
+        arg: command line argument list
+
+    Returns:
+        redir: redirector, where redirector + LFN = PFN
+
+    """
+    if arg.redirector == "xrd-global":
+        redir = "root://cms-xrd-global.cern.ch/"
+    elif arg.redirector == "xrdUS":
+        redir = "root://cmsxrootd.fnal.gov/"
+    elif arg.redirector == "xrdEU_Asia":
+        redir = "root://xrootd-cms.infn.it/"
+    elif arg.redirector == "eos":
+        redir = "root://cmseos.fnal.gov/"
+    elif arg.redirector == "iihe":
+        redir = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
+    elif arg.redirector == "local":
+        if arg.inputLFN == "ttjets":
+            redir = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
+        elif arg.inputLFN == "tttt_weights":
+            redir = "../../myInFiles/TTTTweights/"
+        elif arg.inputLFN == "wjets":
+            redir = "../../myInFiles/Wjets/"
+        elif arg.inputLFN == "tttt":
+            redir = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
+        else:
+            return ""
+    else:
+        return ""
+    return redir
+
+
+def getFileContents(fileName, elmList):
+    """
+
+    Args:
+        fileName (string): path/to/file
+        elmList (bool): if true then dictionary elements are lists else strings
+
+    Returns:
+        fileContents (dictionary): file contents given as a dictionary
+
+    """
+    fileContents = {}
+    with open(fileName) as f:
+        for line in f:
+            if line.find(":") == -1: continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            if elmList is False:
+                fileContents[key1] = val
+            else:
+                fileContents[key1] = val.split(", ")
+    return fileContents

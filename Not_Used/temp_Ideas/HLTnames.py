@@ -25,6 +25,8 @@ trigList = ["HLT_Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5",
             "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ"
 
             ]
+eraStr = "2017B/HTMHT"
+
 fileList = [
     '/store/mc/RunIIFall17NanoAOD/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_'
     'v14-v1/70000/C6AABB0E-33AC-E811-8B63-0CC47A7C3404.root',
@@ -624,7 +626,7 @@ fileList = [
 # allFileNames = "AllFiles.txt"
 
 for nf, fileName in enumerate(fileList):
-    if fileName.find("2017B") == -1: continue
+    if fileName.find(eraStr) == -1: continue
     tree = uproot.open("root://cms-xrd-global.cern.ch/" + fileName)
     l = tree['Events'].keys()
     nm = 0
