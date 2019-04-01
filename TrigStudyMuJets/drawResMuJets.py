@@ -20,8 +20,7 @@ def process_arguments():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN",
                         default="tttt102", help="Set key-name or name of input file")
-    parser.add_argument("-i", "--inputName", default="W", help="Set name of inpput file")
-    parser.add_argument("-o", "--outputName", default="W", help="Set name of output file")
+    parser.add_argument("-o", "--outputName", default="Week", help="Set name of output file")
     args = parser.parse_args()
 
     #  choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
@@ -59,16 +58,10 @@ def pdfCreator(parg, arg, canvas, selCrit):
             if exc.errno != errno.EEXIST:
                 raise
     if arg == 0:
-        # canvas.Print(time_.strftime("TriggerPlots/" + parg.outputName + "%V_%y/" + parg.inputLFN + "_" + minPt +
-        #                             "jetPt.pdf("), "pdf")
         canvas.Print(filename + "(", "pdf")
     if arg == 1:
-        # canvas.Print(time_.strftime("TriggerPlots/" + parg.outputName + "%V_%y/" + parg.inputLFN + "_" + minPt +
-        #                             "jetPt.pdf"), "pdf")
         canvas.Print(filename, "pdf")
     if arg == 2:
-        # canvas.Print(time_.strftime("TriggerPlots/" + parg.outputName + "%V_%y/" + parg.inputLFN + "_" + minPt +
-        #                             "jetPt.pdf)"), "pdf")
         canvas.Print(filename + ")", "pdf")
 
 
@@ -116,7 +109,7 @@ def fitInfo(fit, printEqn, fitName, args):
     Returns:
 
     """
-    fitFile = open("fitInfo.txt", "a+")
+    fitFile = open("fitInfo" + args.inputLFN + ".txt", "a+")
     try:
         with fitFile:
             if printEqn == "s":
@@ -140,15 +133,16 @@ def fitInfo(fit, printEqn, fitName, args):
         print("Could not open file!")
 
 
-def inclusiveEfficiency(info):
+def inclusiveEfficiency(info, arg):
     """
     Args:
         info (string): information to be written to file
+        arg (string): key name
 
     Returns:
 
     """
-    fitFile = open("fitInfo.txt", "a+")
+    fitFile = open("fitInfo" + arg + ".txt", "a+")
     try:
         with fitFile:
             fitFile.write(info)
@@ -235,7 +229,7 @@ def getFileContents(fileName, elmList):
     return fileContents
 
 
-def inputFileName(arg, arg2, selCrit):
+def inputFileName(arg, selCrit):
     """
 
     Args:
@@ -273,7 +267,7 @@ def inputFileName(arg, arg2, selCrit):
     #     version = arg.replace("dataSEl17", '')
     #     inFile = "../OutFiles/Histograms/dataSEl17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
     # else:
-    inFile = "../OutFiles/Histograms/" + arg2
+    inFile = "OutFiles/Histograms/" + arg + ".root"
 
     return inFile
 
@@ -281,11 +275,19 @@ def inputFileName(arg, arg2, selCrit):
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
-    trigList = getFileContents("../myInFiles/trigList.txt", True)
+    if not argms.inputLFN.find("17B") == -1:
+        trigList = getFileContents("../myInFiles/2017ABtrigList.txt", True)
+    elif not argms.inputLFN.find("17C") == -1:
+        trigList = getFileContents("../myInFiles/2017CtrigList.txt", True)
+    elif not argms.inputLFN.find("17D") or argms.inputLFN.find("17E") or argms.inputLFN.find("17F") == -1:
+        trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", True)
+    else:
+        trigList = getFileContents("../myInFiles/trigList.txt", True)
+    # trigList = getFileContents("../myInFiles/trigList.txt", True)
     preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", False)
     selCriteria = getFileContents("selectionCriteria.txt", False)
     
-    inputFile = inputFileName(argms.inputLFN, argms.inputName, selCriteria)
+    inputFile = inputFileName(argms.inputLFN, selCriteria)
 
     # h = {}  # TH1D class
     # h_TriggerRatio = {}  # TEfficiency class
@@ -504,7 +506,7 @@ def main(argms):
                     h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
                     h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
-#                    fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
+                    fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -547,7 +549,7 @@ def main(argms):
             inEff = h_TriggerRatio[tg].GetBinContent(1)  # / numBins
             # print(h_TriggerRatio[tg].GetBinError(1))
             inErEff = h_TriggerRatio[tg].GetBinError(1)  # / 300
-            inclusiveEfficiency(" Jet HT Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg))
+            inclusiveEfficiency(" Jet HT Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg), argms.inputLFN)
             xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
@@ -737,7 +739,7 @@ def main(argms):
                     f_muonPt[tg].SetParLimits(2, 20, 40)
                     f_muonPt[tg].SetParLimits(3, 0.01, 0.05)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(fit=f_muonPt[tg], printEqn="t", fitName=("muonPt" + tg), args=argms)
+                    fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
                     cv8.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -789,7 +791,7 @@ def main(argms):
             inEff = h_TriggerRatio[tg].GetBinContent(1)/300
             print(h_TriggerRatio[tg].GetBinError(1))
             inErEff = h_TriggerRatio[tg].GetBinError(1)/300
-            inclusiveEfficiency("Muon Pt Eff = {0:.3f} +/- {1:.3f} , {2} \n" .format(inEff, inErEff, tg))
+            inclusiveEfficiency("Muon Pt Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg), argms.inputLFN)
             xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1:.2f} GeV/c".format(xTitle, xBinWidth))

@@ -704,6 +704,7 @@ Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Ch
 Muon Pt Eff = 0.248 +/- 0.014 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.757 +/- 0.027 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.741 +/- 0.027 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+
 dataHTMHT17F, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.388, +/-, 0.005, 500.000, +/-, 0.609, 411.321, 212.000, 6.84858324357e-15, 19.169, +/- ,0.156, -0.100, +/-, 0.001
  dataHTMHT17F, jetHtIsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.714, +/-, 0.074, 250.692, +/-, 19.191, 249.872, 212.000, 0.0382140683429, 14.922, +/- ,1.432, -0.034, +/-, 0.036
  dataHTMHT17F, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.696, +/-, 0.004, 500.000, +/-, 0.033, 897.382, 212.000, 4.69660555985e-85, 2.999, +/- ,0.119, 0.001, +/-, 0.001
@@ -733,7 +734,10 @@ dataHTMHT17D, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.365, +/-, 0.153
  Jet HT Eff = 0.774 +/- 0.014 , IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
  Jet HT Eff = 0.647 +/- 0.012 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
 
- Equation given by: 
+ 
+Below this point are Files with data preselection not in  
+
+Equation given by: 
  	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
  	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
 
