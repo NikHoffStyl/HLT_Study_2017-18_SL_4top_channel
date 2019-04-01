@@ -18,7 +18,7 @@ def process_arguments():
     """ Process command-line arguments """
 
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
+    parser.add_argument("-i", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
                                                      "tt_semilep102_17B", "tttt102_17B",
                                                      "tt_semilep102_17C", "tttt102_17C",
                                                      "tt_semilep102_17DEF", "tttt102_17DEF",
@@ -28,7 +28,8 @@ def process_arguments():
                                                      "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
                                                      "dataHTMHT17F", "dataSMu17F", "dataSEl17F",
                                                      "dataHT", "dataSMu", "dataSEl"],
-                        default="tttt102", help="Set list of input files")
+                        default="tttt102", help="Set key-name or name of input file")
+    parser.add_argument("-o", "--outputName", default="W", help="Set name of output file")
     args = parser.parse_args()
     return args
 
@@ -46,7 +47,7 @@ def pdfCreator(parg, arg, canvas, selCrit):
     """
     time_ = datetime.now()
     minPt = selCrit["minJetPt"]
-    filename = time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt + "jetPt.pdf")
+    filename = time_.strftime("TriggerPlots/" + parg.outputName + "%V_%y/" + parg.inputLFN + "_" + minPt + "jetPt.pdf")
     if not os.path.exists(os.path.dirname(filename)):
         try:
             os.makedirs(os.path.dirname(filename))
@@ -54,14 +55,17 @@ def pdfCreator(parg, arg, canvas, selCrit):
             if exc.errno != errno.EEXIST:
                 raise
     if arg == 0:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt +
-                                    "jetPt.pdf("), "pdf")
+        # canvas.Print(time_.strftime("TriggerPlots/" + parg.outputName + "%V_%y/" + parg.inputLFN + "_" + minPt +
+        #                             "jetPt.pdf("), "pdf")
+        canvas.Print(filename + "(", "pdf")
     if arg == 1:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt +
-                                    "jetPt.pdf"), "pdf")
+        # canvas.Print(time_.strftime("TriggerPlots/" + parg.outputName + "%V_%y/" + parg.inputLFN + "_" + minPt +
+        #                             "jetPt.pdf"), "pdf")
+        canvas.Print(filename, "pdf")
     if arg == 2:
-        canvas.Print(time_.strftime("TriggerPlots/W%V_%y/" + parg.inputLFN + "_" + minPt +
-                                    "jetPt.pdf)"), "pdf")
+        # canvas.Print(time_.strftime("TriggerPlots/" + parg.outputName + "%V_%y/" + parg.inputLFN + "_" + minPt +
+        #                             "jetPt.pdf)"), "pdf")
+        canvas.Print(filename + ")", "pdf")
 
 
 def sigmoidFit(x, par):
@@ -240,7 +244,7 @@ def inputFileName(arg, selCrit):
     """
     if arg.find("tttt") != -1 and arg.find("tttt_") == -1:
         version = arg.replace("tttt", '')
-        inFile = "../OutFiles/Histograms/TTTT{0}X_6Jets1Mu{1}jPt_test.root".format(version, selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTTT{0}_6Jets1Mu{1}jPt_test.root".format(version, selCrit["minJetPt"])
     # elif arg == "tttt102":
     #     inFile = "../OutFiles/Histograms/TTTT102X_6Jets1Mu{0}jPt_test.root".format(selCrit["minJetPt"])
     elif not arg.find("ttjets") == -1:
@@ -252,7 +256,7 @@ def inputFileName(arg, selCrit):
         inFile = "../OutFiles/Histograms/Wjets{0}jPt.root" .format(selCrit["minJetPt"])
     elif not arg.find("tt_semilep") == -1:
         version = arg.replace("tt_semilep", '')
-        inFile = "../OutFiles/Histograms/TTToSemiMu{0}X_6Jets1Mu{1}jPt.root" .format(version, selCrit["minJetPt"])
+        inFile = "../OutFiles/Histograms/TTToSemiMu{0}_6Jets1Mu{1}jPt.root" .format(version, selCrit["minJetPt"])
     # elif arg == "tt_semilep102":
     #     inFile = "../OutFiles/Histograms/TTToSemiLep102X_6Jets1Mu{0}jPt.root" .format(selCrit["minJetPt"])
     elif not arg.find("dataHTMHT17") == -1:
@@ -265,7 +269,7 @@ def inputFileName(arg, selCrit):
         version = arg.replace("dataSEl17", '')
         inFile = "../OutFiles/Histograms/dataSEl17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
     else:
-        inFile = None
+        inFile = "../OutFiles/Histograms/" + arg
 
     return inFile
 
@@ -273,7 +277,7 @@ def inputFileName(arg, selCrit):
 def main(argms):
     """ This code merges histograms, only for specific root file """
 
-    trigList = getFileContents("trigList.txt", True)
+    trigList = getFileContents("../myInFiles/trigList.txt", True)
     preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", False)
     selCriteria = getFileContents("selectionCriteria.txt", False)
     
@@ -314,7 +318,6 @@ def main(argms):
     # histFile.cd("plots")
     histFile = ROOT.TFile.Open(inputFile)
     histFile.cd("plots")
-
 
     # - Histograms
     h_jetHt["notrigger"] = ROOT.gDirectory.Get("h_jetHt_notrigger")
@@ -526,7 +529,7 @@ def main(argms):
     i = 0
     for key in trigList:
         if not key.find("El") == -1: continue
-        numBins =  h_jetHt["notrigger"].GetNbinsX()
+        numBins = h_jetHt["notrigger"].GetNbinsX()
         h_jetHt["notrigger"].RebinX(numBins, "")
         for tg in trigList[key]:
             numBins = h_jetHt[tg].GetNbinsX()
@@ -537,9 +540,9 @@ def main(argms):
             h_TriggerRatio[tg].Divide(h_jetHt["notrigger"])
             # h_TriggerRatio[tg].Rebin(numBins)
             # print(h_TriggerRatio[tg].GetBinContent(1))
-            inEff = h_TriggerRatio[tg].GetBinContent(1) #/ numBins
+            inEff = h_TriggerRatio[tg].GetBinContent(1)  # / numBins
             # print(h_TriggerRatio[tg].GetBinError(1))
-            inErEff = h_TriggerRatio[tg].GetBinError(1) #/ 300
+            inErEff = h_TriggerRatio[tg].GetBinError(1)  # / 300
             inclusiveEfficiency(" Jet HT Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg))
             xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
@@ -854,7 +857,7 @@ def main(argms):
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - GenMET pT plots ---------------------------------
-    cv11 = triggerCanvas.cd(1)
+    # cv11 = triggerCanvas.cd(1)
     # h_genMetPt["notrigger"].GetXaxis().SetTitle("Gen E^{Miss}_{T}")
     # h_genMetPt["notrigger"].SetMinimum(0.)
     # # h_genMetPt["notrigger"].SetMaximum(2000)
@@ -902,7 +905,7 @@ def main(argms):
     # ROOT.gStyle.SetLegendTextSize(0.02)
     # ltx.SetTextSize(0.03)
     # ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - Eta plots ------------------------------------------
     cv13 = triggerCanvas.cd(1)
