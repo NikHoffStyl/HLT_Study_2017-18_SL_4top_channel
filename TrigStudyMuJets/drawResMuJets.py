@@ -192,37 +192,37 @@ def cmsPlotString(args):
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     elif args == "tttt_weights":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args == "dataHTMHT17B":
+    elif not args.find("dataHTMHT17B") == -1:
         legStr = "#splitline{CMS}{HTMHT Data Run2017B}"
-    elif args == "dataHTMHT17C":
+    elif not args.find("dataHTMHT17C") == -1:
         legStr = "#splitline{CMS}{HTMHT Data Run2017C}"
-    elif args == "dataHTMHT17D":
+    elif not args.find("dataHTMHT17D") == -1:
         legStr = "#splitline{CMS}{HTMHT Data Run2017D}"
-    elif args == "dataHTMHT17E":
+    elif not args.find("dataHTMHT17E") == -1:
         legStr = "#splitline{CMS}{HTMHT Data Run2017E}"
-    elif args == "dataHTMHT17F":
+    elif not args.find("dataHTMHT17F") == -1:
         legStr = "#splitline{CMS}{HTMHT Data Run2017F}"
-    elif args == "dataSMu17B":
+    elif not args.find("dataSMu17B") == -1:
         legStr = "#splitline{CMS}{Single Muon Data Run2017B}"
-    elif args == "dataSMu17C":
+    elif not args.find("dataSMu17C") == -1:
         legStr = "#splitline{CMS}{Single Muon Data Run2017C}"
-    elif args == "dataSMu17D":
+    elif not args.find("dataSMu17D") == -1:
         legStr = "#splitline{CMS}{Single Muon Data Run2017D}"
-    elif args == "dataSMu17E":
+    elif not args.find("dataSMu17E") == -1:
         legStr = "#splitline{CMS}{Single Muon Data Run2017E}"
-    elif args == "dataSMu17F":
+    elif not args.find("dataSMu17F") == -1:
         legStr = "#splitline{CMS}{Single Muon Data Run2017F}"
-    elif args == "dataSEl17B":
+    elif not args.find("dataSEl17B") == -1:
         legStr = "#splitline{CMS}{Single Electron Data Run2017B}"
-    elif args == "dataSEl17C":
+    elif not args.find("dataSEl17C") == -1:
         legStr = "#splitline{CMS}{Single Electron Data Run2017C}"
-    elif args == "dataSEl17D":
+    elif not args.find("dataSEl17D") == -1:
         legStr = "#splitline{CMS}{Single Electron Data Run2017D}"
-    elif args == "dataSEl17E":
+    elif not args.find("dataSEl17E") == -1:
         legStr = "#splitline{CMS}{Single Electron Data Run2017E}"
-    elif args == "dataSEl17F":
+    elif not args.find("dataSEl17F") == -1:
         legStr = "#splitline{CMS}{Single Electron Data Run2017F}"
-    elif args == "Wjets":
+    elif not args.find("Wjets") == -1:
         legStr = "#splitline{CMS}{W #rightarrow jets}"
     else:
         legStr = "CMS"
@@ -511,7 +511,7 @@ def main(argms):
     cv1.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
     tX1 = 0.6*(h_jetHt["notrigger"].GetXaxis().GetXmax())
-    tY1 = 0.95*(h_jetHt["notrigger"].GetMaximum())
+    tY1 = 1*(h_jetHt["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
