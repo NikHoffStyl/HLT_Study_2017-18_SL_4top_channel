@@ -20,7 +20,7 @@ def process_arguments():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN",
                         default="tttt102", help="Set key-name or name of input file")
-    parser.add_argument("-o", "--outputName", default="Week", help="Set name of output file")
+    parser.add_argument("-o", "--outputName", default="NoPreTrig", help="Set name of output file")
     args = parser.parse_args()
 
     #  choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
@@ -184,22 +184,48 @@ def cmsPlotString(args):
         legStr (string): string containing channel details
 
     """
-    if not args.find("tt_semilep") == -1:
+    if not args.find("TTToSemiLep") == -1:
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     elif not args.find("ttjets") == -1:
         legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args.find("tttt") != -1 and args.find("tttt_") == -1:
+    elif args.find("TTTT") != -1 and args.find("TTTT_") == -1:
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
     elif args == "tttt_weights":
         legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif not args.find("dataHTMHT17") == -1:
-        legStr = "#splitline{CMS}{HT Data}"
-    elif not args.find("dataSMu17") == -1:
-        legStr = "#splitline{CMS}{Single Muon Data}"
-    elif not args.find("dataSEl17") == -1:
-        legStr = "#splitline{CMS}{Single Electron Data}"
-    else:
+    elif args == "dataHTMHT17B":
+        legStr = "#splitline{CMS}{HTMHT Data Run2017B}"
+    elif args == "dataHTMHT17C":
+        legStr = "#splitline{CMS}{HTMHT Data Run2017C}"
+    elif args == "dataHTMHT17D":
+        legStr = "#splitline{CMS}{HTMHT Data Run2017D}"
+    elif args == "dataHTMHT17E":
+        legStr = "#splitline{CMS}{HTMHT Data Run2017E}"
+    elif args == "dataHTMHT17F":
+        legStr = "#splitline{CMS}{HTMHT Data Run2017F}"
+    elif args == "dataSMu17B":
+        legStr = "#splitline{CMS}{Single Muon Data Run2017B}"
+    elif args == "dataSMu17C":
+        legStr = "#splitline{CMS}{Single Muon Data Run2017C}"
+    elif args == "dataSMu17D":
+        legStr = "#splitline{CMS}{Single Muon Data Run2017D}"
+    elif args == "dataSMu17E":
+        legStr = "#splitline{CMS}{Single Muon Data Run2017E}"
+    elif args == "dataSMu17F":
+        legStr = "#splitline{CMS}{Single Muon Data Run2017F}"
+    elif args == "dataSEl17B":
+        legStr = "#splitline{CMS}{Single Electron Data Run2017B}"
+    elif args == "dataSEl17C":
+        legStr = "#splitline{CMS}{Single Electron Data Run2017C}"
+    elif args == "dataSEl17D":
+        legStr = "#splitline{CMS}{Single Electron Data Run2017D}"
+    elif args == "dataSEl17E":
+        legStr = "#splitline{CMS}{Single Electron Data Run2017E}"
+    elif args == "dataSEl17F":
+        legStr = "#splitline{CMS}{Single Electron Data Run2017F}"
+    elif args == "Wjets":
         legStr = "#splitline{CMS}{W #rightarrow jets}"
+    else:
+        legStr = "CMS"
 
     return legStr
 
@@ -282,7 +308,7 @@ def main(argms):
     elif not argms.inputLFN.find("17D") or argms.inputLFN.find("17E") or argms.inputLFN.find("17F") == -1:
         trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", True)
     else:
-        trigList = getFileContents("../myInFiles/trigList.txt", True)
+        trigList = getFileContents("../myInFiles/2017DEFls Ou   trigList.txt", True)
     # trigList = getFileContents("../myInFiles/trigList.txt", True)
     preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", False)
     selCriteria = getFileContents("selectionCriteria.txt", False)
@@ -436,15 +462,19 @@ def main(argms):
             f_jetHt[tg] = ROOT.TF1('jetHt' + tg, turnOnFit, 200, 2500, 4)
             f_jetHt[tg].SetLineColor(1)
             f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
-            f_jetHt[tg].SetParLimits(0, 0.4, 1)
+            f_jetHt[tg].SetParLimits(0, 0, 1)
             f_jetHt[tg].SetParLimits(1, 2, 25)
             f_jetHt[tg].SetParLimits(2, -100, 500)
-            f_jetHt[tg].SetParLimits(3, -0.1, 0.1)
+            f_jetHt[tg].SetParLimits(3, -0.1, 1)
             f_jetHt[tg].SetLineStyle(style[i - 2])
 
             f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, turnOnFit, 0, 250, 4)
             f_muonPt[tg].SetLineColor(1)
             f_muonPt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
+            f_muonPt[tg].SetParLimits(0, 0.7, 0.9)
+            f_muonPt[tg].SetParLimits(1, 0, 2000)
+            f_muonPt[tg].SetParLimits(2, 10, 50)
+            f_muonPt[tg].SetParLimits(3, -0.1, 1)
             f_muonPt[tg].SetLineStyle(style[i - 2])
 
             i += 1
@@ -505,7 +535,7 @@ def main(argms):
                 if i == 0:
                     h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
-                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')  # L= log likelihood, V=verbose, R=range in function
+                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
                     # fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
                     cv2.Update()
@@ -520,7 +550,7 @@ def main(argms):
                     if i == 1: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
                     elif i == 2: f_jetHt[tg].SetParameters(0.8, 10, 330, 0)
                     elif i == 3: f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
-                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LVR')
+                    h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')
                     fitInfo(fit=f_jetHt[tg], printEqn="n", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
@@ -549,7 +579,7 @@ def main(argms):
             inEff = h_TriggerRatio[tg].GetBinContent(1)  # / numBins
             # print(h_TriggerRatio[tg].GetBinError(1))
             inErEff = h_TriggerRatio[tg].GetBinError(1)  # / 300
-            inclusiveEfficiency(" Jet HT Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg), argms.inputLFN)
+            inclusiveEfficiency(" Jet HT Eff =,{0:.3f},+/- ,{1:.3f}, {2} \n".format(inEff, inErEff, tg), argms.inputLFN)
             xTitle = h_jetHt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_jetHt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
@@ -557,8 +587,8 @@ def main(argms):
             # h_TriggerRatio[tg].SetBinContent(1, inEff)
             # h_TriggerRatio[tg].SetBinError(1, inErEff)
             if i == 0:
-                h_TriggerRatio[tg].SetMinimum(0.)
-                h_TriggerRatio[tg].SetMaximum(301.8)
+                # h_TriggerRatio[tg].SetMinimum(0.)
+                # h_TriggerRatio[tg].SetMaximum(301.8)
                 h_TriggerRatio[tg].Draw()
                 tX1 = 0.05 * (h_jetHt["notrigger"].GetXaxis().GetXmax())
                 tY1 = 0.1
@@ -734,10 +764,10 @@ def main(argms):
                 j += 1
                 if i == 0:
                     f_muonPt[tg].SetParameters(0.8, 0.95, 24, 0.05)
-                    f_muonPt[tg].SetParLimits(0, 0.7, 0.9)
-                    f_muonPt[tg].SetParLimits(1, 0, 5)
-                    f_muonPt[tg].SetParLimits(2, 20, 40)
-                    f_muonPt[tg].SetParLimits(3, 0.01, 0.05)
+                    # f_muonPt[tg].SetParLimits(0, 0.7, 0.9)
+                    # f_muonPt[tg].SetParLimits(1, 0, 5)
+                    # f_muonPt[tg].SetParLimits(2, 20, 40)
+                    # f_muonPt[tg].SetParLimits(3, 0.01, 0.05)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
                     fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
@@ -751,22 +781,22 @@ def main(argms):
                 if i > 0:
                     if i == 1:
                         f_muonPt[tg].SetParameters(0.05, 1000, 24, 0.8)
-                        f_muonPt[tg].SetParLimits(0, 0, 0.1)
-                        f_muonPt[tg].SetParLimits(1, 100, 2000)
-                        f_muonPt[tg].SetParLimits(2, 20, 40)
-                        f_muonPt[tg].SetParLimits(3, 0.8, 0.9)
+                        # f_muonPt[tg].SetParLimits(0, 0, 0.1)
+                        # f_muonPt[tg].SetParLimits(1, 100, 2000)
+                        # f_muonPt[tg].SetParLimits(2, 20, 40)
+                        # f_muonPt[tg].SetParLimits(3, 0.8, 0.9)
                     elif i == 2:
                         f_muonPt[tg].SetParameters(0.18, 0.95, 24, 0.8)
-                        f_muonPt[tg].SetParLimits(0, 0.1, 0.4)
-                        f_muonPt[tg].SetParLimits(1, 0, 10)
-                        f_muonPt[tg].SetParLimits(2, 20, 40)
-                        f_muonPt[tg].SetParLimits(3, 0, 0.9)
+                        # f_muonPt[tg].SetParLimits(0, 0.1, 1)
+                        # f_muonPt[tg].SetParLimits(1, 0, 10)
+                        # f_muonPt[tg].SetParLimits(2, 20, 40)
+                        # f_muonPt[tg].SetParLimits(3, 0, 0.9)
                     elif i == 3:
                         f_muonPt[tg].SetParameters(0.75, 0.95, 15, 0.15)
-                        f_muonPt[tg].SetParLimits(0, 0.5, 0.9)
-                        f_muonPt[tg].SetParLimits(1, 0, 10)
-                        f_muonPt[tg].SetParLimits(2, 0, 30)
-                        f_muonPt[tg].SetParLimits(3, 0, 0.3)
+                        # f_muonPt[tg].SetParLimits(0, 0.5, 1)
+                        # f_muonPt[tg].SetParLimits(1, 0, 10)
+                        # f_muonPt[tg].SetParLimits(2, 0, 30)
+                        # f_muonPt[tg].SetParLimits(3, 0, 0.3)
                     h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')
                     fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
@@ -781,23 +811,27 @@ def main(argms):
     i = 0
     for key in trigList:
         if not key.find("El") == -1: continue
+        numBins = h_muonPt["notrigger"].GetNbinsX()
+        h_muonPt["notrigger"].RebinX(numBins, "")
         for tg in trigList[key]:
+            numBins = h_muonPt[tg].GetNbinsX()
+            h_muonPt[tg].RebinX(numBins, "")
             h_TriggerRatio[tg] = h_muonPt[tg].Clone("h_muonPtRatio" + tg)
             h_TriggerRatio[tg].Sumw2()
             h_TriggerRatio[tg].SetStats(0)
             h_TriggerRatio[tg].Divide(h_muonPt["notrigger"])
-            h_TriggerRatio[tg].Rebin(300)
-            print(h_TriggerRatio[tg].GetBinContent(1))
-            inEff = h_TriggerRatio[tg].GetBinContent(1)/300
-            print(h_TriggerRatio[tg].GetBinError(1))
-            inErEff = h_TriggerRatio[tg].GetBinError(1)/300
-            inclusiveEfficiency("Muon Pt Eff = {0:.3f} +/- {1:.3f} , {2} \n".format(inEff, inErEff, tg), argms.inputLFN)
+            # h_TriggerRatio[tg].Rebin(300)
+            # print(h_TriggerRatio[tg].GetBinContent(1))
+            inEff = h_TriggerRatio[tg].GetBinContent(1)
+            # print(h_TriggerRatio[tg].GetBinError(1))
+            inErEff = h_TriggerRatio[tg].GetBinError(1)
+            inclusiveEfficiency("Muon Pt Eff = ,{0:.3f},+/-,{1:.3f}, {2} \n".format(inEff, inErEff, tg), argms.inputLFN)
             xTitle = h_muonPt["notrigger"].GetXaxis().GetTitle()
             xBinWidth = h_muonPt["notrigger"].GetXaxis().GetBinWidth(1)
             h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1:.2f} GeV/c".format(xTitle, xBinWidth))
             h_TriggerRatio[tg].SetName(tg)
             if i == 0:
-                h_TriggerRatio[tg].SetMinimum(0.)
+                # h_TriggerRatio[tg].SetMinimum(0.)
                 # h_TriggerRatio[tg].SetMaximum(301.8)
                 h_TriggerRatio[tg].Draw()
                 tX1 = 0.05 * (h_muonPt["notrigger"].GetXaxis().GetXmax())
