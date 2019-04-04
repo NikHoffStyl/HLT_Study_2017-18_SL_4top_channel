@@ -281,8 +281,8 @@ def getHistNames(file):
     for obj in objList:
         hNames.append("h_" + obj + "_notrigger")
         for trg in trgList:
-            if "Ele" not in trgList:
-                hNames.append("h_" + obj + "_" + trg)
+            if "Ele" in trg: continue
+            hNames.append("h_" + obj + "_" + trg)
 
     return hNames
 
@@ -296,17 +296,19 @@ def getHistograms(files, era):
     Returns:
 
     """
-    if not era == "all": histNames = getHistNames(files[0])
+    histNames = []
+    histFile = []
+    if not era == "all": histNames = getHistNames(files[1])
     h_mcTTTT = {}
     h_mcTTToSemiLep = {}
     h_dataHTMHT = {}
     h_dataSMu = {}
     h_dataSEl = {}
-    for file in files:
+    for nf, file in enumerate(files):
         if era == "all":
             histNames = getHistNames(file)
-        histFile = ROOT.TFile.Open(file)
-        histFile.cd("plots")
+        histFile[nf] = ROOT.TFile.Open(file)
+        histFile[nf].cd("plots")
         for name in histNames:
             if "TTTT" in file:
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
@@ -408,13 +410,13 @@ def main():
     args = parser.parse_args()
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
-    triggerCanvas.SetFillColor(17)
-    triggerCanvas.SetFrameFillColor(18)
-    triggerCanvas.SetGrid()
+    # triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
+    # triggerCanvas.SetFillColor(17)
+    # triggerCanvas.SetFrameFillColor(18)
+    # triggerCanvas.SetGrid()
 
     # - Create text for legend
-    legString = cmsPlotString(args.inputLFN)
+    # legString = cmsPlotString(args.inputLFN)
 
     # - Get File Names and create histogram dictionaries
     files = findEraRootFiles(path="OutFiles/Histograms", era=args.inputLFN, FullPaths=True)
