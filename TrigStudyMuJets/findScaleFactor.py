@@ -307,10 +307,10 @@ def getHistograms(files, era):
     for nf,file in enumerate(files):
         if era == "all":
             histNames = getHistNames(file)
-        histFile.append(ROOT.TFile.Open(file))
-        histFile[nf].cd("plots")
         for name in histNames:
             if "TTTT" in file:
+                histFile.append(ROOT.TFile.Open(file))
+                histFile[nf].cd("plots")
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
                 if not (h_mcTTTT[name]):
                     print('[ERROR]: No histogram "' + name + '" found in ' + file)
@@ -320,6 +320,8 @@ def getHistograms(files, era):
                 # if not (h_mcTTToSemiLep[name]):
                 #     print('[ERROR]: No histogram "' + name + '" found in ' + file)
             elif "dataHTMHT" in file:
+                histFile.append(ROOT.TFile.Open(file))
+                histFile[nf].cd("plots")
                 h_dataHTMHT[name] = ROOT.gDirectory.Get("h_" + name)
                 if not (h_dataHTMHT[name]):
                     print('[ERROR]: No histogram "' + name + '" found in ' + file)
