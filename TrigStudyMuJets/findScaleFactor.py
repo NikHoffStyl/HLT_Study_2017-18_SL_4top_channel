@@ -298,39 +298,39 @@ def getHistograms(files, era):
     """
     histNames = []
     histFile = []
-    if not era == "all": histNames = getHistNames(files[1])
+    if not era == "all": histNames = getHistNames(files[0])
     h_mcTTTT = {}
     h_mcTTToSemiLep = {}
     h_dataHTMHT = {}
     h_dataSMu = {}
     h_dataSEl = {}
-    for nf, file in enumerate(files):
+    for nf,file in enumerate(files):
         if era == "all":
             histNames = getHistNames(file)
-        histFile[nf] = ROOT.TFile.Open(file)
+        histFile.append(ROOT.TFile.Open(file))
         histFile[nf].cd("plots")
         for name in histNames:
             if "TTTT" in file:
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
                 if not (h_mcTTTT[name]):
-                    print('[ERROR]: No histogram "' + name + '" found in' + file)
-            elif "TTToSemi" in file:
-                h_mcTTToSemiLep = None
+                    print('[ERROR]: No histogram "' + name + '" found in ' + file)
+           # elif "TTToSemi" in file:
+            #    h_mcTTToSemiLep = None
                 # h_mcTTToSemiLep[name] = ROOT.gDirectory.Get("h_" + name)
                 # if not (h_mcTTToSemiLep[name]):
-                #     print('[ERROR]: No histogram "' + name + '" found in' + file)
+                #     print('[ERROR]: No histogram "' + name + '" found in ' + file)
             elif "dataHTMHT" in file:
                 h_dataHTMHT[name] = ROOT.gDirectory.Get("h_" + name)
                 if not (h_dataHTMHT[name]):
-                    print('[ERROR]: No histogram "' + name + '" found in' + file)
-            elif "dataSMu" in file:
-                h_dataSMu[name] = ROOT.gDirectory.Get("h_" + name)
-                if not (h_dataSMu[name]):
-                    print('[ERROR]: No histogram "' + name + '" found in' + file)
-            elif "dataSEl" in file:
-                h_dataSEl[name] = ROOT.gDirectory.Get("h_" + name)
-                if not (h_dataSEl[name]):
-                    print('[ERROR]: No histogram "' + name + '" found in' + file)
+                    print('[ERROR]: No histogram "' + name + '" found in ' + file)
+            #elif "dataSMu" in file:
+             #   h_dataSMu[name] = ROOT.gDirectory.Get("h_" + name)
+              #  if not (h_dataSMu[name]):
+               #     print('[ERROR]: No histogram "' + name + '" found in ' + file)
+            #elif "dataSEl" in file:
+             #   h_dataSEl[name] = ROOT.gDirectory.Get("h_" + name)
+              #  if not (h_dataSEl[name]):
+               #     print('[ERROR]: No histogram "' + name + '" found in ' + file)
 
     return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl
 
