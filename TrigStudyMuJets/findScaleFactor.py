@@ -203,7 +203,7 @@ def getFileContents(fileName, elmList):
         fileContents (dictionary): file contents given as a dictionary
 
     """
-    fileContents = [] #{}
+    fileContents = []  # {}
     try:
         with open(fileName) as f:
             for line in f:
@@ -213,8 +213,8 @@ def getFileContents(fileName, elmList):
                 val = val[0:c]
                 if elmList is False:
                     fileContents.append(val)
-                #else:
-                    #fileContents[key1] = val.split(", ")
+                # else:
+                    # fileContents[key1] = val.split(", ")
     except OSError as fnf_error:
         print(fnf_error)
 
@@ -272,7 +272,7 @@ def getHistNames(file):
         hNames (list) : list of histogram names
 
     """
-    objList = ["jetHT", "jetMult", "jetBMult", "jestEta", "jetEta", "jetPhi", "muonPt", "muonEta", "muonPhi",
+    objList = ["jetHt", "jetMult", "jetBMult", "jetEta", "jetPhi", "muonPt", "muonEta", "muonPhi",
                "metPt", "metPhi"]
     # objList = ["jetHT", "jetMult", "jetBMult", "jestEta", "jetEta", "jetPhi", "elPt", "elEta", "elPhi",
     #            "metPt", "metPhi"]
@@ -281,7 +281,8 @@ def getHistNames(file):
     for obj in objList:
         hNames.append(obj + "_notrigger")
         for trg in trgList:
-            hNames.append(obj + "_" + trg)
+            if "Ele" in trgList: continue
+            hNames.append("h_" + obj + "_" + trg)
 
     return hNames
 
@@ -308,7 +309,7 @@ def getHistograms(files, era):
         histFile.cd("plots")
         for name in histNames:
             if "TTTT" in file:
-                h_mcTTTT[name] = ROOT.gDirectory.Get("h_" + name)
+                h_mcTTTT[name] = ROOT.gDirectory.Get(name)
                 if not (h_mcTTTT[name]):
                     print('[ERROR]: No histogram "' + name + '" found in' + file)
             elif "TTToSemi" in file:
