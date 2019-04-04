@@ -291,10 +291,10 @@ def getHistograms(fileList, era):
     """
 
     Args:
-        files (list):
+        fileList (list):
         era (string):
     Returns:
-
+        h_mcTTTT (dictionary):
     """
     if not era == "all": names = getHistNames(fileList[0])
     h_mcTTTT = {}
@@ -331,7 +331,7 @@ def findTrigRatio(h1):
         h1 (dictionary): dictionary of histograms
 
     Returns:
-        h_Out (dictionary): trigger ratio TH!D histogram
+        h_Out (dictionary): trigger ratio TH1D histogram
 
     """
     h_Out = {}
@@ -345,7 +345,7 @@ def findTrigRatio(h1):
             if "_notrigger" in hName: h2 = h1[hName]
             if "_notrigger" not in hName:
                 if h2 is None: continue
-                prop, tg = hName.split("_")
+                hh, prop, tg = hName.split("_")
                 h_Out[hName] = h1[hName].Clone("h_jetHtRatio" + tg)
                 h_Out[hName].Sumw2()
                 h_Out[hName].SetStats(0)
@@ -409,11 +409,11 @@ def main():
 
     # - Get File Names and create histogram dictionaries
     files = findEraRootFiles(path="OutFiles/Histograms", era=args.inputLFN, FullPaths=True)
-    h_mcTTTT, h_dataHTMHT, h_dataSMu, h_dataSEl = getHistograms(files, args.inputLFN)
+    h_mcTTTTs, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
 
     #  - Find efficiency ratio histogram dictionaries
-    #tr_mcTTTT = findTrigRatio(h_mcTTTT)
-    #tr_dataHTMHT = findTrigRatio(h_dataHTMHT)
+    #tr_mcTTTT = findTrigRatio(h_mcTTTTs)
+    #tr_dataHTMHT = findTrigRatio(h_dataHTMHTs)
     #tr_dataSMu = findTrigRatio(h_dataSMu)
     #tr_dataSEl = findTrigRatio(h_dataSEl)
 
