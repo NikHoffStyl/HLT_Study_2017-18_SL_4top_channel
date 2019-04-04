@@ -279,7 +279,7 @@ def getHistNames(file):
     trgList = findTrigList(file)
     hNames = []
     for obj in objList:
-        hNames.append("h" + obj + "_notrigger")
+        hNames.append("h_" + obj + "_notrigger")
         for trg in trgList:
             if "Ele" not in trgList:
                 hNames.append("h_" + obj + "_" + trg)
