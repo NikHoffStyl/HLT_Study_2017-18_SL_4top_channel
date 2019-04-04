@@ -287,7 +287,7 @@ def getHistNames(file):
     return hNames
 
 
-def getHistograms(files, era):
+def getHistograms(fileList, era):
     """
 
     Args:
@@ -296,45 +296,32 @@ def getHistograms(files, era):
     Returns:
 
     """
-    histNames = []
-    histFile = []
-    if not era == "all": histNames = getHistNames(files[0])
+    if not era == "all": names = getHistNames(fileList[0])
     h_mcTTTT = {}
-    h_mcTTToSemiLep = {}
     h_dataHTMHT = {}
     h_dataSMu = {}
     h_dataSEl = {}
-    for nf,file in enumerate(files):
-        if era == "all":
-            histNames = getHistNames(file)
-        for name in histNames:
-            if "TTTT" in file:
-                histFile.append(ROOT.TFile.Open(file))
-                histFile[nf].cd("plots")
+    f = []
+    counter = 0
+    for fName in fileList:
+        f.append(ROOT.TFile.Open(fName))
+        f[counter].cd("plots")
+        for name in names:
+            if "dataSEl17D" in fName:
+                h_dataSEl[name] = ROOT.gDirectory.Get(name)
+                if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+            if "dataSMu" in fName:
+                h_dataSMu[name] = ROOT.gDirectory.Get(name)
+                if not h_dataSMu[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+            if "dataHTMHT" in fName:
+                h_dataHTMHT[name] = ROOT.gDirectory.Get(name)
+                if not h_dataHTMHT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+            if "TTTT" in fName:
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
-                if not (h_mcTTTT[name]):
-                    print('[ERROR]: No histogram "' + name + '" found in ' + file)
-           # elif "TTToSemi" in file:
-            #    h_mcTTToSemiLep = None
-                # h_mcTTToSemiLep[name] = ROOT.gDirectory.Get("h_" + name)
-                # if not (h_mcTTToSemiLep[name]):
-                #     print('[ERROR]: No histogram "' + name + '" found in ' + file)
-            elif "dataHTMHT" in file:
-                histFile.append(ROOT.TFile.Open(file))
-                histFile[nf].cd("plots")
-                h_dataHTMHT[name] = ROOT.gDirectory.Get("h_" + name)
-                if not (h_dataHTMHT[name]):
-                    print('[ERROR]: No histogram "' + name + '" found in ' + file)
-            #elif "dataSMu" in file:
-             #   h_dataSMu[name] = ROOT.gDirectory.Get("h_" + name)
-              #  if not (h_dataSMu[name]):
-               #     print('[ERROR]: No histogram "' + name + '" found in ' + file)
-            #elif "dataSEl" in file:
-             #   h_dataSEl[name] = ROOT.gDirectory.Get("h_" + name)
-              #  if not (h_dataSEl[name]):
-               #     print('[ERROR]: No histogram "' + name + '" found in ' + file)
-
-    return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl
+                if not h_mcTTTT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+    counter +=1
+    tr_mcTTTT = findTrigRatio(h_mcTTTT) 
+    return h_mcTTTT, h_dataHTMHT, h_dataSMu, h_dataSEl
 
 
 def findTrigRatio(h1):
@@ -349,11 +336,11 @@ def findTrigRatio(h1):
     """
     h_Out = {}
     h2 = None
-    propList = ["jetHT", "muonPt", "jetMult", "jetBMult"]
+    propList = ["jetHt", "muonPt", "jetMult", "jetBMult"]
     for prop in propList:
         for hName in h1:
             if prop not in hName: continue
-            numBins = h1[hName].GetNbinsX()
+            numBins = 300#h1[hName].GetNbinsX()
             h1[hName].RebinX(numBins / 10, "")
             if "_notrigger" in hName: h2 = h1[hName]
             if "_notrigger" not in hName:
@@ -412,24 +399,23 @@ def main():
     args = parser.parse_args()
 
     # - Create canvases
-    # triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
-    # triggerCanvas.SetFillColor(17)
-    # triggerCanvas.SetFrameFillColor(18)
-    # triggerCanvas.SetGrid()
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
+    triggerCanvas.SetFillColor(17)
+    triggerCanvas.SetFrameFillColor(18)
+    triggerCanvas.SetGrid()
 
     # - Create text for legend
-    # legString = cmsPlotString(args.inputLFN)
+    legString = cmsPlotString(args.inputLFN)
 
     # - Get File Names and create histogram dictionaries
     files = findEraRootFiles(path="OutFiles/Histograms", era=args.inputLFN, FullPaths=True)
-    h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl = getHistograms(files, args.inputLFN)
+    h_mcTTTT, h_dataHTMHT, h_dataSMu, h_dataSEl = getHistograms(files, args.inputLFN)
 
     #  - Find efficiency ratio histogram dictionaries
-    # tr_mcTTTT = findTrigRatio(h_mcTTTT)
-    # # tr_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLep)
-    # tr_dataHTMHT = findTrigRatio(h_dataHTMHT)
-    # tr_dataSMu = findTrigRatio(h_dataSMu)
-    # tr_dataSEl = findTrigRatio(h_dataSEl)
+    #tr_mcTTTT = findTrigRatio(h_mcTTTT)
+    #tr_dataHTMHT = findTrigRatio(h_dataHTMHT)
+    #tr_dataSMu = findTrigRatio(h_dataSMu)
+    #tr_dataSEl = findTrigRatio(h_dataSEl)
 
     # - Find scale factor histogram dictionaries
     # s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTTT)
