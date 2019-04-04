@@ -279,10 +279,10 @@ def getHistNames(file):
     trgList = findTrigList(file)
     hNames = []
     for obj in objList:
-        hNames.append(obj + "_notrigger")
+        hNames.append("h" + obj + "_notrigger")
         for trg in trgList:
-            if "Ele" in trgList: continue
-            hNames.append("h_" + obj + "_" + trg)
+            if "Ele" not in trgList:
+                hNames.append("h_" + obj + "_" + trg)
 
     return hNames
 
@@ -421,59 +421,59 @@ def main():
     h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl = getHistograms(files, args.inputLFN)
 
     #  - Find efficiency ratio histogram dictionaries
-    tr_mcTTTT = findTrigRatio(h_mcTTTT)
-    # tr_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLep)
-    tr_dataHTMHT = findTrigRatio(h_dataHTMHT)
-    tr_dataSMu = findTrigRatio(h_dataSMu)
-    tr_dataSEl = findTrigRatio(h_dataSEl)
+    # tr_mcTTTT = findTrigRatio(h_mcTTTT)
+    # # tr_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLep)
+    # tr_dataHTMHT = findTrigRatio(h_dataHTMHT)
+    # tr_dataSMu = findTrigRatio(h_dataSMu)
+    # tr_dataSEl = findTrigRatio(h_dataSEl)
 
     # - Find scale factor histogram dictionaries
-    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTTT)
-    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTTT)
-    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTTT)
+    # s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTTT)
+    # s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTTT)
+    # s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTTT)
 
     #  - Draw scale factor hists
-    cv1 = triggerCanvas.cd(1)
-    for hn, hName in enumerate(hNames):
-        if hn == 0:
-            s_HTMHT[hName].Draw()
-            tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
-            tY1 = 1 * (s_HTMHT[hName].GetMaximum())
-        s_HTMHT[hName].Draw("same")
-    cv1.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx = TLatex()
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(args, 0, triggerCanvas)
-
-    cv2 = triggerCanvas.cd(1)
-    for hn, hName in enumerate(hNamesMu):
-        if hn == 0:
-            s_dataSMu[hName].Draw()
-            tX1 = 0.6 * (s_dataSMu[hName].GetXaxis().GetXmax())
-            tY1 = 1 * (s_dataSMu[hName].GetMaximum())
-        s_dataSMu[hName].Draw("same")
-    cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx = TLatex()
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(args, 1, triggerCanvas)
-
-    cv3 = triggerCanvas.cd(1)
-    for hn, hName in enumerate(hNamesEl):
-        if hn == 0:
-            s_dataSEl[hName].Draw()
-            tX1 = 0.6 * (s_dataSEl[hName].GetXaxis().GetXmax())
-            tY1 = 1 * (s_dataSEl[hName].GetMaximum())
-        s_dataSEl[hName].Draw("same")
-    cv3.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx = TLatex()
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(args, 2, triggerCanvas)
+    # cv1 = triggerCanvas.cd(1)
+    # for hn, hName in enumerate(hNames):
+    #     if hn == 0:
+    #         s_HTMHT[hName].Draw()
+    #         tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
+    #         tY1 = 1 * (s_HTMHT[hName].GetMaximum())
+    #     s_HTMHT[hName].Draw("same")
+    # cv1.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # ltx = TLatex()
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # pdfCreator(args, 0, triggerCanvas)
+    #
+    # cv2 = triggerCanvas.cd(1)
+    # for hn, hName in enumerate(hNamesMu):
+    #     if hn == 0:
+    #         s_dataSMu[hName].Draw()
+    #         tX1 = 0.6 * (s_dataSMu[hName].GetXaxis().GetXmax())
+    #         tY1 = 1 * (s_dataSMu[hName].GetMaximum())
+    #     s_dataSMu[hName].Draw("same")
+    # cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # ltx = TLatex()
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # pdfCreator(args, 1, triggerCanvas)
+    #
+    # cv3 = triggerCanvas.cd(1)
+    # for hn, hName in enumerate(hNamesEl):
+    #     if hn == 0:
+    #         s_dataSEl[hName].Draw()
+    #         tX1 = 0.6 * (s_dataSEl[hName].GetXaxis().GetXmax())
+    #         tY1 = 1 * (s_dataSEl[hName].GetMaximum())
+    #     s_dataSEl[hName].Draw("same")
+    # cv3.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # ltx = TLatex()
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # pdfCreator(args, 2, triggerCanvas)
 
 
 if __name__ == '__main__':
