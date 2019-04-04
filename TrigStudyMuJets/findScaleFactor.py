@@ -313,9 +313,10 @@ def getHistograms(files, era):
                 if not (h_mcTTTT[name]):
                     print('[ERROR]: No histogram "' + name + '" found in' + file)
             elif "TTToSemi" in file:
-                h_mcTTToSemiLep[name] = ROOT.gDirectory.Get("h_" + name)
-                if not (h_mcTTToSemiLep[name]):
-                    print('[ERROR]: No histogram "' + name + '" found in' + file)
+                h_mcTTToSemiLep = None
+                # h_mcTTToSemiLep[name] = ROOT.gDirectory.Get("h_" + name)
+                # if not (h_mcTTToSemiLep[name]):
+                #     print('[ERROR]: No histogram "' + name + '" found in' + file)
             elif "dataHTMHT" in file:
                 h_dataHTMHT[name] = ROOT.gDirectory.Get("h_" + name)
                 if not (h_dataHTMHT[name]):
