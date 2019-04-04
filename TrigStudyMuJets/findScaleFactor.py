@@ -203,7 +203,7 @@ def getFileContents(fileName, elmList):
         fileContents (dictionary): file contents given as a dictionary
 
     """
-    fileContents = {}
+    fileContents = [] #{}
     try:
         with open(fileName) as f:
             for line in f:
@@ -212,9 +212,9 @@ def getFileContents(fileName, elmList):
                 c = len(val) - 1
                 val = val[0:c]
                 if elmList is False:
-                    fileContents[key1] = val
-                else:
-                    fileContents[key1] = val.split(", ")
+                    fileContents.append(val)
+                #else:
+                    #fileContents[key1] = val.split(", ")
     except OSError as fnf_error:
         print(fnf_error)
 
@@ -255,9 +255,9 @@ def findTrigList(file):
     Returns: Trigger List
 
     """
-    if "17B" in file: trigList = getFileContents("../myInFiles/2017ABtrigList.txt", True)
-    elif "17C" in file: trigList = getFileContents("../myInFiles/2017CtrigList.txt", True)
-    else: trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", True)
+    if "17B" in file: trigList = getFileContents("../myInFiles/2017ABtrigList.txt", False)
+    elif "17C" in file: trigList = getFileContents("../myInFiles/2017CtrigList.txt", False)
+    else: trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", False)
 
     return trigList
 
@@ -325,8 +325,8 @@ def getHistograms(files, era):
                     print('[ERROR]: No histogram "' + name + '" found in' + file)
             elif "dataSEl" in file:
                 h_dataSEl[name] = ROOT.gDirectory.Get("h_" + name)
-            if not (h_dataSEl[name]):
-                print('[ERROR]: No histogram "' + name + '" found in' + file)
+                if not (h_dataSEl[name]):
+                    print('[ERROR]: No histogram "' + name + '" found in' + file)
 
     return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl
 
