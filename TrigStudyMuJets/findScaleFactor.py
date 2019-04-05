@@ -475,7 +475,8 @@ def main():
         cv[hn] = triggerCanvas.cd(1)
         # hName = "h_jetHt_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
         trg = whatTrig(hName)
-        ROOT.TPaveText(0.0, 0.9, 0.3, 1.0, trg, "nbNDC")
+        t = ROOT.TPaveText(0.0, 0.9, 0.3, 1.0, "nbNDC")
+        t.AddText(trg)
         s_HTMHT[hName].Draw('E1')
         s_HTMHT[hName].SetName("HTMHT Data")
         s_HTMHT[hName].SetLineColor(1)
