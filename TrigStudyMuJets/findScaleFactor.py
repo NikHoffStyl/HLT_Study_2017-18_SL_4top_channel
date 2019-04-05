@@ -449,6 +449,7 @@ def main():
     s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTTT)
     s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTTT)
 
+    ROOT.gStyle.SetOptTitle(0)
     #  - Draw scale factor hists
     cv1 = triggerCanvas.cd(1)
     count = 0
@@ -474,7 +475,7 @@ def main():
         cv[hn] = triggerCanvas.cd(1)
         # hName = "h_jetHt_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
         trg = whatTrig(hName)
-        s_HTMHT[hName].SetTitle(trg)
+        ROOT.TPaveText(0.0, 0.9, 0.3, 1.0, trg, "nbNDC")
         s_HTMHT[hName].Draw('E1')
         s_HTMHT[hName].SetName("HTMHT Data")
         s_HTMHT[hName].SetLineColor(1)
