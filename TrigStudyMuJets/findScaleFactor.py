@@ -9,6 +9,7 @@ import os
 import errno
 import ROOT
 from ROOT import TLatex
+import numpy
 import math
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime
@@ -341,18 +342,23 @@ def findTrigRatio(h1):
     h_Out = {}
     h2 = {}
     propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
+    muonpT_rebin = numpy.array((0.,10.,20.,22.,24.,26.,28.,30.,35.,40.,50.,75.,100.,125.,150.,200.,300.))
+    ht_rebin = numpy.array((0.,100.,200.,220.,240.,260.,280.,300.,350.,400.,500.,750.,1000.,1250.,1500.,2000.,3000.))
     for prop in propList:
         for hName in h1:
             if prop not in hName: continue
             numBins = h1[hName].GetNbinsX()
-            if numBins > 100: h1[hName].RebinX(numBins / 30, "")
+            if prop == "jetHt_": h1[hName] = h1[hName].Rebin(16, hName, ht_rebin)
+            if prop == "muonPt_": h1[hName]= h1[hName].Rebin(16, hName, muonpT_rebin)
+            # else: if numBins > 100: h1[hName].RebinX(numBins / 30, "")
+            
             if "_notrigger" in hName: h2[prop] = h1[hName]
 
     for prop in propList:
         for hName in h1:
             if prop not in hName: continue
-            numBins = h1[hName].GetNbinsX()
-            if numBins > 100: h1[hName].RebinX(numBins / 30, "")
+            #numBins = h1[hName].GetNbinsX()
+            #if numBins > 100: h1[hName].RebinX(numBins / 30, "")
             if "_notrigger" not in hName:
                 if h2 is None: continue
                 hh, tg = hName.split(prop)
@@ -475,7 +481,7 @@ def main():
         cv[hn] = triggerCanvas.cd(1)
         # hName = "h_jetHt_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
         trg = whatTrig(hName)
-        t = ROOT.TPaveText(0.0, 0.9, 0.3, 1.0, "nbNDC")
+        t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
         s_HTMHT[hName].Draw('E1')
         s_HTMHT[hName].SetName("HTMHT Data")
@@ -487,7 +493,8 @@ def main():
         s_dataSMu[hName].SetLineColor(2)
         s_dataSEl[hName].Draw('E1 same')
         s_dataSEl[hName].SetName("Single Electron Data")
-        s_dataSEl[hName].SetLineColor(3)
+        s_dataSEl[hName].SetLineColor(4)
+        t.Draw("same")
         cv[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
         ROOT.gStyle.SetLegendTextSize(0.02)
         ltx = TLatex()
