@@ -395,6 +395,23 @@ def scaleFactor(h1, h2):
     return h_scale, hNameList
 
 
+def whatTrig(h_name):
+    """
+
+    Args:
+        h_name:
+
+    Returns:
+
+    """
+    propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
+    trig = ""
+    for prop in propList:
+        if prop in h_name:
+            hh, trig = h_name.split(prop)
+    return trig
+
+
 def main():
     """
     Draw scale factors across HT and lep Pt and jet mult
@@ -456,8 +473,10 @@ def main():
     for hn, hName in enumerate(hNames):
         cv[hn] = triggerCanvas.cd(1)
         # hName = "h_jetHt_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
+        trg = whatTrig(hName)
         s_HTMHT[hName].Draw('E1')
         s_HTMHT[hName].SetName("HTMHT Data")
+        s_HTMHT[hName].SetTitle(trg)
         s_HTMHT[hName].SetLineColor(1)
         tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
         tY1 = 1.2
