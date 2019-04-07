@@ -21,7 +21,7 @@ def process_arguments():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN", choices=["B", "C", "D", "E", "F", "DEF", "CDEF", "all"],
                         default="tttt102", help="Set era in 2017 to be checked")
-    parser.add_argument("-o", "--outputName", default="NoPreTrig", help="Set name of output file")
+    parser.add_argument("-o", "--outputName", default="Scales", help="Set name of output file")
     args = parser.parse_args()
 
     return args
@@ -201,7 +201,7 @@ def getFileContents(fileName, elmList):
         elmList (bool): if true then dictionary elements are lists else strings
 
     Returns:
-        fileContents (dictionary): file contents given as a dictionary
+        fileContents: file contents given as a dictionary or list
 
     """
     fileContents = []  # {}
@@ -214,8 +214,8 @@ def getFileContents(fileName, elmList):
                 val = val[0:c]
                 if elmList is False:
                     fileContents.append(val)
-                # else:
-                    # fileContents[key1] = val.split(", ")
+                else:
+                    fileContents[key1] = val
     except OSError as fnf_error:
         print(fnf_error)
 
@@ -308,28 +308,39 @@ def getHistograms(fileList, era):
         f.append(ROOT.TFile.Open(fName))
         f[counter].cd("plots")
         for name in names:
+            # keyWords = name.split("_")
+            # for nk, keyWord in enumerate(keyWords):
+            #     if nk > 2: keyWord[2] += "_" + keyWord[nk]
             if "dataSEl17D" in fName:
                 h_dataSEl[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+                hName = name.replace("h_", "h_dataSEl_")
+                h_dataSEl[name].SetName(hName)
                 h_dataSEl[name].SetDirectory(0)  # = h_dataSEl[name].Clone("El" + name)
             if "dataSMu" in fName:
                 h_dataSMu[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSMu[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+                hName = name.replace("h_", "h_dataSMu_")
+                h_dataSMu[name].SetName(hName)
                 h_dataSMu[name].SetDirectory(0)  # = h_dataSMu[name].Clone("Mu" + name)
             if "dataHTMHT" in fName:
                 h_dataHTMHT[name] = ROOT.gDirectory.Get(name)
                 if not h_dataHTMHT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+                hName = name.replace("h_", "h_dataHTMHT_")
+                h_dataHTMHT[name].SetName(hName)
                 h_dataHTMHT[name].SetDirectory(0)  # = h_dataHTMHT[name].Clone("Ht" + name)
             if "TTTT" in fName:
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
                 if not h_mcTTTT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+                hName = name.replace("h_", "h_mcTTTT_")
+                h_mcTTTT[name].SetName(hName)
                 h_mcTTTT[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
         f[counter].Close()
         counter += 1
     return h_mcTTTT, h_dataHTMHT, h_dataSMu, h_dataSEl
 
 
-def findTrigRatio(h1):
+def findTrigRatio(h1, title):
     """
 
     Args:
@@ -341,15 +352,16 @@ def findTrigRatio(h1):
     """
     h_Out = {}
     h2 = {}
+
     propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
-    muonpT_rebin = numpy.array((0.,10.,20.,22.,24.,26.,28.,30.,35.,40.,50.,75.,100.,125.,150.,200.,300.))
-    ht_rebin = numpy.array((0.,100.,200.,220.,240.,260.,280.,300.,350.,400.,500.,750.,1000.,1250.,1500.,2000.,3000.))
+    muonpT_rebin = numpy.array((0., 10., 20., 22., 24., 26., 28., 30., 35., 40., 50., 75., 100., 125., 150., 200., 300.))
+    ht_rebin = numpy.array((0., 100., 200., 220., 240., 260., 280., 300., 350., 400., 500., 750., 1000., 1250., 1500., 2000., 3000.))
     for prop in propList:
         for hName in h1:
             if prop not in hName: continue
             numBins = h1[hName].GetNbinsX()
             if prop == "jetHt_": h1[hName] = h1[hName].Rebin(16, hName, ht_rebin)
-            if prop == "muonPt_": h1[hName]= h1[hName].Rebin(16, hName, muonpT_rebin)
+            if prop == "muonPt_": h1[hName] = h1[hName].Rebin(16, hName, muonpT_rebin)
             # else: if numBins > 100: h1[hName].RebinX(numBins / 30, "")
             
             if "_notrigger" in hName: h2[prop] = h1[hName]
@@ -357,24 +369,23 @@ def findTrigRatio(h1):
     for prop in propList:
         for hName in h1:
             if prop not in hName: continue
-            #numBins = h1[hName].GetNbinsX()
-            #if numBins > 100: h1[hName].RebinX(numBins / 30, "")
             if "_notrigger" not in hName:
                 if h2 is None: continue
-                hh, tg = hName.split(prop)
-                h_Out[hName] = h1[hName].Clone("h_jetHtRatio" + tg)
+                effName = hName.replace("h_", "h_eff")
+                # hh, tg = hName.split(prop)
+                h_Out[hName] = h1[hName].Clone(effName)
                 h_Out[hName].Sumw2()
                 h_Out[hName].SetStats(0)
                 h_Out[hName].Divide(h2[prop])
                 xTitle = h2[prop].GetXaxis().GetTitle()
                 xBinWidth = h2[prop].GetXaxis().GetBinWidth(1)
-                h_Out[hName].SetTitle(";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                h_Out[hName].SetName(hName)
+                h_Out[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                # h_Out[hName].SetName(hName)
 
     return h_Out
 
 
-def scaleFactor(h1, h2):
+def scaleFactor(h1, h2, title):
     """
 
     Args:
@@ -389,14 +400,15 @@ def scaleFactor(h1, h2):
     for hName in h1:
         for hName2 in h2:
             if not hName == hName2: continue
+            sfName = hName.replace("h_eff", "h_sf")
             hNameList.append(hName)
-            h_scale[hName] = h1[hName].Clone("h_scale" + hName)
+            h_scale[hName] = h1[hName].Clone(sfName)
             # h_scale[hName].Sumw2()
             h_scale[hName].SetStats(0)
             h_scale[hName].Divide(h2[hName])
             xTitle = h2[hName].GetXaxis().GetTitle()
             xBinWidth = h2[hName].GetXaxis().GetBinWidth(1)
-            h_scale[hName].SetTitle(";{0};Scale Factors per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_scale[hName].SetTitle(title + ";{0};Scale Factors per {1} GeV/c".format(xTitle, round(xBinWidth)))
 
     return h_scale, hNameList
 
@@ -410,12 +422,15 @@ def whatTrig(h_name):
     Returns:
 
     """
-    propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
-    trig = ""
-    for prop in propList:
-        if prop in h_name:
-            hh, trig = h_name.split(prop)
-    return trig
+    # propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
+    # trig = ""
+    # for prop in propList:
+    #     if prop in h_name:
+    #         hh, trig = h_name.split(prop)
+    keyWords = h_name.split("_")
+    for nk, keyWord in enumerate(keyWords):
+        if nk > 3: keyWord[3] += "_" + keyWord[nk]
+    return keyWords[3]
 
 
 def main():
@@ -429,6 +444,9 @@ def main():
                         default="D", help="Set era in 2017 to be checked")
     parser.add_argument("-o", "--outputName", default="NoPreTrig", help="Set name of output file")
     args = parser.parse_args()
+
+    preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", True)
+    selCriteria = getFileContents("selectionCriteria.txt", True)
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)
@@ -445,90 +463,124 @@ def main():
     # h_mcTTTTs["h_jetHt_notrigger"].Draw()
 
     #  - Find efficiency ratio histogram dictionaries
-    tr_mcTTTT = findTrigRatio(h_mcTTTTs)
-    tr_dataHTMHT = findTrigRatio(h_dataHTMHTs)
-    tr_dataSMu = findTrigRatio(h_dataSMus)
-    tr_dataSEl = findTrigRatio(h_dataSEls)
+    tr_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
+    tr_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
+    tr_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
+    tr_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
 
     # - Find scale factor histogram dictionaries
-    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTTT)
-    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTTT)
-    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTTT)
+    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTTT, "HTMHT Data")
+    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTTT, "Single Electron Data")
+    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTTT, "Single Muon Data")
 
     ROOT.gStyle.SetOptTitle(0)
-    #  - Draw scale factor hists
-    cv1 = triggerCanvas.cd(1)
-    count = 0
-    for hn, hName in enumerate(hNames):
-        if "jetHt" not in hName: continue
-        print(hName)
-        count += 1
-        s_HTMHT[hName].SetLineColor(count)
-        if count == 1:
-            s_HTMHT[hName].Draw('E1')
-        tX1 = 0.1 * (s_HTMHT[hName].GetXaxis().GetXmax())
-        tY1 = 1.2 * (s_HTMHT[hName].GetMaximum())
-        s_HTMHT[hName].Draw('E1 same')
-    cv1.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
+
+    triggerCanvas.cd(1)
     ltx = TLatex()
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
+    cutInfoPage(ltx, selCriteria, preSelCuts)
     pdfCreator(args, 0, triggerCanvas)
 
-    cv = [None]*20
+    # - Draw trigger efficiency hists
+    cv1 = [None] * 20
     for hn, hName in enumerate(hNames):
-        cv[hn] = triggerCanvas.cd(1)
-        # hName = "h_jetHt_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2"
+        cv1[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
-        s_HTMHT[hName].Draw('E1')
-        s_HTMHT[hName].SetName("HTMHT Data")
-        s_HTMHT[hName].SetLineColor(1)
-        tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
+        tr_dataHTMHT[hName].Draw('E1')
+        # tr_dataHTMHT[hName].SetName("HTMHT Data")
+        tr_dataHTMHT[hName].SetLineColor(1)
+        tX1 = 0.6 * (tr_dataHTMHT[hName].GetXaxis().GetXmax())
         tY1 = 1.2
-        s_dataSMu[hName].Draw('E1 same')
-        s_dataSMu[hName].SetName("Single Muon Data")
-        s_dataSMu[hName].SetLineColor(2)
-        s_dataSEl[hName].Draw('E1 same')
-        s_dataSEl[hName].SetName("Single Electron Data")
-        s_dataSEl[hName].SetLineColor(4)
+        tr_dataSMu[hName].Draw('E1 same')
+        # tr_dataSMu[hName].SetName("Single Muon Data")
+        tr_dataSMu[hName].SetLineColor(2)
+        tr_dataSEl[hName].Draw('E1 same')
+        # tr_dataSEl[hName].SetName("Single Electron Data")
+        tr_dataSEl[hName].SetLineColor(4)
+        tr_mcTTTT[hName].Draw('E1 same')
+        # tr_mcTTTT[hName].SetName("Four Top MC")
+        tr_mcTTTT[hName].SetLineColor(6)
         t.Draw("same")
-        cv[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
+        cv1[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
         ROOT.gStyle.SetLegendTextSize(0.02)
         ltx = TLatex()
         ltx.SetTextSize(0.03)
         ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
-    
-    cv2 = triggerCanvas.cd(1)
-    for hn, hName in enumerate(hNamesMu):
-        if hn == 0:
-            s_dataSMu[hName].Draw('E1')
-        tX1 = 0.1 * (s_dataSMu[hName].GetXaxis().GetXmax())
-        tY1 = 1.2 * (s_dataSMu[hName].GetMaximum())
+
+    # - Draw scale factor hists
+    cv2 = [None]*20
+    for hn, hName in enumerate(hNames):
+        cv2[hn] = triggerCanvas.cd(1)
+        trg = whatTrig(hName)
+        t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
+        t.AddText(trg)
+        s_HTMHT[hName].Draw('E1')
+        # s_HTMHT[hName].SetName("HTMHT Data")
+        s_HTMHT[hName].SetLineColor(1)
+        tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
+        tY1 = 1.2
         s_dataSMu[hName].Draw('E1 same')
-    cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx = TLatex()
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(args, 1, triggerCanvas)
-    
-    cv3 = triggerCanvas.cd(1)
-    for hn, hName in enumerate(hNamesEl):
-        if hn == 0:
-            s_dataSEl[hName].Draw('E1')
-        tX1 = 0.1 * (s_dataSEl[hName].GetXaxis().GetXmax())
-        tY1 = 1.2 * (s_dataSEl[hName].GetMaximum())
+        # s_dataSMu[hName].SetName("Single Muon Data")
+        s_dataSMu[hName].SetLineColor(2)
         s_dataSEl[hName].Draw('E1 same')
-    cv3.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
-    ltx = TLatex()
-    ltx.SetTextSize(0.03)
-    ltx.DrawLatex(tX1, tY1, legString)
-    pdfCreator(args, 2, triggerCanvas)
+        # s_dataSEl[hName].SetName("Single Electron Data")
+        s_dataSEl[hName].SetLineColor(4)
+        t.Draw("same")
+        cv2[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
+        ROOT.gStyle.SetLegendTextSize(0.02)
+        ltx = TLatex()
+        ltx.SetTextSize(0.03)
+        ltx.DrawLatex(tX1, tY1, legString)
+        pdfCreator(args, 1, triggerCanvas)
+
+    # cv1 = triggerCanvas.cd(1)
+    # count = 0
+    # for hn, hName in enumerate(hNames):
+    #     if "jetHt" not in hName: continue
+    #     print(hName)
+    #     count += 1
+    #     s_HTMHT[hName].SetLineColor(count)
+    #     if count == 1:
+    #         s_HTMHT[hName].Draw('E1')
+    #     tX1 = 0.1 * (s_HTMHT[hName].GetXaxis().GetXmax())
+    #     tY1 = 1.2 * (s_HTMHT[hName].GetMaximum())
+    #     s_HTMHT[hName].Draw('E1 same')
+    # cv1.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # ltx = TLatex()
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # pdfCreator(args, 1, triggerCanvas)
+    
+    # cv2 = triggerCanvas.cd(1)
+    # for hn, hName in enumerate(hNamesMu):
+    #     if hn == 0:
+    #         s_dataSMu[hName].Draw('E1')
+    #     tX1 = 0.1 * (s_dataSMu[hName].GetXaxis().GetXmax())
+    #     tY1 = 1.2 * (s_dataSMu[hName].GetMaximum())
+    #     s_dataSMu[hName].Draw('E1 same')
+    # cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # ltx = TLatex()
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # pdfCreator(args, 1, triggerCanvas)
+    #
+    # cv3 = triggerCanvas.cd(1)
+    # for hn, hName in enumerate(hNamesEl):
+    #     if hn == 0:
+    #         s_dataSEl[hName].Draw('E1')
+    #     tX1 = 0.1 * (s_dataSEl[hName].GetXaxis().GetXmax())
+    #     tY1 = 1.2 * (s_dataSEl[hName].GetMaximum())
+    #     s_dataSEl[hName].Draw('E1 same')
+    # cv3.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    # ROOT.gStyle.SetLegendTextSize(0.02)
+    # ltx = TLatex()
+    # ltx.SetTextSize(0.03)
+    # ltx.DrawLatex(tX1, tY1, legString)
+    # pdfCreator(args, 2, triggerCanvas)
 
 
 if __name__ == '__main__':
