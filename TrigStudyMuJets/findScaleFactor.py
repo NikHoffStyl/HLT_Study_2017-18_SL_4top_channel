@@ -204,7 +204,8 @@ def getFileContents(fileName, elmList):
         fileContents: file contents given as a dictionary or list
 
     """
-    fileContents = []  # {}
+    if elmList is False: fileContents = []  # {}
+    else: fileContents = {}
     try:
         with open(fileName) as f:
             for line in f:
@@ -422,15 +423,15 @@ def whatTrig(h_name):
     Returns:
 
     """
-    # propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
-    # trig = ""
-    # for prop in propList:
-    #     if prop in h_name:
-    #         hh, trig = h_name.split(prop)
-    keyWords = h_name.split("_")
-    for nk, keyWord in enumerate(keyWords):
-        if nk > 3: keyWord[3] += "_" + keyWord[nk]
-    return keyWords[3]
+    propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
+    trig = ""
+    for prop in propList:
+        if prop in h_name:
+            hh, trig = h_name.split(prop)
+    #keyWords = h_name.split("_")
+    #for nk, keyWord in enumerate(keyWords):
+     #   if nk > 3: keyWord[3] += "_" + keyWord[nk]
+    return trig
 
 
 def main():
@@ -568,7 +569,7 @@ def main():
     # ltx.DrawLatex(tX1, tY1, legString)
     # pdfCreator(args, 1, triggerCanvas)
     #
-    # cv3 = triggerCanvas.cd(1)
+    cv3 = triggerCanvas.cd(1)
     # for hn, hName in enumerate(hNamesEl):
     #     if hn == 0:
     #         s_dataSEl[hName].Draw('E1')
@@ -580,7 +581,7 @@ def main():
     # ltx = TLatex()
     # ltx.SetTextSize(0.03)
     # ltx.DrawLatex(tX1, tY1, legString)
-    # pdfCreator(args, 2, triggerCanvas)
+    pdfCreator(args, 2, triggerCanvas)
 
 
 if __name__ == '__main__':
