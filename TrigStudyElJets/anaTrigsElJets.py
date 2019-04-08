@@ -22,7 +22,8 @@ class TriggerStudy(Module):
     for different combinations of trigger paths."""
 
     def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None, era=None):
-        """ Initialise global variables
+        """
+        Initialise global variables
 
         Args:
             writeHistFile (bool): True to write file, False otherwise
@@ -583,9 +584,9 @@ def ioFiles(arg, selCrit):
         postFix = "TTToSemiLep102X"
         if arg.inputLFN == "tt_semilep102_17B":
             outFile = "OutFiles/Histograms/TTToSemiLep102X_17B_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tt_semilep102_17C":
+        elif arg.inputLFN == "tt_semilep102_17C":
             outFile = "OutFiles/Histograms/TTToSemiLep102X_17C_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tt_semilep102_17DEF":
+        elif arg.inputLFN == "tt_semilep102_17DEF":
             outFile = "OutFiles/Histograms/TTToSemiLep102X_17DEF_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
 
     elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
@@ -630,11 +631,11 @@ def ioFiles(arg, selCrit):
             inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
         postFix = "TTTT102"
         if arg.inputLFN == "tttt102_17B":
-            outFile = "OutFiles/Histograms/TTTT102X_17B_6Jets1El{0}jPt_test.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tttt102_17C":
-            outFile = "OutFiles/Histograms/TTTT102X_17C_6Jets1El{0}jPt_test.root".format(selCrit["minJetPt"])
-        if arg.inputLFN == "tttt102_17DEF":
-            outFile = "OutFiles/Histograms/TTTT102X_17DEF_6Jets1El{0}jPt_test.root".format(selCrit["minJetPt"])
+            outFile = "OutFiles/Histograms/TTTT102X_17B_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+        elif arg.inputLFN == "tttt102_17C":
+            outFile = "OutFiles/Histograms/TTTT102X_17C_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
+        elif arg.inputLFN == "tttt102_17DEF":
+            outFile = "OutFiles/Histograms/TTTT102X_17DEF_6Jets1El{0}jPt.root".format(selCrit["minJetPt"])
 
     else:
         inLFNList = None

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Jan 2019
@@ -56,10 +57,10 @@ class TriggerStudy(Module):
 
         self.nJet = None
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';Cuts and Triggers;Total Number of Accepted Events', 16, 0, 16)
-        self.h_muonGenPartFlav = ROOT.TH1D('h_muonGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; '
-                                                                'Number of events', 16, 0, 16)
-        self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
-                                                              'Number of events', 182, -2, 180)
+        # self.h_muonGenPartFlav = ROOT.TH1D('h_muonGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; '
+        #                                                         'Number of events', 16, 0, 16)
+        # self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
+        #                                                       'Number of events', 182, -2, 180)
         self.h_muonRelIso04_all = ROOT.TH1D('h_muonRelIso04_all', 'muonRelIso04_all;muonRelIso04_all;Number of Events',
                                             100, -1, 2)
 
@@ -141,8 +142,8 @@ class TriggerStudy(Module):
         self.addObject(self.h_muonPt['no_trigger'])
         self.addObject(self.h_muonPt['prompt'])
         self.addObject(self.h_muonPt['non-prompt'])
-        self.addObject(self.h_muonGenPartFlav)
-        self.addObject(self.h_muonGenPartIdx)
+        # self.addObject(self.h_muonGenPartFlav)
+        # self.addObject(self.h_muonGenPartIdx)
         self.addObject(self.h_muonRelIso04_all)
         self.addObject(self.h_muonEta['no_trigger'])
         self.addObject(self.h_muonPhi['no_trigger'])

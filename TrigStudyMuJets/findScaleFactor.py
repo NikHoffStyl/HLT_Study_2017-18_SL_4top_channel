@@ -451,8 +451,8 @@ def main():
 
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)
-    triggerCanvas.SetFillColor(17)
-    triggerCanvas.SetFrameFillColor(18)
+    # triggerCanvas.SetFillColor(17)
+    # triggerCanvas.SetFrameFillColor(18)
     triggerCanvas.SetGrid()
 
     # - Create text for legend
@@ -481,26 +481,24 @@ def main():
     cutInfoPage(ltx, selCriteria, preSelCuts)
     pdfCreator(args, 0, triggerCanvas)
 
-    # - Draw trigger efficiency hists
     cv1 = [None] * 20
+    cv2 = [None] * 20
     for hn, hName in enumerate(hNames):
+
+        # - Draw trigger efficiency hists
         cv1[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
         tr_dataHTMHT[hName].Draw('E1')
-        # tr_dataHTMHT[hName].SetName("HTMHT Data")
         tr_dataHTMHT[hName].SetLineColor(1)
         tX1 = 0.6 * (tr_dataHTMHT[hName].GetXaxis().GetXmax())
         tY1 = 1.2
         tr_dataSMu[hName].Draw('E1 same')
-        # tr_dataSMu[hName].SetName("Single Muon Data")
         tr_dataSMu[hName].SetLineColor(2)
         tr_dataSEl[hName].Draw('E1 same')
-        # tr_dataSEl[hName].SetName("Single Electron Data")
         tr_dataSEl[hName].SetLineColor(4)
         tr_mcTTTT[hName].Draw('E1 same')
-        # tr_mcTTTT[hName].SetName("Four Top MC")
         tr_mcTTTT[hName].SetLineColor(6)
         t.Draw("same")
         cv1[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
@@ -510,23 +508,18 @@ def main():
         ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
 
-    # - Draw scale factor hists
-    cv2 = [None]*20
-    for hn, hName in enumerate(hNames):
+        # - Draw scale factor hists
         cv2[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
         s_HTMHT[hName].Draw('E1')
-        # s_HTMHT[hName].SetName("HTMHT Data")
         s_HTMHT[hName].SetLineColor(1)
         tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
         tY1 = 1.2
         s_dataSMu[hName].Draw('E1 same')
-        # s_dataSMu[hName].SetName("Single Muon Data")
         s_dataSMu[hName].SetLineColor(2)
         s_dataSEl[hName].Draw('E1 same')
-        # s_dataSEl[hName].SetName("Single Electron Data")
         s_dataSEl[hName].SetLineColor(4)
         t.Draw("same")
         cv2[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
