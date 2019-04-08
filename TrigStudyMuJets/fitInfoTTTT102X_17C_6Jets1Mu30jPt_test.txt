@@ -1,0 +1,36 @@
+
+ Equation given by: 
+ 	 subFunc = (x[0] - par[1]) / (par[2] * math.sqrt(x[0])) 
+ 	y = (0.5 * par[0] * (1 + ROOT.TMath.Erf(subFunc))) + par[3] 
+
+Channel, Trigger, Plateau, Plateau Error, Turning Point, Turning Point Error, Chi2, NDF,prob, Slope, Slope Error, Initial Plateau, Initial Plateau Error 
+ TTTT102X_17C_6Jets1Mu30jPt_test, jetHtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.867, +/-, 0.013, 423.251, +/-, 2.313, 814.171, 223.000, 3.084950271e-68, 9.809, +/- ,0.127, -0.076, +/-, 0.006
+ TTTT102X_17C_6Jets1Mu30jPt_test, jetHtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.968, +/-, 0.033, 286.482, +/-, 3.023, 377.919, 223.000, 4.22671244541e-10, 11.168, +/- ,0.152, -0.032, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.895, +/-, 0.007, 496.004, +/-, 0.664, 480.604, 223.000, 5.66857824373e-21, 3.283, +/- ,0.049, 0.047, +/-, 0.004
+  Jet HT Eff = 0.716 +/- 0.002 , IsoMu27 
+ Jet HT Eff = 0.809 +/- 0.002 , PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff = 0.944 +/- 0.002 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff = 0.846 +/- 0.002 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+TTTT102X_17C_6Jets1Mu30jPt_test, muonPtIsoMu27, 0.906, +/-, 0.001, 27.143, +/-, 0.010, 2184.786, 244.000, 2.32464838713e-308, 0.123, +/- ,0.003, 0.033, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, muonPtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.817, +/-, 0.002, 40.000, +/-, 12.665, 430.525, 244.000, 1.76492546677e-12, 100.000, +/- ,7.896, 0.800, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, muonPtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.983, +/-, 0.003, 27.194, +/-, 0.042, 624.838, 244.000, 3.05130690977e-35, 0.205, +/- ,0.020, 0.805, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.911, +/-, 0.004, 15.093, +/-, 0.017, 3818.187, 244.000, 0.0, 0.133, +/- ,0.005, 0.182, +/-, 0.002
+ Muon Pt Eff = 0.839 +/- 0.005 , IsoMu27 
+Muon Pt Eff = 0.808 +/- 0.004 , PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = 0.962 +/- 0.005 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = 0.901 +/- 0.005 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+TTTT102X_17C_6Jets1Mu30jPt_test, jetHtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.867, +/-, 0.013, 423.251, +/-, 2.313, 814.171, 223.000, 3.084950271e-68, 9.809, +/- ,0.127, -0.076, +/-, 0.006
+ TTTT102X_17C_6Jets1Mu30jPt_test, jetHtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.968, +/-, 0.033, 286.482, +/-, 3.023, 377.919, 223.000, 4.22671244541e-10, 11.168, +/- ,0.152, -0.032, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.895, +/-, 0.007, 496.004, +/-, 0.664, 480.604, 223.000, 5.66857824373e-21, 3.283, +/- ,0.049, 0.047, +/-, 0.004
+  Jet HT Eff = 0.716 +/- 0.002 , IsoMu27 
+ Jet HT Eff = 0.809 +/- 0.002 , PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff = 0.944 +/- 0.002 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff = 0.846 +/- 0.002 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+TTTT102X_17C_6Jets1Mu30jPt_test, muonPtIsoMu27, 0.906, +/-, 0.001, 27.143, +/-, 0.010, 2184.786, 244.000, 2.32464838713e-308, 0.123, +/- ,0.003, 0.033, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, muonPtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.817, +/-, 0.002, 40.000, +/-, 12.665, 430.525, 244.000, 1.76492546677e-12, 100.000, +/- ,7.896, 0.800, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, muonPtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.983, +/-, 0.003, 27.194, +/-, 0.042, 624.838, 244.000, 3.05130690977e-35, 0.205, +/- ,0.020, 0.805, +/-, 0.001
+ TTTT102X_17C_6Jets1Mu30jPt_test, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.911, +/-, 0.004, 15.093, +/-, 0.017, 3818.187, 244.000, 0.0, 0.133, +/- ,0.005, 0.182, +/-, 0.002
+ Muon Pt Eff = 0.839 +/- 0.005 , IsoMu27 
+Muon Pt Eff = 0.808 +/- 0.004 , PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = 0.962 +/- 0.005 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = 0.901 +/- 0.005 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 

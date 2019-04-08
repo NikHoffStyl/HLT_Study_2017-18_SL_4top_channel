@@ -1,0 +1,15 @@
+dataSEl17C_6Jets1Mu30jPt, jetHtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.309, +/-, 0.167, 428.782, +/-, 19.009, 170.460, 155.000, 0.187258149073, 12.984, +/- ,1.731, -0.100, +/-, 0.145
+ dataSEl17C_6Jets1Mu30jPt, jetHtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.748, +/-, 0.254, 150.525, +/-, 50.994, 144.039, 155.000, 0.725663410098, 20.168, +/- ,4.758, -0.100, +/-, 0.191
+ dataSEl17C_6Jets1Mu30jPt, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.682, +/-, 0.019, 487.333, +/-, 4.331, 169.068, 155.000, 0.207920541083, 3.415, +/- ,0.377, 0.004, +/-, 0.006
+  Jet HT Eff = 0.572 +/- 0.017 , IsoMu27 
+ Jet HT Eff = 0.211 +/- 0.009 , PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff = 0.663 +/- 0.019 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff = 0.539 +/- 0.016 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataSEl17C_6Jets1Mu30jPt, muonPtIsoMu27, 0.857, +/-, 0.009, 27.227, +/-, 0.190, 257.200, 212.000, 0.0184053969342, 0.226, +/- ,0.082, 0.010, +/-, 0.001
+ dataSEl17C_6Jets1Mu30jPt, muonPtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.800, +/-, 0.014, 39.973, +/-, 19.721, 5227.149, 212.000, 0.0, 1117.207, +/- ,1285.969, 0.800, +/-, 0.000
+ dataSEl17C_6Jets1Mu30jPt, muonPtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.826, +/-, 0.009, 27.497, +/-, 0.107, 484.752, 212.000, 2.08473665097e-23, 0.049, +/- ,7.927, 0.426, +/-, 0.008
+ dataSEl17C_6Jets1Mu30jPt, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.755, +/-, 0.029, 19.498, +/-, 0.970, 309.404, 212.000, 1.4245573619e-05, 3.616, +/- ,0.575, 0.016, +/-, 0.007
+ Muon Pt Eff = 0.619 +/- 0.038 , IsoMu27 
+Muon Pt Eff = 0.167 +/- 0.016 , PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = 0.651 +/- 0.038 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = 0.557 +/- 0.035 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 

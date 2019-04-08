@@ -1,0 +1,11 @@
+dataSMu17B_6Jets1Mu30jPt, jetHtPFHT380_SixJet32_DoubleBTagCSV_p075, 0.193, +/-, 0.003, 500.000, +/-, 0.003, 334.105, 208.000, 6.52234483052e-08, 6.443, +/- ,0.158, -0.000, +/-, 0.000
+ dataSMu17B_6Jets1Mu30jPt, jetHtIsoMu24_PFHT380_SixJet32_DoubleBTagCSV_p075, 0.918, +/-, 0.086, 131.473, +/-, 15.608, 250.693, 208.000, 0.0229035094711, 8.461, +/- ,0.854, -0.082, +/-, 0.002
+  Jet HT Eff =,0.895,+/- ,0.005, IsoMu24 
+ Jet HT Eff =,0.086,+/- ,0.001, PFHT380_SixJet32_DoubleBTagCSV_p075 
+ Jet HT Eff =,0.905,+/- ,0.005, IsoMu24_PFHT380_SixJet32_DoubleBTagCSV_p075 
+dataSMu17B_6Jets1Mu30jPt, muonPtIsoMu24, 0.930, +/-, 0.011, 23.933, +/-, 0.026, 833.863, 244.000, 1.57355660051e-65, 0.148, +/- ,0.008, 0.071, +/-, 0.005
+ dataSMu17B_6Jets1Mu30jPt, muonPtPFHT380_SixJet32_DoubleBTagCSV_p075, 1.552, +/-, 0.441, 24.000, +/-, 16.054, 642531999999997661882865580643450880.000, 244.000, 0.0, 1000.000, +/- ,841.471, 0.800, +/-, 0.357
+ dataSMu17B_6Jets1Mu30jPt, muonPtIsoMu24_PFHT380_SixJet32_DoubleBTagCSV_p075, 0.815, +/-, 0.000, 10.112, +/-, 20.000, 1992000000000000154451963176550400.000, 244.000, 0.0, 0.263, +/- ,0.000, -0.085, +/-, 0.000
+ Muon Pt Eff = ,0.895,+/-,0.005, IsoMu24 
+Muon Pt Eff = ,0.085,+/-,0.001, PFHT380_SixJet32_DoubleBTagCSV_p075 
+Muon Pt Eff = ,0.905,+/-,0.005, IsoMu24_PFHT380_SixJet32_DoubleBTagCSV_p075 
