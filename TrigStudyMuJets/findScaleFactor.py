@@ -367,7 +367,7 @@ def findTrigRatio(h1, title):
                 xBinWidth = h2[prop].GetXaxis().GetBinWidth(1)
                 h_TH1DOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
                 if not ROOT.TEfficiency.CheckConsistency(h1, h2): continue
-                h_TEffOut[hName] = ROOT.TEfficiency(h1, h2)
+                h_TEffOut[hName] = ROOT.TEfficiency(h1[hName], h2)
                 h_TEffOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
                 h_TEffOut[hName].SetName(effName2)
 
