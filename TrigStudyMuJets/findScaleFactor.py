@@ -300,6 +300,7 @@ def getHistograms(fileList, era):
     """
     if not era == "all": names = getHistNames(fileList[0])
     h_mcTTTT = {}
+    h_mcTTToSemiLep = {}
     h_dataHTMHT = {}
     h_dataSMu = {}
     h_dataSEl = {}
@@ -336,9 +337,15 @@ def getHistograms(fileList, era):
                 hName = name.replace("h_", "h_mcTTTT_")
                 h_mcTTTT[name].SetName(hName)
                 h_mcTTTT[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
+            if "TTToSemiLep" in fName:
+                h_mcTTToSemiLep[name] = ROOT.gDirectory.Get(name)
+                if not h_mcTTToSemiLep[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+                hName = name.replace("h_", "h_mcTTToSemiLep_")
+                h_mcTTToSemiLep[name].SetName(hName)
+                h_mcTTToSemiLep[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
         f[counter].Close()
         counter += 1
-    return h_mcTTTT, h_dataHTMHT, h_dataSMu, h_dataSEl
+    return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl
 
 
 def findTrigRatio(h1, title):
@@ -460,19 +467,20 @@ def main():
 
     # - Get File Names and create histogram dictionaries
     files = findEraRootFiles(path="OutFiles/Histograms", era=args.inputLFN, FullPaths=True)
-    h_mcTTTTs, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
+    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
     # h_mcTTTTs["h_jetHt_notrigger"].Draw()
 
     #  - Find efficiency ratio histogram dictionaries
     tr_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
+    tr_mcTTToSemiLep = findTrigRatio(h_mcTTTTs, "Top-AntiTop MC")
     tr_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
     tr_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
     tr_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
 
     # - Find scale factor histogram dictionaries
-    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTTT, "HTMHT Data")
-    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTTT, "Single Electron Data")
-    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTTT, "Single Muon Data")
+    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data")
+    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data")
+    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data")
 
     ROOT.gStyle.SetOptTitle(0)
 
