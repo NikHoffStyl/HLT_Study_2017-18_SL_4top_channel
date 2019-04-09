@@ -147,46 +147,22 @@ def cmsPlotString(args):
         legStr (string): string containing channel details
 
     """
-    if not args.find("TTToSemiLep") == -1:
-        legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif not args.find("ttjets") == -1:
-        legStr = "#splitline{CMS}{t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args.find("TTTT") != -1 and args.find("TTTT_") == -1:
-        legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif args == "tttt_weights":
-        legStr = "#splitline{CMS}{t#bar{t}t#bar{t} #rightarrow l #nu_{l} #plus jets}"
-    elif not args.find("dataHTMHT17B") == -1:
-        legStr = "#splitline{CMS}{HTMHT Data Run2017B}"
-    elif not args.find("dataHTMHT17C") == -1:
-        legStr = "#splitline{CMS}{HTMHT Data Run2017C}"
-    elif not args.find("dataHTMHT17D") == -1:
-        legStr = "#splitline{CMS}{HTMHT Data Run2017D}"
-    elif not args.find("dataHTMHT17E") == -1:
-        legStr = "#splitline{CMS}{HTMHT Data Run2017E}"
-    elif not args.find("dataHTMHT17F") == -1:
-        legStr = "#splitline{CMS}{HTMHT Data Run2017F}"
-    elif not args.find("dataSMu17B") == -1:
-        legStr = "#splitline{CMS}{Single Muon Data Run2017B}"
-    elif not args.find("dataSMu17C") == -1:
-        legStr = "#splitline{CMS}{Single Muon Data Run2017C}"
-    elif not args.find("dataSMu17D") == -1:
-        legStr = "#splitline{CMS}{Single Muon Data Run2017D}"
-    elif not args.find("dataSMu17E") == -1:
-        legStr = "#splitline{CMS}{Single Muon Data Run2017E}"
-    elif not args.find("dataSMu17F") == -1:
-        legStr = "#splitline{CMS}{Single Muon Data Run2017F}"
-    elif not args.find("dataSEl17B") == -1:
-        legStr = "#splitline{CMS}{Single Electron Data Run2017B}"
-    elif not args.find("dataSEl17C") == -1:
-        legStr = "#splitline{CMS}{Single Electron Data Run2017C}"
-    elif not args.find("dataSEl17D") == -1:
-        legStr = "#splitline{CMS}{Single Electron Data Run2017D}"
-    elif not args.find("dataSEl17E") == -1:
-        legStr = "#splitline{CMS}{Single Electron Data Run2017E}"
-    elif not args.find("dataSEl17F") == -1:
-        legStr = "#splitline{CMS}{Single Electron Data Run2017F}"
-    elif not args.find("Wjets") == -1:
-        legStr = "#splitline{CMS}{W #rightarrow jets}"
+    if args == "B":
+        legStr = "#splitline{CMS}{Run2017B}"
+    elif args == "C":
+        legStr = "#splitline{CMS}{Run2017C}"
+    elif args == "D":
+        legStr = "#splitline{CMS}{Run2017D}"
+    elif args == "E":
+        legStr = "#splitline{CMS}{Run2017E}"
+    elif args == "F":
+        legStr = "#splitline{CMS}{Run2017F}"
+    elif args == "DEF":
+        legStr = "#splitline{CMS}{Run2017D-F}"
+    elif args == "CDEF":
+        legStr = "#splitline{CMS}{Run2017C-F}"
+    elif args == "all":
+        legStr = "#splitline{CMS}{All Run2017}"
     else:
         legStr = "CMS"
 
@@ -358,7 +334,8 @@ def findTrigRatio(h1, title):
         h_Out (dictionary): trigger ratio TH1D histogram
 
     """
-    h_Out = {}
+    h_TH1DOut = {}
+    h_TEffOut = {}
     h2 = {}
 
     propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
@@ -380,17 +357,21 @@ def findTrigRatio(h1, title):
             if "_notrigger" not in hName:
                 if h2 is None: continue
                 effName = hName.replace("h_", "h_eff")
+                effName2 = hName.replace("h_", "h_eff2")
                 # hh, tg = hName.split(prop)
-                h_Out[hName] = h1[hName].Clone(effName)
-                h_Out[hName].Sumw2()
-                h_Out[hName].SetStats(0)
-                h_Out[hName].Divide(h2[prop])
+                h_TH1DOut[hName] = h1[hName].Clone(effName)
+                h_TH1DOut[hName].Sumw2()
+                h_TH1DOut[hName].SetStats(0)
+                h_TH1DOut[hName].Divide(h2[prop])
                 xTitle = h2[prop].GetXaxis().GetTitle()
                 xBinWidth = h2[prop].GetXaxis().GetBinWidth(1)
-                h_Out[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
-                # h_Out[hName].SetName(hName)
+                h_TH1DOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                if not ROOT.TEfficiency.CheckConsistency(h1, h2): continue
+                h_TEffOut[hName] = ROOT.TEfficiency(h1, h2)
+                h_TEffOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                h_TEffOut[hName].SetName(effName2)
 
-    return h_Out
+    return h_TH1DOut, h_TEffOut
 
 
 def scaleFactor(h1, h2, title):
@@ -435,9 +416,9 @@ def whatTrig(h_name):
     for prop in propList:
         if prop in h_name:
             hh, trig = h_name.split(prop)
-    #keyWords = h_name.split("_")
-    #for nk, keyWord in enumerate(keyWords):
-     #   if nk > 3: keyWord[3] += "_" + keyWord[nk]
+    # keyWords = h_name.split("_")
+    # for nk, keyWord in enumerate(keyWords):
+    #    if nk > 3: keyWord[3] += "_" + keyWord[nk]
     return trig
 
 
@@ -471,11 +452,11 @@ def main():
     # h_mcTTTTs["h_jetHt_notrigger"].Draw()
 
     #  - Find efficiency ratio histogram dictionaries
-    tr_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
-    tr_mcTTToSemiLep = findTrigRatio(h_mcTTTTs, "Top-AntiTop MC")
-    tr_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
-    tr_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
-    tr_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
+    # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
+    tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTTTs, "Top-AntiTop MC")
+    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
+    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
+    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
 
     # - Find scale factor histogram dictionaries
     s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data")
@@ -498,16 +479,21 @@ def main():
         trg = whatTrig(hName)
         t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
-        tr_dataHTMHT[hName].Draw('E1')
-        tr_dataHTMHT[hName].SetLineColor(1)
-        tX1 = 0.6 * (tr_dataHTMHT[hName].GetXaxis().GetXmax())
-        tY1 = 1.2
-        tr_dataSMu[hName].Draw('E1 same')
-        tr_dataSMu[hName].SetLineColor(2)
-        tr_dataSEl[hName].Draw('E1 same')
-        tr_dataSEl[hName].SetLineColor(4)
-        tr_mcTTTT[hName].Draw('E1 same')
-        tr_mcTTTT[hName].SetLineColor(6)
+        tr2_mcTTToSemiLep[hName].Draw('E1')
+        tr2_mcTTToSemiLep[hName].SetLineColor(1)
+        cv1[hn].Update()
+        graph1 = tr2_mcTTToSemiLep[hName].GetPaintedGraph()
+        graph1.SetMinimum(0)
+        graph1.SetMaximum(1.2)
+        cv1[hn].Update()
+        tX1 = 0.05 * (tr_dataHTMHT[hName].GetXaxis().GetXmax())
+        tY1 = 1.1
+        tr2_dataSMu[hName].Draw('E1 same')
+        tr2_dataSMu[hName].SetLineColor(2)
+        tr2_dataHTMHT[hName].Draw('E1 same')
+        tr2_dataHTMHT[hName].SetLineColor(4)
+        tr2_dataSEl[hName].Draw('E1 same')
+        tr2_dataSEl[hName].SetLineColor(6)
         t.Draw("same")
         cv1[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
         ROOT.gStyle.SetLegendTextSize(0.02)
