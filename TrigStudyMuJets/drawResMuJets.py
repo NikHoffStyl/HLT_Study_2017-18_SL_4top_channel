@@ -453,7 +453,7 @@ def main(argms):
             h_muonPhi[tg] = ROOT.gDirectory.Get("h_muonPhi_" + tg)
             h_muonMap[tg] = ROOT.gDirectory.Get("h_muonMap_" + tg)
             h_muonIsolation[tg] = ROOT.gDirectory.Get("h_muonIsolation_" + tg)
-            h_muonIsoPt[tg] = ROOT.gDirectory.Get("h_muonIsoPt" + tg)
+            h_muonIsoPt[tg] = ROOT.gDirectory.Get("h_muonIsoPt_" + tg)
 
             h_metPt[tg] = ROOT.gDirectory.Get("h_metPt_" + tg)
             h_metPhi[tg] = ROOT.gDirectory.Get("h_metPhi_" + tg)
@@ -549,7 +549,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
+                    # h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     # f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
                     # h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
                     # fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
