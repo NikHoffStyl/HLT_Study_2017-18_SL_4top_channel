@@ -413,11 +413,10 @@ def main(argms):
     h_muonIsolation["notrigger"].SetLineColor(1)
     if not (h_muonIsolation["notrigger"]):
         print("No trigger muon Pt histogram is empty")
-    h_muonIsoPt["notrigger"] = ROOT.gDirectory.Get("h_muonMap_notrigger")
+    h_muonIsoPt["notrigger"] = ROOT.gDirectory.Get("h_muonIsoPt_notrigger")
     h_muonIsoPt["notrigger"].SetLineColor(1)
     if not (h_muonIsoPt["notrigger"]):
         print("No trigger muon map histogram is empty")
-
 
     h_metPt["notrigger"] = ROOT.gDirectory.Get("h_metPt_notrigger")
     h_metPt["notrigger"].SetLineColor(1)
@@ -454,7 +453,7 @@ def main(argms):
             h_muonPhi[tg] = ROOT.gDirectory.Get("h_muonPhi_" + tg)
             h_muonMap[tg] = ROOT.gDirectory.Get("h_muonMap_" + tg)
             h_muonIsolation[tg] = ROOT.gDirectory.Get("h_muonIsolation_" + tg)
-            h_muonIsoPt[tg] = ROOT.gDirectory.Get("h_muonMap_" + tg)
+            h_muonIsoPt[tg] = ROOT.gDirectory.Get("h_muonIsoPt" + tg)
 
             h_metPt[tg] = ROOT.gDirectory.Get("h_metPt_" + tg)
             h_metPhi[tg] = ROOT.gDirectory.Get("h_metPhi_" + tg)
@@ -515,13 +514,15 @@ def main(argms):
 
     ROOT.gStyle.SetOptTitle(0)
 
-    # - HT plots for mu Triggers ---------------------------------
+    # - plots for mu Triggers ---------------------------------
     cv0 = triggerCanvas.cd(1)
     """ Isolation distribution for different triggers """
+    h_muonIsolation["notrigger"].RebinX(3, "")
     h_muonIsolation["notrigger"].Draw('E1')
     for key in trigList:
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
+            h_muonIsolation[tg].RebinX(2, "")
             h_muonIsolation[tg].Draw('E1 same')
     cv0.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
