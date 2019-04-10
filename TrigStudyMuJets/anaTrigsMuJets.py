@@ -372,7 +372,7 @@ class TriggerStudy(Module):
                 self.h_muonEta['no_trigger'].Fill(muon.eta)
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
-                self.h_muonRelIso04_all['no_trigger'].Fill(muon.pfRelIso04_all)
+                self.h_muonIsolation['no_trigger'].Fill(muon.pfRelIso04_all)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
                 for key in self.trigLst:
                     if not key.find("El") == -1: continue
@@ -382,7 +382,7 @@ class TriggerStudy(Module):
                             self.h_muonEta[tg].Fill(muon.eta)
                             self.h_muonPhi[tg].Fill(muon.phi)
                             self.h_muonMap[tg].Fill(muon.eta, muon.phi)
-                            self.h_muonRelIso04_all[tg].Fill(muon.pfRelIso04_all)
+                            self.h_muonIsolation[tg].Fill(muon.pfRelIso04_all)
                 # if muon.genPartFlav == 1:
                 #    self.h_muonPt['prompt'].Fill(muon.pt)
                 # if muon.genPartFlav == 5:
