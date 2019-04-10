@@ -581,7 +581,7 @@ def main(argms):
 
     triggerCanvas.cd(1)
     h_muonIsoPt["notrigger"].Draw('COLZ')  # CONT4Z
-    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
     for key in trigList:
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
