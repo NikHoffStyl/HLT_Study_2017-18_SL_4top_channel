@@ -122,7 +122,7 @@ class TriggerStudy(Module):
                                                                         '#delta#phi = 0.046', 300, -6, 8)
         self.h_muonIsolation['no_trigger'] = ROOT.TH1D('h_muonIsolation_notrigger', 'no trigger ;Muon pfRelIso04_all;'
                                                                                     'Number of Events', 30, 0, 0.17)
-        self.h_muonIsoPt['no_trigger'] = ROOT.TH1D('h_muonIsoPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);'
+        self.h_muonIsoPt['no_trigger'] = ROOT.TH2F('h_muonIsoPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);'
                                                                             'Muon pfRelIso04_all',
                                                    300, 0, 300, 30, 0, 0.17)
         self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;',
@@ -197,7 +197,7 @@ class TriggerStudy(Module):
                 self.h_muonIsolation[trgPath] = ROOT.TH1D('h_muonIsolation_' + trgPath,
                                                           trgPath + ';Muon pfRelIso04_all;Number of Events', 20, 0, 0.17)
                 self.addObject(self.h_muonIsolation[trgPath])
-                self.h_muonIsoPt[trgPath] = ROOT.TH1D('h_muonIsoPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);'
+                self.h_muonIsoPt[trgPath] = ROOT.TH2F('h_muonIsoPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);'
                                                                                           'Muon pfRelIso04_all',
                                                       300, 0, 300, 30, 0, 0.17)
                 self.addObject(self.h_muonIsoPt[trgPath])
