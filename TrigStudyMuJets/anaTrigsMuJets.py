@@ -47,8 +47,9 @@ class TriggerStudy(Module):
         self.h_muonPt = {}
         self.h_muonEta = {}
         self.h_muonPhi = {}
-        self.h_muonIsolation = {}
         self.h_muonMap = {}
+        self.h_muonIsolation = {}
+        self.h_muonIsoPt = {}
 
         self.h_metPt = {}
         self.h_metPhi = {}
@@ -63,7 +64,7 @@ class TriggerStudy(Module):
         # self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
         #                                                       'Number of events', 182, -2, 180)
         self.h_muonRelIso04_all = ROOT.TH1D('h_muonRelIso04_all', 'muonRelIso04_all;muonRelIso04_all;Number of Events',
-                                            100, -1, 2)
+                                            50, 0, 0.2)
 
         self.writeHistFile = writeHistFile
         self.eventLimit = eventLimit  # -1 for no limit of events fully processed
@@ -120,7 +121,10 @@ class TriggerStudy(Module):
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
                                                                         '#delta#phi = 0.046', 300, -6, 8)
         self.h_muonIsolation['no_trigger'] = ROOT.TH1D('h_muonIsolation_notrigger', 'no trigger ;Muon pfRelIso04_all;'
-                                                                                    'Number of Events', 20, 0, 0.17)
+                                                                                    'Number of Events', 30, 0, 0.17)
+        self.h_muonIsoPt['no_trigger'] = ROOT.TH1D('h_muonIsoPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);'
+                                                                            'Muon pfRelIso04_all',
+                                                   300, 0, 300, 30, 0, 0.17)
         self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;',
                                                  150, -6, 6, 160, -3.2, 3.2)
         ##################
@@ -151,6 +155,7 @@ class TriggerStudy(Module):
         self.addObject(self.h_muonEta['no_trigger'])
         self.addObject(self.h_muonPhi['no_trigger'])
         self.addObject(self.h_muonIsolation['no_trigger'])
+        self.addObject(self.h_muonIsoPt['no_trigger'])
         self.addObject(self.h_muonMap['no_trigger'])
 
         self.addObject(self.h_metPt['no_trigger'])
@@ -189,9 +194,13 @@ class TriggerStudy(Module):
                 self.h_muonPhi[trgPath] = ROOT.TH1D('h_muonPhi_' + trgPath, trgPath + ';Muon #phi;Number of Events per'
                                                                                       ' #delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_muonPhi[trgPath])
-                self.h_muonIsolation[trgPath] = ROOT.TH1D('h_muonIsolation_notrigger' + trgPath,
+                self.h_muonIsolation[trgPath] = ROOT.TH1D('h_muonIsolation_' + trgPath,
                                                           trgPath + ';Muon pfRelIso04_all;Number of Events', 20, 0, 0.17)
                 self.addObject(self.h_muonIsolation[trgPath])
+                self.h_muonIsoPt[trgPath] = ROOT.TH1D('h_muonIsoPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);'
+                                                                                          'Muon pfRelIso04_all',
+                                                      300, 0, 300, 30, 0, 0.17)
+                self.addObject(self.h_muonIsoPt[trgPath])
                 self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath, trgPath + ';Muon #eta;Muon #phi',
                                                     150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
@@ -213,18 +222,17 @@ class TriggerStudy(Module):
 
         self.addObject(self.h_eventsPrg)
 
-
-    def endJob(self):
-        Module.endJob(self)
-        pass
-
-    def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.out = wrappedOutputTree
-        self.out.branch("aTestBranch",  "I")
-        pass
-
-    def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        pass
+    # def endJob(self):
+    #     Module.endJob(self)
+    #     pass
+    #
+    # def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+    #     self.out = wrappedOutputTree
+    #     self.out.branch("aTestBranch",  "I")
+    #     pass
+    #
+    # def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+    #     pass
 
     def jetCriteria(self, jets):
         """
@@ -373,6 +381,7 @@ class TriggerStudy(Module):
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
                 self.h_muonIsolation['no_trigger'].Fill(muon.pfRelIso04_all)
+                self.h_muonIsoPt['no_trigger'].Fill(muon.pt, muon.pfRelIso04_all)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
                 for key in self.trigLst:
                     if not key.find("El") == -1: continue
@@ -383,6 +392,7 @@ class TriggerStudy(Module):
                             self.h_muonPhi[tg].Fill(muon.phi)
                             self.h_muonMap[tg].Fill(muon.eta, muon.phi)
                             self.h_muonIsolation[tg].Fill(muon.pfRelIso04_all)
+                            self.h_muonIsoPt[tg].Fill(muon.pt, muon.pfRelIso04_all)
                 # if muon.genPartFlav == 1:
                 #    self.h_muonPt['prompt'].Fill(muon.pt)
                 # if muon.genPartFlav == 5:
@@ -413,7 +423,7 @@ class TriggerStudy(Module):
             # self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
 
             self.h_eventsPrg.Fill(1)
-            self.out.fillBranch("aTestBranch", self.eventCounter)
+            # self.out.fillBranch("aTestBranch", self.eventCounter)
             i = 0
             for key in self.trigLst:
                 if not key.find("El") == -1: continue
