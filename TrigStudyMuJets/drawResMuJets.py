@@ -20,6 +20,7 @@ def process_arguments():
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--inputLFN",
                         default="tttt102", help="Set key-name or name of input file")
+    parser.add_argument("-i", "--inputkey", default="_v2", help="Set name of input directory key")
     parser.add_argument("-o", "--outputName", default="NoPreTrig", help="Set name of output file")
     args = parser.parse_args()
 
@@ -255,7 +256,7 @@ def getFileContents(fileName, elmList):
     return fileContents
 
 
-def inputFileName(arg, selCrit):
+def inputFileName(arg, arg2, selCrit):
     """
 
     Args:
@@ -293,7 +294,7 @@ def inputFileName(arg, selCrit):
     #     version = arg.replace("dataSEl17", '')
     #     inFile = "../OutFiles/Histograms/dataSEl17{0}_6Jets1Mu{1}jPt.root".format(version, selCrit["minJetPt"])
     # else:
-    inFile = "OutFiles/Histograms/" + arg + ".root"
+    inFile = "OutFiles/Histograms" + arg2 + "/" + arg + ".root"
 
     return inFile
 
@@ -313,7 +314,7 @@ def main(argms):
     preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", False)
     selCriteria = getFileContents("selectionCriteria.txt", False)
     
-    inputFile = inputFileName(argms.inputLFN, selCriteria)
+    inputFile = inputFileName(argms.inputLFN, argms.inputkey, selCriteria)
 
     # h = {}  # TH1D class
     # h_TriggerRatio = {}  # TEfficiency class
@@ -329,6 +330,8 @@ def main(argms):
     h_muonEta = {}
     h_muonPhi = {}
     h_muonMap = {}
+    h_muonIsolation = {}
+    h_muonIsoPt ={}
     h_metPt = {}
     h_metPhi = {}
     # h_genMetPt = {}
@@ -406,6 +409,16 @@ def main(argms):
     if not (h_muonMap["notrigger"]):
         print("No trigger muon map histogram is empty")
 
+    h_muonIsolation["notrigger"] = ROOT.gDirectory.Get("h_muonIsolation_notrigger")
+    h_muonIsolation["notrigger"].SetLineColor(1)
+    if not (h_muonIsolation["notrigger"]):
+        print("No trigger muon Pt histogram is empty")
+    h_muonIsoPt["notrigger"] = ROOT.gDirectory.Get("h_muonMap_notrigger")
+    h_muonIsoPt["notrigger"].SetLineColor(1)
+    if not (h_muonIsoPt["notrigger"]):
+        print("No trigger muon map histogram is empty")
+
+
     h_metPt["notrigger"] = ROOT.gDirectory.Get("h_metPt_notrigger")
     h_metPt["notrigger"].SetLineColor(1)
     if not (h_metPt["notrigger"]):
@@ -440,6 +453,8 @@ def main(argms):
             h_muonEta[tg] = ROOT.gDirectory.Get("h_muonEta_" + tg)
             h_muonPhi[tg] = ROOT.gDirectory.Get("h_muonPhi_" + tg)
             h_muonMap[tg] = ROOT.gDirectory.Get("h_muonMap_" + tg)
+            h_muonIsolation[tg] = ROOT.gDirectory.Get("h_muonIsolation_" + tg)
+            h_muonIsoPt[tg] = ROOT.gDirectory.Get("h_muonMap_" + tg)
 
             h_metPt[tg] = ROOT.gDirectory.Get("h_metPt_" + tg)
             h_metPhi[tg] = ROOT.gDirectory.Get("h_metPhi_" + tg)
@@ -454,6 +469,7 @@ def main(argms):
             h_muonPt[tg].SetLineColor(i)
             h_muonEta[tg].SetLineColor(i)
             h_muonPhi[tg].SetLineColor(i)
+            h_muonIsolation[tg].SetLineColor(i)
             h_metPt[tg].SetLineColor(i)
             h_metPhi[tg].SetLineColor(i)
             # h_genMetPt[tg].SetLineColor(i)
@@ -500,6 +516,76 @@ def main(argms):
     ROOT.gStyle.SetOptTitle(0)
 
     # - HT plots for mu Triggers ---------------------------------
+    cv0 = triggerCanvas.cd(1)
+    """ Isolation distribution for different triggers """
+    h_muonIsolation["notrigger"].Draw('E1')
+    for key in trigList:
+        if not key.find("El") == -1: continue
+        for tg in trigList[key]:
+            h_muonIsolation[tg].Draw('E1 same')
+    cv0.BuildLegend(0.47, 0.54, 0.97, 0.74)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    tX1 = 0.6 * (h_muonIsolation["notrigger"].GetXaxis().GetXmax())
+    tY1 = 1 * (h_muonIsolation["notrigger"].GetMaximum())
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+
+    cv02 = triggerCanvas.cd(1)
+    """ Trigger efficiency vs muon Isolation"""
+    i = 0
+    j = 2
+    for key in trigList:
+        if not key.find("El") == -1: continue
+        for tg in trigList[key]:
+            if ROOT.TEfficiency.CheckConsistency(h_muonIsolation[tg], h_muonIsolation["notrigger"]):
+                h_TriggerRatio[tg] = ROOT.TEfficiency(h_muonIsolation[tg], h_muonIsolation["notrigger"])
+                xTitle = h_muonIsolation["notrigger"].GetXaxis().GetTitle()
+                xBinWidth = h_muonIsolation["notrigger"].GetXaxis().GetBinWidth(1)
+                h_TriggerRatio[tg].SetTitle(";{0};Trigger Efficiency per {1}GeV/c".format(xTitle, round(xBinWidth)))
+                h_TriggerRatio[tg].SetName(tg)
+                h_TriggerRatio[tg].SetTitle(tg)
+                h_TriggerRatio[tg].SetLineColor(j)
+                j += 1
+                if i == 0:
+                    h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
+                    # f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
+                    # h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
+                    # fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
+                    h_TriggerRatio[tg].Draw('AP')
+                    cv02.Update()
+                    graph1 = h_TriggerRatio[tg].GetPaintedGraph()
+                    graph1.SetMinimum(0)
+                    graph1.SetMaximum(1.2)
+                    cv02.Update()
+                    tX1 = 0.05 * (h_muonIsolation["notrigger"].GetXaxis().GetXmax())
+                    tY1 = 1.1
+                    # assymGraph = h_TriggerRatio[tg].CreateGraph()
+                elif i > 0:
+                    # if i == 1:
+                    #     f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
+                    # elif i == 2:
+                    #     f_jetHt[tg].SetParameters(0.8, 10, 330, 0)
+                    # elif i == 3:
+                    #     f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
+                    # h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')
+                    # fitInfo(fit=f_jetHt[tg], printEqn="n", fitName=("jetHt" + tg), args=argms)
+                    h_TriggerRatio[tg].Draw('same')
+                i += 1
+    cv02.BuildLegend(0.4, 0.1, 0.9, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.02)
+    ltx.SetTextSize(0.03)
+    ltx.DrawLatex(tX1, tY1, legString)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+
+    triggerCanvas.cd(1)
+    h_muonIsoPt["notrigger"].Draw('COLZ')  # CONT4Z
+    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    for key in trigList:
+        if not key.find("El") == -1: continue
+        for tg in trigList[key]:
+            h_muonIsoPt[tg].Draw('COLZ')
+            pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv1 = triggerCanvas.cd(1)
     """ HT distribution for different triggers """
