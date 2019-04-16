@@ -120,10 +120,10 @@ class TriggerStudy(Module):
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
                                                                         '#delta#phi = 0.046', 300, -6, 8)
-        self.h_muonIsolation['no_trigger'] = ROOT.TH1D('h_muonIsolation_notrigger', 'no trigger ;Muon pfRelIso04_all;'
+        self.h_muonIsolation['no_trigger'] = ROOT.TH1D('h_muonIsolation_notrigger', 'no trigger ;Muon miniPFRelIso_all;'
                                                                                     'Number of Events', 30, 0, 0.17)
         self.h_muonIsoPt['no_trigger'] = ROOT.TH2F('h_muonIsoPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);'
-                                                                            'Muon pfRelIso04_all',
+                                                                            'Muon miniPFRelIso_all',
                                                    300, 0, 300, 30, 0, 0.17)
         self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;',
                                                  150, -6, 6, 160, -3.2, 3.2)
@@ -195,10 +195,10 @@ class TriggerStudy(Module):
                                                                                       ' #delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_muonPhi[trgPath])
                 self.h_muonIsolation[trgPath] = ROOT.TH1D('h_muonIsolation_' + trgPath,
-                                                          trgPath + ';Muon pfRelIso04_all;Number of Events', 20, 0, 0.17)
+                                                          trgPath + ';Muon miniPFRelIso_all;Number of Events', 30, 0, 0.17)
                 self.addObject(self.h_muonIsolation[trgPath])
                 self.h_muonIsoPt[trgPath] = ROOT.TH2F('h_muonIsoPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);'
-                                                                                          'Muon pfRelIso04_all',
+                                                                                          'Muon miniPFRelIso_all',
                                                       300, 0, 300, 30, 0, 0.17)
                 self.addObject(self.h_muonIsoPt[trgPath])
                 self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath, trgPath + ';Muon #eta;Muon #phi',
@@ -279,7 +279,7 @@ class TriggerStudy(Module):
         for nm, muon in enumerate(muons):
             # - Check muon criteria 2017 https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
             if (getattr(muon, "tightId") is False) or abs(muon.eta) > self.selCriteria["maxObjEta"]: continue
-            if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
+            # if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
             nMuonsPass += 1
             MuonsPassIdx = nm
 
@@ -380,8 +380,8 @@ class TriggerStudy(Module):
                 self.h_muonEta['no_trigger'].Fill(muon.eta)
                 self.h_muonPhi['no_trigger'].Fill(muon.phi)
                 self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
-                self.h_muonIsolation['no_trigger'].Fill(muon.pfRelIso04_all)
-                self.h_muonIsoPt['no_trigger'].Fill(muon.pt, muon.pfRelIso04_all)
+                self.h_muonIsolation['no_trigger'].Fill(muon.miniPFRelIso_all)
+                self.h_muonIsoPt['no_trigger'].Fill(muon.pt, muon.miniPFRelIso_all)
                 self.h_muonPt['no_trigger'].Fill(muon.pt)
                 for key in self.trigLst:
                     if not key.find("El") == -1: continue
@@ -391,8 +391,8 @@ class TriggerStudy(Module):
                             self.h_muonEta[tg].Fill(muon.eta)
                             self.h_muonPhi[tg].Fill(muon.phi)
                             self.h_muonMap[tg].Fill(muon.eta, muon.phi)
-                            self.h_muonIsolation[tg].Fill(muon.pfRelIso04_all)
-                            self.h_muonIsoPt[tg].Fill(muon.pt, muon.pfRelIso04_all)
+                            self.h_muonIsolation[tg].Fill(muon.miniPFRelIso_all)
+                            self.h_muonIsoPt[tg].Fill(muon.pt, muon.miniPFRelIso_all)
                 # if muon.genPartFlav == 1:
                 #    self.h_muonPt['prompt'].Fill(muon.pt)
                 # if muon.genPartFlav == 5:
