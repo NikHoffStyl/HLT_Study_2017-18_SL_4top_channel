@@ -517,12 +517,12 @@ def main(argms):
     # - plots for mu Triggers ---------------------------------
     cv0 = triggerCanvas.cd(1)
     """ Isolation distribution for different triggers """
-    h_muonIsolation["notrigger"].RebinX(3, "")
+    # h_muonIsolation["notrigger"].RebinX(3, "")
     h_muonIsolation["notrigger"].Draw('E1')
     for key in trigList:
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
-            h_muonIsolation[tg].RebinX(2, "")
+            # h_muonIsolation[tg].RebinX(2, "")
             h_muonIsolation[tg].Draw('E1 same')
     cv0.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
