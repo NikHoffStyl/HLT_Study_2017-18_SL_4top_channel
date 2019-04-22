@@ -549,10 +549,6 @@ def main(argms):
                 h_TriggerRatio[tg].SetLineColor(j)
                 j += 1
                 if i == 0:
-                    # h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
-                    # f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
-                    # h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
-                    # fitInfo(fit=f_jetHt[tg], printEqn="t", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
                     cv02.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -561,16 +557,7 @@ def main(argms):
                     cv02.Update()
                     tX1 = 0.05 * (h_muonIsolation["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
-                    # assymGraph = h_TriggerRatio[tg].CreateGraph()
                 elif i > 0:
-                    # if i == 1:
-                    #     f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
-                    # elif i == 2:
-                    #     f_jetHt[tg].SetParameters(0.8, 10, 330, 0)
-                    # elif i == 3:
-                    #     f_jetHt[tg].SetParameters(0.8, 5, 500, 0)
-                    # h_TriggerRatio[tg].Fit(f_jetHt[tg], 'LR')
-                    # fitInfo(fit=f_jetHt[tg], printEqn="n", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
     cv02.BuildLegend(0.4, 0.1, 0.9, 0.3)
@@ -587,6 +574,18 @@ def main(argms):
         for tg in trigList[key]:
             h_muonIsoPt[tg].Draw('COLZ')
             pdfCreator(argms, 1, triggerCanvas, selCriteria)
+
+    cvIso = triggerCanvas.cd(1)
+    h_isoProjection = {"notrigger": h_muonIsoPt["notrigger"].ProjectionY("", 0, 1, "o")}
+    h_isoProjection["notrigger"].Draw()
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    for key in trigList:
+        if not key.find("El") == -1: continue
+        for tg in trigList[key]:
+            h_isoProjection[tg] = h_muonIsoPt[tg].ProjectionY("", 0, 1, "o")
+            h_isoProjection[tg].Draw("same")
+            pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    cvIso.BuildLegend(0.4, 0.1, 0.9, 0.3)
 
     cv1 = triggerCanvas.cd(1)
     """ HT distribution for different triggers """
