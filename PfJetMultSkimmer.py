@@ -34,30 +34,31 @@ class PfJetsSkimmer(Module):
         self.out = wrappedOutputTree
 
         # Jets
-        self.out.branch("nJets", "I")
-        self.out.branch("Jet_" + "btagDeepB", "F")
-        self.out.branch("Jet_" + "btagDeepFlavB", "F")
-        self.out.branch("Jet_" + "eta", "F")
-        self.out.branch("Jet_" + "phi", "F")
-        self.out.branch("Jet_" + "pt", "F")
-        self.out.branch("Jet_" + "jetId", "I")
-        self.out.branch("Jet_" + "cleanmask", "F")
+        self.out.branch("nJets2", "I")
+        # self.out.branch("Jet2_" + "btagDeepB", "F")
+        # self.out.branch("Jet2_" + "btagDeepFlavB", "F")
+        # self.out.branch("Jet2_" + "eta", "F")
+        # self.out.branch("Jet2_" + "phi", "F")
+        # self.out.branch("Jet2_" + "pt", "F")
+        # self.out.branch("Jet2_" + "jetId", "I")
+        # self.out.branch("Jet2_" + "cleanmask", "F")
+        self.out.branch("Jet2_" + "HT", "F")
 
         # Muons
-        self.out.branch("nMuon", "I")
-        self.out.branch("Muon_" + "eta", "F")
-        self.out.branch("Muon_" + "phi", "F")
-        self.out.branch("Muon_" + "pt", "F")
-        self.out.branch("Muon_" + "pfRelIso04_all", "F")
-        self.out.branch("Muon_" + "tightId", "F")
+        self.out.branch("nMuon2", "I")
+        self.out.branch("Muon2_" + "eta", "F")
+        self.out.branch("Muon2_" + "phi", "F")
+        self.out.branch("Muon2_" + "pt", "F")
+        self.out.branch("Muon2_" + "pfRelIso04_all", "F")
+        self.out.branch("Muon2_" + "tightId", "F")
 
         # Electrons
-        self.out.branch("nElectron", "I")
-        self.out.branch("Electron_" + "eta", "F")
-        self.out.branch("Electron_" + "phi", "F")
-        self.out.branch("Electron_" + "pt", "F")
-        self.out.branch("Electron_" + "pfRelIso04_all", "F")
-        self.out.branch("Electron_" + "tightId", "F")
+        self.out.branch("nElectron2", "I")
+        self.out.branch("Electron2_" + "eta", "F")
+        self.out.branch("Electron2_" + "phi", "F")
+        self.out.branch("Electron2_" + "pt", "F")
+        self.out.branch("Electron2_" + "pfRelIso04_all", "F")
+        self.out.branch("Electron2_" + "tightId", "F")
 
         pass
 
@@ -69,9 +70,15 @@ class PfJetsSkimmer(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         # Collections
-        allmuons = Collection(event, "Muon")
-        allelectrons = Collection(event, "Electron")
-        allrecojets = Collection(event, "Jet")
+        muons = Collection(event, "Muon")
+        electrons = Collection(event, "Electron")
+        jets = Collection(event, "Jet")
+        # hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
+        # met = Object(event, "MET")
+
+        jetHt = 0
+        for nj, jet in enumerate(jets):
+            jetHt += jet.pt
 
         # Select from reco :
         # muons = [x for nx, x in enumerate(allmuons) if
@@ -82,9 +89,10 @@ class PfJetsSkimmer(Module):
         #             x.p4().Perp() > self.minJetPt and abs(x.eta) < self.maxObjEta and x.p4().DeltaR(lep0) > 0.8]
         # recojets.sort(key=lambda x: x.p4().Perp(), reverse=True)
 
-        self.out.fillBranch("nMuon", len(allmuons))
-        self.out.fillBranch("nElectron", len(allelectrons))
-        self.out.fillBranch("nJets", len(allrecojets))
+        self.out.fillBranch("nMuon2", len(muons))
+        self.out.fillBranch("nElectron2", len(electrons))
+        self.out.fillBranch("nJets2", len(jets))
+        self.out.fillBranch("Jet2_HT", jetHt)
         #for muon in allmuons:
             #self.out.fillBranch("Muon_eta", muon.p4().Eta())
             #self.out.fillBranch("Muon_phi", muon.phi)
