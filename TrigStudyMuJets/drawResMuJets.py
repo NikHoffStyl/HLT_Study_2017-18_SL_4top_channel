@@ -171,7 +171,7 @@ def cutInfoPage(lx, selCrit, preCuts):
     lx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
                  % (selCrit["minJetId"], selCrit["minJetPt"], selCrit["maxObjEta"]))
     lx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
-    lx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
+    lx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and PFRelIso_all<%s (for at least 1)}"
                  % (selCrit["maxObjEta"], selCrit["maxPfRelIso04"]))
 
 

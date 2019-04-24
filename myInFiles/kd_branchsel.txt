@@ -1,16 +1,18 @@
 # Comment format
-# drop *
-# keep Electron*
-# keep Muon*
-# keep Jet*
-# keep MET*
+drop *
+kepp n*
+keep Electron*
+keep Muon*
+keep Jet*
+keep MET*
+keep HLT_*
 
-drop Tau*
-drop GenVisTau*
-drop Photon*
-drop CaloMET*
-drop IsoTrack*
-drop LHE*
-drop LHEPart*
-drop GenDressedLepton*
-drop SoftActivityJet*
+# drop Tau*
+# drop GenVisTau*
+# drop Photon*
+# drop CaloMET*
+# drop IsoTrack*
+# drop LHE*
+# drop LHEPart*
+# drop GenDressedLepton*
+# drop SoftActivityJet*
