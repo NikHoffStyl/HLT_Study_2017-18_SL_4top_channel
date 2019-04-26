@@ -42,20 +42,21 @@ def process_arguments():
     return args
 
 
-def skimmer(file, thePostFix):
+def skimmer(file, arg):
     """
 
     Args:
         file: input files of datasets
-        thePostFix: the string attached to the end of the file names
+        arg: the string attached to the end of the file names
 
     Returns:
 
     """
+    thePostFix = arg.inputLFN
     p99 = PostProcessor(".",
                         file,
                         cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) ",
-                        modules=[PfJetsSkimmer()],
+                        modules=[PfJetsSkimmer(arg)],
                         postfix=thePostFix,
                         branchsel="myInFiles/kd_branchsel.txt",
                         outputbranchsel="myInFiles/kd_branchsel.txt",
@@ -234,11 +235,9 @@ def main(argms):
             if counter > argms.fileLimit: break
         allFiles.append(redirector + str(line).replace('\n', ''))
 
-    thePostFix = argms.inputLFN
-
     procs = []
     for index, files in enumerate(allFiles):
-        proc = Process(target=skimmer, args=(files, thePostFix,))
+        proc = Process(target=skimmer, args=(files, argms,))
         procs.append(proc)
         proc.start()
 
@@ -250,4 +249,3 @@ def main(argms):
 
 if __name__ == '__main__':
     main(process_arguments())
-
