@@ -4,6 +4,9 @@ trigList = ["HLT_Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5",
             "HLT_Ele28_eta2p1_WPTight_Gsf_HT150",
             "HLT_IsoMu24",
             "HLT_IsoMu24_2p1",
+            "HLT_IsoMu24_eta2p1",
+            "HLT_IsoMu24_2p1_v",
+            "HLT_IsoMu24_eta2p1_v",
             "HLT_IsoMu27",
             "HLT_Ele32_WPTight_Gsf",
             "HLT_Ele35_WPTight_Gsf",
@@ -25,7 +28,7 @@ trigList = ["HLT_Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5",
             "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ"
 
             ]
-eraStr = "TTToSemiLeptonic"
+eraStr = "2017B/HTMHT"
 
 fileList = [
     '/store/mc/RunIIFall17NanoAOD/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_'

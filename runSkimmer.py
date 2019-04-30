@@ -53,14 +53,18 @@ def skimmer(file, arg):
 
     """
     thePostFix = arg.inputLFN
-    p99 = PostProcessor(".",
-                        file,
+    p99 = PostProcessor("SingleElectron/17F",
+                        # "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X",
+                        # "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X",
+                        [file],
                         cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) ",
-                        modules=[PfJetsSkimmer(arg)],
+                        modules=[PfJetsSkimmer(eventLimit=arg.eventLimit)],
                         postfix=thePostFix,
                         branchsel="myInFiles/kd_branchsel.txt",
                         outputbranchsel="myInFiles/kd_branchsel.txt",
                         )
+    #p99.inputFiles
+    print(p99.inputFiles)
     t0 = time.time()
     p99.run()
     t1 = time.time()
@@ -245,6 +249,7 @@ def main(argms):
         proc.join()
 
     print("End of job!")
+    #skimmer(allFiles, argms)
 
 
 if __name__ == '__main__':

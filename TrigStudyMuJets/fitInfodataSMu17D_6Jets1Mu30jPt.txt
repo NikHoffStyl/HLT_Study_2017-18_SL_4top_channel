@@ -13,3 +13,33 @@ dataSMu17D_6Jets1Mu30jPt, muonPtIsoMu27, 0.926, +/-, 0.001, 27.060, +/-, 0.018, 
 Muon Pt Eff = 0.166 +/- 0.007 , PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.878 +/- 0.022 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
 Muon Pt Eff = 0.629 +/- 0.020 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataSMu17D_6Jets1Mu30jPt, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.281, +/-, 0.003, 500.000, +/-, 0.744, 351.849, 204.000, 5.80737968417e-10, 5.355, +/- ,0.117, 0.000, +/-, 0.000
+ dataSMu17D_6Jets1Mu30jPt, jetHtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.852, +/-, 0.043, 229.062, +/-, 3.347, 1110.941, 204.000, 1.21774770378e-124, 2.000, +/- ,1.933, 0.467, +/-, 0.022
+ dataSMu17D_6Jets1Mu30jPt, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.853, +/-, 0.003, 500.000, +/-, 0.011, 1007.513, 204.000, 1.8545430518e-106, 2.387, +/- ,0.039, 0.003, +/-, 0.000
+  Jet HT Eff =,0.818,+/- ,0.005, IsoMu27 
+ Jet HT Eff =,0.135,+/- ,0.002, PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff =,0.851,+/- ,0.005, IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff =,0.392,+/- ,0.003, Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataSMu17D_6Jets1Mu30jPt, muonPtIsoMu27, 0.926, +/-, 0.001, 27.060, +/-, 0.018, 451.854, 244.000, 1.35388571577e-14, 0.118, +/- ,0.004, 0.026, +/-, 0.001
+ dataSMu17D_6Jets1Mu30jPt, muonPtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 1.552, +/-, 0.441, 24.000, +/-, 16.054, 551199999999996860341185094470336512.000, 244.000, 0.0, 1000.000, +/- ,841.471, 0.800, +/-, 0.357
+ dataSMu17D_6Jets1Mu30jPt, muonPtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 1.552, +/-, 0.441, 24.000, +/-, 16.054, 447833999999998420313722770627231744.000, 244.000, 0.0, 0.950, +/- ,459.261, 0.800, +/-, 0.357
+ dataSMu17D_6Jets1Mu30jPt, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.667, +/-, 0.008, 10.000, +/-, 0.102, 4748.016, 244.000, 0.0, 23.317, +/- ,0.876, -0.100, +/-, 0.001
+ Muon Pt Eff = ,0.818,+/-,0.005, IsoMu27 
+Muon Pt Eff = ,0.134,+/-,0.002, PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = ,0.851,+/-,0.005, IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = ,0.391,+/-,0.003, Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataSMu17D_6Jets1Mu30jPt, jetHtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.281, +/-, 0.003, 500.000, +/-, 0.744, 351.849, 204.000, 5.80737968417e-10, 5.355, +/- ,0.117, 0.000, +/-, 0.000
+ dataSMu17D_6Jets1Mu30jPt, jetHtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 0.852, +/-, 0.043, 229.062, +/-, 3.347, 1110.941, 204.000, 1.21774770378e-124, 2.000, +/- ,1.933, 0.467, +/-, 0.022
+ dataSMu17D_6Jets1Mu30jPt, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.853, +/-, 0.003, 500.000, +/-, 0.011, 1007.513, 204.000, 1.8545430518e-106, 2.387, +/- ,0.039, 0.003, +/-, 0.000
+  Jet HT Eff =,0.818,+/- ,0.005, IsoMu27 
+ Jet HT Eff =,0.135,+/- ,0.002, PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff =,0.851,+/- ,0.005, IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+ Jet HT Eff =,0.392,+/- ,0.003, Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataSMu17D_6Jets1Mu30jPt, muonPtIsoMu27, 0.926, +/-, 0.001, 27.060, +/-, 0.018, 451.854, 244.000, 1.35388571577e-14, 0.118, +/- ,0.004, 0.026, +/-, 0.001
+ dataSMu17D_6Jets1Mu30jPt, muonPtPFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 1.552, +/-, 0.441, 24.000, +/-, 16.054, 551199999999996860341185094470336512.000, 244.000, 0.0, 1000.000, +/- ,841.471, 0.800, +/-, 0.357
+ dataSMu17D_6Jets1Mu30jPt, muonPtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2, 1.552, +/-, 0.441, 24.000, +/-, 16.054, 447833999999998420313722770627231744.000, 244.000, 0.0, 0.950, +/- ,459.261, 0.800, +/-, 0.357
+ dataSMu17D_6Jets1Mu30jPt, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.667, +/-, 0.008, 10.000, +/-, 0.102, 4748.016, 244.000, 0.0, 23.317, +/- ,0.876, -0.100, +/-, 0.001
+ Muon Pt Eff = ,0.818,+/-,0.005, IsoMu27 
+Muon Pt Eff = ,0.134,+/-,0.002, PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = ,0.851,+/-,0.005, IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2 
+Muon Pt Eff = ,0.391,+/-,0.003, Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 

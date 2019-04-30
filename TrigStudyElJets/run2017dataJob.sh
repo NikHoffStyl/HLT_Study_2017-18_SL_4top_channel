@@ -13,7 +13,7 @@ export X509_USER_PROXY=/user/$USER/x509up_u23075 # $(#id -u $USER)
 cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyElJets
 
 #python runAnaTrigsElJets.py -f tt_semilep102_17B
-python runAnaTrigsElJets.py -f tt_semilep102_17C
+#python runAnaTrigsElJets.py -f tt_semilep102_17C
 #python runAnaTrigsElJets.py -f tt_semilep102_17DEF
 
 #python runAnaTrigsElJets.py -f tttt102_17B
@@ -36,4 +36,4 @@ python runAnaTrigsElJets.py -f tt_semilep102_17C
 #python runAnaTrigsElJets.py -f dataSEl17C
 #python runAnaTrigsElJets.py -f dataSEl17D
 #python runAnaTrigsElJets.py -f dataSEl17E
-#python runAnaTrigsElJets.py -f dataSEl17F
+python runAnaTrigsElJets.py -f dataSEl17F

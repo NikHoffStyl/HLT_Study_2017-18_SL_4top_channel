@@ -1,6 +1,6 @@
 # Comment format
 drop *
-kepp n*
+keep n*
 keep Electron*
 keep Muon*
 keep Jet*
