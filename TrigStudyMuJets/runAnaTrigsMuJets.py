@@ -6,8 +6,33 @@ Created on Jan 2019
 """
 from __future__ import (division, print_function)
 import time
+import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from anaTrigsMuJets import *
+
+
+def findEraRootFiles(path, verbose=False, FullPaths=True):
+    """
+    Find Root files in a given directory/path.
+    Args:
+        path (string): directory
+        verbose (bool): print to stdout if true
+        FullPaths (bool): return path plus file name in list elements
+
+    Returns: files (list): list of names of root files in the directory given as argument
+
+    """
+    files = []
+    if not path[-1] == '/': path += '/'
+    if verbose: print(' >> Looking for files in path: ' + path)
+    for f in os.listdir(path):
+        if not f[-5:] == '.root': continue
+        # if era != "all" and era not in f[:-5]: continue
+        if verbose: print(' >> Adding file: ', f)
+        files.append(f)
+    if FullPaths: files = [path + x for x in files]
+    if len(files) == 0: print('[ERROR]: No root files found in: ' + path)
+    return files
 
 
 def main(argms):
@@ -40,12 +65,14 @@ def main(argms):
     if argms.noWriteFile: writeFile = False
     else: writeFile = True
 
-    files = []
-    for counter, line in enumerate(inputLFNList):
-        counter += 1
-        if not argms.fileLimit == -1:
-            if counter > argms.fileLimit: break
-        files.append(redirector + str(line).replace('\n', ''))
+    # files = []
+    # for counter, line in enumerate(inputLFNList):
+    #     counter += 1
+    #     if not argms.fileLimit == -1:
+    #         if counter > argms.fileLimit: break
+    #     files.append(redirector + str(line).replace('\n', ''))
+
+    files = findEraRootFiles("../HTMHT/17D")
 
     p99 = PostProcessor(".",
                         files,
@@ -59,15 +86,15 @@ def main(argms):
                         noOut=True,
                         # haddFileName="TestBranch.root",
                         # justcount=False,
-                        postfix=thePostFix,
+                        # postfix=thePostFix,
                         histFileName=outputFile,
                         histDirName="plots",
                         branchsel="../myInFiles/kd_branchsel.txt",
                         outputbranchsel="../myInFiles/kd_branchsel.txt",
                         )
-    t0 = time.clock()
+    t0 = time.time()
     p99.run()
-    t1 = time.clock()
+    t1 = time.time()
     print("Elapsed time %7.1fs" % (t1-t0))
 
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+    #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Jan 2019
@@ -279,7 +279,7 @@ class TriggerStudy(Module):
         for nm, muon in enumerate(muons):
             # - Check muon criteria 2017 https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
             if (getattr(muon, "tightId") is False) or abs(muon.eta) > self.selCriteria["maxObjEta"]: continue
-            # if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
+            if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
             nMuonsPass += 1
             MuonsPassIdx = nm
 
@@ -371,33 +371,7 @@ class TriggerStudy(Module):
         ##############################
         #    Muon Trigger checks     #
         ##############################
-        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 0 and nElPass == 0:
-            for nm, muon in enumerate(muons):
-                if not MuonPassIdx == nm: continue
-                self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
-                # self.h_muonGenPartFlav.Fill(muon.genPartFlav)
-                # self.h_muonGenPartIdx.Fill(muon.genPartIdx)
-                self.h_muonEta['no_trigger'].Fill(muon.eta)
-                self.h_muonPhi['no_trigger'].Fill(muon.phi)
-                self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
-                self.h_muonIsolation['no_trigger'].Fill(muon.miniPFRelIso_all)
-                self.h_muonIsoPt['no_trigger'].Fill(muon.pt, muon.miniPFRelIso_all)
-                self.h_muonPt['no_trigger'].Fill(muon.pt)
-                for key in self.trigLst:
-                    if not key.find("El") == -1: continue
-                    for tg in self.trigLst[key]:
-                        if trigPath[tg]:
-                            self.h_muonPt[tg].Fill(muon.pt)
-                            self.h_muonEta[tg].Fill(muon.eta)
-                            self.h_muonPhi[tg].Fill(muon.phi)
-                            self.h_muonMap[tg].Fill(muon.eta, muon.phi)
-                            self.h_muonIsolation[tg].Fill(muon.miniPFRelIso_all)
-                            self.h_muonIsoPt[tg].Fill(muon.pt, muon.miniPFRelIso_all)
-                # if muon.genPartFlav == 1:
-                #    self.h_muonPt['prompt'].Fill(muon.pt)
-                # if muon.genPartFlav == 5:
-                #    self.h_muonPt['non-prompt'].Fill(muon.pt)
-
+        if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 1 and nElPass == 0:
             for nj, jet in enumerate(jets):
                 if nj not in JetPassIdx: continue
                 for key in self.trigLst:
@@ -405,39 +379,70 @@ class TriggerStudy(Module):
                     for tg in self.trigLst[key]:
                         if trigPath[tg]:
                             jetHt[tg] += jet.pt
-                            self.h_jetEta[tg].Fill(jet.eta)
-                            self.h_jetPhi[tg].Fill(jet.phi)
-                            self.h_jetMap[tg].Fill(jet.eta, jet.phi)
                 jetHt["notrig"] += jet.pt
-                self.h_jetEta['no_trigger'].Fill(jet.eta)
-                self.h_jetPhi['no_trigger'].Fill(jet.phi)
-                self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
-
-            self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
-            self.h_jetMult['no_trigger'].Fill(nJetPass)
-            self.h_jetBMult['no_trigger'].Fill(nBtagPass)
-
-            self.h_metPt['no_trigger'].Fill(metPt)
-            self.h_metPhi['no_trigger'].Fill(metPhi)
-            # self.h_genMetPt['no_trigger'].Fill(genMetPt)
-            # self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
-
-            self.h_eventsPrg.Fill(1)
-            # self.out.fillBranch("aTestBranch", self.eventCounter)
-            i = 0
-            for key in self.trigLst:
-                if not key.find("El") == -1: continue
-                for tg in self.trigLst[key]:
-                    if trigPath[tg]:
-                        self.h_jetHt[tg].Fill(jetHt[tg])
-                        self.h_metPt[tg].Fill(metPt)
-                        self.h_metPhi[tg].Fill(metPhi)
-                        # self.h_genMetPt[tg].Fill(genMetPt)
-                        # self.h_genMetPhi[tg].Fill(genMetPhi)
-                        self.h_jetMult[tg].Fill(nJetPass)
-                        self.h_jetBMult[tg].Fill(nBtagPass)
-                        self.h_eventsPrg.Fill(2 + i)
-                        i += 1
+            if jetHt["notrig"] < 500:
+                for nm, muon in enumerate(muons):
+                    if not MuonPassIdx == nm: continue
+                    self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
+                    # self.h_muonGenPartFlav.Fill(muon.genPartFlav)
+                    # self.h_muonGenPartIdx.Fill(muon.genPartIdx)
+                    self.h_muonEta['no_trigger'].Fill(muon.eta)
+                    self.h_muonPhi['no_trigger'].Fill(muon.phi)
+                    self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
+                    self.h_muonIsolation['no_trigger'].Fill(muon.miniPFRelIso_all)
+                    self.h_muonIsoPt['no_trigger'].Fill(muon.pt, muon.miniPFRelIso_all)
+                    self.h_muonPt['no_trigger'].Fill(muon.pt)
+                    for key in self.trigLst:
+                        if not key.find("El") == -1: continue
+                        for tg in self.trigLst[key]:
+                            if trigPath[tg]:
+                                self.h_muonPt[tg].Fill(muon.pt)
+                                self.h_muonEta[tg].Fill(muon.eta)
+                                self.h_muonPhi[tg].Fill(muon.phi)
+                                self.h_muonMap[tg].Fill(muon.eta, muon.phi)
+                                self.h_muonIsolation[tg].Fill(muon.miniPFRelIso_all)
+                                self.h_muonIsoPt[tg].Fill(muon.pt, muon.miniPFRelIso_all)
+                    # if muon.genPartFlav == 1:
+                    #    self.h_muonPt['prompt'].Fill(muon.pt)
+                    # if muon.genPartFlav == 5:
+                    #    self.h_muonPt['non-prompt'].Fill(muon.pt)
+                for nj, jet in enumerate(jets):
+                    if nj not in JetPassIdx: continue
+                    for key in self.trigLst:
+                        if not key.find("El") == -1: continue
+                        for tg in self.trigLst[key]:
+                            if trigPath[tg]:
+                                jetHt[tg] += jet.pt
+                                self.h_jetEta[tg].Fill(jet.eta)
+                                self.h_jetPhi[tg].Fill(jet.phi)
+                                self.h_jetMap[tg].Fill(jet.eta, jet.phi)
+                    jetHt["notrig"] += jet.pt
+                    self.h_jetEta['no_trigger'].Fill(jet.eta)
+                    self.h_jetPhi['no_trigger'].Fill(jet.phi)
+                    self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
+                self.h_jetHt['no_trigger'].Fill(jetHt["notrig"])
+                self.h_jetMult['no_trigger'].Fill(nJetPass)
+                self.h_jetBMult['no_trigger'].Fill(nBtagPass)
+                self.h_metPt['no_trigger'].Fill(metPt)
+                self.h_metPhi['no_trigger'].Fill(metPhi)
+                # self.h_genMetPt['no_trigger'].Fill(genMetPt)
+                # self.h_genMetPhi['no_trigger'].Fill(genMetPhi)
+                self.h_eventsPrg.Fill(1)
+                # self.out.fillBranch("aTestBranch", self.eventCounter)
+                i = 0
+                for key in self.trigLst:
+                    if not key.find("El") == -1: continue
+                    for tg in self.trigLst[key]:
+                        if trigPath[tg]:
+                            self.h_jetHt[tg].Fill(jetHt[tg])
+                            self.h_metPt[tg].Fill(metPt)
+                            self.h_metPhi[tg].Fill(metPhi)
+                            # self.h_genMetPt[tg].Fill(genMetPt)
+                            # self.h_genMetPhi[tg].Fill(genMetPhi)
+                            self.h_jetMult[tg].Fill(nJetPass)
+                            self.h_jetBMult[tg].Fill(nBtagPass)
+                            self.h_eventsPrg.Fill(2 + i)
+                            i += 1
 
         return True
 
