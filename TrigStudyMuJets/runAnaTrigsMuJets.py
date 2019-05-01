@@ -74,13 +74,13 @@ def main(argms):
 
     keyWord = argms.inputLFN
     runPeriod = keyWord[-3:]
-    if not keyWord.find("HTMHT") == -1: dirPath = "../HTMHT/"
-    elif not keyWord.find("SMu") == -1: dirPath = "../SingleMuon/"
-    elif not keyWord.find("SEl") == -1: dirPath = "../SingleElectron/"
+    if not keyWord.find("HTMHT") == -1: dirPath = "../HTMHT/" + runPeriod
+    elif not keyWord.find("SMu") == -1: dirPath = "../SingleMuon/" + runPeriod
+    elif not keyWord.find("SEl") == -1: dirPath = "../SingleElectron/" + runPeriod
     elif not keyWord.find("tt_semilep102") == -1: dirPath = "../TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X/"
     elif not keyWord.find("tttt102") == -1: dirPath = "../TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X/"
     else: return 0
-    files = findEraRootFiles(dirPath + runPeriod)
+    files = findEraRootFiles(dirPath)
 
     p99 = PostProcessor(".",
                         files,
