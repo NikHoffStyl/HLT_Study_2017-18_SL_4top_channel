@@ -587,20 +587,20 @@ def main(argms):
         h_isoProjection["notrigger"].GetXaxis().SetTitleOffset(1.3)
         xTitle = h_isoProjection["notrigger"].GetXaxis().GetTitle()
         xBinWidth = h_isoProjection["notrigger"].GetXaxis().GetBinWidth(1)
-        # h_isoProjection["notrigger"].Draw()
+        #h_isoProjection["notrigger"].Draw()
         for key in trigList:
             if not key.find("El") == -1: continue
             for tg in trigList[key]:
                 h_isoProjection[tg] = h_muonIsoPt[tg].ProjectionY(tg, i, i, "o")
                 h_isoProjection[tg].SetLineColor(colr)
-                # h_isoProjection[tg].Draw("same")
+                #h_isoProjection[tg].Draw("same")
                 if not ROOT.TEfficiency.CheckConsistency(h_isoProjection[tg], h_isoProjection["notrigger"]): continue
                 h_TEffOut[tg] = ROOT.TEfficiency(h_isoProjection[tg], h_isoProjection["notrigger"])
                 h_TEffOut[tg].SetTitle(";{0};Trigger Efficiency per {1} a.u.".format(xTitle, round(xBinWidth)))
                 h_TEffOut[tg].SetName(tg)
                 h_TEffOut[tg].SetTitle(tg)
                 h_TEffOut[tg].SetLineColor(colr)
-                # h_TEffOut[tg].SetName(effName2)
+                #h_TEffOut[tg].SetName(effName2)
                 if colr == 2: 
                     h_TEffOut[tg].Draw()
                     cvIso[i].Update()
@@ -627,7 +627,7 @@ def main(argms):
     tY1 = 1*(h_jetHt["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv2 = triggerCanvas.cd(1)
     """ Trigger efficiency vs total HT """
@@ -671,7 +671,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv82 = triggerCanvas.cd(1)
     """ Trigger inclussive efficiency vs total HT """
@@ -712,7 +712,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - Jet Multiplicity plots ---------------------------------
     cv3 = triggerCanvas.cd(1)
@@ -728,7 +728,7 @@ def main(argms):
     tY1 = 0.95 * (h_jetMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv4 = triggerCanvas.cd(1)
     i = 0
@@ -761,7 +761,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - B tagged Jet Multiplicity plots ---------------------------
     cv5 = triggerCanvas.cd(1)
@@ -778,7 +778,7 @@ def main(argms):
     tY1 = 0.95 * (h_jetBMult["notrigger"].GetMaximum())
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv6 = triggerCanvas.cd(1)
     i = 0
@@ -811,7 +811,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - Muon test Plots-------------------------------
     # triggerCanvas.cd(1)
@@ -842,7 +842,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv71 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].SetTitle("")
@@ -858,7 +858,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv8 = triggerCanvas.cd(1)
     i = 0
@@ -918,7 +918,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv81 = triggerCanvas.cd(1)
     i = 0
@@ -956,7 +956,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - MET pT plots ---------------------------------
     cv9 = triggerCanvas.cd(1)
@@ -974,7 +974,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv10 = triggerCanvas.cd(1)
     i = 0
@@ -1007,7 +1007,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - GenMET pT plots ---------------------------------
     # cv11 = triggerCanvas.cd(1)
@@ -1074,7 +1074,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv14 = triggerCanvas.cd(1)
     h_muonEta["notrigger"].Draw('E1')
@@ -1088,7 +1088,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv15 = triggerCanvas.cd(1)
     i = 0
@@ -1121,7 +1121,7 @@ def main(argms):
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
-    #pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - Phi plots ------------------------------------------
     cv16 = triggerCanvas.cd(1)
@@ -1137,7 +1137,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     cv17 = triggerCanvas.cd(1)
     # h_muonPhi["notrigger"].GetYaxis().SetTitleOffset(1.4)
@@ -1152,7 +1152,7 @@ def main(argms):
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     ROOT.gStyle.SetLegendTextSize(0.02)
-    # pdfCreator(argms, 1, triggerCanvas, selCriteria)
+    pdfCreator(argms, 1, triggerCanvas, selCriteria)
 
     # - Eta-Phi Map plots ------------------------------------------
     triggerCanvas.cd(1)
