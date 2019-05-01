@@ -85,7 +85,7 @@ def main(argms):
     p99 = PostProcessor(".",
                         files,
                         # files[0],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
+                        # cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList,
@@ -97,8 +97,8 @@ def main(argms):
                         # postfix=thePostFix,
                         histFileName=outputFile,
                         histDirName="plots",
-                        branchsel="../myInFiles/kd_branchsel.txt",
-                        outputbranchsel="../myInFiles/kd_branchsel.txt",
+                        # branchsel="../myInFiles/kd_branchsel.txt",
+                        # outputbranchsel="../myInFiles/kd_branchsel.txt",
                         )
     t0 = time.time()
     p99.run()

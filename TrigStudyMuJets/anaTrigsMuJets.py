@@ -380,7 +380,7 @@ class TriggerStudy(Module):
                         if trigPath[tg]:
                             jetHt[tg] += jet.pt
                 jetHt["notrig"] += jet.pt
-            if jetHt["notrig"] < 500:
+            if jetHt["notrig"] > 500:
                 for nm, muon in enumerate(muons):
                     if not MuonPassIdx == nm: continue
                     self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
@@ -412,11 +412,11 @@ class TriggerStudy(Module):
                         if not key.find("El") == -1: continue
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
-                                jetHt[tg] += jet.pt
+                                # jetHt[tg] += jet.pt
                                 self.h_jetEta[tg].Fill(jet.eta)
                                 self.h_jetPhi[tg].Fill(jet.phi)
                                 self.h_jetMap[tg].Fill(jet.eta, jet.phi)
-                    jetHt["notrig"] += jet.pt
+                    # jetHt["notrig"] += jet.pt
                     self.h_jetEta['no_trigger'].Fill(jet.eta)
                     self.h_jetPhi['no_trigger'].Fill(jet.phi)
                     self.h_jetMap['no_trigger'].Fill(jet.eta, jet.phi)
