@@ -447,7 +447,7 @@ def main():
     legString = cmsPlotString(args.inputLFN)
 
     # - Get File Names and create histogram dictionaries
-    files = findEraRootFiles(path="OutFiles/Histograms", era=args.inputLFN, FullPaths=True)
+    files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era=args.inputLFN, FullPaths=True)
     h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
     # h_mcTTTTs["h_jetHt_notrigger"].Draw()
 
