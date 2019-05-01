@@ -474,6 +474,29 @@ def main():
     cv2 = [None] * 20
     for hn, hName in enumerate(hNames):
 
+        # - Draw trigger hists
+        cv1[hn] = triggerCanvas.cd(1)
+        trg = whatTrig(hName)
+        t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
+        t.AddText(trg)
+        h_mcTTToSemiLeps[hName].Draw('AP')
+        h_mcTTToSemiLeps[hName].SetLineColor(1)
+        tX1 = 0.05 * (tr_dataHTMHT[hName].GetXaxis().GetXmax())
+        tY1 = 1.1
+        h_dataSMus[hName].Draw('same')
+        h_dataSMus[hName].SetLineColor(2)
+        h_dataHTMHTs[hName].Draw('same')
+        h_dataHTMHTs[hName].SetLineColor(4)
+        h_dataSEls[hName].Draw('same')
+        h_dataSEls[hName].SetLineColor(6)
+        t.Draw("same")
+        cv1[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
+        ROOT.gStyle.SetLegendTextSize(0.02)
+        ltx = TLatex()
+        ltx.SetTextSize(0.03)
+        ltx.DrawLatex(tX1, tY1, legString)
+        pdfCreator(args, 1, triggerCanvas)
+
         # - Draw trigger efficiency hists
         cv1[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
