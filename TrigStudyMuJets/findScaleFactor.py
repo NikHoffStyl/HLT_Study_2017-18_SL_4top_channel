@@ -147,19 +147,19 @@ def cmsPlotString(args):
         legStr (string): string containing channel details
 
     """
-    if args == "B":
+    if args == "17B":
         legStr = "#splitline{CMS}{Run2017B}"
-    elif args == "C":
+    elif args == "17C":
         legStr = "#splitline{CMS}{Run2017C}"
-    elif args == "D":
+    elif args == "17D":
         legStr = "#splitline{CMS}{Run2017D}"
-    elif args == "E":
+    elif args == "17E":
         legStr = "#splitline{CMS}{Run2017E}"
-    elif args == "F":
+    elif args == "17F":
         legStr = "#splitline{CMS}{Run2017F}"
-    elif args == "DEF":
+    elif args == "17DEF":
         legStr = "#splitline{CMS}{Run2017D-F}"
-    elif args == "CDEF":
+    elif args == "17CDEF":
         legStr = "#splitline{CMS}{Run2017C-F}"
     elif args == "all":
         legStr = "#splitline{CMS}{All Run2017}"
@@ -274,7 +274,8 @@ def getHistograms(fileList, era):
     Returns:
         h_mcTTTT (dictionary):
     """
-    if not era == "all": names = getHistNames(fileList[0])
+    # if not era == "all":
+    names = getHistNames(fileList[0])
     h_mcTTTT = {}
     h_mcTTToSemiLep = {}
     h_dataHTMHT = {}
@@ -329,7 +330,7 @@ def findTrigRatio(h1, title):
 
     Args:
         h1 (dictionary): dictionary of histograms
-
+        title (string): title given in legend
     Returns:
         h_Out (dictionary): trigger ratio TH1D histogram
 
@@ -344,7 +345,7 @@ def findTrigRatio(h1, title):
     for prop in propList:
         for hName in h1:
             if prop not in hName: continue
-            numBins = h1[hName].GetNbinsX()
+            # numBins = h1[hName].GetNbinsX()
             if prop == "jetHt_": h1[hName] = h1[hName].Rebin(16, hName, ht_rebin)
             if prop == "muonPt_": h1[hName] = h1[hName].Rebin(16, hName, muonpT_rebin)
             # else: if numBins > 100: h1[hName].RebinX(numBins / 30, "")
@@ -378,9 +379,9 @@ def scaleFactor(h1, h2, title):
     """
 
     Args:
-        h1:
-        h2:
-
+        h1: numerator
+        h2: denominator
+        title (string): title given to legend
     Returns:
 
     """
@@ -447,13 +448,41 @@ def main():
     legString = cmsPlotString(args.inputLFN)
 
     # - Get File Names and create histogram dictionaries
-    files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era=args.inputLFN, FullPaths=True)
-    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
-    # h_mcTTTTs["h_jetHt_notrigger"].Draw()
+    # files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era=args.inputLFN, FullPaths=True)
+    # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
+    files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
+    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
+    files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
+    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C")
+    files17D = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
+    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D")
+    files17E = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17E", FullPaths=True)
+    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E")
+    files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
+    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F")
+
+    if args.inputLFN == "17B":
+        h_mcTTToSemiLeps = h_mcTTToSemiLeps17B
+        h_dataHTMHTs = h_dataHTMHTs17B
+        h_dataSMus = h_dataSMus17B
+        h_dataSEls = h_dataSEls17B
+    elif args.inputLFN == "17C":
+        h_mcTTToSemiLeps = h_mcTTToSemiLeps17C
+        h_dataHTMHTs = h_dataHTMHTs17C
+        h_dataSMus = h_dataSMus17C
+        h_dataSEls = h_dataSEls17C
+    else:
+        h_mcTTToSemiLeps = h_mcTTToSemiLeps17D
+        h_dataHTMHTs = ROOT.Add(h_dataHTMHTs17D, h_dataHTMHTs17E, 1, 1)
+        h_dataHTMHTs.Add(h_dataHTMHTs17F)
+        h_dataSMus = ROOT.Add(h_dataSMus17D, h_dataSMus17E, 1, 1)
+        h_dataSMus.Add(h_dataSMus17F)
+        h_dataSEls = ROOT.Add(h_dataSEls17D, h_dataSEls17E, 1, 1)
+        h_dataSEls.Add(h_dataSEls17F)
 
     #  - Find efficiency ratio histogram dictionaries
     # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
-    tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps, "Top-AntiTop MC")
+    tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps17D, "Top-AntiTop MC")
     tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
     tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
     tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
@@ -477,6 +506,12 @@ def main():
         # - Draw trigger hists
         cv1[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
+        if args.inputLFN == "17B":
+            if trg != "IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075" or trg != "IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue  # 1 is data 2 is mc
+        if args.inputLFN == "17C":
+            if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
+        if args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F":
+            if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
         t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
         h_mcTTToSemiLeps[hName].SetTitle("Top-AntiTop MC")
