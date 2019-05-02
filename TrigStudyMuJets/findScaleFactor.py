@@ -293,31 +293,31 @@ def getHistograms(fileList, era):
             if "dataSEl" in fName:
                 h_dataSEl[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_dataSEl_")
+                hName = name.replace("h_", "h_dataSEl" + era + "_")
                 h_dataSEl[name].SetName(hName)
                 h_dataSEl[name].SetDirectory(0)  # = h_dataSEl[name].Clone("El" + name)
             if "dataSMu" in fName:
                 h_dataSMu[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSMu[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_dataSMu_")
+                hName = name.replace("h_", "h_dataSMu" + era + "_")
                 h_dataSMu[name].SetName(hName)
                 h_dataSMu[name].SetDirectory(0)  # = h_dataSMu[name].Clone("Mu" + name)
             if "dataHTMHT" in fName:
                 h_dataHTMHT[name] = ROOT.gDirectory.Get(name)
                 if not h_dataHTMHT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_dataHTMHT_")
+                hName = name.replace("h_", "h_dataHTMHT" + era + "_")
                 h_dataHTMHT[name].SetName(hName)
                 h_dataHTMHT[name].SetDirectory(0)  # = h_dataHTMHT[name].Clone("Ht" + name)
             if "TTTT" in fName:
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
                 if not h_mcTTTT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_mcTTTT_")
+                hName = name.replace("h_", "h_mcTTTT" + era + "_")
                 h_mcTTTT[name].SetName(hName)
                 h_mcTTTT[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
             if "TTToSemiLep" in fName:
                 h_mcTTToSemiLep[name] = ROOT.gDirectory.Get(name)
                 if not h_mcTTToSemiLep[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_mcTTToSemiLep_")
+                hName = name.replace("h_", "h_mcTTToSemiLep" + era + "_")
                 h_mcTTToSemiLep[name].SetName(hName)
                 h_mcTTToSemiLep[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
         f[counter].Close()
@@ -430,7 +430,7 @@ def main():
 
     """
     parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["17B", "17C", "17D", "17E", "17F", "all"],
+    parser.add_argument("-f", "--inputLFN", choices=["17B", "17C", "17D", "17E", "17F", "17DEF", "all"],
                         default="D", help="Set era in 2017 to be checked")
     parser.add_argument("-o", "--outputName", default="NoPreTrig", help="Set name of output file")
     args = parser.parse_args()
@@ -485,40 +485,41 @@ def main():
     cutInfoPage(ltx, selCriteria, preSelCuts)
     pdfCreator(args, 0, triggerCanvas)
 
+    cv0 = [None] * 20
     cv1 = [None] * 20
     cv2 = [None] * 20
     for hn, hName in enumerate(hNames):
 
         # - Draw trigger hists
-        cv1[hn] = triggerCanvas.cd(1)
+        cv0[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         if args.inputLFN == "17B":
             if trg != "IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075" or trg != "IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue  # 1 is data 2 is mc
         if args.inputLFN == "17C":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
-        if args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F":
+        if args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
         t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
 
-        if args.inputLFN == "17B":
-            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
-            h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
-            h_dataSMus[hName] = h_dataSMus17B[hName]
-            h_dataSEls[hName] = h_dataSEls17B[hName]
-        elif args.inputLFN == "17C":
-            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
-            h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
-            h_dataSMus[hName] = h_dataSMus17C[hName]
-            h_dataSEls[hName] = h_dataSEls17C[hName]
-        else:
-            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
+        # if args.inputLFN == "17B":
+        #     h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
+        #     h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
+        #     h_dataSMus[hName] = h_dataSMus17B[hName]
+        #     h_dataSEls[hName] = h_dataSEls17B[hName]
+        # elif args.inputLFN == "17C":
+        #     h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
+        #     h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
+        #     h_dataSMus[hName] = h_dataSMus17C[hName]
+        #     h_dataSEls[hName] = h_dataSEls17C[hName]
+        # else:
+            # h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
             # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
-            h_dataHTMHTs[hName].Add(h_dataHTMHTs17E[hName])
-            h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
+        h_dataHTMHTs[hName].Add(h_dataHTMHTs17E[hName])
+        h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
             # h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
-            h_dataSMus[hName].Add(h_dataSMus17E[hName])
-            h_dataSMus[hName].Add(h_dataSMus17F[hName])
+        h_dataSMus[hName].Add(h_dataSMus17E[hName])
+        h_dataSMus[hName].Add(h_dataSMus17F[hName])
             # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
             # h_dataSEls[hName].Add(h_dataSEls17E[hName])
             # h_dataSEls[hName].Add(h_dataSEls17F[hName])
@@ -541,7 +542,7 @@ def main():
         h_dataSEls[hName].SetLineColor(6)
         h_dataSEls[hName].SetFillColor(6)
         t.Draw("same")
-        cv1[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
+        cv0[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
         ROOT.gStyle.SetLegendTextSize(0.03)
         ltx = TLatex()
         ltx.SetTextSize(0.03)
