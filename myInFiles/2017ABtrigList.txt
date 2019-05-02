@@ -1,8 +1,8 @@
-Mu_OR_Jets: IsoMu24_PFHT380_SixJet32_DoubleBTagCSV_p075
-El_OR_Jets: Ele32_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075
+Mu_OR_Jets: IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075
+El_OR_Jets: Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075
 
 El_CROSS_Jets: Ele28_eta2p1_WPTight_Gsf_HT150
 
-Muon: IsoMu24
+Muon: IsoMu24_eta2p1
 Electron: Ele35_WPTight_Gsf
 Jet: PFHT380_SixJet32_DoubleBTagCSV_p075
