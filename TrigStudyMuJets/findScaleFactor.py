@@ -449,12 +449,12 @@ def main():
 
     # - Get File Names and create histogram dictionaries
     # h_mcTTTTs = {}
-    h_mcTTToSemiLeps = {}
-    h_dataHTMHTs = {}
-    h_dataSMus = {}
-    h_dataSEls = {}
-    # files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era=args.inputLFN, FullPaths=True)
-    # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
+    # h_mcTTToSemiLeps = {}
+    # h_dataHTMHTs = {}
+    # h_dataSMus = {}
+    # h_dataSEls = {}
+    files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era=args.inputLFN, FullPaths=True)
+    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
     h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
     files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
