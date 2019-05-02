@@ -345,9 +345,12 @@ class TriggerStudy(Module):
                 for tg in self.trigLst[key]:
                     trigPath.update({tg: False})
 
-        if self.era == "17AB":
-            if trigPath['IsoMu24'] is True or trigPath['PFHT380_SixJet32_DoubleBTagCSV_p075'] is True:
-                trigPath['IsoMu24_PFHT380_SixJet32_DoubleBTagCSV_p075'] = True
+        if self.era == "17ABdata":
+            if trigPath['IsoMu24_eta2p1'] is True or trigPath['PFHT380_SixJet32_DoubleBTagCSV_p075'] is True:
+                trigPath['IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075'] = True
+        if self.era == "17ABmc":
+            if trigPath['IsoMu24_eta2p1'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
+                trigPath['IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
         elif self.era == "17C":
             if trigPath['IsoMu27'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] is True:
                 trigPath['IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] = True

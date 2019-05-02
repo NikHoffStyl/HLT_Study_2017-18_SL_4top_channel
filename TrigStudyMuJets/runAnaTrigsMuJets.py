@@ -46,8 +46,12 @@ def main(argms):
     """
     redirector = chooseRedirector(argms)
     if not argms.inputLFN.find("17B") == -1:
-        trigList = getFileContents("../myInFiles/2017ABtrigList.txt", True)
-        era2017 = "17AB"
+        if argms.inputLFN == "tt_semilep102_17B" or argms.inputLFN == "tttt102_17B":
+            trigList = getFileContents("../myInFiles/trigList.txt", True)
+            era2017 = "17ABmc"
+        else:
+            trigList = getFileContents("../myInFiles/2017ABtrigList.txt", True)
+            era2017 = "17ABdata"
     elif not argms.inputLFN.find("17C") == -1:
         trigList = getFileContents("../myInFiles/2017CtrigList.txt", True)
         era2017 = "17C"
