@@ -453,8 +453,8 @@ def main():
     # h_dataHTMHTs = {}
     # h_dataSMus = {}
     # h_dataSEls = {}
-    files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era=args.inputLFN, FullPaths=True)
-    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
+    files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
+    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17D")
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
     h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
     files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
@@ -513,11 +513,14 @@ def main():
             h_dataSEls[hName] = h_dataSEls17C[hName]
         else:
             h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
-            h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
+            # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
+            h_dataHTMHTs[hName].Add(h_dataHTMHTs17E[hName])
             h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
-            h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
+            # h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
+            h_dataSMus[hName].Add(h_dataSMus17E[hName])
             h_dataSMus[hName].Add(h_dataSMus17F[hName])
-            h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
+            # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
+            h_dataSEls[hName].Add(h_dataSEls17E[hName])
             h_dataSEls[hName].Add(h_dataSEls17F[hName])
 
         h_mcTTToSemiLeps[hName].SetTitle("Top-AntiTop MC")
