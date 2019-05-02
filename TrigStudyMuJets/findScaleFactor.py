@@ -290,7 +290,7 @@ def getHistograms(fileList, era):
             # keyWords = name.split("_")
             # for nk, keyWord in enumerate(keyWords):
             #     if nk > 2: keyWord[2] += "_" + keyWord[nk]
-            if "dataSEl17D" in fName:
+            if "dataSEl" in fName:
                 h_dataSEl[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataSEl_")
@@ -520,7 +520,7 @@ def main():
             h_dataSMus[hName].Add(h_dataSMus17E[hName])
             h_dataSMus[hName].Add(h_dataSMus17F[hName])
             # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
-            # h_dataSEls[hName].Add(h_dataSEls17E[hName])
+            h_dataSEls[hName].Add(h_dataSEls17E[hName])
             h_dataSEls[hName].Add(h_dataSEls17F[hName])
 
         h_mcTTToSemiLeps[hName].SetTitle("Top-AntiTop MC")
