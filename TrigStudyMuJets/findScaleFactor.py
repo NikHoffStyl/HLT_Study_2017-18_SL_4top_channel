@@ -448,6 +448,11 @@ def main():
     legString = cmsPlotString(args.inputLFN)
 
     # - Get File Names and create histogram dictionaries
+    # h_mcTTTTs = {}
+    h_mcTTToSemiLeps = {}
+    h_dataHTMHTs = {}
+    h_dataSMus = {}
+    h_dataSEls = {}
     # files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era=args.inputLFN, FullPaths=True)
     # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, args.inputLFN)
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
@@ -461,31 +466,12 @@ def main():
     files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
     h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F")
 
-    if args.inputLFN == "17B":
-        h_mcTTToSemiLeps = h_mcTTToSemiLeps17B
-        h_dataHTMHTs = h_dataHTMHTs17B
-        h_dataSMus = h_dataSMus17B
-        h_dataSEls = h_dataSEls17B
-    elif args.inputLFN == "17C":
-        h_mcTTToSemiLeps = h_mcTTToSemiLeps17C
-        h_dataHTMHTs = h_dataHTMHTs17C
-        h_dataSMus = h_dataSMus17C
-        h_dataSEls = h_dataSEls17C
-    else:
-        h_mcTTToSemiLeps = h_mcTTToSemiLeps17D
-        h_dataHTMHTs = ROOT.Add(h_dataHTMHTs17D, h_dataHTMHTs17E, 1, 1)
-        h_dataHTMHTs.Add(h_dataHTMHTs17F)
-        h_dataSMus = ROOT.Add(h_dataSMus17D, h_dataSMus17E, 1, 1)
-        h_dataSMus.Add(h_dataSMus17F)
-        h_dataSEls = ROOT.Add(h_dataSEls17D, h_dataSEls17E, 1, 1)
-        h_dataSEls.Add(h_dataSEls17F)
-
     #  - Find efficiency ratio histogram dictionaries
     # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
     tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps17D, "Top-AntiTop MC")
-    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
-    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
-    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
+    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs17D, "HTMHT Data")
+    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus17D, "Single Muon Data")
+    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls17D, "Single Electron Data")
 
     # - Find scale factor histogram dictionaries
     s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data")
@@ -514,6 +500,26 @@ def main():
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
         t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
+
+        if args.inputLFN == "17B":
+            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
+            h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
+            h_dataSMus[hName] = h_dataSMus17B[hName]
+            h_dataSEls[hName] = h_dataSEls17B[hName]
+        elif args.inputLFN == "17C":
+            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
+            h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
+            h_dataSMus[hName] = h_dataSMus17C[hName]
+            h_dataSEls[hName] = h_dataSEls17C[hName]
+        else:
+            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
+            h_dataHTMHTs[hName] = ROOT.Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
+            h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
+            h_dataSMus[hName] = ROOT.Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
+            h_dataSMus[hName].Add(h_dataSMus17F[hName])
+            h_dataSEls[hName] = ROOT.Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
+            h_dataSEls[hName].Add(h_dataSEls17F[hName])
+
         h_mcTTToSemiLeps[hName].SetTitle("Top-AntiTop MC")
         h_dataHTMHTs[hName].SetTitle("HTMHT Data")
         h_dataSMus[hName].SetTitle("Single Muon Data")
