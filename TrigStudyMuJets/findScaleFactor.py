@@ -469,6 +469,7 @@ def main():
 
     for hname1 in h_dataHTMHTs17D:
         for hname2 in h_dataHTMHTs17E:
+            if hname1 == "h_metPt_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2":continue
             if hname1 == hname2:
                 h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
                 h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
