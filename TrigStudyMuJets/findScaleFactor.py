@@ -281,7 +281,6 @@ def getHistograms(fileList, era):
     h_dataHTMHT = {}
     h_dataSMu = {}
     h_dataSEl = {}
-    hNameList = []
     f = []
     counter = 0
     for fName in fileList:
@@ -295,7 +294,6 @@ def getHistograms(fileList, era):
                 h_dataSEl[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataSEl" + era + "_")
-                print(name)
                 h_dataSEl[name].SetName(hName)
                 h_dataSEl[name].SetDirectory(0)  # = h_dataSEl[name].Clone("El" + name)
             if "dataSMu" in fName:
@@ -322,10 +320,9 @@ def getHistograms(fileList, era):
                 hName = name.replace("h_", "h_mcTTToSemiLep" + era + "_")
                 h_mcTTToSemiLep[name].SetName(hName)
                 h_mcTTToSemiLep[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
-            hNameList.append(hName)
         f[counter].Close()
         counter += 1
-    return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl, hNameList
+    return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl
 
 
 def findTrigRatio(h1, title):
@@ -457,41 +454,53 @@ def main():
     # h_dataSMus = {}
     # h_dataSEls = {}
     files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
-    # histNames = getHistNames(files[0])
-    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls,histNames = getHistograms(files, "17DEF")
+    histNames = getHistNames(files[0])
+    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
-    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B, histNames = getHistograms(files17B, "17B")
+    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
     files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
-    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C, histNames = getHistograms(files17C, "17C")
+    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C")
     files17D = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
-    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D, histNames = getHistograms(files17D, "17D")
+    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D")
     files17E = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17E", FullPaths=True)
-    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E, histNames = getHistograms(files17E, "17E")
+    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E")
     files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
-    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F, histNames = getHistograms(files17F, "17F")
+    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F")
 
-    for hn, hName in enumerate(histNames):
-        if args.inputLFN == "17B":
-            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
-            h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
-            h_dataSMus[hName] = h_dataSMus17B[hName]
-            h_dataSEls[hName] = h_dataSEls17B[hName]
-        elif args.inputLFN == "17C":
-            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
-            h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
-            h_dataSMus[hName] = h_dataSMus17C[hName]
-            h_dataSEls[hName] = h_dataSEls17C[hName]
-        else:
-            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
-            # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
-            h_dataHTMHTs[hName].Add(h_dataHTMHTs17E[hName])
-            h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
-            # h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
-            h_dataSMus[hName].Add(h_dataSMus17E[hName])
-            h_dataSMus[hName].Add(h_dataSMus17F[hName])
-            # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
-            h_dataSEls[hName].Add(h_dataSEls17E[hName])
-            h_dataSEls[hName].Add(h_dataSEls17F[hName])
+    for hname1 in h_dataHTMHTs17D:
+        for hname2 in h_dataHTMHTs17E:
+            if hname1 == hname2:
+                h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
+                h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
+                h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
+                for hname3 in h_dataHTMHTs17F:
+                    if hname3 == hname1:
+                        h_dataHTMHTs[hname1].Add(h_dataHTMHTs17F[hname1])
+                        h_dataSMus[hname1].Add(h_dataSMus17F[hname1])
+                        h_dataSEls[hname1].Add(h_dataSEls17F[hname1])
+
+    # for hn, hName in enumerate(histNames):
+    #     if args.inputLFN == "17B":
+    #         h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
+    #         h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
+    #         h_dataSMus[hName] = h_dataSMus17B[hName]
+    #         h_dataSEls[hName] = h_dataSEls17B[hName]
+    #     elif args.inputLFN == "17C":
+    #         h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
+    #         h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
+    #         h_dataSMus[hName] = h_dataSMus17C[hName]
+    #         h_dataSEls[hName] = h_dataSEls17C[hName]
+    #     else:
+    #         h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
+    #         # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
+    #         h_dataHTMHTs[hName].Add(h_dataHTMHTs17E[hName])
+    #         h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
+    #         # h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
+    #         h_dataSMus[hName].Add(h_dataSMus17E[hName])
+    #         h_dataSMus[hName].Add(h_dataSMus17F[hName])
+    #         # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
+    #         h_dataSEls[hName].Add(h_dataSEls17E[hName])
+    #         h_dataSEls[hName].Add(h_dataSEls17F[hName])
 
     #  - Find efficiency ratio histogram dictionaries
     # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
