@@ -322,7 +322,7 @@ def getHistograms(fileList, era):
                 h_mcTTToSemiLep[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
         f[counter].Close()
         counter += 1
-    return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl, names
+    return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl
 
 
 def findTrigRatio(h1, title):
@@ -454,17 +454,18 @@ def main():
     # h_dataSMus = {}
     # h_dataSEls = {}
     files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
-    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls, histNames = getHistograms(files, "17DEF")
+    histNames = getHistNames(files[0])
+    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
-    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B, histNames = getHistograms(files17B, "17B")
+    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
     files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
-    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C, histNames = getHistograms(files17C, "17C")
+    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C")
     files17D = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
-    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D, histNames = getHistograms(files17D, "17D")
+    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D")
     files17E = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17E", FullPaths=True)
-    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E, histNames = getHistograms(files17E, "17E")
+    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E")
     files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
-    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F, histNames = getHistograms(files17F, "17F")
+    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F")
 
     for hn, hName in enumerate(histNames):
         if args.inputLFN == "17B":
@@ -492,9 +493,9 @@ def main():
     #  - Find efficiency ratio histogram dictionaries
     # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
     tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps, "Top-AntiTop MC")
-    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs17D, "HTMHT Data")
-    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus17D, "Single Muon Data")
-    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls17D, "Single Electron Data")
+    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
+    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
+    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
 
     # - Find scale factor histogram dictionaries
     s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data")
