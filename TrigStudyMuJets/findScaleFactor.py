@@ -491,7 +491,7 @@ def main():
         h_dataSEls[hName].SetLineColor(6)
         t.Draw("same")
         cv1[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
-        ROOT.gStyle.SetLegendTextSize(0.02)
+        ROOT.gStyle.SetLegendTextSize(0.03)
         ltx = TLatex()
         ltx.SetTextSize(0.03)
         ltx.DrawLatex(tX1, tY1, legString)
