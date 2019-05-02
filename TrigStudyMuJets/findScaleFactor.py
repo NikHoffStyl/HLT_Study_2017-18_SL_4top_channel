@@ -525,10 +525,10 @@ def main():
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
         elif args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
-        t = ROOT.TPaveText(0.15, 0.91, 0.75, 0.98, "nbNDC")
-        t2 = ROOT.TPaveText(0.7, 0.91, 0.9, 0.98, "nbNDC")
-        t.IsTransparent()  # SetFillColor(0)
-        t2.IsTransparent()  # SetFillColor(0)
+        t = ROOT.TPaveText(0.15, 0.91, 0.7, 0.98, "nbNDC")
+        t2 = ROOT.TPaveText(0.55, 0.81, 0.75, 0.88, "nbNDC")
+        t.SetFillColor(0)
+        t2.SetFillColor(0)
         t.SetTextSize(0.03)
         t2.SetTextSize(0.03)
         t.AddText(trg)
@@ -552,7 +552,7 @@ def main():
         h_dataSEls[hName].SetFillColor(6)
         t.Draw("same")
         t2.Draw("same")
-        cv0[hn].BuildLegend(0.4, 0.5, 0.9, 0.7)
+        cv0[hn].BuildLegend(0.6, 0.5, 0.9, 0.7)
         ROOT.gStyle.SetLegendTextSize(0.03)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
@@ -579,8 +579,8 @@ def main():
         tr2_dataSEl[hName].SetLineColor(6)
         t.Draw("same")
         t2.Draw("same")
-        cv1[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
-        ROOT.gStyle.SetLegendTextSize(0.02)
+        cv1[hn].BuildLegend(0.6, 0.1, 0.9, 0.3)
+        ROOT.gStyle.SetLegendTextSize(0.03)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
@@ -601,12 +601,12 @@ def main():
         s_dataSEl[hName].SetLineColor(6)
         t.Draw("same")
         t2.Draw("same")
-        cv2[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
-        ROOT.gStyle.SetLegendTextSize(0.02)
+        cv2[hn].BuildLegend(0.6, 0.1, 0.9, 0.3)
+        ROOT.gStyle.SetLegendTextSize(0.03)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
-        # pdfCreator(args, 1, triggerCanvas)
+        pdfCreator(args, 1, triggerCanvas)
 
     # cv1 = triggerCanvas.cd(1)
     # count = 0
@@ -642,11 +642,11 @@ def main():
     # pdfCreator(args, 1, triggerCanvas)
     #
     cv3 = triggerCanvas.cd(1)
-    t3 = ROOT.TPaveText(0.2, 0.45, 0.8, 0.55, "nbNDC")
+    t3 = ROOT.TPaveText(0., 0., 1., 1., "nbNDC")
     t3.SetFillColor(0)
     t3.SetTextSize(0.03)
     t3.AddText("Values coming soon")
-    t3.Draw(0)
+    t3.Draw()
     pdfCreator(args, 2, triggerCanvas)
 
 
