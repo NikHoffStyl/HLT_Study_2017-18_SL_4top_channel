@@ -126,8 +126,8 @@ def cutInfoPage(lx, selCrit, preCuts):
     """
     lx.SetTextSize(0.04)
     lx.DrawLatex(0.10, 0.70, "Pre-selection Requisites for:")
-    lx.DrawLatex(0.16, 0.65, "#bullet number of Jets: #bf{number > %s}" % preCuts["nJet"])
-    lx.DrawLatex(0.16, 0.60, "#bullet number of leptons (Muons or Electrons): #bf{number > %s }" % preCuts["nLepton"])
+    lx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preCuts["nJet"])
+    lx.DrawLatex(0.16, 0.60, "#bullet Leptons (Muons or Electrons): #bf{number > %s }" % preCuts["nLepton"])
     lx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
     lx.DrawLatex(0.10, 0.40, "Baseline selection Requisites for:")
     lx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
@@ -135,7 +135,7 @@ def cutInfoPage(lx, selCrit, preCuts):
     lx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
     lx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and PFRelIso_all<%s (for at least 1)}"
                  % (selCrit["maxObjEta"], selCrit["maxPfRelIso04"]))
-    lx.DrawLatex(0.16, 0.20, "HT >500 GeV")
+    lx.DrawLatex(0.16, 0.20, "#bullet #bf{HT >500 GeV}")
 
 
 def cmsPlotString(args):
@@ -159,7 +159,7 @@ def cmsPlotString(args):
     elif args == "17F":
         legStr = "#splitline{CMS}{Run2017F}"
     elif args == "17DEF":
-        legStr = "#splitline{CMS}{Run2017D-F}"
+        legStr = "#splitline{CMS Run2017D-F}{#eta}"
     elif args == "17CDEF":
         legStr = "#splitline{CMS}{Run2017C-F}"
     elif args == "all":
@@ -450,13 +450,7 @@ def main():
     legString = cmsPlotString(args.inputLFN)
 
     # - Get File Names and create histogram dictionaries
-    # h_mcTTTTs = {}
-    # h_mcTTToSemiLeps = {}
-    # h_dataHTMHTs = {}
-    # h_dataSMus = {}
-    # h_dataSEls = {}
     files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
-    histNames = getHistNames(files[0])
     h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
     h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
@@ -469,40 +463,33 @@ def main():
     files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
     h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F")
 
-    for hname1 in h_dataHTMHTs17D:
-        for hname2 in h_dataHTMHTs17E:
-            if hname1 == hname2:
-                h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
-                h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
-                h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
-                for hname3 in h_dataHTMHTs17F:
-                    if hname3 == hname1:
-                        h_dataHTMHTs[hname1].Add(h_dataHTMHTs17F[hname1])
-                        h_dataSMus[hname1].Add(h_dataSMus17F[hname1])
-                        h_dataSEls[hname1].Add(h_dataSEls17F[hname1])
-
-    # for hn, hName in enumerate(histNames):
-    #     if args.inputLFN == "17B":
-    #         h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
-    #         h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
-    #         h_dataSMus[hName] = h_dataSMus17B[hName]
-    #         h_dataSEls[hName] = h_dataSEls17B[hName]
-    #     elif args.inputLFN == "17C":
-    #         h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
-    #         h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
-    #         h_dataSMus[hName] = h_dataSMus17C[hName]
-    #         h_dataSEls[hName] = h_dataSEls17C[hName]
-    #     else:
-    #         h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
-    #         # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
-    #         h_dataHTMHTs[hName].Add(h_dataHTMHTs17E[hName])
-    #         h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
-    #         # h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
-    #         h_dataSMus[hName].Add(h_dataSMus17E[hName])
-    #         h_dataSMus[hName].Add(h_dataSMus17F[hName])
-    #         # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
-    #         h_dataSEls[hName].Add(h_dataSEls17E[hName])
-    #         h_dataSEls[hName].Add(h_dataSEls17F[hName])
+    if args.inputLFN == "17B":
+        for hName in h_mcTTToSemiLeps17B:
+            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
+            h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
+            h_dataSMus[hName] = h_dataSMus17B[hName]
+            h_dataSEls[hName] = h_dataSEls17B[hName]
+    elif args.inputLFN == "17C":
+        for hName in h_mcTTToSemiLeps17C:
+            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
+            h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
+            h_dataSMus[hName] = h_dataSMus17C[hName]
+            h_dataSEls[hName] = h_dataSEls17C[hName]
+    else:
+        for hname1 in h_dataHTMHTs17D:
+            for hname2 in h_dataHTMHTs17E:
+                if hname1 == hname2:
+                    h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
+                    h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
+                    h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
+                    for hname3 in h_dataHTMHTs17F:
+                        if hname3 == hname1:
+                            h_dataHTMHTs[hname1].Add(h_dataHTMHTs17F[hname1])
+                            h_dataSMus[hname1].Add(h_dataSMus17F[hname1])
+                            h_dataSEls[hname1].Add(h_dataSEls17F[hname1])
+                            # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
+                            # h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
+                            # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
 
     #  - Find efficiency ratio histogram dictionaries
     # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
@@ -537,31 +524,14 @@ def main():
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
         if args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
-        t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
+        t = ROOT.TPaveText(0.1, 0.91, 0.75, 0.98, "nbNDC")
+        t2 = ROOT.TPaveText(0.8, 0.91, 1, 0.98, "nbNDC")
+        t.SetFillColor(0)
+        t2.SetFillColor(0)
+        t.SetTextSize(0.03)
+        t2.SetTextSize(0.03)
         t.AddText(trg)
-
-        # if args.inputLFN == "17B":
-        #     h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
-        #     h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
-        #     h_dataSMus[hName] = h_dataSMus17B[hName]
-        #     h_dataSEls[hName] = h_dataSEls17B[hName]
-        # elif args.inputLFN == "17C":
-        #     h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
-        #     h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
-        #     h_dataSMus[hName] = h_dataSMus17C[hName]
-        #     h_dataSEls[hName] = h_dataSEls17C[hName]
-        # else:
-            # h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
-            # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
-        # h_dataHTMHTs[hName].Add(h_dataHTMHTs17E[hName])
-        # h_dataHTMHTs[hName].Add(h_dataHTMHTs17F[hName])
-        #     h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
-        # h_dataSMus[hName].Add(h_dataSMus17E[hName])
-        # h_dataSMus[hName].Add(h_dataSMus17F[hName])
-            # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
-            # h_dataSEls[hName].Add(h_dataSEls17E[hName])
-            # h_dataSEls[hName].Add(h_dataSEls17F[hName])
-
+        t2.AddText(legString)
         h_mcTTToSemiLeps[hName].SetTitle("Top-AntiTop MC")
         h_dataHTMHTs[hName].SetTitle("HTMHT Data")
         h_dataSMus[hName].SetTitle("Single Muon Data")
@@ -569,7 +539,7 @@ def main():
         h_mcTTToSemiLeps[hName].Draw()
         h_mcTTToSemiLeps[hName].SetLineColor(1)
         tX1 = 0.05 * (h_mcTTToSemiLeps[hName].GetXaxis().GetXmax())
-        tY1 = 1.1
+        tY1 = 1.1*(h_mcTTToSemiLeps[hName].GetMaximum())
         h_dataSMus[hName].Draw('same')
         h_dataSMus[hName].SetLineColor(2)
         h_dataSMus[hName].SetFillColor(2)
@@ -589,8 +559,6 @@ def main():
 
         # - Draw trigger efficiency hists
         cv1[hn] = triggerCanvas.cd(1)
-        trg = whatTrig(hName)
-        t = ROOT.TPaveText(0.2, 0.95, 0.5, 1.0, "nbNDC")
         t.AddText(trg)
         tr2_mcTTToSemiLep[hName].Draw('AP')
         tr2_mcTTToSemiLep[hName].SetLineColor(1)
@@ -617,12 +585,11 @@ def main():
 
         # - Draw scale factor hists
         cv2[hn] = triggerCanvas.cd(1)
-        trg = whatTrig(hName)
-        t = ROOT.TPaveText(0.1, 0.91, 0.5, 0.98, "nbNDC")
-        t.SetTextSize(0.03)
         t.AddText(trg)
         s_HTMHT[hName].Draw('E1')
         s_HTMHT[hName].SetLineColor(4)
+        s_HTMHT[hName].SetMinimum(0)
+        s_HTMHT[hName].SetMaximum(1.8)
         tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
         tY1 = 1.2
         s_dataSMu[hName].Draw('E1 same')
