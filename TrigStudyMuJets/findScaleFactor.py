@@ -295,6 +295,7 @@ def getHistograms(fileList, era):
                 h_dataSEl[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataSEl" + era + "_")
+                print(name)
                 h_dataSEl[name].SetName(hName)
                 h_dataSEl[name].SetDirectory(0)  # = h_dataSEl[name].Clone("El" + name)
             if "dataSMu" in fName:
@@ -465,7 +466,7 @@ def main():
     files17D = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
     h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D, histNames = getHistograms(files17D, "17D")
     files17E = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17E", FullPaths=True)
-    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E, histNames= getHistograms(files17E, "17E")
+    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E, histNames = getHistograms(files17E, "17E")
     files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
     h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F, histNames = getHistograms(files17F, "17F")
 
