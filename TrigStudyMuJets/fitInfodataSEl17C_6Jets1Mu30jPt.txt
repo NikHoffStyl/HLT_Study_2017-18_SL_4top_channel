@@ -13,3 +13,18 @@ dataSEl17C_6Jets1Mu30jPt, muonPtIsoMu27, 0.857, +/-, 0.009, 27.227, +/-, 0.190, 
 Muon Pt Eff = 0.167 +/- 0.016 , PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
 Muon Pt Eff = 0.651 +/- 0.038 , IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
 Muon Pt Eff = 0.557 +/- 0.035 , Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataSEl17C_6Jets1Mu30jPt, jetHtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.187, +/-, 0.090, 500.000, +/-, 43.842, 35.822, 40.000, 0.658775353704, 18.051, +/- ,8.224, -0.100, +/-, 0.041
+ dataSEl17C_6Jets1Mu30jPt, jetHtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 0.842, +/-, 0.355, 500.000, +/-, 74.341, 40.380, 40.000, 0.453474592106, 19.236, +/- ,18.007, -0.100, +/-, 0.201
+ dataSEl17C_6Jets1Mu30jPt, jetHtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.240, +/-, 0.070, 500.000, +/-, 23.162, 77.159, 40.000, 0.000377972922668, 18.916, +/- ,6.425, -0.100, +/-, 0.024
+  Jet HT Eff =,0.594,+/- ,0.061, IsoMu27 
+ Jet HT Eff =,0.135,+/- ,0.025, PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff =,0.645,+/- ,0.065, IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+ Jet HT Eff =,0.175,+/- ,0.029, Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
+dataSEl17C_6Jets1Mu30jPt, muonPtIsoMu27, 0.800, +/-, 0.033, 26.417, +/-, 1.607, 56.134, 90.000, 0.998039615535, 0.053, +/- ,4.972, -0.100, +/-, 0.023
+ dataSEl17C_6Jets1Mu30jPt, muonPtPFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 1.552, +/-, 0.441, 24.000, +/-, 16.054, 1352000000000001618906481057333248.000, 90.000, 0.0, 1000.000, +/- ,841.471, 0.800, +/-, 0.357
+ dataSEl17C_6Jets1Mu30jPt, muonPtIsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2, 1.039, +/-, 0.000, 42.041, +/-, 0.000, 217.368, 90.000, 1.53750208207e-12, 796.323, +/- ,0.000, 0.259, +/-, 0.000
+ dataSEl17C_6Jets1Mu30jPt, muonPtMu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5, 0.600, +/-, 0.026, 50.000, +/-, 7.049, 101.881, 90.000, 0.184448566143, 42.773, +/- ,9.457, -0.100, +/-, 0.009
+ Muon Pt Eff = ,0.594,+/-,0.061, IsoMu27 
+Muon Pt Eff = ,0.135,+/-,0.025, PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = ,0.645,+/-,0.065, IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2 
+Muon Pt Eff = ,0.175,+/-,0.029, Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5 
