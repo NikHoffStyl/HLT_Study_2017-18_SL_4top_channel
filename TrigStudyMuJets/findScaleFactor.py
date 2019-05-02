@@ -125,16 +125,17 @@ def cutInfoPage(lx, selCrit, preCuts):
 
     """
     lx.SetTextSize(0.04)
-    lx.DrawLatex(0.10, 0.70, "On-line (pre-)selection Requisites for:")
-    lx.DrawLatex(0.16, 0.65, "#bullet Jets: #bf{number > %s}" % preCuts["nJet"])
-    lx.DrawLatex(0.16, 0.60, "#bullet Muons plus Electrons: #bf{number > %s }" % preCuts["nLepton"])
+    lx.DrawLatex(0.10, 0.70, "Pre-selection Requisites for:")
+    lx.DrawLatex(0.16, 0.65, "#bullet number of Jets: #bf{number > %s}" % preCuts["nJet"])
+    lx.DrawLatex(0.16, 0.60, "#bullet number of leptons (Muons or Electrons): #bf{number > %s }" % preCuts["nLepton"])
     lx.DrawLatex(0.10, 0.50, "Event Limit: #bf{None (see last page)}")
-    lx.DrawLatex(0.10, 0.40, "Off-line (post-)selection Requisites for:")
+    lx.DrawLatex(0.10, 0.40, "Baseline selection Requisites for:")
     lx.DrawLatex(0.16, 0.35, "#bullet Jets: #bf{jetId > %s , p_{T} > %s and |#eta|<%s (for at least 6 jets)}"
                  % (selCrit["minJetId"], selCrit["minJetPt"], selCrit["maxObjEta"]))
     lx.DrawLatex(0.16, 0.30, "      #bf{btagDeepFlavB > 0.7489 (for at least one jet)}")
-    lx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and miniPFRelIso_all<%s (for at least 1)}"
+    lx.DrawLatex(0.16, 0.25, "#bullet Muons: #bf{has tightId, |#eta|<%s and PFRelIso_all<%s (for at least 1)}"
                  % (selCrit["maxObjEta"], selCrit["maxPfRelIso04"]))
+    lx.DrawLatex(0.16, 0.20, "HT >500 GeV")
 
 
 def cmsPlotString(args):
