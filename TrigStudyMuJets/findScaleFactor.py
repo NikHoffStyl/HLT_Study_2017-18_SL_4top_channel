@@ -149,21 +149,21 @@ def cmsPlotString(args):
 
     """
     if args == "17B":
-        legStr = "#splitline{CMS}{Run2017B}"
+        legStr = "CMS Run2017B"
     elif args == "17C":
-        legStr = "#splitline{CMS}{Run2017C}"
+        legStr = "CMS Run2017C"
     elif args == "17D":
-        legStr = "#splitline{CMS}{Run2017D}"
+        legStr = "CMS Run2017D"
     elif args == "17E":
-        legStr = "#splitline{CMS}{Run2017E}"
+        legStr = "CMS Run2017E"
     elif args == "17F":
-        legStr = "#splitline{CMS}{Run2017F}"
+        legStr = "CMS Run2017F"
     elif args == "17DEF":
-        legStr = "#splitline{CMS Run2017D-F}{#eta}"
+        legStr = "CMS Run2017D-F"
     elif args == "17CDEF":
-        legStr = "#splitline{CMS}{Run2017C-F}"
+        legStr = "CMS Run2017C-F"
     elif args == "all":
-        legStr = "#splitline{CMS}{All Run2017}"
+        legStr = "CMS All Run2017"
     else:
         legStr = "CMS"
 
@@ -223,6 +223,7 @@ def findEraRootFiles(path, era="all", verbose=False, FullPaths=False):
         files.append(f)
     if FullPaths: files = [path + x for x in files]
     if len(files) == 0: print('[ERROR]: No root files found in: ' + path)
+    print(files)
     return files
 
 
@@ -263,7 +264,7 @@ def getHistNames(file):
         for trg in trgList:
             if "Ele" in trg: continue
             hNames.append("h_" + obj + "_" + trg)
-
+    print(hNames)
     return hNames
 
 
@@ -520,14 +521,14 @@ def main():
         trg = whatTrig(hName)
         if args.inputLFN == "17B":
             if trg != "IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075" or trg != "IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue  # 1 is data 2 is mc
-        if args.inputLFN == "17C":
+        elif args.inputLFN == "17C":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
-        if args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
+        elif args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
-        t = ROOT.TPaveText(0.1, 0.91, 0.75, 0.98, "nbNDC")
-        t2 = ROOT.TPaveText(0.8, 0.91, 1, 0.98, "nbNDC")
-        t.SetFillColor(0)
-        t2.SetFillColor(0)
+        t = ROOT.TPaveText(0.15, 0.91, 0.75, 0.98, "nbNDC")
+        t2 = ROOT.TPaveText(0.7, 0.91, 0.9, 0.98, "nbNDC")
+        t.IsTransparent()  # SetFillColor(0)
+        t2.IsTransparent()  # SetFillColor(0)
         t.SetTextSize(0.03)
         t2.SetTextSize(0.03)
         t.AddText(trg)
@@ -551,7 +552,7 @@ def main():
         h_dataSEls[hName].SetFillColor(6)
         t.Draw("same")
         t2.Draw("same")
-        cv0[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
+        cv0[hn].BuildLegend(0.4, 0.5, 0.9, 0.7)
         ROOT.gStyle.SetLegendTextSize(0.03)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
@@ -568,8 +569,8 @@ def main():
         graph1.SetMinimum(0)
         graph1.SetMaximum(1.2)
         cv1[hn].Update()
-        tX1 = 0.05 * (tr_dataHTMHT[hName].GetXaxis().GetXmax())
-        tY1 = 1.1
+        # tX1 = 0.05 * (tr_dataHTMHT[hName].GetXaxis().GetXmax())
+        # tY1 = 1.1
         tr2_dataSMu[hName].Draw('same')
         tr2_dataSMu[hName].SetLineColor(2)
         tr2_dataHTMHT[hName].Draw('same')
@@ -592,8 +593,8 @@ def main():
         s_HTMHT[hName].SetLineColor(4)
         s_HTMHT[hName].SetMinimum(0)
         s_HTMHT[hName].SetMaximum(1.8)
-        tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
-        tY1 = 1.2
+        # tX1 = 0.6 * (s_HTMHT[hName].GetXaxis().GetXmax())
+        # tY1 = 1.2
         s_dataSMu[hName].Draw('E1 same')
         s_dataSMu[hName].SetLineColor(2)
         s_dataSEl[hName].Draw('E1 same')
@@ -602,10 +603,10 @@ def main():
         t2.Draw("same")
         cv2[hn].BuildLegend(0.4, 0.1, 0.9, 0.3)
         ROOT.gStyle.SetLegendTextSize(0.02)
-        ltx = TLatex()
-        ltx.SetTextSize(0.03)
-        ltx.DrawLatex(tX1, tY1, legString)
-        pdfCreator(args, 1, triggerCanvas)
+        # ltx = TLatex()
+        # ltx.SetTextSize(0.03)
+        # ltx.DrawLatex(tX1, tY1, legString)
+        # pdfCreator(args, 1, triggerCanvas)
 
     # cv1 = triggerCanvas.cd(1)
     # count = 0
@@ -641,17 +642,11 @@ def main():
     # pdfCreator(args, 1, triggerCanvas)
     #
     cv3 = triggerCanvas.cd(1)
-    # for hn, hName in enumerate(hNamesEl):
-    #     if hn == 0:
-    #         s_dataSEl[hName].Draw('E1')
-    #     tX1 = 0.1 * (s_dataSEl[hName].GetXaxis().GetXmax())
-    #     tY1 = 1.2 * (s_dataSEl[hName].GetMaximum())
-    #     s_dataSEl[hName].Draw('E1 same')
-    # cv3.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    # ROOT.gStyle.SetLegendTextSize(0.02)
-    # ltx = TLatex()
-    # ltx.SetTextSize(0.03)
-    # ltx.DrawLatex(tX1, tY1, legString)
+    t3 = ROOT.TPaveText(0.2, 0.45, 0.8, 0.55, "nbNDC")
+    t3.SetFillColor(0)
+    t3.SetTextSize(0.03)
+    t3.AddText("Values coming soon")
+    t3.Draw(0)
     pdfCreator(args, 2, triggerCanvas)
 
 
