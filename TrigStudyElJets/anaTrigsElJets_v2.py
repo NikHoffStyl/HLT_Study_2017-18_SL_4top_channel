@@ -386,7 +386,7 @@ class TriggerStudy(Module):
             if jetHt["notrig"] > 500:
                 for nm, electron in enumerate(electrons):
                     if not ElPassIdx == nm: continue
-                    self.h_electronRelIso04_all.Fill(electron.pfRelIso04_all)
+                    self.h_electronRelIso04_all.Fill(electron.miniPFRelIso_all)
                     # self.h_electronGenPartFlav.Fill(electron.genPartFlav)
                     # self.h_electronGenPartIdx.Fill(electron.genPartIdx)
                     self.h_electronEta['no_trigger'].Fill(electron.eta)
