@@ -236,7 +236,8 @@ def findTrigList(file):
     Returns: Trigger List
 
     """
-    if "17B" in file: trigList = getFileContents("../myInFiles/2017ABtrigList.txt", False)
+    if "17B" in file and "data" in file: trigList = getFileContents("../myInFiles/2017ABtrigList.txt", False)
+    elif "17B" in file and "TTT" in file: trigList = getFileContents("../myInFiles/trigList.txt", False)
     elif "17C" in file: trigList = getFileContents("../myInFiles/2017CtrigList.txt", False)
     else: trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", False)
 
@@ -278,7 +279,7 @@ def getHistograms(fileList, era):
         h_mcTTTT (dictionary):
     """
     # if not era == "all":
-    names = getHistNames(fileList[0])
+    # names = getHistNames(fileList[0])
     h_mcTTTT = {}
     h_mcTTToSemiLep = {}
     h_dataHTMHT = {}
@@ -289,35 +290,45 @@ def getHistograms(fileList, era):
     for fName in fileList:
         f.append(ROOT.TFile.Open(fName))
         f[counter].cd("plots")
-        for name in names:
+        #for name in names:
             # keyWords = name.split("_")
             # for nk, keyWord in enumerate(keyWords):
             #     if nk > 2: keyWord[2] += "_" + keyWord[nk]
-            if "dataSEl" in fName:
+        if "dataSEl" in fName:
+            names = getHistNames(fName)
+            for name in names:
                 h_dataSEl[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataSEl" + era + "_")
                 h_dataSEl[name].SetName(hName)
                 h_dataSEl[name].SetDirectory(0)  # = h_dataSEl[name].Clone("El" + name)
-            if "dataSMu" in fName:
+        if "dataSMu" in fName:
+            names = getHistNames(fName)
+            for name in names:
                 h_dataSMu[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSMu[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataSMu" + era + "_")
                 h_dataSMu[name].SetName(hName)
                 h_dataSMu[name].SetDirectory(0)  # = h_dataSMu[name].Clone("Mu" + name)
-            if "dataHTMHT" in fName:
+        if "dataHTMHT" in fName:
+            names = getHistNames(fName)
+            for name in names:
                 h_dataHTMHT[name] = ROOT.gDirectory.Get(name)
                 if not h_dataHTMHT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataHTMHT" + era + "_")
                 h_dataHTMHT[name].SetName(hName)
                 h_dataHTMHT[name].SetDirectory(0)  # = h_dataHTMHT[name].Clone("Ht" + name)
-            if "TTTT" in fName:
+        if "TTTT" in fName:
+            names = getHistNames(fName)
+            for name in names:
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
                 if not h_mcTTTT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_mcTTTT" + era + "_")
                 h_mcTTTT[name].SetName(hName)
                 h_mcTTTT[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
-            if "TTToSemiLep" in fName:
+        if "TTToSemiLep" in fName:
+            names = getHistNames(fName)
+            for name in names:
                 h_mcTTToSemiLep[name] = ROOT.gDirectory.Get(name)
                 if not h_mcTTToSemiLep[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_mcTTToSemiLep" + era + "_")
@@ -451,8 +462,13 @@ def main():
     legString = cmsPlotString(args.inputLFN)
 
     # - Get File Names and create histogram dictionaries
-    files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
-    h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
+    h_mcTTTTs = {}
+    h_mcTTToSemiLeps = {}
+    h_dataHTMHTs = {}
+    h_dataSMus = {}
+    h_dataSEls = {}
+    # files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
+    # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
     h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
     files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
@@ -478,11 +494,15 @@ def main():
             h_dataSEls[hName] = h_dataSEls17C[hName]
     else:
         for hname1 in h_dataHTMHTs17D:
+            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
             for hname2 in h_dataHTMHTs17E:
                 if hname1 == hname2:
-                    h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
-                    h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
-                    h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
+                    h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)                                                                        
+                    h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)                                                                              
+                    h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1) 
+                    #h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
+                    #h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
+                    #h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
                     for hname3 in h_dataHTMHTs17F:
                         if hname3 == hname1:
                             h_dataHTMHTs[hname1].Add(h_dataHTMHTs17F[hname1])
@@ -511,9 +531,9 @@ def main():
     cutInfoPage(ltx, selCriteria, preSelCuts)
     pdfCreator(args, 0, triggerCanvas)
 
-    cv0 = [None] * 20
-    cv1 = [None] * 20
-    cv2 = [None] * 20
+    cv0 = [None] * 30
+    cv1 = [None] * 30
+    cv2 = [None] * 30
     for hn, hName in enumerate(hNames):
 
         # - Draw trigger hists
