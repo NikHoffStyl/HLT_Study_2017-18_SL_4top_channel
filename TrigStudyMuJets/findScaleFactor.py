@@ -223,7 +223,7 @@ def findEraRootFiles(path, era="all", verbose=False, FullPaths=False):
         files.append(f)
     if FullPaths: files = [path + x for x in files]
     if len(files) == 0: print('[ERROR]: No root files found in: ' + path)
-    print(files)
+    if verbose: print(files)
     return files
 
 
@@ -244,12 +244,12 @@ def findTrigList(file):
     return trigList
 
 
-def getHistNames(file):
+def getHistNames(file, verbose=False):
     """
 
     Args:
         file:
-
+        verbose:
     Returns:
         hNames (list) : list of histogram names
 
@@ -265,7 +265,7 @@ def getHistNames(file):
         for trg in trgList:
             if "Ele" in trg: continue
             hNames.append("h_" + obj + "_" + trg)
-    print(hNames)
+    if verbose: print(hNames)
     return hNames
 
 
@@ -278,8 +278,6 @@ def getHistograms(fileList, era):
     Returns:
         h_mcTTTT (dictionary):
     """
-    # if not era == "all":
-    # names = getHistNames(fileList[0])
     h_mcTTTT = {}
     h_mcTTToSemiLep = {}
     h_dataHTMHT = {}
@@ -290,10 +288,6 @@ def getHistograms(fileList, era):
     for fName in fileList:
         f.append(ROOT.TFile.Open(fName))
         f[counter].cd("plots")
-        #for name in names:
-            # keyWords = name.split("_")
-            # for nk, keyWord in enumerate(keyWords):
-            #     if nk > 2: keyWord[2] += "_" + keyWord[nk]
         if "dataSEl" in fName:
             names = getHistNames(fName)
             for name in names:
@@ -389,13 +383,14 @@ def findTrigRatio(h1, title):
     return h_TH1DOut, h_TEffOut
 
 
-def scaleFactor(h1, h2, title):
+def scaleFactor(h1, h2, title, era):
     """
 
     Args:
         h1: numerator
         h2: denominator
         title (string): title given to legend
+        era:
     Returns:
 
     """
@@ -403,15 +398,23 @@ def scaleFactor(h1, h2, title):
     hNameList = []
     for hName in h1:
         for hName2 in h2:
-            if not hName == hName2: continue
+            if not hName == hName2:
+                if era == "17B":
+                    if hName.find("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075") == -1 or hName2.find(
+                            "IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2") == -1: continue
+                    else:
+                        str1 = hName.replace("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075")
+                        str2 = hName.replace("IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2")
+                        if not str1 == str2: continue
+                else: continue  # hNameList.append(hName2)
             sfName = hName.replace("h_eff", "h_sf")
             hNameList.append(hName)
             h_scale[hName] = h1[hName].Clone(sfName)
             # h_scale[hName].Sumw2()
             h_scale[hName].SetStats(0)
-            h_scale[hName].Divide(h2[hName])
-            xTitle = h2[hName].GetXaxis().GetTitle()
-            xBinWidth = h2[hName].GetXaxis().GetBinWidth(1)
+            h_scale[hName].Divide(h2[hName2])
+            xTitle = h2[hName2].GetXaxis().GetTitle()
+            xBinWidth = h2[hName2].GetXaxis().GetBinWidth(1)
             h_scale[hName].SetTitle(title + ";{0};Scale Factors per {1} GeV/c".format(xTitle, round(xBinWidth)))
 
     return h_scale, hNameList
@@ -494,15 +497,15 @@ def main():
             h_dataSEls[hName] = h_dataSEls17C[hName]
     else:
         for hname1 in h_dataHTMHTs17D:
-            h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
+            h_mcTTToSemiLeps[hname1] = h_mcTTToSemiLeps17D[hname1]
             for hname2 in h_dataHTMHTs17E:
                 if hname1 == hname2:
-                    h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)                                                                        
-                    h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)                                                                              
-                    h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1) 
-                    #h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
-                    #h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
-                    #h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
+                    h_dataHTMHTs[hname1].Add(h_dataHTMHTs17D[hname1], h_dataHTMHTs17E[hname1], 1, 1)
+                    h_dataSMus[hname1].Add(h_dataSMus17D[hname1], h_dataSMus17E[hname1], 1, 1)
+                    h_dataSEls[hname1].Add(h_dataSEls17D[hname1], h_dataSEls17E[hname1], 1, 1)
+                    # h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
+                    # h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
+                    # h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
                     for hname3 in h_dataHTMHTs17F:
                         if hname3 == hname1:
                             h_dataHTMHTs[hname1].Add(h_dataHTMHTs17F[hname1])
@@ -520,9 +523,9 @@ def main():
     tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
 
     # - Find scale factor histogram dictionaries
-    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data")
-    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data")
-    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data")
+    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data", args.inputLFN)
+    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data", args.inputLFN)
+    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN)
 
     ROOT.gStyle.SetOptTitle(0)
 
