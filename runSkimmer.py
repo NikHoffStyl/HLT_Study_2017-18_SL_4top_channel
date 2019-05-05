@@ -27,7 +27,14 @@ def process_arguments():
                                                      "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
                                                      "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
                                                      "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
-                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F"],
+                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F",
+                                                     "tt_semilep102_18", "tttt102_18",
+                                                     "dataHTMHT18B", "dataSMu18B", "dataSEl18B",
+                                                     "dataHTMHT18C", "dataSMu18C", "dataSEl18C",
+                                                     "dataHTMHT18D", "dataSMu18D", "dataSEl18D",
+                                                     "dataHTMHT18E", "dataSMu18E", "dataSEl18E",
+                                                     "dataHTMHT18F", "dataSMu18F", "dataSEl18F"
+                                                     ],
                         default="tttt102", help="Set list of input files")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
                         default="xrd-global", help="Sets redirector to query locations for LFN")
@@ -53,7 +60,7 @@ def skimmer(file, arg):
 
     """
     thePostFix = arg.inputLFN
-    p99 = PostProcessor("SingleElectron/17F",
+    p99 = PostProcessor("/pnfs/iihe/cms/store/user/nistylia/Trimmed2018Data/SingleMuon/17A",
                         # "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X",
                         # "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X",
                         [file],
@@ -69,7 +76,7 @@ def skimmer(file, arg):
     p99.run()
     t1 = time.time()
     proc = os.getpid()
-    print("Elapsed time {0:7.1f} s by process id: {1}".format((t1 - t0), proc))
+    print(">>> Elapsed time {0:7.1f} s by process id: {1}".format((t1 - t0), proc))
 
 
 def chooseRedirector(arg):
@@ -126,98 +133,90 @@ def ioFiles(arg):
     # you may want to change path to suit your file ordering
     if arg.inputLFN == "dataHTMHT17B":
         inLFNList = open("myInFiles/data/HTMHT_Run2017B-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataHTMHT17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17B":
         inLFNList = open("myInFiles/data/SingleMuon_Run2017B-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSMu17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17B":
         inLFNList = open("myInFiles/data/SingleElectron_Run2017B-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSEl17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17C":
         inLFNList = open("myInFiles/data/HTMHT_Run2017C-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataHTMHT17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17C":
         inLFNList = open("myInFiles/data/SingleMuon_Run2017C-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSMu17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17C":
         inLFNList = open("myInFiles/data/SingleElectron_Run2017C-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSEl17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17D":
         inLFNList = open("myInFiles/data/HTMHT_Run2017D-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataHTMHT17D_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17D":
         inLFNList = open("myInFiles/data/SingleMuon_Run2017D-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSMu17D_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17D":
         inLFNList = open("myInFiles/data/SingleElectron_Run2017D-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSEl17D_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17E":
         inLFNList = open("myInFiles/data/HTMHT_Run2017E-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataHTMHT17E_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17E":
         inLFNList = open("myInFiles/data/SingleMuon_Run2017E-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSMu17E_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17E":
         inLFNList = open("myInFiles/data/SingleElectron_Run2017E-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSEl17E_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataHTMHT17F":
         inLFNList = open("myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataHTMHT17F_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSMu17F":
         inLFNList = open("myInFiles/data/SingleMuon_Run2017F-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSMu17F_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "dataSEl17F":
         inLFNList = open("myInFiles/data/SingleElectron_Run2017F-Nano14Dec2018-v1.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/dataSEl17F_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-
     elif not arg.inputLFN.find("tt_semilep102_17") == -1:
         inLFNList = open("myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
-        # if arg.inputLFN == "tt_semilep102_17B":
-        #     outFile = "OutFiles/Skimmed{0}/TTToSemiLep102X_17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-        # elif arg.inputLFN == "tt_semilep102_17C":
-        #     outFile = "OutFiles/Skimmed{0}/TTToSemiLep102X_17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-        # elif arg.inputLFN == "tt_semilep102_17DEF":
-        #     outFile = "OutFiles/Skimmed{0}/TTToSemiLep102X_17DEF_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-
     elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
         inLFNList = open("myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/TTToSemiLep94X_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "ttjets94":
         if arg.redirector == "local":
             inLFNList = open(
                 "../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
         else:
             inLFNList = open("myInFiles/mc/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_94X.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/TT94_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
     elif arg.inputLFN == "tttt_weights":
         if arg.redirector == "local":
             inLFNList = open("../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
         else:
             inLFNList = open("myInFiles/mc/TTTTweights_files.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/TTTTweights.root"
     elif arg.inputLFN == "wjets":  # W (to Lep + Nu) + jets
         if arg.redirector == "local":
             inLFNList = open("../myInFiles/Wjets/Wjets_files.txt", "r")
         else:
             inLFNList = open("myInFiles/mc/Wjets_files.txt", "r")
-        outFile = "OutFiles/Skimmed{0}/Wjets.root"
     elif arg.inputLFN == "tttt94":  # tttt MC
         if arg.redirector == "local":
             inLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
         else:
             inLFNList = open("myInFiles/mc/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_94X.txt", "r")
-        # outFile = "OutFiles/Skimmed{0}/TTTT94X_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
     elif not arg.inputLFN.find("tttt102_17") == -1:  # tttt MC
-        if arg.redirector == "local":
-            inLFNList = open("../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
-        else:
-            inLFNList = open("myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
-        # if arg.inputLFN == "tttt102_17B":
-        #     outFile = "OutFiles/Skimmed{0}/TTTT102X_17B_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
-        # elif arg.inputLFN == "tttt102_17C":
-        #     outFile = "OutFiles/Skimmed{0}/TTTT102X_17C_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
-        # elif arg.inputLFN == "tttt102_17DEF":
-        #     outFile = "OutFiles/Skimmed{0}/TTTT102X_17DEF_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
+        inLFNList = open("myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
+
+    elif arg.inputLFN == "dataHTMHT18A":
+        inLFNList = open("myInFiles/data2018/JetHT_Run2018A-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSMu18A":
+        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018A-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSEl18A":
+        inLFNList = open("myInFiles/data2018/EGamma_Run2018A-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataHTMHT18B":
+        inLFNList = open("myInFiles/data2018/JetHT_Run2018B-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSMu18B":
+        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018B-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSEl18B":
+        inLFNList = open("myInFiles/data2018/EGamma_Run2018B-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataHTMHT18C":
+        inLFNList = open("myInFiles/data2018/JetHT_Run2018C-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSMu18C":
+        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018C-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSEl18C":
+        inLFNList = open("myInFiles/data2018/EGamma_Run2018C-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataHTMHT18D":
+        inLFNList = open("myInFiles/data2018/JetHT_Run2018D-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSMu18D":
+        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018D-Nano14Dec2018-v1.txt", "r")
+    elif arg.inputLFN == "dataSEl18D":
+        inLFNList = open("myInFiles/data2018/EGamma_Run2018D-Nano14Dec2018-v1.txt", "r")
+    elif not arg.inputLFN.find("tt_semilep102_18") == -1:
+        inLFNList = open("myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X_18.txt", "r")
+    elif not arg.inputLFN.find("tttt102_18") == -1:
+        inLFNList = open("myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X_18.txt", "r")
     else:
         return None
 
@@ -249,8 +248,11 @@ def main(argms):
         proc.join()
 
     print("End of job!")
-    #skimmer(allFiles, argms)
+    # skimmer(allFiles, argms)
 
 
 if __name__ == '__main__':
+    t2 = time.time()
     main(process_arguments())
+    t3 = time.time()
+    print(">>>>> Total Elapsed time {0:7.1f} s ".format((t3 - t2)))
