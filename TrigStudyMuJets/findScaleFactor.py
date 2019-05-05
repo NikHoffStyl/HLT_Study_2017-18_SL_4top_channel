@@ -398,15 +398,23 @@ def scaleFactor(h1, h2, title, era):
     hNameList = []
     for hName in h1:
         for hName2 in h2:
+            #print("1  {0}   {1}".format(hName, hName2))
             if not hName == hName2:
                 if era == "17B":
-                    if hName.find("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075") == -1 or hName2.find(
-                            "IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2") == -1: continue
+                    if hName.find("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075") == -1 or hName2.find("IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2") == -1:
+                        #print("2 {0}   {1}".format(hName, hName2))
+                        continue
                     else:
-                        str1 = hName.replace("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075")
-                        str2 = hName.replace("IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2")
-                        if not str1 == str2: continue
+                        #print("1 {0}   {1}".format(hName, hName2))
+                        str1 = hName.replace("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", "lala")
+                        str2 = hName2.replace("IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "lala")
+                        #print("2 {0}   {1}".format(hName, hName2))
+                        if not str1 == str2:
+                            #print("str  {0}   {1}".format(str1, str2))
+                            #print("3 {0}   {1}".format(hName, hName2))
+                            continue
                 else: continue  # hNameList.append(hName2)
+            print("{0}   {1} ".format(hName, hName2))
             sfName = hName.replace("h_eff", "h_sf")
             hNameList.append(hName)
             h_scale[hName] = h1[hName].Clone(sfName)
@@ -486,6 +494,7 @@ def main():
     if args.inputLFN == "17B":
         for hName in h_mcTTToSemiLeps17B:
             h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
+        for hName in h_dataHTMHTs17B:
             h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
             h_dataSMus[hName] = h_dataSMus17B[hName]
             h_dataSEls[hName] = h_dataSEls17B[hName]
@@ -500,12 +509,12 @@ def main():
             h_mcTTToSemiLeps[hname1] = h_mcTTToSemiLeps17D[hname1]
             for hname2 in h_dataHTMHTs17E:
                 if hname1 == hname2:
-                    h_dataHTMHTs[hname1].Add(h_dataHTMHTs17D[hname1], h_dataHTMHTs17E[hname1], 1, 1)
-                    h_dataSMus[hname1].Add(h_dataSMus17D[hname1], h_dataSMus17E[hname1], 1, 1)
-                    h_dataSEls[hname1].Add(h_dataSEls17D[hname1], h_dataSEls17E[hname1], 1, 1)
-                    # h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
-                    # h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
-                    # h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
+                    h_dataHTMHTs[hname1] = h_dataHTMHTs17D[hname1]
+                    h_dataSMus[hname1] = h_dataSMus17D[hname1]
+                    h_dataSEls[hname1] = h_dataSEls17D[hname1]
+                    h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
+                    h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
+                    h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
                     for hname3 in h_dataHTMHTs17F:
                         if hname3 == hname1:
                             h_dataHTMHTs[hname1].Add(h_dataHTMHTs17F[hname1])
@@ -537,17 +546,23 @@ def main():
     cv0 = [None] * 30
     cv1 = [None] * 30
     cv2 = [None] * 30
+    hNames.sort()
     for hn, hName in enumerate(hNames):
-
+        
         # - Draw trigger hists
         cv0[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         if args.inputLFN == "17B":
-            if trg != "IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075" or trg != "IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue  # 1 is data 2 is mc
+            if not trg == "IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075": continue  # 1 is data 2 is mc
         elif args.inputLFN == "17C":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
         elif args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
+        else:
+            print("No actions yet for this option")
+        print(">>>>>>>  {0}".format(hName))
+        if not hName.find("DoubleBTagCSV_p075") == -1: hName2 = hName.replace("SixJet32_DoubleBTagCSV_p075", "SixPFJet32_DoublePFBTagDeepCSV_2p2")
+        else: hName2 = hName
         t = ROOT.TPaveText(0.15, 0.91, 0.7, 0.98, "nbNDC")
         t2 = ROOT.TPaveText(0.55, 0.81, 0.75, 0.88, "nbNDC")
         t.SetFillColor(0)
@@ -556,12 +571,12 @@ def main():
         t2.SetTextSize(0.03)
         t.AddText(trg)
         t2.AddText(legString)
-        h_mcTTToSemiLeps[hName].SetTitle("Top-AntiTop MC")
+        h_mcTTToSemiLeps[hName2].SetTitle("Top-AntiTop MC")
         h_dataHTMHTs[hName].SetTitle("HTMHT Data")
         h_dataSMus[hName].SetTitle("Single Muon Data")
         h_dataSEls[hName].SetTitle("Single Electron Data")
-        h_mcTTToSemiLeps[hName].Draw()
-        h_mcTTToSemiLeps[hName].SetLineColor(1)
+        h_mcTTToSemiLeps[hName2].Draw()
+        h_mcTTToSemiLeps[hName2].SetLineColor(1)
         # tX1 = 0.05 * (h_mcTTToSemiLeps[hName].GetXaxis().GetXmax())
         # tY1 = 1.1*(h_mcTTToSemiLeps[hName].GetMaximum())
         h_dataSMus[hName].Draw('same')
@@ -585,10 +600,10 @@ def main():
         # - Draw trigger efficiency hists
         cv1[hn] = triggerCanvas.cd(1)
         # t.AddText(trg)
-        tr2_mcTTToSemiLep[hName].Draw('AP')
-        tr2_mcTTToSemiLep[hName].SetLineColor(1)
+        tr2_mcTTToSemiLep[hName2].Draw('AP')
+        tr2_mcTTToSemiLep[hName2].SetLineColor(1)
         cv1[hn].Update()
-        graph1 = tr2_mcTTToSemiLep[hName].GetPaintedGraph()
+        graph1 = tr2_mcTTToSemiLep[hName2].GetPaintedGraph()
         graph1.SetMinimum(0)
         graph1.SetMaximum(1.2)
         cv1[hn].Update()
