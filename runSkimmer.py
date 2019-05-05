@@ -29,11 +29,10 @@ def process_arguments():
                                                      "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
                                                      "dataHTMHT17F", "dataSMu17F", "dataSEl17F",
                                                      "tt_semilep102_18", "tttt102_18",
+                                                     "dataHTMHT18A", "dataSMu18A", "dataSEl18A",
                                                      "dataHTMHT18B", "dataSMu18B", "dataSEl18B",
                                                      "dataHTMHT18C", "dataSMu18C", "dataSEl18C",
-                                                     "dataHTMHT18D", "dataSMu18D", "dataSEl18D",
-                                                     "dataHTMHT18E", "dataSMu18E", "dataSEl18E",
-                                                     "dataHTMHT18F", "dataSMu18F", "dataSEl18F"
+                                                     "dataHTMHT18D", "dataSMu18D", "dataSEl18D"
                                                      ],
                         default="tttt102", help="Set list of input files")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
