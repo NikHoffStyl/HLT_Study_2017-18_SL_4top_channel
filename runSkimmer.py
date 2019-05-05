@@ -59,7 +59,7 @@ def skimmer(file, arg):
 
     """
     thePostFix = arg.inputLFN
-    p99 = PostProcessor("/pnfs/iihe/cms/store/user/nistylia/Trimmed2018Data/SingleMuon/17A",
+    p99 = PostProcessor("/pnfs/iihe/cms/store/user/nistylia/Trimmed2018Data/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X_18",
                         # "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X",
                         # "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X",
                         [file],
