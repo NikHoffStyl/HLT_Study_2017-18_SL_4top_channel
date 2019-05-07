@@ -343,9 +343,9 @@ def main(argms):
     f_muonPt = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 1000, 500)  # 1100 600
-    triggerCanvas.SetFillColor(17)
-    triggerCanvas.SetFrameFillColor(18)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
+    #triggerCanvas.SetFillColor(17)
+    #triggerCanvas.SetFrameFillColor(18)
     triggerCanvas.SetGrid()
 
     # - Open file and sub folder
@@ -481,7 +481,7 @@ def main(argms):
             f_jetHt[tg].SetParLimits(1, 2, 25)
             f_jetHt[tg].SetParLimits(2, -100, 500)
             f_jetHt[tg].SetParLimits(3, -0.1, 1)
-            f_jetHt[tg].SetLineStyle(style[i - 2])
+            #f_jetHt[tg].SetLineStyle(style[i - 2])
 
             f_muonPt[tg] = ROOT.TF1('f_muonPt' + tg, turnOnFit, 0, 250, 4)
             f_muonPt[tg].SetLineColor(1)
@@ -490,9 +490,9 @@ def main(argms):
             f_muonPt[tg].SetParLimits(1, 0, 2000)
             f_muonPt[tg].SetParLimits(2, 10, 50)
             f_muonPt[tg].SetParLimits(3, -0.1, 1)
-            f_muonPt[tg].SetLineStyle(style[i - 2])
+            #f_muonPt[tg].SetLineStyle(style[i - 2])
 
-            i += 1
+            i += 2
 
     # - Events histogram
     h_eventsPrg = ROOT.gDirectory.Get("h_eventsPrg")
@@ -547,7 +547,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetTitle(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
+                j += 2
                 if i == 0:
                     #h_TriggerRatio[tg].Draw()
                     #cvEff.Update()
@@ -609,7 +609,7 @@ def main(argms):
                     graph1.SetMaximum(1.2)
                     cvIso[i].Update()
                 else: h_TEffOut[tg].Draw("same")
-                colr += 1
+                colr += 2
         t.Draw("same")
         cvIso[i].BuildLegend(0.47, 0.74, 0.97, 0.94)
         pdfCreator(argms, 1, triggerCanvas, selCriteria)
@@ -644,7 +644,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetTitle(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
+                j += 2
                 if i == 0:
                     h_TriggerRatio[tg].GetListOfFunctions().AddFirst(f_jetHt[tg])
                     f_jetHt[tg].SetParameters(0.8, 20, 135, 0)
@@ -656,7 +656,7 @@ def main(argms):
                     graph1.SetMinimum(0)
                     graph1.SetMaximum(1.2)
                     cv2.Update()
-                    tX1 = 0.05*(h_jetHt["notrigger"].GetXaxis().GetXmax())
+                    tX1 = 0.15*(h_jetHt["notrigger"].GetXaxis().GetXmax())
                     tY1 = 1.1
                     # assymGraph = h_TriggerRatio[tg].CreateGraph()
                 elif i > 0:
@@ -667,8 +667,8 @@ def main(argms):
                     fitInfo(fit=f_jetHt[tg], printEqn="n", fitName=("jetHt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
                 i += 1
-    cv2.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
+    cv2.BuildLegend(0.2, 0.1, 0.9, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.03)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
@@ -703,13 +703,13 @@ def main(argms):
                 # h_TriggerRatio[tg].SetMinimum(0.)
                 # h_TriggerRatio[tg].SetMaximum(301.8)
                 h_TriggerRatio[tg].Draw()
-                tX1 = 0.05 * (h_jetHt["notrigger"].GetXaxis().GetXmax())
+                tX1 = 0.15 * (h_jetHt["notrigger"].GetXaxis().GetXmax())
                 tY1 = 0.1
             if i > 0:
                 h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv82.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
+    cv82.BuildLegend(0.2, 0.1, 0.9, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.03)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
@@ -744,7 +744,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetTitle(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
+                j += 2
                 if i == 0:
                     h_TriggerRatio[tg].Draw('AP')
                     cv4.Update()
@@ -794,7 +794,7 @@ def main(argms):
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetTitle(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
+                j += 2
                 if i == 0:
                     h_TriggerRatio[tg].Draw('AP')
                     cv6.Update()
@@ -874,15 +874,15 @@ def main(argms):
                 h_TriggerRatio[tg].SetName(tg)
                 h_TriggerRatio[tg].SetTitle(tg)
                 h_TriggerRatio[tg].SetLineColor(j)
-                j += 1
+                j += 2
                 if i == 0:
                     f_muonPt[tg].SetParameters(0.8, 0.95, 24, 0.05)
                     # f_muonPt[tg].SetParLimits(0, 0.7, 0.9)
                     # f_muonPt[tg].SetParLimits(1, 0, 5)
                     # f_muonPt[tg].SetParLimits(2, 20, 40)
                     # f_muonPt[tg].SetParLimits(3, 0.01, 0.05)
-                    h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
-                    fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
+                    #h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')  # L= log likelihood, V=verbose, R=range in function
+                    #fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('AP')
                     cv8.Update()
                     graph1 = h_TriggerRatio[tg].GetPaintedGraph()
@@ -910,12 +910,12 @@ def main(argms):
                         # f_muonPt[tg].SetParLimits(1, 0, 10)
                         # f_muonPt[tg].SetParLimits(2, 0, 30)
                         # f_muonPt[tg].SetParLimits(3, 0, 0.3)
-                    h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')
-                    fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
+                    #h_TriggerRatio[tg].Fit(f_muonPt[tg], 'LR')
+                    #fitInfo(fit=f_muonPt[tg], printEqn="n", fitName=("muonPt" + tg), args=argms)
                     h_TriggerRatio[tg].Draw('same')
             i += 1
-    cv8.BuildLegend(0.4, 0.1, 0.9, 0.3)
-    ROOT.gStyle.SetLegendTextSize(0.02)
+    cv8.BuildLegend(0.2, 0.1, 0.9, 0.3)
+    ROOT.gStyle.SetLegendTextSize(0.03)
     ltx.SetTextSize(0.03)
     ltx.DrawLatex(tX1, tY1, legString)
     pdfCreator(argms, 1, triggerCanvas, selCriteria)
@@ -951,7 +951,7 @@ def main(argms):
                 tY1 = 0.1
             if i > 0:
                 h_TriggerRatio[tg].Draw('same')
-            i += 1
+            i += 2
     cv81.BuildLegend(0.4, 0.1, 0.9, 0.3)
     ROOT.gStyle.SetLegendTextSize(0.02)
     ltx.SetTextSize(0.03)

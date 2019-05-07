@@ -256,7 +256,7 @@ def getHistNames(file, verbose=False):
     """
     # objList = ["jetHt", "jetMult", "jetBMult", "jetEta", "jetPhi", "muonPt", "muonEta", "muonPhi",
     #            "metPt", "metPhi"]
-    objList = ["jetHT", "jetMult", "jetBMult", "jestEta", "jetEta", "jetPhi", "elPt", "elEta", "elPhi",
+    objList = ["jetHt", "jetMult", "jetBMult", "jetEta", "jetPhi", "electronPt", "electronEta", "electronPhi",
                "metPt", "metPhi"]
     trgList = findTrigList(file)
     hNames = []
@@ -347,15 +347,15 @@ def findTrigRatio(h1, title):
     h_TEffOut = {}
     h2 = {}
 
-    propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
-    muonpT_rebin = numpy.array((0., 10., 20., 22., 24., 26., 28., 30., 35., 40., 50., 75., 100., 125., 150., 200., 300.))
+    propList = ["jetHt_", "electronPt_", "jetMult_", "jetBMult_"]
+    electronpT_rebin = numpy.array((0., 10., 20., 22., 24., 26., 28., 30., 35., 40., 50., 75., 100., 125., 150., 200., 300.))
     ht_rebin = numpy.array((0., 100., 200., 220., 240., 260., 280., 300., 350., 400., 500., 750., 1000., 1250., 1500., 2000., 3000.))
     for prop in propList:
         for hName in h1:
             if prop not in hName: continue
             # numBins = h1[hName].GetNbinsX()
             if prop == "jetHt_": h1[hName] = h1[hName].Rebin(16, hName, ht_rebin)
-            if prop == "muonPt_": h1[hName] = h1[hName].Rebin(16, hName, muonpT_rebin)
+            if prop == "electronPt_": h1[hName] = h1[hName].Rebin(16, hName, electronpT_rebin)
             # else: if numBins > 100: h1[hName].RebinX(numBins / 30, "")
             
             if "_notrigger" in hName: h2[prop] = h1[hName]
@@ -437,7 +437,7 @@ def whatTrig(h_name):
     Returns:
 
     """
-    propList = ["jetHt_", "muonPt_", "jetMult_", "jetBMult_"]
+    propList = ["jetHt_", "electronPt_", "jetMult_", "jetBMult_"]
     trig = ""
     for prop in propList:
         if prop in h_name:
@@ -579,15 +579,15 @@ def main():
         h_mcTTToSemiLeps[hName2].SetLineColor(1)
         # tX1 = 0.05 * (h_mcTTToSemiLeps[hName].GetXaxis().GetXmax())
         # tY1 = 1.1*(h_mcTTToSemiLeps[hName].GetMaximum())
-        h_dataSMus[hName].Draw('same')
-        h_dataSMus[hName].SetLineColor(2)
-        h_dataSMus[hName].SetFillColor(2)
-        h_dataHTMHTs[hName].Draw('same')
-        h_dataHTMHTs[hName].SetLineColor(4)
-        h_dataHTMHTs[hName].SetFillColor(4)
         h_dataSEls[hName].Draw('same')
         h_dataSEls[hName].SetLineColor(6)
         h_dataSEls[hName].SetFillColor(6)
+        h_dataHTMHTs[hName].Draw('same')
+        h_dataHTMHTs[hName].SetLineColor(4)
+        h_dataHTMHTs[hName].SetFillColor(4)
+        h_dataSMus[hName].Draw('same')
+        h_dataSMus[hName].SetLineColor(2)
+        h_dataSMus[hName].SetFillColor(2)
         t.Draw("same")
         t2.Draw("same")
         cv0[hn].BuildLegend(0.6, 0.5, 0.9, 0.7)
