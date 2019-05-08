@@ -269,12 +269,13 @@ def getHistNames(file, verbose=False):
     return hNames
 
 
-def getHistograms(fileList, era):
+def getHistograms(fileList, era, newDir):
     """
 
     Args:
         fileList (list):
         era (string):
+        newDir (TDirectory):
     Returns:
         h_mcTTTT (dictionary):
     """
@@ -295,7 +296,7 @@ def getHistograms(fileList, era):
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataSEl" + era + "_")
                 h_dataSEl[name].SetName(hName)
-                h_dataSEl[name].SetDirectory(0)  # = h_dataSEl[name].Clone("El" + name)
+                h_dataSEl[name].SetDirectory(newDir)  # = h_dataSEl[name].Clone("El" + name)
         if "dataSMu" in fName:
             names = getHistNames(fName)
             for name in names:
@@ -303,7 +304,7 @@ def getHistograms(fileList, era):
                 if not h_dataSMu[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataSMu" + era + "_")
                 h_dataSMu[name].SetName(hName)
-                h_dataSMu[name].SetDirectory(0)  # = h_dataSMu[name].Clone("Mu" + name)
+                h_dataSMu[name].SetDirectory(newDir)  # = h_dataSMu[name].Clone("Mu" + name)
         if "dataHTMHT" in fName:
             names = getHistNames(fName)
             for name in names:
@@ -311,7 +312,7 @@ def getHistograms(fileList, era):
                 if not h_dataHTMHT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_dataHTMHT" + era + "_")
                 h_dataHTMHT[name].SetName(hName)
-                h_dataHTMHT[name].SetDirectory(0)  # = h_dataHTMHT[name].Clone("Ht" + name)
+                h_dataHTMHT[name].SetDirectory(newDir)  # = h_dataHTMHT[name].Clone("Ht" + name)
         if "TTTT" in fName:
             names = getHistNames(fName)
             for name in names:
@@ -319,7 +320,7 @@ def getHistograms(fileList, era):
                 if not h_mcTTTT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_mcTTTT" + era + "_")
                 h_mcTTTT[name].SetName(hName)
-                h_mcTTTT[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
+                h_mcTTTT[name].SetDirectory(newDir)  # = h_mcTTTT[name].Clone("tt" + name)
         if "TTToSemiLep" in fName:
             names = getHistNames(fName)
             for name in names:
@@ -327,18 +328,19 @@ def getHistograms(fileList, era):
                 if not h_mcTTToSemiLep[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 hName = name.replace("h_", "h_mcTTToSemiLep" + era + "_")
                 h_mcTTToSemiLep[name].SetName(hName)
-                h_mcTTToSemiLep[name].SetDirectory(0)  # = h_mcTTTT[name].Clone("tt" + name)
+                h_mcTTToSemiLep[name].SetDirectory(newDir)  # = h_mcTTTT[name].Clone("tt" + name)
         f[counter].Close()
         counter += 1
     return h_mcTTTT, h_mcTTToSemiLep, h_dataHTMHT, h_dataSMu, h_dataSEl
 
 
-def findTrigRatio(h1, title):
+def findTrigRatio(h1, title, newDir):
     """
 
     Args:
         h1 (dictionary): dictionary of histograms
         title (string): title given in legend
+        newDir (TDirectory):
     Returns:
         h_Out (dictionary): trigger ratio TH1D histogram
 
@@ -375,6 +377,7 @@ def findTrigRatio(h1, title):
                 xTitle = h2[prop].GetXaxis().GetTitle()
                 xBinWidth = h2[prop].GetXaxis().GetBinWidth(1)
                 h_TH1DOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                h_TH1DOut[hName].SetDirectory(newDir)
                 if not ROOT.TEfficiency.CheckConsistency(h1[hName], h2[prop]): continue
                 h_TEffOut[hName] = ROOT.TEfficiency(h1[hName], h2[prop])
                 h_TEffOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
@@ -383,7 +386,7 @@ def findTrigRatio(h1, title):
     return h_TH1DOut, h_TEffOut
 
 
-def scaleFactor(h1, h2, title, era):
+def scaleFactor(h1, h2, title, era, newDir):
     """
 
     Args:
@@ -391,6 +394,7 @@ def scaleFactor(h1, h2, title, era):
         h2: denominator
         title (string): title given to legend
         era:
+        newDir (TDirectory):
     Returns:
 
     """
@@ -424,6 +428,7 @@ def scaleFactor(h1, h2, title, era):
             xTitle = h2[hName2].GetXaxis().GetTitle()
             xBinWidth = h2[hName2].GetXaxis().GetBinWidth(1)
             h_scale[hName].SetTitle(title + ";{0};Scale Factors per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_scale[hName].SetDirectory(newDir)
 
     return h_scale, hNameList
 
@@ -472,6 +477,9 @@ def main():
     # - Create text for legend
     legString = cmsPlotString(args.inputLFN)
 
+    outputSFfile = ROOT.TFile("scaleFactors.root", "new")
+    outDIR = outputSFfile.mkdir("muChannel")
+
     # - Get File Names and create histogram dictionaries
     h_mcTTTTs = {}
     h_mcTTToSemiLeps = {}
@@ -481,15 +489,17 @@ def main():
     # files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
     # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
-    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B")
+    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B", outDIR)
     files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
-    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C")
+    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C", outDIR)
     files17D = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
-    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D")
+    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D", outDIR)
     files17E = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17E", FullPaths=True)
-    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E")
+    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E", outDIR)
     files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
-    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F")
+    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F", outDIR)
+
+    outDIR.cd()
 
     if args.inputLFN == "17B":
         for hName in h_mcTTToSemiLeps17B:
@@ -526,15 +536,18 @@ def main():
 
     #  - Find efficiency ratio histogram dictionaries
     # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
-    tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps, "Top-AntiTop MC")
-    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data")
-    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data")
-    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data")
+    tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps, "Top-AntiTop MC", outDIR)
+    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data", outDIR)
+    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data", outDIR)
+    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data", outDIR)
 
     # - Find scale factor histogram dictionaries
-    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data", args.inputLFN)
-    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data", args.inputLFN)
-    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN)
+    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data", args.inputLFN, outDIR)
+    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data", args.inputLFN, outDIR)
+    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN, outDIR)
+
+    outputSFfile.Write()
+    outputSFfile.Close()
 
     ROOT.gStyle.SetOptTitle(0)
 
