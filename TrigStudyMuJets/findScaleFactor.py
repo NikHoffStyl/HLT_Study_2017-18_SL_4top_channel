@@ -580,13 +580,18 @@ def main():
         cv0[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         if args.inputLFN == "17B":
+            intgrLumi = 5.61  # /fb
             if not trg == "IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075": continue  # 1 is data 2 is mc
         elif args.inputLFN == "17C":
+            intgrLumi = 10.83  # /fb
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
         elif args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
+            intgrLumi = 27.61  # /fb
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
         else:
+            intgrLumi = 41.53  # /fb
             print("No actions yet for this option")
+            continue
         print(">>>>>>>  {0}".format(hName))
         if not hName.find("DoubleBTagCSV_p075") == -1: hName2 = hName.replace("SixJet32_DoubleBTagCSV_p075", "SixPFJet32_DoublePFBTagDeepCSV_2p2")
         else: hName2 = hName
@@ -602,6 +607,8 @@ def main():
         h_dataHTMHTs[hName].SetTitle("HTMHT Data")
         h_dataSMus[hName].SetTitle("Single Muon Data")
         h_dataSEls[hName].SetTitle("Single Electron Data")
+        normVal = (intgrLumi * 831000 * 0.45)/(h_mcTTToSemiLeps[hName2].GetEntries())
+        h_mcTTToSemiLeps[hName2].Scale(normVal)
         h_mcTTToSemiLeps[hName2].Draw()
         h_mcTTToSemiLeps[hName2].SetLineColor(1)
         # tX1 = 0.05 * (h_mcTTToSemiLeps[hName].GetXaxis().GetXmax())
