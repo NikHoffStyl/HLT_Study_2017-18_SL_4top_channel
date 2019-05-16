@@ -292,41 +292,41 @@ def getHistograms(fileList, era, newDir):
         if "dataSEl" in fName:
             names = getHistNames(fName)
             for name in names:
+                hName = name.replace("h_", "h_dataSEl" + era + "_")
                 h_dataSEl[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_dataSEl" + era + "_")
                 h_dataSEl[name].SetName(hName)
                 h_dataSEl[name].SetDirectory(newDir)  # = h_dataSEl[name].Clone("El" + name)
         if "dataSMu" in fName:
             names = getHistNames(fName)
             for name in names:
+                hName = name.replace("h_", "h_dataSMu" + era + "_")
                 h_dataSMu[name] = ROOT.gDirectory.Get(name)
                 if not h_dataSMu[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_dataSMu" + era + "_")
                 h_dataSMu[name].SetName(hName)
                 h_dataSMu[name].SetDirectory(newDir)  # = h_dataSMu[name].Clone("Mu" + name)
         if "dataHTMHT" in fName:
             names = getHistNames(fName)
             for name in names:
+                hName = name.replace("h_", "h_dataHTMHT" + era + "_")
                 h_dataHTMHT[name] = ROOT.gDirectory.Get(name)
                 if not h_dataHTMHT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_dataHTMHT" + era + "_")
                 h_dataHTMHT[name].SetName(hName)
                 h_dataHTMHT[name].SetDirectory(newDir)  # = h_dataHTMHT[name].Clone("Ht" + name)
         if "TTTT" in fName:
             names = getHistNames(fName)
             for name in names:
+                hName = name.replace("h_", "h_mcTTTT" + era + "_")
                 h_mcTTTT[name] = ROOT.gDirectory.Get(name)
                 if not h_mcTTTT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_mcTTTT" + era + "_")
                 h_mcTTTT[name].SetName(hName)
                 h_mcTTTT[name].SetDirectory(newDir)  # = h_mcTTTT[name].Clone("tt" + name)
         if "TTToSemiLep" in fName:
             names = getHistNames(fName)
             for name in names:
+                hName = name.replace("h_", "h_mcTTToSemiLep" + era + "_")
                 h_mcTTToSemiLep[name] = ROOT.gDirectory.Get(name)
                 if not h_mcTTToSemiLep[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
-                hName = name.replace("h_", "h_mcTTToSemiLep" + era + "_")
                 h_mcTTToSemiLep[name].SetName(hName)
                 h_mcTTToSemiLep[name].SetDirectory(newDir)  # = h_mcTTTT[name].Clone("tt" + name)
         f[counter].Close()
@@ -410,8 +410,8 @@ def scaleFactor(h1, h2, title, era, newDir):
                         continue
                     else:
                         #print("1 {0}   {1}".format(hName, hName2))
-                        str1 = hName.replace("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", "lala")
-                        str2 = hName2.replace("IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "lala")
+                        str1 = hName.replace("IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", "")
+                        str2 = hName2.replace("IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "")
                         #print("2 {0}   {1}".format(hName, hName2))
                         if not str1 == str2:
                             #print("str  {0}   {1}".format(str1, str2))
@@ -419,7 +419,7 @@ def scaleFactor(h1, h2, title, era, newDir):
                             continue
                 else: continue  # hNameList.append(hName2)
             print("{0}   {1} ".format(hName, hName2))
-            sfName = hName.replace("h_eff", "h_sf")
+            sfName = hName.replace("h_", "h_sf")
             hNameList.append(hName)
             h_scale[hName] = h1[hName].Clone(sfName)
             # h_scale[hName].Sumw2()
@@ -450,7 +450,7 @@ def whatTrig(h_name):
     # keyWords = h_name.split("_")
     # for nk, keyWord in enumerate(keyWords):
     #    if nk > 3: keyWord[3] += "_" + keyWord[nk]
-    return trig
+    return trig    
 
 
 def main():
@@ -477,9 +477,15 @@ def main():
     # - Create text for legend
     legString = cmsPlotString(args.inputLFN)
 
-    outputSFfile = ROOT.TFile("scaleFactors.root", "new")
-    outDIR = outputSFfile.mkdir("muChannel")
-
+    outputSFfile = ROOT.TFile("scaleFactors.root", "update")
+    outDIR = outputSFfile.mkdir("muChannel_Era" + args.inputLFN)
+    #outputSFfile.cd("muChannel")
+    #outDIR = ROOT.gDirectory.pwd()
+    #eraDIR = outDIR.mkdir("Era_" + args.inputLFN) 
+    eventDIR = outDIR.mkdir("EventDistributions")
+    effDIR = outDIR.mkdir("TriggerEfficiencies")
+    sfDIR = outDIR.mkdir("ScaleFactors")
+    outDIR.cd()
     # - Get File Names and create histogram dictionaries
     h_mcTTTTs = {}
     h_mcTTToSemiLeps = {}
@@ -489,34 +495,44 @@ def main():
     # files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
     # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
     files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
-    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B", outDIR)
+    h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B", eventDIR)
     files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
-    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C", outDIR)
+    h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C", eventDIR)
     files17D = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
-    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D", outDIR)
+    h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D", eventDIR)
     files17E = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17E", FullPaths=True)
-    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E", outDIR)
+    h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E", eventDIR)
     files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
-    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F", outDIR)
+    h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F", eventDIR)
 
-    outDIR.cd()
+    eventDIR.cd()
 
     if args.inputLFN == "17B":
         for hName in h_mcTTToSemiLeps17B:
             h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17B[hName]
+            #h_mcTTToSemiLeps[hName].Write(hName)
         for hName in h_dataHTMHTs17B:
             h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
             h_dataSMus[hName] = h_dataSMus17B[hName]
             h_dataSEls[hName] = h_dataSEls17B[hName]
+            #h_dataHTMHTs[hName].Write(hName)
+            #h_dataSMus[hName].Write(hName)
+            #h_dataSEls[hName].Write(hName)
     elif args.inputLFN == "17C":
         for hName in h_mcTTToSemiLeps17C:
             h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17C[hName]
             h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
             h_dataSMus[hName] = h_dataSMus17C[hName]
             h_dataSEls[hName] = h_dataSEls17C[hName]
+            #h_mcTTToSemiLeps[hName].Write(hName)
+            #h_dataHTMHTs[hName].Write(hName)
+            #h_dataSMus[hName].Write(hName)
+            #h_dataSEls[hName].Write(hName)
     else:
         for hname1 in h_dataHTMHTs17D:
             h_mcTTToSemiLeps[hname1] = h_mcTTToSemiLeps17D[hname1]
+            #eventDIR.cd()
+            #h_mcTTToSemiLeps[hname1].Write(hname1)
             for hname2 in h_dataHTMHTs17E:
                 if hname1 == hname2:
                     h_dataHTMHTs[hname1] = h_dataHTMHTs17D[hname1]
@@ -536,18 +552,16 @@ def main():
 
     #  - Find efficiency ratio histogram dictionaries
     # tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs, "Four Top MC")
-    tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps, "Top-AntiTop MC", outDIR)
-    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data", outDIR)
-    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data", outDIR)
-    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data", outDIR)
+    tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTToSemiLeps, "Top-AntiTop MC", effDIR)
+    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data", effDIR)
+    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data", effDIR)
+    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data", effDIR)
 
     # - Find scale factor histogram dictionaries
-    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data", args.inputLFN, outDIR)
-    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data", args.inputLFN, outDIR)
-    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN, outDIR)
-
-    outputSFfile.Write()
-    outputSFfile.Close()
+    effDIR.cd()
+    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data", args.inputLFN, sfDIR)
+    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data", args.inputLFN, sfDIR)
+    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN, sfDIR)
 
     ROOT.gStyle.SetOptTitle(0)
 
@@ -658,7 +672,27 @@ def main():
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
+        
+        eventDIR.cd()
+        mcName = hName2.replace("h_", "h_mcTTToSemiLep_")
+        h_mcTTToSemiLeps[hName2].Write(mcName)
+        htName = hName.replace("h_", "h_dataHTMHT_")
+        h_dataHTMHTs[hName].Write(htName)
+        muName = hName.replace("h_", "h_dataMu_")
+        h_dataSMus[hName].Write(muName)
+        eleName = hName.replace("h_", "h_dataEle_")
+        h_dataSEls[hName].Write(eleName)
 
+        effDIR.cd()
+        tr_mcTTToSemiLep[hName2].Write(mcName)
+        tr_dataHTMHT[hName].Write(htName)
+        tr_dataSMu[hName].Write(muName)
+        tr_dataSEl[hName].Write(eleName)
+
+        sfDIR.cd()
+        s_HTMHT[hName].Write(htName)
+        s_dataSMu[hName].Write(muName)
+        s_dataSEl[hName].Write(eleName)
     # cv1 = triggerCanvas.cd(1)
     # count = 0
     # for hn, hName in enumerate(hNames):
@@ -700,6 +734,9 @@ def main():
     t3.Draw()
     pdfCreator(args, 2, triggerCanvas)
 
+    
+    #outputSFfile.Write()
+    outputSFfile.Close()
 
 if __name__ == '__main__':
     main()

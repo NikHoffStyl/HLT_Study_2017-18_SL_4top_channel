@@ -13,8 +13,7 @@ export X509_USER_PROXY=/user/$USER/x509up_u23075 # $(#id -u $USER)
 cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets
 
 #python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17B
-#python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17C
-#python runAnaTrigsMuJets.py -f tt_semilep102_17DEF
+python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17C
 #python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17DEF
 
 #python runAnaTrigsMuJets.py -o _HTcut -f tttt102_17B
@@ -37,4 +36,4 @@ cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets
 #python runAnaTrigsMuJets.py -o _HTcut -f datasel17C
 #python runAnaTrigsMuJets.py -o _HTcut -f dataSEl17D
 #python runAnaTrigsMuJets.py -o _HTcut -f dataSEl17E
-python runAnaTrigsMuJets.py -o _HTcut -f dataSEl17F
+#python runAnaTrigsMuJets.py -o _HTcut -f dataSEl17F

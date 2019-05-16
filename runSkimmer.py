@@ -10,9 +10,11 @@ from __future__ import (division, print_function)
 import time
 import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
-from PfJetMultSkimmer import PfJetsSkimmer
+# from PfJetMultSkimmer import PfJetsSkimmer
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from multiprocessing import Process
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection  # , Object
+from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
 
 def process_arguments():
@@ -48,6 +50,55 @@ def process_arguments():
     return args
 
 
+class PfJetsSkimmer(Module):
+    """This class is to be used by the postprocessor to skimm a file down
+    using the requirement of number of jets and a single lepton."""
+
+    def __init__(self, writeHistFile=True, eventLimit=-1):
+        """ Initialise global variables
+        Args:
+            writeHistFile (bool): True to write file, False otherwise
+        """
+
+        self.eventCounter = 0
+        self.writeHistFile = writeHistFile
+        self.eventLimit = eventLimit
+
+    def beginJob(self, histFile=None, histDirName=None):
+        """begin job"""
+        Module.beginJob(self, histFile, histDirName)
+
+    def endJob(self):
+        """end Job"""
+        Module.endJob(self)
+
+    def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+        """add branches to file"""
+        self.out = wrappedOutputTree
+
+        self.out.branch("Jet2_" + "HT", "F")
+
+        pass
+
+    def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
+        """end file"""
+        pass
+
+    def analyze(self, event):
+        """process event, return True (go to next module) or False (fail, go to next event)"""
+        self.eventCounter += 1
+
+        if self.eventCounter > self.eventLimit > -1:
+            return False
+
+        jets = Collection(event, "Jet")
+        jetHt = 0
+        for nj, jet in enumerate(jets):
+            jetHt += jet.pt
+        self.out.fillBranch("Jet2_HT", jetHt)
+
+        return True
+
 def skimmer(file, arg):
     """
 
@@ -59,20 +110,20 @@ def skimmer(file, arg):
 
     """
     thePostFix = arg.inputLFN
-    p99 = PostProcessor("/pnfs/iihe/cms/store/user/nistylia/Trimmed2018Data/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X_18",
-                        # "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X",
-                        # "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X",
+    p99 = PostProcessor("OutDirectory",
                         [file],
                         cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) ",
                         modules=[PfJetsSkimmer(eventLimit=arg.eventLimit)],
                         postfix=thePostFix,
-                        branchsel="myInFiles/kd_branchsel.txt",
-                        outputbranchsel="myInFiles/kd_branchsel.txt",
+                        branchsel="/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/kd_branchsel.txt",
+                        outputbranchsel="/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/kd_branchsel.txt",
                         )
     #p99.inputFiles
     print(p99.inputFiles)
     t0 = time.time()
     p99.run()
+    #cmdString="gfal-copy -r file://$TMPDIR/OutDirectory/{0} srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/$USER/Trimmed2018Data/JetHT_Run2018A-Nano14Dec2018-v1/".format([file])
+    #os.system(cmdString)
     t1 = time.time()
     proc = os.getpid()
     print(">>> Elapsed time {0:7.1f} s by process id: {1}".format((t1 - t0), proc))
@@ -189,33 +240,33 @@ def ioFiles(arg):
         inLFNList = open("myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
 
     elif arg.inputLFN == "dataHTMHT18A":
-        inLFNList = open("myInFiles/data2018/JetHT_Run2018A-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/JetHT_Run2018A-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataSMu18A":
-        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018A-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/SingleMuon_Run2018A-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataSEl18A":
-        inLFNList = open("myInFiles/data2018/EGamma_Run2018A-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/EGamma_Run2018A-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataHTMHT18B":
-        inLFNList = open("myInFiles/data2018/JetHT_Run2018B-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/JetHT_Run2018B-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataSMu18B":
-        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018B-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/SingleMuon_Run2018B-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataSEl18B":
-        inLFNList = open("myInFiles/data2018/EGamma_Run2018B-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/EGamma_Run2018B-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataHTMHT18C":
-        inLFNList = open("myInFiles/data2018/JetHT_Run2018C-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/JetHT_Run2018C-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataSMu18C":
-        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018C-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/SingleMuon_Run2018C-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataSEl18C":
-        inLFNList = open("myInFiles/data2018/EGamma_Run2018C-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/EGamma_Run2018C-Nano14Dec2018-v1.txt", "r")
     elif arg.inputLFN == "dataHTMHT18D":
-        inLFNList = open("myInFiles/data2018/JetHT_Run2018D-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/JetHT_Run2018D-Nano14Dec2018_ver2-v1.txt", "r")
     elif arg.inputLFN == "dataSMu18D":
-        inLFNList = open("myInFiles/data2018/SingleMuon_Run2018D-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/SingleMuon_Run2018D-Nano14Dec2018_ver2-v1.txt", "r")
     elif arg.inputLFN == "dataSEl18D":
-        inLFNList = open("myInFiles/data2018/EGamma_Run2018D-Nano14Dec2018-v1.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/data2018/EGamma_Run2018D-Nano14Dec2018_ver2-v1.txt", "r")
     elif not arg.inputLFN.find("tt_semilep102_18") == -1:
-        inLFNList = open("myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X_18.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X_18.txt", "r")
     elif not arg.inputLFN.find("tttt102_18") == -1:
-        inLFNList = open("myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X_18.txt", "r")
+        inLFNList = open("/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X_18.txt", "r")
     else:
         return None
 

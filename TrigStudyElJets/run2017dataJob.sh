@@ -14,7 +14,7 @@ cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyElJets
 
 #python runAnaTrigsElJets_v2.py -o _HTcut -f tt_semilep102_17B
 #python runAnaTrigsElJets_v2.py -o _HTcut -f tt_semilep102_17C
-python runAnaTrigsElJets_v2.py -o _HTcut -f tt_semilep102_17DEF
+#python runAnaTrigsElJets_v2.py -o _HTcut -f tt_semilep102_17DEF
 
 #python runAnaTrigsElJets_v2.py -o _HTcut -f tttt102_17B
 #python runAnaTrigsElJets_v2.py -o _HTcut -f tttt102_17C
@@ -36,4 +36,4 @@ python runAnaTrigsElJets_v2.py -o _HTcut -f tt_semilep102_17DEF
 #python runAnaTrigsElJets_v2.py -o _HTcut -f dataSEl17C
 #python runAnaTrigsElJets_v2.py -o _HTcut -f dataSEl17D
 #python runAnaTrigsElJets_v2.py -o _HTcut -f dataSEl17E
-#python runAnaTrigsElJets_v2.py -o _HTcut -f dataSEl17F
+python runAnaTrigsElJets_v2.py -o _HTcut -f dataSEl17F
