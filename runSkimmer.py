@@ -12,7 +12,7 @@ import os
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 # from PfJetMultSkimmer import PfJetsSkimmer
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from multiprocessing import Process
+# from multiprocessing import Process
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection  # , Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 
@@ -34,9 +34,11 @@ def process_arguments():
                                                      "dataHTMHT18A", "dataSMu18A", "dataSEl18A",
                                                      "dataHTMHT18B", "dataSMu18B", "dataSEl18B",
                                                      "dataHTMHT18C", "dataSMu18C", "dataSEl18C",
-                                                     "dataHTMHT18D", "dataSMu18D", "dataSEl18D"
+                                                     "dataHTMHT18D", "dataSMu18D", "dataSEl18D",
+                                                     "oneFile"
                                                      ],
-                        default="tttt102", help="Set list of input files")
+                        default="_v", help="Set list of input files")
+    parser.add_argument("-fnp", "--fileName", help="path/to/fileName")
     parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
                         default="xrd-global", help="Sets redirector to query locations for LFN")
     parser.add_argument("-nw", "--noWriteFile", action="store_true",
@@ -99,6 +101,7 @@ class PfJetsSkimmer(Module):
 
         return True
 
+
 def skimmer(file, arg):
     """
 
@@ -118,12 +121,13 @@ def skimmer(file, arg):
                         branchsel="/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/kd_branchsel.txt",
                         outputbranchsel="/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/kd_branchsel.txt",
                         )
-    #p99.inputFiles
+    # p99.inputFiles
     print(p99.inputFiles)
     t0 = time.time()
     p99.run()
-    #cmdString="gfal-copy -r file://$TMPDIR/OutDirectory/{0} srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/$USER/Trimmed2018Data/JetHT_Run2018A-Nano14Dec2018-v1/".format([file])
-    #os.system(cmdString)
+    outFileName = file[-41:-5]
+    cmdString = "gfal-copy -r file://$TMPDIR/OutDirectory/{0}{1}.root srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/$USER/Trimmed2018Data/{0}/".format(outFileName, thePostFix)
+    os.system(cmdString)
     t1 = time.time()
     proc = os.getpid()
     print(">>> Elapsed time {0:7.1f} s by process id: {1}".format((t1 - t0), proc))
@@ -278,27 +282,29 @@ def main(argms):
 
     redirector = chooseRedirector(argms)
 
-    inputLFNList = ioFiles(argms)
-    if inputLFNList is None: return 0
+    # inputLFNList = ioFiles(argms)
+    # if inputLFNList is None: return 0
 
-    allFiles = []
-    for counter, line in enumerate(inputLFNList):
-        counter += 1
-        if not argms.fileLimit == -1:
-            if counter > argms.fileLimit: break
-        allFiles.append(redirector + str(line).replace('\n', ''))
+    pathToFile = redirector + argms.fileName
 
-    procs = []
-    for index, files in enumerate(allFiles):
-        proc = Process(target=skimmer, args=(files, argms,))
-        procs.append(proc)
-        proc.start()
+    # allFiles = []
+    # for counter, line in enumerate(inputLFNList):
+    #     counter += 1
+    #     if not argms.fileLimit == -1:
+    #         if counter > argms.fileLimit: break
+    #     allFiles.append(redirector + str(line).replace('\n', ''))
+    #
+    # procs = []
+    # for index, files in enumerate(allFiles):
+    #     proc = Process(target=skimmer, args=(files, argms,))
+    #     procs.append(proc)
+    #     proc.start()
+    #
+    # for proc in procs:
+    #     proc.join()
 
-    for proc in procs:
-        proc.join()
-
-    print("End of job!")
-    # skimmer(allFiles, argms)
+    # print("End of job!")
+    skimmer(pathToFile, argms)
 
 
 if __name__ == '__main__':
