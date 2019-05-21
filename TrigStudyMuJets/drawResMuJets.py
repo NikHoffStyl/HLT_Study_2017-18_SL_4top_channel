@@ -9,6 +9,7 @@ import os
 import errno
 import ROOT
 from ROOT import TLatex
+import numpy
 import math
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime
@@ -343,7 +344,7 @@ def main(argms):
     f_muonPt = {}
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)  # 1100 600
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 900, 500)  # 1100 600
     #triggerCanvas.SetFillColor(17)
     #triggerCanvas.SetFrameFillColor(18)
     triggerCanvas.SetGrid()
@@ -474,6 +475,18 @@ def main(argms):
             # h_genMetPt[tg].SetLineColor(i)
             # h_genMetPhi[tg].SetLineColor(i)
 
+            h_jetHt[tg].SetFillColorAlpha(i, 0.3)
+            h_jetMult[tg].SetFillColorAlpha(i, 0.3)
+            h_jetBMult[tg].SetFillColorAlpha(i, 0.3)
+            h_jetEta[tg].SetFillColorAlpha(i, 0.3)
+            h_jetPhi[tg].SetFillColorAlpha(i, 0.3)
+            h_muonPt[tg].SetFillColorAlpha(i, 0.3)
+            h_muonEta[tg].SetFillColorAlpha(i, 0.3)
+            h_muonPhi[tg].SetFillColorAlpha(i, 0.3)
+            h_muonIsolation[tg].SetFillColorAlpha(i, 0.3)
+            h_metPt[tg].SetFillColorAlpha(i,  0.3)
+            h_metPhi[tg].SetFillColorAlpha(i, 0.3)
+
             f_jetHt[tg] = ROOT.TF1('jetHt' + tg, turnOnFit, 200, 2500, 4)
             f_jetHt[tg].SetLineColor(1)
             f_jetHt[tg].SetParNames("saturation_Y", "slope", "x_turnON", "initY")
@@ -513,6 +526,11 @@ def main(argms):
     legString = cmsPlotString(argms.inputLFN)
 
     ROOT.gStyle.SetOptTitle(0)
+
+    muonpT_rebin = numpy.array(
+        (0., 10., 20., 22., 24., 26., 28., 30., 35., 40., 50., 75., 100., 125., 150., 200., 300.))
+    ht_rebin = numpy.array(
+        (0., 100., 200., 220., 240., 260., 280., 300., 350., 400., 500., 750., 1000., 1250., 1500., 2000., 3000.))
 
     # - plots for mu Triggers ---------------------------------
     #cv0 = triggerCanvas.cd(1)
@@ -616,10 +634,12 @@ def main(argms):
 
     cv1 = triggerCanvas.cd(1)
     """ HT distribution for different triggers """
+    h_jetHt["notrigger"] = h_jetHt["notrigger"].Rebin(16, "HTnotrigger", ht_rebin)
     h_jetHt["notrigger"].Draw('E1')
     for key in trigList:
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
+            h_jetHt[tg] = h_jetHt[tg].Rebin(16, "HT_" + tg, ht_rebin)
             h_jetHt[tg].Draw('E1 same')
     cv1.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ROOT.gStyle.SetLegendTextSize(0.02)
@@ -829,6 +849,7 @@ def main(argms):
     # - Muon pT plots ---------------------------------
     cv7 = triggerCanvas.cd(1)
     # h_muonPt["notrigger"].SetTitle("")
+    h_muonPt["notrigger"] = h_muonPt["notrigger"].Rebin(16, "Ptnotrigger", muonpT_rebin)
     h_muonPt["notrigger"].SetMinimum(0.)
     # h_muonPt["notrigger"].SetMaximum(3500)
     h_muonPt["notrigger"].Draw('E1')
@@ -837,6 +858,7 @@ def main(argms):
     for key in trigList:
         if not key.find("El") == -1: continue
         for tg in trigList[key]:
+            h_muonPt[tg] = h_muonPt[tg].Rebin(16, "Pt_" + tg, muonpT_rebin)
             h_muonPt[tg].Draw('E1 same')
     cv7.BuildLegend(0.47, 0.54, 0.97, 0.74)
     ltx.SetTextSize(0.03)
