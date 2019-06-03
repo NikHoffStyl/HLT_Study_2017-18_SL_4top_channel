@@ -12,9 +12,20 @@ export X509_USER_PROXY=/user/$USER/x509up_u23075 # $(#id -u $USER)
 
 cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets
 
-#python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17B
-python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17C
-#python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17DEF
+#inputFILE=/pnfs/iihe/cms/store/user/nistylia/TrimmedSkimmed2017Data/W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_102X/
+#outputDIR=/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/OutFiles/WjetsGenTest/
+#fileERA=17B
+echo "inputFile:" ${FILE_IN}
+echo "outputDIR:" ${FILE_OUT}
+echo "fileERA:" ${ERA}
+outputFILE=${FILE_OUT}${ERA}.root 
+#mkdir -p $outputFILE
+
+python trgAnalyser.py -fnp ${FILE_IN} -o ${outputFILE} -era ${ERA}
+
+#python runAnaTrigsMuJets.py -o _HTcutGenInfo -f tt_semilep102_17B
+#python runAnaTrigsMuJets.py -o _HTcutGenInfo -f tt_semilep102_17C
+#python runAnaTrigsMuJets.py -o _GenInfoV2 -f tt_semilep102_17DEF
 
 #python runAnaTrigsMuJets.py -o _HTcut -f tttt102_17B
 #python runAnaTrigsMuJets.py -o _HTcut -f tttt102_17C

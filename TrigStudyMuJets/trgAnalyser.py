@@ -1,20 +1,96 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Jan 2019
+    Created on May 2019
 
-@author: NikHoffStyl
-"""
+    @author: NikHoffStyl
+    """
 from __future__ import (division, print_function)
-
 import ROOT
-# from ROOT import TLatex
-
-# from importlib import import_module
-
+import time
+import os
+from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+
+##
+#  Change global variables as needed
+##
+pathToTrigLists = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/"
+pathToSelectionCriteria = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets"
+###
+
+
+def process_arguments():
+    """
+    Processes command line arguments
+    Returns:
+        args: list of commandline arguments
+
+    """
+
+    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-fnp", "--fileName", help="path/to/fileName")
+    parser.add_argument("-era", "--era", choices=["17B", "17C", "17DEF", "18"], help="era")
+    parser.add_argument("-nw", "--noWriteFile", action="store_true",
+                        help="Does not output a ROOT file, which contains the histograms.")
+    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
+                        help="Set a limit to the number of events.")
+    parser.add_argument("-o", "--outputName", default="_v", help="Set name of output file")
+    args = parser.parse_args()
+    return args
+
+
+def findEraRootFiles(path, verbose=False, FullPaths=True):
+    """
+    Find Root files in a given directory/path.
+    Args:
+        path (string): directory
+        verbose (bool): print to stdout if true
+        FullPaths (bool): return path plus file name in list elements
+
+    Returns: files (list): list of names of root files in the directory given as argument
+
+    """
+    files = []
+    if not path[-1] == '/': path += '/'
+    if verbose: print(' >> Looking for files in path: ' + path)
+    for f in os.listdir(path):
+        if not f[-5:] == '.root': continue
+        # if era != "all" and era not in f[:-5]: continue
+        if verbose: print(' >> Adding file: ', f)
+        files.append(f)
+    if FullPaths: files = [path + x for x in files]
+    if len(files) == 0: print('[ERROR]: No root files found in: ' + path)
+    return files
+
+
+def getFileContents(fileName, elmList):
+    """
+
+    Args:
+        fileName (string): path/to/file
+        elmList (bool): if true then dictionary elements are lists else strings
+
+    Returns:
+        fileContents (dictionary): file contents given as a dictionary
+
+    """
+    fileContents = {}
+    with open(fileName) as f:
+        for line in f:
+            if line.find(":") == -1:
+                continue
+            (key1, val) = line.split(": ")
+            c = len(val) - 1
+            val = val[0:c]
+            if elmList is False:
+                fileContents[key1] = val
+            else:
+                fileContents[key1] = val.split(", ")
+
+    return fileContents
 
 
 class TriggerStudy(Module):
@@ -34,32 +110,32 @@ class TriggerStudy(Module):
         self.era = era
         self.eventCounter = 0
         self.comboCounter = 0
-        # self.numTriggers = len(trigLst["Muon"]) * len(trigLst["Jet"])
-        # print("Number of Combined Triggers: %d" % self.numTriggers)
-
+        self.eventId = {}
+        self.runId = {}
+        self.lumi = {}
         self.h_jetHt = {}
         self.h_jetMult = {}
         self.h_jetBMult = {}
         self.h_jetEta = {}
         self.h_jetPhi = {}
         self.h_jetMap = {}
-
         self.h_muonPt = {}
+        self.h_softMuonPt = {}
+        self.h_softMuonMult = {}
         self.h_muonEta = {}
         self.h_muonPhi = {}
         self.h_muonMap = {}
         self.h_muonIsolation = {}
         self.h_muonIsoPt = {}
-
         self.h_metPt = {}
         self.h_metPhi = {}
 
-        # self.h_genMetPt = {}
-        # self.h_genMetPhi = {}
+        self.h_genMetPt = {}
+        self.h_genMetPhi = {}
 
         self.nJet = None
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';Cuts and Triggers;Total Number of Accepted Events', 16, 0, 16)
-        if not era.find('data') == -1:
+        if not self.era.find('mc') == -1:
             self.h_muonGenPartFlav = ROOT.TH1D('h_muonGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; '
                                                'Number of events', 16, 0, 16)
             self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
@@ -72,7 +148,7 @@ class TriggerStudy(Module):
         self.trigLst = trigLst
 
         self.selCriteria = {}
-        with open("selectionCriteria.txt") as f:
+        with open(pathToSelectionCriteria + "/selectionCriteria.txt") as f:
             for line in f:
                 if line.find(":") == -1: continue
                 (key, val) = line.split(": ")
@@ -89,11 +165,20 @@ class TriggerStudy(Module):
         # - Run beginJob() of Module
         Module.beginJob(self, histFile, histDirName)
 
+        # self.runId['no_trigger'] = ROOT.TH1D('h_runId_notrigger', 'no trigger ; run; Number of Events', 1000000, 0, 1000000)
+        # self.eventId['no_trigger'] = ROOT.TH1D('h_runId_notrigger', 'no trigger ;event; Number of Events', 1000000, 0, 1000000)
+        # self.lumi['no_trigger'] = ROOT.TH1D('h_runId_notrigger', 'no trigger ;luminosityBlock; Number of Events', 1000000, 0, 1000000)
+        #
+        # self.runId['no_baseline'] = ROOT.TH1D('h_runId_nobaseline', 'no baseline ; run; Number of Events', 1000000, 0, 1000000)
+        # self.eventId['no_baseline'] = ROOT.TH1D('h_runId_nobaseline', 'no baseline ;event; Number of Events', 1000000, 0, 1000000)
+        # self.lumi['no_baseline'] = ROOT.TH1D('h_runId_nobaseline', 'no baseline ;luminosityBlock; Number of Events', 1000000, 0, 1000000)
+
         ##################
         # JET HISTOGRAMS #
         ##################
         self.h_jetHt['no_baseline'] = ROOT.TH1D('h_jetHt_nobaseline',
-                                               'no baseline ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1, 3000)
+                                                'no baseline ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1,
+                                                3000)
         self.h_jetHt['no_trigger'] = ROOT.TH1D('h_jetHt_notrigger',
                                                'no trigger ;H_{T} (GeV/c);Number of Events per 10 GeV/c', 300, 1, 3000)
         self.h_jetMult['no_trigger'] = ROOT.TH1D('h_jetMult_notrigger',
@@ -114,11 +199,12 @@ class TriggerStudy(Module):
         ##################
         self.h_muonPt['no_trigger'] = ROOT.TH1D('h_muonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events'
                                                                       ' per 1 GeV/c', 300, 0, 300)
-        self.h_muonPt['no_baseline'] = ROOT.TH1D('h_muonPt_nobaseline', 'no baseline ;Muon P_{T} (GeV/c);Number of Events'
-                                                                      ' per 1 GeV/c', 300, 0, 300)
-        if not era.find('data') == -1:
+        self.h_muonPt['no_baseline'] = ROOT.TH1D('h_muonPt_nobaseline',
+                                                 'no baseline ;Muon P_{T} (GeV/c);Number of Events'
+                                                 ' per 1 GeV/c', 300, 0, 300)
+        if not self.era.find('mc') == -1:
             self.h_muonPt['prompt0'] = ROOT.TH1D('h_muonPt_prompt0', 'prompt0 muons ;Muon P_{T} (GeV/c);Number of '
-                                                 'Events per 1 GeV/c', 300, 0, 300)
+                                                                     'Events per 1 GeV/c', 300, 0, 300)
             self.h_muonPt['from_prompt_tau0'] = ROOT.TH1D('h_muonPt_from_prompt_tau0',
                                                           'muons from_prompt_tau0 ;Muon P_{T} (GeV/c);Number of Events '
                                                           'per 1 GeV/c', 300, 0, 300)
@@ -134,9 +220,8 @@ class TriggerStudy(Module):
             self.h_muonPt['unmatched0'] = ROOT.TH1D('h_muonPt_unmatched0',
                                                     'unmatched0 muons ;Muon P_{T} (GeV/c);Number of Events '
                                                     'per 1 GeV/c', 300, 0, 300)
-            
             self.h_muonPt['prompt'] = ROOT.TH1D('h_muonPt_prompt', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                'Events per 1 GeV/c', 300, 0, 300)
+                                                                   'Events per 1 GeV/c', 300, 0, 300)
             self.h_muonPt['from_prompt_tau'] = ROOT.TH1D('h_muonPt_from_prompt_tau',
                                                          'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
                                                          'per 1 GeV/c', 300, 0, 300)
@@ -152,6 +237,12 @@ class TriggerStudy(Module):
             self.h_muonPt['unmatched'] = ROOT.TH1D('h_muonPt_unmatched',
                                                    'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
                                                    'per 1 GeV/c', 300, 0, 300)
+            self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
+                                                                              'Events per 1GeV/c', 300, 0, 300)
+            self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
+                                                                                'per #delta#phi = 0.046', 300, -6, 8)
+            self.addObject(self.h_genMetPt['no_trigger'])
+            self.addObject(self.h_genMetPhi['no_trigger'])
             self.addObject(self.h_muonPt['prompt0'])
             self.addObject(self.h_muonPt['from_prompt_tau0'])
             self.addObject(self.h_muonPt['from_b0'])
@@ -177,6 +268,65 @@ class TriggerStudy(Module):
                                                    300, 0, 300, 30, 0, 0.17)
         self.h_muonMap['no_trigger'] = ROOT.TH2F('h_muonMap_notrigger', 'no trigger;Muon #eta;Muon #phi;',
                                                  150, -6, 6, 160, -3.2, 3.2)
+
+        ##################
+        # SOFT MUONS     #
+        ##################
+        self.h_softMuonMult['no_trigger'] = ROOT.TH1D('h_softMuonMult_notrigger', 'no trigger ;Number of Soft Muons;Number of Events',
+                                                    10, 0, 10)
+        self.addObject(self.h_softMuonMult['no_trigger'])
+        self.h_softMuonPt['no_trigger'] = ROOT.TH1D('h_softMuonPt_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events'
+                                                    ' per 1 GeV/c', 300, 0, 300)
+        self.addObject(self.h_softMuonPt['no_trigger'])
+        if not self.era.find('mc') == -1:
+            self.h_softMuonPt['prompt'] = ROOT.TH1D('h_softMuonPt_prompt', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                    'Events per 1 GeV/c', 300, 0, 300)
+            self.h_softMuonPt['from_prompt_tau'] = ROOT.TH1D('h_softMuonPt_from_prompt_tau',
+                                                             'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                             'per 1 GeV/c', 300, 0, 300)
+            self.h_softMuonPt['from_b'] = ROOT.TH1D('h_softMuonPt_from_b',
+                                                    'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                    'per 1 GeV/c', 300, 0, 300)
+            self.h_softMuonPt['from_c'] = ROOT.TH1D('h_softMuonPt_from_c',
+                                                    'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                    'per 1 GeV/c', 300, 0, 300)
+            self.h_softMuonPt['from_light_or_unknown'] = ROOT.TH1D('h_softMuonPt_from_light_or_unknown',
+                                                                   'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                                                                   'per 1 GeV/c', 300, 0, 300)
+            self.h_softMuonPt['unmatched'] = ROOT.TH1D('h_softMuonPt_unmatched',
+                                                       'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                       'per 1 GeV/c', 300, 0, 300)
+            self.addObject(self.h_softMuonPt['prompt'])
+            self.addObject(self.h_softMuonPt['from_prompt_tau'])
+            self.addObject(self.h_softMuonPt['from_b'])
+            self.addObject(self.h_softMuonPt['from_c'])
+            self.addObject(self.h_softMuonPt['from_light_or_unknown'])
+            self.addObject(self.h_softMuonPt['unmatched'])
+
+            self.h_softMuonMult['prompt'] = ROOT.TH1D('h_softMuonMult_prompt', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                    'Events per 1 GeV/c', 10, 0, 10)
+            self.h_softMuonMult['from_prompt_tau'] = ROOT.TH1D('h_softMuonMult_from_prompt_tau',
+                                                             'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                             'per 1 GeV/c', 10, 0, 10)
+            self.h_softMuonMult['from_b'] = ROOT.TH1D('h_softMuonMult_from_b',
+                                                    'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                    'per 1 GeV/c', 10, 0, 10)
+            self.h_softMuonMult['from_c'] = ROOT.TH1D('h_softMuonMult_from_c',
+                                                    'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                    'per 1 GeV/c', 10, 0, 10)
+            self.h_softMuonMult['from_light_or_unknown'] = ROOT.TH1D('h_softMuonMult_from_light_or_unknown',
+                                                                   'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                                                                   'per 1 GeV/c', 10, 0, 10)
+            self.h_softMuonMult['unmatched'] = ROOT.TH1D('h_softMuonMult_unmatched',
+                                                       'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                       'per 1 GeV/c', 10, 0, 10)
+            self.addObject(self.h_softMuonMult['prompt'])
+            self.addObject(self.h_softMuonMult['from_prompt_tau'])
+            self.addObject(self.h_softMuonMult['from_b'])
+            self.addObject(self.h_softMuonMult['from_c'])
+            self.addObject(self.h_softMuonMult['from_light_or_unknown'])
+            self.addObject(self.h_softMuonMult['unmatched'])
+
         ##################
         # MET HISTOGRAMS #
         ##################
@@ -184,11 +334,6 @@ class TriggerStudy(Module):
                                                                     ' 1 GeV/c', 300, 0, 300)
         self.h_metPhi['no_trigger'] = ROOT.TH1D('h_metPhi_notrigger', 'no trigger ;MET #phi;Number of Events per '
                                                                       '#delta#phi = 0.046', 300, -6, 8)
-        # self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
-        #                                                                   'Events per 1GeV/c', 300, 0, 300)
-        # self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
-        #                                                                     'per #delta#phi = 0.046', 300, -6, 8)
-
         self.addObject(self.h_jetHt['no_baseline'])
         self.addObject(self.h_jetHt['no_trigger'])
         self.addObject(self.h_jetMult['no_trigger'])
@@ -208,8 +353,6 @@ class TriggerStudy(Module):
 
         self.addObject(self.h_metPt['no_trigger'])
         self.addObject(self.h_metPhi['no_trigger'])
-        # self.addObject(self.h_genMetPt['no_trigger'])
-        # self.addObject(self.h_genMetPhi['no_trigger'])
 
         for key in self.trigLst:
             if not key.find("El") == -1: continue
@@ -236,8 +379,16 @@ class TriggerStudy(Module):
                 self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);Number of '
                                                                                     'Events per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_muonPt[trgPath])
-                if not era.find('data') == -1:
-                    self.h_muonPt['prompt' + trgPath] = ROOT.TH1D('h_muonPt_prompt' + trgPath, 'prompt muons ;Muon P_{T} (GeV/c);Number of '
+
+                self.h_softMuonPt[trgPath] = ROOT.TH1D('h_softMuonPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);Number of '
+                                                       'Events per 1 GeV/c', 300, 0, 300)
+                self.addObject(self.h_softMuonPt[trgPath])
+                self.h_softMuonMult[trgPath] = ROOT.TH1D('h_softMuonMult' + trgPath, trgPath + ';Number of Soft Muons;Number of Events',
+                                                         10, 0, 10)
+                self.addObject(self.h_softMuonMult[trgPath])
+                if not self.era.find('mc') == -1:
+                    self.h_muonPt['prompt' + trgPath] = ROOT.TH1D('h_muonPt_prompt' + trgPath,
+                                                                  'prompt muons ;Muon P_{T} (GeV/c);Number of '
                                                                   'Events per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPt['prompt' + trgPath])
                     self.h_muonPt['from_prompt_tau' + trgPath] = ROOT.TH1D('h_muonPt_from_prompt_tau' + trgPath,
@@ -260,6 +411,73 @@ class TriggerStudy(Module):
                                                                      'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
                                                                      'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPt['unmatched' + trgPath])
+                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
+                                                         'of Events per 1 GeV/c', 300, 0, 300)
+                    self.addObject(self.h_genMetPt[trgPath])
+                    self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
+                                                          'Events per #delta#phi=0.046', 300, -6, 8)
+                    self.addObject(self.h_genMetPhi[trgPath])
+
+                    self.h_softMuonPt['prompt' + trgPath] = ROOT.TH1D('h_softMuonPt_prompt' + trgPath,
+                                                                      'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                                      'Events per 1 GeV/c', 300, 0, 300)
+                    self.addObject(self.h_softMuonPt['prompt' + trgPath])
+                    self.h_softMuonPt['from_prompt_tau' + trgPath] = ROOT.TH1D('h_softMuonPt_from_prompt_tau' + trgPath,
+                                                                               'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                                               'per 1 GeV/c', 300, 0, 300)
+                    self.addObject(self.h_softMuonPt['from_prompt_tau' + trgPath])
+                    self.h_softMuonPt['from_b' + trgPath] = ROOT.TH1D('h_softMuonPt_from_b' + trgPath,
+                                                                      'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                                      'per 1 GeV/c', 300, 0, 300)
+                    self.addObject(self.h_softMuonPt['from_b' + trgPath])
+                    self.h_softMuonPt['from_c' + trgPath] = ROOT.TH1D('h_softMuonPt_from_c' + trgPath,
+                                                                      'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                                      'per 1 GeV/c', 300, 0, 300)
+                    self.addObject(self.h_softMuonPt['from_c' + trgPath])
+                    self.h_softMuonPt['from_light_or_unknown' + trgPath] = ROOT.TH1D('h_softMuonPt_from_light_or_unknown' + trgPath,
+                                                                                     'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                                                                                     'per 1 GeV/c', 300, 0, 300)
+                    self.addObject(self.h_softMuonPt['from_light_or_unknown' + trgPath])
+                    self.h_softMuonPt['unmatched' + trgPath] = ROOT.TH1D('h_softMuonPt_unmatched' + trgPath,
+                                                                         'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                                         'per 1 GeV/c',300, 0, 300)
+                    self.addObject(self.h_softMuonPt['unmatched' + trgPath])
+
+
+
+                    self.h_softMuonMult['prompt' + trgPath] = ROOT.TH1D('h_softMuonMult_prompt' + trgPath,
+                                                                      'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                                      'Events per 1 GeV/c', 10, 0, 10)
+                    self.addObject(self.h_softMuonMult['prompt' + trgPath])
+                    self.h_softMuonMult['from_prompt_tau' + trgPath] = ROOT.TH1D('h_softMuonMult_from_prompt_tau' + trgPath,
+                                                                               'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                                               'per 1 GeV/c', 10, 0, 10)
+                    self.addObject(self.h_softMuonMult['from_prompt_tau' + trgPath])
+                    self.h_softMuonMult['from_b' + trgPath] = ROOT.TH1D('h_softMuonMult_from_b' + trgPath,
+                                                                      'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                                      'per 1 GeV/c', 10, 0, 10)
+                    self.addObject(self.h_softMuonMult['from_b' + trgPath])
+                    self.h_softMuonMult['from_c' + trgPath] = ROOT.TH1D('h_softMuonMult_from_c' + trgPath,
+                                                                      'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                                      'per 1 GeV/c', 10, 0, 10)
+                    self.addObject(self.h_softMuonMult['from_c' + trgPath])
+                    self.h_softMuonMult['from_light_or_unknown' + trgPath] = ROOT.TH1D('h_softMuonMult_from_light_or_unknown' + trgPath,
+                                                                                     'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                                                                                     'per 1 GeV/c', 10, 0, 10)
+                    self.addObject(self.h_softMuonMult['from_light_or_unknown' + trgPath])
+                    self.h_softMuonMult['unmatched' + trgPath] = ROOT.TH1D('h_softMuonMult_unmatched' + trgPath,
+                                                                         'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                                         'per 1 GeV/c', 10, 0, 10)
+                    self.addObject(self.h_softMuonMult['unmatched' + trgPath])
+
+#                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
+ #                                                        'of Events per 1 GeV/c', 300, 0, 300)
+  #                  self.addObject(self.h_genMetPt[trgPath])
+   #                 self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
+    #                                                                                        'Events per #delta#phi=0.046',
+     #                                                     300, -6, 8)
+      #              self.addObject(self.h_genMetPhi[trgPath])
+
                 self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Number of Events per'
                                                                                       ' #delta#eta = 0.046', 300, -6, 8)
                 self.addObject(self.h_muonEta[trgPath])
@@ -283,28 +501,7 @@ class TriggerStudy(Module):
                                                                                     '#delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_metPhi[trgPath])
 
-            # self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
-                #                                                                         'of Events per 1 GeV/c',
-                #                                      300, 0, 300)
-                # self.addObject(self.h_genMetPt[trgPath])
-                # self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
-                #                                                                         'Events per #delta#phi=0.046',
-                #                                       300, -6, 8)
-                # self.addObject(self.h_genMetPhi[trgPath])
-
         self.addObject(self.h_eventsPrg)
-
-    # def endJob(self):
-    #     Module.endJob(self)
-    #     pass
-    #
-    # def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-    #     self.out = wrappedOutputTree
-    #     self.out.branch("aTestBranch",  "I")
-    #     pass
-    #
-    # def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-    #     pass
 
     def jetCriteria(self, jets):
         """
@@ -346,16 +543,21 @@ class TriggerStudy(Module):
                 nMuonsPass (int): number of muons
                 MuonsPassIdx (int): index of muon that passed
         """
-        nMuonsPass = 0
-        MuonsPassIdx = 0
+        nTightMuonsPass = 0
+        tightMuonsPassIdx = 0
+        nSoftMuonsPass = 0
+        softMuonsPassIdx = 0
         for nm, muon in enumerate(muons):
+            if (getattr(muon, "softId") is True) and (getattr(muon, "tightId") is False):
+                nSoftMuonsPass += 1
+                softMuonsPassIdx = nm
             # - Check muon criteria 2017 https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
             if (getattr(muon, "tightId") is False) or abs(muon.eta) > self.selCriteria["maxObjEta"]: continue
             if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
-            nMuonsPass += 1
-            MuonsPassIdx = nm
+            nTightMuonsPass += 1
+            tightMuonsPassIdx = nm
 
-        return nMuonsPass, MuonsPassIdx
+        return nTightMuonsPass, tightMuonsPassIdx, nSoftMuonsPass, softMuonsPassIdx
 
     def electronCriteria(self, electrons):
         """
@@ -400,6 +602,9 @@ class TriggerStudy(Module):
         electrons = Collection(event, "Electron")
         jets = Collection(event, "Jet")
         hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
+        # runObj = Object(event, "run")
+        # eventObj = Object(event, "event")
+        # lumiObj = Object(event, "luminosityBlock")
         met = Object(event, "MET")
         # genMet = Object(event, "GenMET")
 
@@ -443,7 +648,7 @@ class TriggerStudy(Module):
                 jetHt.update({tg: 0})
 
         nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
-        nMuonPass, MuonPassIdx = self.muonCriteria(muons)
+        nMuonPass, MuonPassIdx, nSoftMuonPass, softMuonPassIdx = self.muonCriteria(muons)
         nElPass, ElPassIdx = self.electronCriteria(electrons)
 
         ##############################
@@ -454,7 +659,7 @@ class TriggerStudy(Module):
             HT += jet.pt
         self.h_jetHt['no_baseline'].Fill(HT)
         for muon in muons:
-            if not era.find('data') == -1:
+            if not self.era.find('mc') == -1:
                 self.h_muonPt['no_baseline'].Fill(muon.pt)
                 if muon.genPartFlav == 1:
                     self.h_muonPt['prompt0'].Fill(muon.pt)
@@ -468,6 +673,7 @@ class TriggerStudy(Module):
                     self.h_muonPt['unmatched0'].Fill(muon.pt)
                 elif muon.genPartFlav == 15:
                     self.h_muonPt['from_prompt_tau0'].Fill(muon.pt)
+
         if nJetPass > 5 and nMuonPass == 1 and nBtagPass > 1 and nElPass == 0:
             for nj, jet in enumerate(jets):
                 if nj not in JetPassIdx: continue
@@ -479,9 +685,58 @@ class TriggerStudy(Module):
                 jetHt["notrig"] += jet.pt
             if jetHt["notrig"] > 500:
                 for nm, muon in enumerate(muons):
+                    if nSoftMuonPass > 0:
+                        self.h_softMuonMult['no_trigger'].Fill(nSoftMuonPass)
+                        self.h_softMuonPt['no_trigger'].Fill(muon.pt)
+                        for key in self.trigLst:
+                            if not key.find("El") == -1: continue
+                            for tg in self.trigLst[key]:
+                                # print(tg)
+                                if trigPath[tg]:
+                                    # print(">>>pass")
+                                    self.h_softMuonPt[tg].Fill(muon.pt)
+                                    self.h_softMuonMult[tg].Fill(nSoftMuonPass)
+                                    if not self.era.find('mc') == -1:
+                                        if muon.genPartFlav == 1:
+                                            self.h_softMuonPt['prompt' + tg].Fill(muon.pt)
+                                            self.h_softMuonMult['prompt' + tg].Fill(nSoftMuonPass)
+                                        elif muon.genPartFlav == 5:
+                                            self.h_softMuonPt['from_b' + tg].Fill(muon.pt)
+                                            self.h_softMuonMult['from_b' + tg].Fill(nSoftMuonPass)
+                                        elif muon.genPartFlav == 4:
+                                            self.h_softMuonPt['from_c' + tg].Fill(muon.pt)
+                                            self.h_softMuonMult['from_c' + tg].Fill(nSoftMuonPass)
+                                        elif muon.genPartFlav == 3:
+                                            self.h_softMuonPt['from_light_or_unknown' + tg].Fill(muon.pt)
+                                            self.h_softMuonMult['from_light_or_unknown' + tg].Fill(nSoftMuonPass)
+                                        elif muon.genPartFlav == 0:
+                                            self.h_softMuonPt['unmatched' + tg].Fill(muon.pt)
+                                            self.h_softMuonMult['unmatched' + tg].Fill(nSoftMuonPass)
+                                        elif muon.genPartFlav == 15:
+                                            self.h_softMuonPt['from_prompt_tau' + tg].Fill(muon.pt)
+                                            self.h_softMuonMult['from_prompt_tau' + tg].Fill(nSoftMuonPass)
+                        if not self.era.find('mc') == -1:
+                            if muon.genPartFlav == 1:
+                                self.h_softMuonPt['prompt'].Fill(muon.pt)
+                                self.h_softMuonMult['prompt'].Fill(nSoftMuonPass)
+                            elif muon.genPartFlav == 5:
+                                self.h_softMuonPt['from_b'].Fill(muon.pt)
+                                self.h_softMuonMult['from_b'].Fill(nSoftMuonPass)
+                            elif muon.genPartFlav == 4:
+                                self.h_softMuonPt['from_c'].Fill(muon.pt)
+                                self.h_softMuonMult['from_c'].Fill(nSoftMuonPass)
+                            elif muon.genPartFlav == 3:
+                                self.h_softMuonPt['from_light_or_unknown'].Fill(muon.pt)
+                                self.h_softMuonMult['from_light_or_unknown'].Fill(nSoftMuonPass)
+                            elif muon.genPartFlav == 0:
+                                self.h_softMuonPt['unmatched'].Fill(muon.pt)
+                                self.h_softMuonMult['unmatched'].Fill(nSoftMuonPass)
+                            elif muon.genPartFlav == 15:
+                                self.h_softMuonPt['from_prompt_tau'].Fill(muon.pt)
+                                self.h_softMuonMult['from_prompt_tau'].Fill(nSoftMuonPass)
                     if not MuonPassIdx == nm: continue
                     self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
-                    if not era.find('data') == -1:
+                    if not self.era.find('mc') == -1:
                         self.h_muonGenPartFlav.Fill(muon.genPartFlav)
                         self.h_muonGenPartIdx.Fill(muon.genPartIdx)
                     self.h_muonEta['no_trigger'].Fill(muon.eta)
@@ -495,7 +750,7 @@ class TriggerStudy(Module):
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 self.h_muonPt[tg].Fill(muon.pt)
-                                if not era.find('data') == -1:
+                                if not self.era.find('mc') == -1:
                                     if muon.genPartFlav == 1:
                                         self.h_muonPt['prompt' + tg].Fill(muon.pt)
                                     elif muon.genPartFlav == 5:
@@ -513,7 +768,7 @@ class TriggerStudy(Module):
                                 self.h_muonMap[tg].Fill(muon.eta, muon.phi)
                                 self.h_muonIsolation[tg].Fill(muon.miniPFRelIso_all)
                                 self.h_muonIsoPt[tg].Fill(muon.pt, muon.miniPFRelIso_all)
-                    if not era.find('data') == -1:
+                    if not self.era.find('mc') == -1:
                         if muon.genPartFlav == 1:
                             self.h_muonPt['prompt'].Fill(muon.pt)
                         elif muon.genPartFlav == 5:
@@ -566,245 +821,72 @@ class TriggerStudy(Module):
         return True
 
 
-def process_arguments():
+def main(argms):
     """
-    Processes command line arguments
-    Returns:
-        args: list of commandline arguments
-
-    """
-
-    parser = ArgumentParser(description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--inputLFN", choices=["tt_semilep94", "ttjets94", "tttt94", "tttt_weights", "wjets",
-                                                     "tt_semilep102_17B", "tttt102_17B",
-                                                     "tt_semilep102_17C", "tttt102_17C",
-                                                     "tt_semilep102_17DEF", "tttt102_17DEF",
-                                                     "dataHTMHT17B", "dataSMu17B", "dataSEl17B",
-                                                     "dataHTMHT17C", "dataSMu17C", "dataSEl17C",
-                                                     "dataHTMHT17D", "dataSMu17D", "dataSEl17D",
-                                                     "dataHTMHT17E", "dataSMu17E", "dataSEl17E",
-                                                     "dataHTMHT17F", "dataSMu17F", "dataSEl17F",
-                                                     "dataHT18B", "dataSMu18B", "dataSEl18B",
-                                                     "dataHT18C", "dataSMu18C", "dataSEl18C",
-                                                     "dataHT18D", "dataSMu18D", "dataSEl18D",
-                                                     "dataHT18E", "dataSMu18E", "dataSEl18E",
-                                                     "dataHT18F", "dataSMu18F", "dataSEl18F"],
-                        default="tttt102", help="Set list of input files")
-    parser.add_argument("-fnp", "--fileName", help="path/to/fileName")
-    parser.add_argument("-r", "--redirector", choices=["xrd-global", "xrdUS", "xrdEU_Asia", "eos", "iihe", "local"],
-                        default="xrd-global", help="Sets redirector to query locations for LFN")
-    parser.add_argument("-nw", "--noWriteFile", action="store_true",
-                        help="Does not output a ROOT file, which contains the histograms.")
-    parser.add_argument("-e", "--eventLimit", type=int, default=-1,
-                        help="Set a limit to the number of events.")
-    parser.add_argument("-lf", "--fileLimit", type=int, default=-1,
-                        help="Set a limit to the number of files to run through.")
-    parser.add_argument("-o", "--outputName", default="_v", help="Set name of output file")
-    args = parser.parse_args()
-    return args
-
-
-def chooseRedirector(arg):
-    """
-    Sets redirector using keyword given in commandline arguments
+    This is where the input files are chosen and the PostProcessor runs
     Args:
-        arg: command line argument list
+        argms: command line arguments
 
     Returns:
-        redir: redirector, where redirector + LFN = PFN
 
     """
-    if arg.redirector == "xrd-global":
-        redir = "root://cms-xrd-global.cern.ch/"
-    elif arg.redirector == "xrdUS":
-        redir = "root://cmsxrootd.fnal.gov/"
-    elif arg.redirector == "xrdEU_Asia":
-        redir = "root://xrootd-cms.infn.it/"
-    elif arg.redirector == "eos":
-        redir = "root://cmseos.fnal.gov/"
-    elif arg.redirector == "iihe":
-        redir = "dcap://maite.iihe.ac.be/pnfs/iihe/cms/ph/sc4/"
-    elif arg.redirector == "local":
-        if arg.inputLFN == "ttjets":
-            redir = "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/"
-        elif arg.inputLFN == "tttt_weights":
-            redir = "../../myInFiles/TTTTweights/"
-        elif arg.inputLFN == "wjets":
-            redir = "../../myInFiles/Wjets/"
-        elif arg.inputLFN == "tttt":
-            redir = "../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/"
+    if argms.fileName.find("Run2017B") != -1 or argms.era == "17B":
+        if not argms.fileName.find("pythia") == -1:
+            trigList = getFileContents(pathToTrigLists + "trigList.txt", True)
+            era2017 = "17ABmc"
         else:
-            return ""
+            trigList = getFileContents(pathToTrigLists + "2017ABtrigList.txt", True)
+            era2017 = "17ABdata"
+    elif argms.fileName.find("Run2017C") != -1 or argms.era == "17C":
+        trigList = getFileContents(pathToTrigLists + "2017CtrigList.txt", True)
+        era2017 = "17C"
+        if argms.fileName.find("pythia") != -1 and argms.era == "17C": era2017 = "17Cmc"
+    elif argms.fileName.find("Run2017D") !=-1 or argms.fileName.find("Run2017E") !=-1 or argms.fileName.find("Run2017F") != -1 or argms.era == "17DEF":
+        trigList = getFileContents(pathToTrigLists + "2017DEFtrigList.txt", True)
+        era2017 = "17DEF"
+        if argms.fileName.find("pythia") != -1 and argms.era == "17DEF": era2017 = "17DEFmc"
+    elif not argms.fileName.find("Run2018") == -1:
+        trigList = getFileContents(pathToTrigLists + "2018trigList.txt", True)
+        era2017 = "18data"
+        if not argms.fileName.find("pythia") == -1: era2017 = "18mc"
     else:
-        return ""
-    return redir
+        trigList = getFileContents(pathToTrigLists + "trigList.txt", True)
+        era2017 = "original"
+
+    print(era2017)
+
+    preSelCuts = getFileContents(pathToTrigLists + "preSelectionCuts.txt", False)
+    selCriteria = getFileContents("selectionCriteria.txt", False)
+
+    if argms.noWriteFile: writeFile = False
+    else: writeFile = True
+
+    files = findEraRootFiles(argms.fileName)
 
 
-def getFileContents(fileName, elmList):
-    """
-
-    Args:
-        fileName (string): path/to/file
-        elmList (bool): if true then dictionary elements are lists else strings
-
-    Returns:
-        fileContents (dictionary): file contents given as a dictionary
-
-    """
-    fileContents = {}
-    with open(fileName) as f:
-        for line in f:
-            if line.find(":") == -1: continue
-            (key1, val) = line.split(": ")
-            c = len(val) - 1
-            val = val[0:c]
-            if elmList is False:
-                fileContents[key1] = val
-            else:
-                fileContents[key1] = val.split(", ")
-    return fileContents
+    p99 = PostProcessor(".",
+                        files,
+                        # argms.fileName,
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
+                        modules=[TriggerStudy(writeHistFile=writeFile,
+                                              eventLimit=argms.eventLimit,
+                                              trigLst=trigList,
+                                              era=era2017)],
+                        # jsonInput=None,
+                        noOut=True,
+                        histFileName=argms.outputName,
+                        histDirName="plots",
+                        # branchsel="../myInFiles/kd_branchsel.txt",
+                        # outputbranchsel="../myInFiles/kd_branchsel.txt",
+                        )
+    t0 = time.time()
+    p99.run()
+    t1 = time.time()
+    print("Elapsed time %7.1fs" % (t1-t0))
 
 
-def ioFiles(arg, selCrit):
-    """
-    Input and Output file
-
-    Args:
-        arg : command line arguments
-        selCrit (dictionary): selection criteria
-
-    Returns:
-        inLFNList (string): list of file datasets
-        postFix (string): string added to output file
-        outFile (string): output file name
-
-    Open the text list of files as read-only ("r" option), use as pairs to add proper postfix to output file
-    you may want to change path to suit your file ordering
-
-    """
-    descriptor = arg.outputName
-    if arg.inputLFN == "dataHTMHT17B":
-        inLFNList = open("../myInFiles/data/HTMHT_Run2017B-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataHTMHT17B"
-        outFile = "OutFiles/Histograms{0}/dataHTMHT17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSMu17B":
-        inLFNList = open("../myInFiles/data/SingleMuon_Run2017B-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSMu17B"
-        outFile = "OutFiles/Histograms{0}/dataSMu17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSEl17B":
-        inLFNList = open("../myInFiles/data/SingleElectron_Run2017B-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSEl17B"
-        outFile = "OutFiles/Histograms{0}/dataSEl17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataHTMHT17C":
-        inLFNList = open("../myInFiles/data/HTMHT_Run2017C-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataHTMHT17C"
-        outFile = "OutFiles/Histograms{0}/dataHTMHT17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSMu17C":
-        inLFNList = open("../myInFiles/data/SingleMuon_Run2017C-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSMu17C"
-        outFile = "OutFiles/Histograms{0}/dataSMu17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSEl17C":
-        inLFNList = open("../myInFiles/data/SingleElectron_Run2017C-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSEl17C"
-        outFile = "OutFiles/Histograms{0}/dataSEl17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataHTMHT17D":
-        inLFNList = open("../myInFiles/data/HTMHT_Run2017D-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataHTMHT17D"
-        outFile = "OutFiles/Histograms{0}/dataHTMHT17D_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSMu17D":
-        inLFNList = open("../myInFiles/data/SingleMuon_Run2017D-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSMu17D"
-        outFile = "OutFiles/Histograms{0}/dataSMu17D_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSEl17D":
-        inLFNList = open("../myInFiles/data/SingleElectron_Run2017D-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSEl17D"
-        outFile = "OutFiles/Histograms{0}/dataSEl17D_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataHTMHT17E":
-        inLFNList = open("../myInFiles/data/HTMHT_Run2017E-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataHTMHT17E"
-        outFile = "OutFiles/Histograms{0}/dataHTMHT17E_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSMu17E":
-        inLFNList = open("../myInFiles/data/SingleMuon_Run2017E-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSMu17E"
-        outFile = "OutFiles/Histograms{0}/dataSMu17E_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSEl17E":
-        inLFNList = open("../myInFiles/data/SingleElectron_Run2017E-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSEl17E"
-        outFile = "OutFiles/Histograms{0}/dataSEl17E_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataHTMHT17F":
-        inLFNList = open("../myInFiles/data/HTMHT_Run2017F-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataHTMHT17F"
-        outFile = "OutFiles/Histograms{0}/dataHTMHT17F_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSMu17F":
-        inLFNList = open("../myInFiles/data/SingleMuon_Run2017F-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSMu17F"
-        outFile = "OutFiles/Histograms{0}/dataSMu17F_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "dataSEl17F":
-        inLFNList = open("../myInFiles/data/SingleElectron_Run2017F-Nano14Dec2018-v1.txt", "r")
-        postFix = "dataSEl17F"
-        outFile = "OutFiles/Histograms{0}/dataSEl17F_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-
-    elif not arg.inputLFN.find("tt_semilep102_17") == -1:
-        inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X.txt", "r")
-        postFix = "TTToSemiLep102X"
-        if arg.inputLFN == "tt_semilep102_17B":
-            outFile = "OutFiles/Histograms{0}/TTToSemiLep102X_17B_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-        elif arg.inputLFN == "tt_semilep102_17C":
-            outFile = "OutFiles/Histograms{0}/TTToSemiLep102X_17C_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-        elif arg.inputLFN == "tt_semilep102_17DEF":
-            outFile = "OutFiles/Histograms{0}/TTToSemiLep102X_17DEF_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-
-    elif arg.inputLFN == "tt_semilep94":  # tt + jets MC
-        inLFNList = open("../myInFiles/mc/TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_94X.txt", "r")
-        # inLFNList = open("../NanoAODTools/StandaloneExamples/Infiles/TTJets_"
-        #                     "SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt", "r")
-        postFix = "TTToSemiLep94X"
-        outFile = "OutFiles/Histograms{0}/TTToSemiLep94X_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "ttjets94":
-        if arg.redirector == "local":
-            inLFNList = open(
-                "../../myInFiles/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8/fileNames.txt", "r")
-        else:
-            inLFNList = open("../myInFiles/mc/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_94X.txt", "r")
-        postFix = "TTJets_SL_94"
-        outFile = "OutFiles/Histograms{0}/TT94_6Jets1Mu{1}jPt.root".format(descriptor, selCrit["minJetPt"])
-    elif arg.inputLFN == "tttt_weights":
-        if arg.redirector == "local":
-            inLFNList = open("../../myInFiles/TTTTweights/TTTTweights_files.txt", "r")
-        else:
-            inLFNList = open("../myInFiles/mc/TTTTweights_files.txt", "r")
-        postFix = "TTTT_PSWeights"
-        outFile = "OutFiles/Histograms{0}/TTTTweights.root"
-    elif arg.inputLFN == "wjets":  # W (to Lep + Nu) + jets
-        if arg.redirector == "local":
-            inLFNList = open("../../myInFiles/Wjets/Wjets_files.txt", "r")
-        else:
-            inLFNList = open("../myInFiles/mc/Wjets_files.txt", "r")
-        postFix = "WJetsToLNu"
-        outFile = "OutFiles/Histograms{0}/Wjets.root"
-    elif arg.inputLFN == "tttt94":  # tttt MC
-        if arg.redirector == "local":
-            inLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
-        else:
-            inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_94X.txt", "r")
-        postFix = "TTTT94"
-        outFile = "OutFiles/Histograms{0}/TTTT94X_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
-    elif not arg.inputLFN.find("tttt102_17") == -1:  # tttt MC
-        if arg.redirector == "local":
-            inLFNList = open("../../myInFiles/TTTT_TuneCP5_13TeV-amcatnlo-pythia8/fileNames.txt", "r")
-        else:
-            inLFNList = open("../myInFiles/mc/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X.txt", "r")
-        postFix = "TTTT102"
-        if arg.inputLFN == "tttt102_17B":
-            outFile = "OutFiles/Histograms{0}/TTTT102X_17B_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
-        elif arg.inputLFN == "tttt102_17C":
-            outFile = "OutFiles/Histograms{0}/TTTT102X_17C_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
-        elif arg.inputLFN == "tttt102_17DEF":
-            outFile = "OutFiles/Histograms{0}/TTTT102X_17DEF_6Jets1Mu{1}jPt_test.root".format(descriptor, selCrit["minJetPt"])
-
-    else:
-        inLFNList = None
-        postFix = None
-        outFile = None
-
-    return inLFNList, postFix, outFile
+if __name__ == '__main__':
+    t2 = time.time()
+    main(process_arguments())
+    t3 = time.time()
+    print(">>>>> Total Elapsed time {0:7.1f} s ".format((t3 - t2)))
