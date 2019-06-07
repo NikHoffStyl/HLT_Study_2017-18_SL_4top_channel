@@ -1,0 +1,26 @@
+# All logs #
+**/logs
+*.log
+*.stderr
+*.stdout
+
+# ROOT files #
+*.root
+
+# PDFs and Images #
+*.pdf
+*.png
+
+# OS generated files #
+.DS_Store
+.DS_Store?
+._*
+
+# Editor generated backups #
+*~
+
+
+**/TrashBin
+**/Not_Used
+
+
