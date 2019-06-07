@@ -3,6 +3,9 @@
 *.log
 *.stderr
 *.stdout
+*.err
+*.out
+*.o
 
 # ROOT files #
 *.root
@@ -16,10 +19,19 @@
 .DS_Store?
 ._*
 
+# Large submission generated files #
+*.txt.*
+
+
 # Editor generated backups #
 *~
 
 
+# Python modules and tools #
+*.pyc
+
+ 
+# Specific to project #
 **/TrashBin
 **/Not_Used
 
