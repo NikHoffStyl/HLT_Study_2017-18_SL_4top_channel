@@ -149,17 +149,23 @@ def cmsPlotString(args):
 
     """
     if args == "17B":
-        legStr = "CMS Run2017B"
+        #legStr = "CMS Run2017B"
+        legStr = "CMS #bf{                                        Data Run2017B                                            5.61 fb^{-1} (13TeV)}"
     elif args == "17C":
-        legStr = "CMS Run2017C"
+        #legStr = "CMS Run2017C"
+        legStr = "CMS #bf{                                        Data Run2017C                                           10.83 fb^{-1} (13TeV)}"
     elif args == "17D":
-        legStr = "CMS Run2017D"
+        #legStr = "CMS Run2017D"
+        legStr = "CMS #bf{                                        Data Run2017D                                            4.62 fb^{-1} (13TeV)}"
     elif args == "17E":
-        legStr = "CMS Run2017E"
+        #legStr = "CMS Run2017E"
+        legStr = "CMS #bf{                                        Data Run2017E                                            9.83 fb^{-1} (13TeV)}"
     elif args == "17F":
-        legStr = "CMS Run2017F"
+        #legStr = "CMS Run2017F"
+        legStr = "CMS #bf{                                        Data Run2017F                                           13.16 fb^{-1} (13TeV)}"
     elif args == "17DEF":
-        legStr = "CMS Run2017D-F"
+        # legStr = "CMS Run2017D-F"
+        legStr = "CMS #bf{                                        Data Run2017D-F                                           27.61 fb^{-1} (13TeV)}"
     elif args == "17CDEF":
         legStr = "CMS Run2017C-F"
     elif args == "all":
@@ -374,10 +380,10 @@ def findTrigRatio(h1, title):
                 h_TH1DOut[hName].Divide(h2[prop])
                 xTitle = h2[prop].GetXaxis().GetTitle()
                 xBinWidth = h2[prop].GetXaxis().GetBinWidth(1)
-                h_TH1DOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                h_TH1DOut[hName].SetTitle(title + ";{0};Trigger Efficiency".format(xTitle))
                 if not ROOT.TEfficiency.CheckConsistency(h1[hName], h2[prop]): continue
                 h_TEffOut[hName] = ROOT.TEfficiency(h1[hName], h2[prop])
-                h_TEffOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                h_TEffOut[hName].SetTitle(title + ";{0};Trigger Efficiency".format(xTitle))
                 h_TEffOut[hName].SetName(effName2)
 
     return h_TH1DOut, h_TEffOut
@@ -423,7 +429,7 @@ def scaleFactor(h1, h2, title, era):
             h_scale[hName].Divide(h2[hName2])
             xTitle = h2[hName2].GetXaxis().GetTitle()
             xBinWidth = h2[hName2].GetXaxis().GetBinWidth(1)
-            h_scale[hName].SetTitle(title + ";{0};Scale Factors per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_scale[hName].SetTitle(title + ";{0};Scale Factors".format(xTitle))
 
     return h_scale, hNameList
 
@@ -464,7 +470,7 @@ def main():
     selCriteria = getFileContents("selectionCriteria.txt", True)
 
     # - Create canvases
-    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 750, 500)
+    triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 900, 500)
     # triggerCanvas.SetFillColor(17)
     # triggerCanvas.SetFrameFillColor(18)
     triggerCanvas.SetGrid()
@@ -537,6 +543,7 @@ def main():
     s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN)
 
     ROOT.gStyle.SetOptTitle(0)
+    ROOT.gStyle.SetOptStat(0)
 
     triggerCanvas.cd(1)
     ltx = TLatex()
@@ -553,49 +560,76 @@ def main():
         cv0[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         if args.inputLFN == "17B":
+            intgrLumi = 5.61  # /fb
             if not trg == "Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075": continue  # 1 is data 2 is mc
         elif args.inputLFN == "17C":
+            intgrLumi = 10.83  # /fb
             if not trg == "Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
         elif args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
+            intgrLumi = 27.61  # /fb
             if not trg == "Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
         else:
+            intgrLumi = 41.53  # /fb
             print("No actions yet for this option")
+            continue
         print(">>>>>>>  {0}".format(hName))
         if not hName.find("DoubleBTagCSV_p075") == -1: hName2 = hName.replace("SixJet32_DoubleBTagCSV_p075", "SixPFJet32_DoublePFBTagDeepCSV_2p2")
         else: hName2 = hName
         t = ROOT.TPaveText(0.15, 0.91, 0.7, 0.98, "nbNDC")
-        t2 = ROOT.TPaveText(0.55, 0.81, 0.75, 0.88, "nbNDC")
+        t2 = ROOT.TPaveText(0.08, 0.91, 0.92, 0.96, "nbNDC")
         t.SetFillColor(0)
         t2.SetFillColor(0)
         t.SetTextSize(0.03)
-        t2.SetTextSize(0.03)
+        t2.SetTextSize(0.035)
         t.AddText(trg)
         t2.AddText(legString)
-        h_mcTTToSemiLeps[hName2].SetTitle("Top-AntiTop MC")
-        h_dataHTMHTs[hName].SetTitle("HTMHT Data")
-        h_dataSMus[hName].SetTitle("Single Muon Data")
-        h_dataSEls[hName].SetTitle("Single Electron Data")
-        h_mcTTToSemiLeps[hName2].Draw()
+        histEntries = h_mcTTToSemiLeps[hName2].GetEntries()
+        h_mcTTToSemiLeps[hName2].SetTitle("Top-AntiTop MC (%d)" % histEntries)
+        histEntries = h_dataHTMHTs[hName].GetEntries()
+        h_dataHTMHTs[hName].SetTitle("HTMHT Data (%d)" % histEntries)
+        histEntries = h_dataSMus[hName].GetEntries()
+        h_dataSMus[hName].SetTitle("Single Muon Data (%d) " % histEntries)
+        histEntries = h_dataSEls[hName].GetEntries()
+        h_dataSEls[hName].SetTitle("Single Electron Data (%d)" % histEntries)
+        normVal = (intgrLumi * 831000 * 0.45)/43732445  # (h_mcTTToSemiLeps[hName2].GetEntries())
+        print(normVal)
+        h_mcTTToSemiLeps[hName2].Scale(normVal)
+        for i in range (0, 17):
+            binWidth = h_mcTTToSemiLeps[hName2].GetXaxis().GetBinWidth(i)
+            binContent = h_mcTTToSemiLeps[hName2].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_mcTTToSemiLeps[hName2].SetBinContent(i, newBinContent)
+            binContent = h_dataHTMHTs[hName].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_dataHTMHTs[hName].SetBinContent(i, newBinContent)
+            binContent = h_dataSMus[hName].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_dataSMus[hName].SetBinContent(i, newBinContent)
+            binContent = h_dataSEls[hName].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_dataSEls[hName].SetBinContent(i, newBinContent)
+        h_mcTTToSemiLeps[hName2].Draw('hist')
         h_mcTTToSemiLeps[hName2].SetLineColor(1)
         # tX1 = 0.05 * (h_mcTTToSemiLeps[hName].GetXaxis().GetXmax())
         # tY1 = 1.1*(h_mcTTToSemiLeps[hName].GetMaximum())
         h_dataSEls[hName].Draw('same')
         h_dataSEls[hName].SetLineColor(6)
-        h_dataSEls[hName].SetFillColor(6)
+        h_dataSEls[hName].SetFillColorAlpha(6, 0.4)
         h_dataHTMHTs[hName].Draw('same')
         h_dataHTMHTs[hName].SetLineColor(4)
-        h_dataHTMHTs[hName].SetFillColor(4)
+        h_dataHTMHTs[hName].SetFillColorAlpha(4, 0.4)
         h_dataSMus[hName].Draw('same')
         h_dataSMus[hName].SetLineColor(2)
-        h_dataSMus[hName].SetFillColor(2)
-        t.Draw("same")
+        h_dataSMus[hName].SetFillColorAlpha(2, 0.4)
+        # t.Draw("same")
         t2.Draw("same")
-        cv0[hn].BuildLegend(0.6, 0.5, 0.9, 0.7)
-        ROOT.gStyle.SetLegendTextSize(0.03)
+        ROOT.gStyle.SetLegendTextSize(0.035)
+        cv0[hn].BuildLegend(0.65, 0.55, 0.95, 0.9)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
+        triggerCanvas.Print("TriggerPlots/images/{0}events.png".format(hn), "png")
 
         # - Draw trigger efficiency hists
         cv1[hn] = triggerCanvas.cd(1)
@@ -615,14 +649,15 @@ def main():
         tr2_dataHTMHT[hName].SetLineColor(4)
         tr2_dataSEl[hName].Draw('same')
         tr2_dataSEl[hName].SetLineColor(6)
-        t.Draw("same")
+        # t.Draw("same")
         t2.Draw("same")
-        cv1[hn].BuildLegend(0.6, 0.1, 0.9, 0.3)
-        ROOT.gStyle.SetLegendTextSize(0.03)
+        ROOT.gStyle.SetLegendTextSize(0.035)
+        cv1[hn].BuildLegend(0.65, 0.1, 0.9, 0.38)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
+        triggerCanvas.Print("TriggerPlots/images/{0}teff.png".format(hn), "png")
 
         # - Draw scale factor hists
         cv2[hn] = triggerCanvas.cd(1)
@@ -637,14 +672,15 @@ def main():
         s_dataSMu[hName].SetLineColor(2)
         s_dataSEl[hName].Draw('E1 same')
         s_dataSEl[hName].SetLineColor(6)
-        t.Draw("same")
+        # t.Draw("same")
         t2.Draw("same")
-        cv2[hn].BuildLegend(0.6, 0.1, 0.9, 0.3)
-        ROOT.gStyle.SetLegendTextSize(0.03)
+        ROOT.gStyle.SetLegendTextSize(0.035)
+        cv2[hn].BuildLegend(0.65, 0.1, 0.9, 0.28)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
+        triggerCanvas.Print("TriggerPlots/images/{0}sf.png".format(hn), "png")
 
     # cv1 = triggerCanvas.cd(1)
     # count = 0

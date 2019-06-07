@@ -10,11 +10,10 @@ keep Jet*
 keep MET*
 keep GenJet*
 keep genTtbarId
-keep HLT_Ele3?_WPTight_Gsf
 keep HLT_IsoMu2*
-keep HLT_PFHT380*
-keep HLT_Ele28_eta2p1_WPTight_Gsf_HT150
-keep HLT_Mu15_IsoVVVL_PFHT450_CaloBTagCSV_4p5
+keep HLT_PFHT*
+keep HLT_Ele*
+keep HLT_Mu*
 
 # drop Tau*
 # drop GenVisTau*
