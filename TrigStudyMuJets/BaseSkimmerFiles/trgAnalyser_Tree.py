@@ -170,14 +170,19 @@ class TriggerStudy(Module):
 
         if self.era == "17ABdata":
             self.out.branch("HLT_IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", "I")
+            self.out.branch("HLT_Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075", "I")
         elif self.era == "17ABmc":
             self.out.branch("HLT_IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
+            self.out.branch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
         elif not self.era.find("17C") == -1:
             self.out.branch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", "I")
+            self.out.branch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", "I")
         elif not self.era.find("17DEF") == -1:
             self.out.branch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
+            self.out.branch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
         elif self.era == '18data':
             self.out.branch("HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
+            self.out.branch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
         else:
             self.out.branch("HLT_OR", "I")
 
@@ -321,30 +326,55 @@ class TriggerStudy(Module):
                 self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", 1)
             else:
                 self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", 0)
+            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixJet32_DoubleBTagCSV_p075'] is True:
+                trigPath['Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075'] = True
+                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075", 1)
+            else:
+                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075", 0)
         elif self.era == "17ABmc":
             if trigPath['IsoMu24_eta2p1'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
                 trigPath['IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
                 self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
             else:
                 self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
+            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
+                trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
+            else:
+                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
         elif not self.era.find("17C") == -1:
             if trigPath['IsoMu27'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] is True:
                 trigPath['IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] = True
                 self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 1)
             else:
                 self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 0)
+            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] is True:
+                trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] = True
+                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 1)
+            else:
+                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 0)
         elif not self.era.find("17DEF") == -1:
             if trigPath['IsoMu27'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
                 trigPath['IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
                 self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
             else:
                 self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
+            if trigPath['Ele32_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
+                trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
+            else:
+                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
         elif self.era == '18data':
             if trigPath['IsoMu24'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
                 trigPath['HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
                 self.out.fillBranch("HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
             else:
                 self.out.fillBranch("HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
+            if trigPath['Ele32_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
+                trigPath['HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
+                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
+            else:
+                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
         else:
             print("No era specified. Stopped Analysis.")
             return False
@@ -456,7 +486,7 @@ def main(argms):
     print(p99.inputFiles)
     t0 = time.time()
     p99.run()
-    cmdString = "gfal-copy -r file://$TMPDIR/{0}{1}.root srm://maite.iihe.ac.be:8443{2}BaseSelection{3}/{0}.root/".format(inFile, thePostFix, OutDir, argms.era)
+    cmdString = "gfal-copy -r file://$TMPDIR/{0}{1}.root srm://maite.iihe.ac.be:8443{2}BaseSelectionv2_{3}/{0}.root/".format(inFile, thePostFix, OutDir, argms.era)
     os.system(cmdString)
     t1 = time.time()
     proc = os.getpid()
