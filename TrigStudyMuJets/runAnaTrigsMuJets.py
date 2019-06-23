@@ -58,6 +58,9 @@ def main(argms):
     elif not argms.inputLFN.find("17D") or argms.inputLFN.find("17E") or argms.inputLFN.find("17F") == -1:
         trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", True)
         era2017 = "17DEF"
+    elif not argms.inputLFN.find("18") == -1:
+        trigList = getFileContents("../myInFiles/2018trigList.txt", True)
+        era2017 = "18data"
     else:
         trigList = getFileContents("../myInFiles/trigList.txt", True)
         era2017 = "original"
@@ -81,6 +84,7 @@ def main(argms):
     if not keyWord.find("HTMHT") == -1: dirPath = "../HTMHT/" + runPeriod
     elif not keyWord.find("SMu") == -1: dirPath = "../SingleMuon/" + runPeriod
     elif not keyWord.find("SEl") == -1: dirPath = "../SingleElectron/" + runPeriod
+    #elif not keyWord.find("SEl18") == -1: dirPath = "/pnfs/iihe/cms/store/user/nistylia/Trimmed2018Data/EGamma_Run2018{0}-Nano14Dec2018-v1".format(runPeriod)
     elif not keyWord.find("tt_semilep102") == -1: dirPath = "../TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8_102X/"
     elif not keyWord.find("tttt102") == -1: dirPath = "../TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_102X/"
     else: return 0

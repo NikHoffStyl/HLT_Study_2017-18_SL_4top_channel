@@ -2,8 +2,8 @@
 
 pwd=$PWD
 source $VO_CMS_SW_DIR/cmsset_default.sh                          # make scram available
-cd /user/$USER/CMSSW_9_4_10/src/                                 # your local CMSSW release
-#cd /user/$USER/CMSSW_10_2_6/src/                                 # your local CMSSW release
+cd /user/$USER/CMSSW_9_4_10/src/                                # your local CMSSW release use for RunII2017
+#cd /user/$USER/CMSSW_10_2_6/src/                                 # your local CMSSW release use for RunII2018
 eval `scram runtime -sh`                                         # don't use cmsenv, won't work on batch
 # cd $pwd
 
@@ -13,9 +13,9 @@ export X509_USER_PROXY=/user/$USER/x509up_u23075 # $(#id -u $USER)
 
 # cd /user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork
 cd $TMPDIR
-export SKIMJOBDIR=/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets
+export SKIMJOBDIR=/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork
 
-python $SKIMJOBDIR/trgAnalyser_Tree.py -fnp $FILE_IN -era $ERA
+python $SKIMJOBDIR/runSkimmerv2.py -fnp $FILE_TO_RUN_ON -r xrdEU_Asia
 #python runAnaTrigsMuJets.py -o _HTcut -f tt_semilep102_17B
 #python runSkimmer.py -f tt_semilep102_17C
 #python runSkimmer.py -f tt_semilep102_17DEF

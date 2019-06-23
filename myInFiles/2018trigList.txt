@@ -1,8 +1,11 @@
 Mu_OR_Jets: IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2
+Mu_OR_Jets2: IsoMu24_PFHT400_SixPFJet32_DoublePFBTagDeepCSV_2p94
 El_OR_Jets: Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2
+El_OR_Jets2: Ele32_WPTight_Gsf_PFHT400_SixPFJet32_DoublePFBTagDeepCSV_2p94
 
 El_CROSS_Jets: Ele28_eta2p1_WPTight_Gsf_HT150
 
 Muon: IsoMu24
 Electron: Ele32_WPTight_Gsf
 Jet: PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2
+Jet2: PFHT400_SixPFJet32_DoublePFBTagDeepCSV_2p94

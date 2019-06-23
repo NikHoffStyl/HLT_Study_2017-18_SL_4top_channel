@@ -19,6 +19,8 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 ##
 pathToTrigLists = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/"
 pathToSelectionCriteria = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets"
+
+
 ###
 
 
@@ -130,6 +132,11 @@ class TriggerStudy(Module):
         self.h_muonMap = {}
         self.h_muonIsolation = {}
         self.h_muonIsoPt = {}
+        self.h_muonEtaNomedium = {}
+        self.h_muonPhiNomedium = {}
+        self.h_muonMapNomedium = {}
+        self.h_muonIsolationNomedium = {}
+        self.h_muonIsoPtNomedium = {}
         self.h_metPt = {}
         self.h_metPhi = {}
 
@@ -140,9 +147,9 @@ class TriggerStudy(Module):
         self.h_eventsPrg = ROOT.TH1D('h_eventsPrg', ';Selection Steps;Total Number of Accepted Events', 16, 0, 16)
         if not self.era.find('mc') == -1:
             self.h_muonGenPartFlav = ROOT.TH1D('h_muonGenPartFlav', 'genPartFlav_afterCriteria; GenPartFlav; '
-                                               'Number of events', 16, 0, 16)
+                                                                    'Number of events', 16, 0, 16)
             self.h_muonGenPartIdx = ROOT.TH1D('h_muonGenPartIdx', 'genPartIdx_afterCriteria; GenPartIdx; '
-                                              'Number of events', 182, -2, 180)
+                                                                  'Number of events', 182, -2, 180)
         self.h_muonRelIso04_all = ROOT.TH1D('h_muonRelIso04_all', 'muonRelIso04_all;muonRelIso04_all;Number of Events',
                                             50, 0, 0.2)
 
@@ -207,11 +214,12 @@ class TriggerStudy(Module):
         self.h_muonPt['no_baseline'] = ROOT.TH1D('h_muonPt_nobaseline',
                                                  'no baseline ;Muon P_{T} (GeV/c);Number of Events'
                                                  ' per 1 GeV/c', 300, 0, 300)
-        self.h_muonPtnomedium['no_trigger'] = ROOT.TH1D('h_muonPtnomedium_notrigger', 'no trigger ;Muon P_{T} (GeV/c);Number of Events'
-                                                                      ' per 1 GeV/c', 300, 0, 300)
+        self.h_muonPtnomedium['no_trigger'] = ROOT.TH1D('h_muonPtnomedium_notrigger',
+                                                        'no trigger ;Muon P_{T} (GeV/c);Number of Events'
+                                                        ' per 1 GeV/c', 300, 0, 300)
         self.h_muonPtnomedium['no_baseline'] = ROOT.TH1D('h_muonPtnomedium_nobaseline',
-                                                 'no baseline ;Muon P_{T} (GeV/c);Number of Events'
-                                                 ' per 1 GeV/c', 300, 0, 300)
+                                                         'no baseline ;Muon P_{T} (GeV/c);Number of Events'
+                                                         ' per 1 GeV/c', 300, 0, 300)
         if not self.era.find('mc') == -1:
             self.h_muonPt['prompt0'] = ROOT.TH1D('h_muonPt_prompt0', 'prompt0 muons ;Muon P_{T} (GeV/c);Number of '
                                                                      'Events per 1 GeV/c', 300, 0, 300)
@@ -248,46 +256,49 @@ class TriggerStudy(Module):
                                                    'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
                                                    'per 1 GeV/c', 300, 0, 300)
 
-            self.h_muonPtnomedium['prompt0'] = ROOT.TH1D('h_muonPtnomedium_prompt0', 'prompt0 muons ;Muon P_{T} (GeV/c);Number of '
-                                                                     'Events per 1 GeV/c', 300, 0, 300)
+            self.h_muonPtnomedium['prompt0'] = ROOT.TH1D('h_muonPtnomedium_prompt0',
+                                                         'prompt0 muons ;Muon P_{T} (GeV/c);Number of '
+                                                         'Events per 1 GeV/c', 300, 0, 300)
             self.h_muonPtnomedium['from_prompt_tau0'] = ROOT.TH1D('h_muonPtnomedium_from_prompt_tau0',
-                                                          'muons from_prompt_tau0 ;Muon P_{T} (GeV/c);Number of Events '
-                                                          'per 1 GeV/c', 300, 0, 300)
+                                                                  'muons from_prompt_tau0 ;Muon P_{T} (GeV/c);Number of Events '
+                                                                  'per 1 GeV/c', 300, 0, 300)
             self.h_muonPtnomedium['from_b0'] = ROOT.TH1D('h_muonPtnomedium_from_b0',
-                                                 'muons from_b0;Muon P_{T} (GeV/c);Number of Events '
-                                                 'per 1 GeV/c', 300, 0, 300)
-            self.h_muonPtnomedium['from_c0'] = ROOT.TH1D('h_muonPtnomedium_from_c0',
-                                                 'muons from_c0 ;Muon P_{T} (GeV/c);Number of Events '
-                                                 'per 1 GeV/c', 300, 0, 300)
-            self.h_muonPtnomedium['from_light_or_unknown0'] = ROOT.TH1D('h_muonPtnomedium_from_light_or_unknown0',
-                                                                'muons from_light_or_unknown0;Muon P_{T} (GeV/c);Number of Events '
-                                                                'per 1 GeV/c', 300, 0, 300)
-            self.h_muonPtnomedium['unmatched0'] = ROOT.TH1D('h_muonPtnomedium_unmatched0',
-                                                    'unmatched0 muons ;Muon P_{T} (GeV/c);Number of Events '
-                                                    'per 1 GeV/c', 300, 0, 300)
-            self.h_muonPtnomedium['prompt'] = ROOT.TH1D('h_muonPtnomedium_prompt', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                                   'Events per 1 GeV/c', 300, 0, 300)
-            self.h_muonPtnomedium['from_prompt_tau'] = ROOT.TH1D('h_muonPtnomedium_from_prompt_tau',
-                                                         'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                         'muons from_b0;Muon P_{T} (GeV/c);Number of Events '
                                                          'per 1 GeV/c', 300, 0, 300)
+            self.h_muonPtnomedium['from_c0'] = ROOT.TH1D('h_muonPtnomedium_from_c0',
+                                                         'muons from_c0 ;Muon P_{T} (GeV/c);Number of Events '
+                                                         'per 1 GeV/c', 300, 0, 300)
+            self.h_muonPtnomedium['from_light_or_unknown0'] = ROOT.TH1D('h_muonPtnomedium_from_light_or_unknown0',
+                                                                        'muons from_light_or_unknown0;Muon P_{T} (GeV/c);Number of Events '
+                                                                        'per 1 GeV/c', 300, 0, 300)
+            self.h_muonPtnomedium['unmatched0'] = ROOT.TH1D('h_muonPtnomedium_unmatched0',
+                                                            'unmatched0 muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                            'per 1 GeV/c', 300, 0, 300)
+            self.h_muonPtnomedium['prompt'] = ROOT.TH1D('h_muonPtnomedium_prompt',
+                                                        'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                        'Events per 1 GeV/c', 300, 0, 300)
+            self.h_muonPtnomedium['from_prompt_tau'] = ROOT.TH1D('h_muonPtnomedium_from_prompt_tau',
+                                                                 'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                                 'per 1 GeV/c', 300, 0, 300)
             self.h_muonPtnomedium['from_b'] = ROOT.TH1D('h_muonPtnomedium_from_b',
-                                                'muons from_b;Muon P_{T} (GeV/c);Number of Events '
-                                                'per 1 GeV/c', 300, 0, 300)
+                                                        'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                        'per 1 GeV/c', 300, 0, 300)
             self.h_muonPtnomedium['from_c'] = ROOT.TH1D('h_muonPtnomedium_from_c',
-                                                'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
-                                                'per 1 GeV/c', 300, 0, 300)
+                                                        'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                        'per 1 GeV/c', 300, 0, 300)
             self.h_muonPtnomedium['from_light_or_unknown'] = ROOT.TH1D('h_muonPtnomedium_from_light_or_unknown',
-                                                               'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
-                                                               'per 1 GeV/c', 300, 0, 300)
+                                                                       'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                                                                       'per 1 GeV/c', 300, 0, 300)
             self.h_muonPtnomedium['unmatched'] = ROOT.TH1D('h_muonPtnomedium_unmatched',
-                                                   'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
-                                                   'per 1 GeV/c', 300, 0, 300)
+                                                           'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                           'per 1 GeV/c', 300, 0, 300)
 
-
-            self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger', 'no trigger ;GenMET P_{T} (GeV/c);Number of '
-                                                                              'Events per 1GeV/c', 300, 0, 300)
-            self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger', 'no trigger ;GenMET #phi;Number of Events '
-                                                                                'per #delta#phi = 0.046', 300, -6, 8)
+            self.h_genMetPt['no_trigger'] = ROOT.TH1D('h_genMetPt_notrigger',
+                                                      'no trigger ;GenMET P_{T} (GeV/c);Number of '
+                                                      'Events per 1GeV/c', 300, 0, 300)
+            self.h_genMetPhi['no_trigger'] = ROOT.TH1D('h_genMetPhi_notrigger',
+                                                       'no trigger ;GenMET #phi;Number of Events '
+                                                       'per #delta#phi = 0.046', 300, -6, 8)
             self.addObject(self.h_genMetPt['no_trigger'])
             self.addObject(self.h_genMetPhi['no_trigger'])
             self.addObject(self.h_muonPt['prompt0'])
@@ -316,9 +327,26 @@ class TriggerStudy(Module):
             self.addObject(self.h_muonPtnomedium['from_light_or_unknown'])
             self.addObject(self.h_muonPtnomedium['unmatched'])
 
-
             self.addObject(self.h_muonGenPartFlav)
             self.addObject(self.h_muonGenPartIdx)
+
+        self.h_muonEtaNomedium['no_trigger'] = ROOT.TH1D('h_muonEtaNomedium_notrigger',
+                                                         'no trigger ;Muon #eta;Number of Events per '
+                                                         '#delta#eta = 0.046', 300, -6, 8)
+        self.h_muonPhiNomedium['no_trigger'] = ROOT.TH1D('h_muonPhiNomedium_notrigger',
+                                                         'no trigger ;Muon #phi;Number of Events per '
+                                                         '#delta#phi = 0.046', 300, -6, 8)
+        self.h_muonIsolationNomedium['no_trigger'] = ROOT.TH1D('h_muonIsolationNomedium_notrigger',
+                                                               'no trigger ;Muon miniPFRelIso_all;'
+                                                               'Number of Events', 30, 0, 0.17)
+        self.h_muonIsoPtNomedium['no_trigger'] = ROOT.TH2F('h_muonIsoPtNomedium_notrigger',
+                                                           'no trigger ;Muon P_{T} (GeV/c);'
+                                                           'Muon miniPFRelIso_all',
+                                                           300, 0, 300, 30, 0, 0.17)
+        self.h_muonMapNomedium['no_trigger'] = ROOT.TH2F('h_muonMapNomedium_notrigger',
+                                                         'no trigger;Muon #eta;Muon #phi;',
+                                                         150, -6, 6, 160, -3.2, 3.2)
+
         self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
@@ -334,33 +362,37 @@ class TriggerStudy(Module):
         ##################
         # SOFT MUONS     #
         ##################
-        self.h_mediumMuonMult['no_trigger'] = ROOT.TH1D('h_mediumMuonMult_notrigger', 'no trigger ;Number of Soft Muons;Number of Events',
-                                                    10, 0, 10)
+        self.h_mediumMuonMult['no_trigger'] = ROOT.TH1D('h_mediumMuonMult_notrigger',
+                                                        'no trigger ;Number of Soft Muons;Number of Events',
+                                                        10, 0, 10)
         self.addObject(self.h_mediumMuonMult['no_trigger'])
-        self.h_mediumMuonPt['no_trigger'] = ROOT.TH1D('h_mediumMuonPt_notrigger', 'no trigger ;soft Muon P_{T} (GeV/c);Number of Events'
-                                                    ' per 1 GeV/c', 300, 0, 300)
+        self.h_mediumMuonPt['no_trigger'] = ROOT.TH1D('h_mediumMuonPt_notrigger',
+                                                      'no trigger ;soft Muon P_{T} (GeV/c);Number of Events'
+                                                      ' per 1 GeV/c', 300, 0, 300)
         self.addObject(self.h_mediumMuonPt['no_trigger'])
-        self.h_mediumMuonTightPt['no_trigger'] = ROOT.TH1D('h_mediumMuonTightPt_notrigger', 'no trigger ; tight Muon P_{T} (GeV/c);Number of Events'
-                                                    ' per 1 GeV/c', 300, 0, 300)
+        self.h_mediumMuonTightPt['no_trigger'] = ROOT.TH1D('h_mediumMuonTightPt_notrigger',
+                                                           'no trigger ; tight Muon P_{T} (GeV/c);Number of Events'
+                                                           ' per 1 GeV/c', 300, 0, 300)
         self.addObject(self.h_mediumMuonTightPt['no_trigger'])
         if not self.era.find('mc') == -1:
-            self.h_mediumMuonPt['prompt'] = ROOT.TH1D('h_mediumMuonPt_prompt', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                    'Events per 1 GeV/c', 300, 0, 300)
+            self.h_mediumMuonPt['prompt'] = ROOT.TH1D('h_mediumMuonPt_prompt',
+                                                      'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                      'Events per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonPt['from_prompt_tau'] = ROOT.TH1D('h_mediumMuonPt_from_prompt_tau',
-                                                             'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
-                                                             'per 1 GeV/c', 300, 0, 300)
+                                                               'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                               'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonPt['from_b'] = ROOT.TH1D('h_mediumMuonPt_from_b',
-                                                    'muons from_b;Muon P_{T} (GeV/c);Number of Events '
-                                                    'per 1 GeV/c', 300, 0, 300)
+                                                      'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                      'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonPt['from_c'] = ROOT.TH1D('h_mediumMuonPt_from_c',
-                                                    'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
-                                                    'per 1 GeV/c', 300, 0, 300)
+                                                      'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                      'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonPt['from_light_or_unknown'] = ROOT.TH1D('h_mediumMuonPt_from_light_or_unknown',
-                                                                   'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
-                                                                   'per 1 GeV/c', 300, 0, 300)
+                                                                     'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                                                                     'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonPt['unmatched'] = ROOT.TH1D('h_mediumMuonPt_unmatched',
-                                                       'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
-                                                       'per 1 GeV/c', 300, 0, 300)
+                                                         'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                         'per 1 GeV/c', 300, 0, 300)
             self.addObject(self.h_mediumMuonPt['prompt'])
             self.addObject(self.h_mediumMuonPt['from_prompt_tau'])
             self.addObject(self.h_mediumMuonPt['from_b'])
@@ -368,23 +400,24 @@ class TriggerStudy(Module):
             self.addObject(self.h_mediumMuonPt['from_light_or_unknown'])
             self.addObject(self.h_mediumMuonPt['unmatched'])
 
-            self.h_mediumMuonTightPt['prompt'] = ROOT.TH1D('h_mediumMuonTightPt_prompt', 'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                    'Events per 1 GeV/c', 300, 0, 300)
+            self.h_mediumMuonTightPt['prompt'] = ROOT.TH1D('h_mediumMuonTightPt_prompt',
+                                                           'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                           'Events per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonTightPt['from_prompt_tau'] = ROOT.TH1D('h_mediumMuonTightPt_from_prompt_tau',
-                                                             'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
-                                                             'per 1 GeV/c', 300, 0, 300)
+                                                                    'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                                                                    'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonTightPt['from_b'] = ROOT.TH1D('h_mediumMuonTightPt_from_b',
-                                                    'muons from_b;Muon P_{T} (GeV/c);Number of Events '
-                                                    'per 1 GeV/c', 300, 0, 300)
+                                                           'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                           'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonTightPt['from_c'] = ROOT.TH1D('h_mediumMuonTightPt_from_c',
-                                                    'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
-                                                    'per 1 GeV/c', 300, 0, 300)
+                                                           'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                           'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonTightPt['from_light_or_unknown'] = ROOT.TH1D('h_mediumMuonTightPt_from_light_or_unknown',
-                                                                   'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
-                                                                   'per 1 GeV/c', 300, 0, 300)
+                                                                          'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                                                                          'per 1 GeV/c', 300, 0, 300)
             self.h_mediumMuonTightPt['unmatched'] = ROOT.TH1D('h_mediumMuonTightPt_unmatched',
-                                                       'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
-                                                       'per 1 GeV/c', 300, 0, 300)
+                                                              'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                              'per 1 GeV/c', 300, 0, 300)
             self.addObject(self.h_mediumMuonTightPt['prompt'])
             self.addObject(self.h_mediumMuonTightPt['from_prompt_tau'])
             self.addObject(self.h_mediumMuonTightPt['from_b'])
@@ -392,24 +425,24 @@ class TriggerStudy(Module):
             self.addObject(self.h_mediumMuonTightPt['from_light_or_unknown'])
             self.addObject(self.h_mediumMuonTightPt['unmatched'])
 
-
-            self.h_mediumMuonMult['prompt'] = ROOT.TH1D('h_mediumMuonMult_prompt', 'prompt muons ;tight Muon P_{T} (GeV/c);Number of '
-                                                      'Events per 1 GeV/c', 10, 0, 10)
+            self.h_mediumMuonMult['prompt'] = ROOT.TH1D('h_mediumMuonMult_prompt',
+                                                        'prompt muons ;tight Muon P_{T} (GeV/c);Number of '
+                                                        'Events per 1 GeV/c', 10, 0, 10)
             self.h_mediumMuonMult['from_prompt_tau'] = ROOT.TH1D('h_mediumMuonMult_from_prompt_tau',
-                                                               'muons from_prompt_tau ;tight Muon P_{T} (GeV/c);Number of Events '
-                                                               'per 1 GeV/c', 10, 0, 10)
+                                                                 'muons from_prompt_tau ;tight Muon P_{T} (GeV/c);Number of Events '
+                                                                 'per 1 GeV/c', 10, 0, 10)
             self.h_mediumMuonMult['from_b'] = ROOT.TH1D('h_mediumMuonMult_from_b',
-                                                      'muons from_b;tight Muon P_{T} (GeV/c);Number of Events '
-                                                      'per 1 GeV/c', 10, 0, 10)
+                                                        'muons from_b;tight Muon P_{T} (GeV/c);Number of Events '
+                                                        'per 1 GeV/c', 10, 0, 10)
             self.h_mediumMuonMult['from_c'] = ROOT.TH1D('h_mediumMuonMult_from_c',
-                                                      'muons from_c ;tight Muon P_{T} (GeV/c);Number of Events '
-                                                      'per 1 GeV/c', 10, 0, 10)
+                                                        'muons from_c ;tight Muon P_{T} (GeV/c);Number of Events '
+                                                        'per 1 GeV/c', 10, 0, 10)
             self.h_mediumMuonMult['from_light_or_unknown'] = ROOT.TH1D('h_mediumMuonMult_from_light_or_unknown',
-                                                                     'muons from_light_or_unknown;tight Muon P_{T} (GeV/c);Number of Events '
-                                                                     'per 1 GeV/c', 10, 0, 10)
+                                                                       'muons from_light_or_unknown;tight Muon P_{T} (GeV/c);Number of Events '
+                                                                       'per 1 GeV/c', 10, 0, 10)
             self.h_mediumMuonMult['unmatched'] = ROOT.TH1D('h_mediumMuonMult_unmatched',
-                                                         'unmatched muons ;tight Muon P_{T} (GeV/c);Number of Events '
-                                                         'per 1 GeV/c', 10, 0, 10)
+                                                           'unmatched muons ;tight Muon P_{T} (GeV/c);Number of Events '
+                                                           'per 1 GeV/c', 10, 0, 10)
             self.addObject(self.h_mediumMuonMult['prompt'])
             self.addObject(self.h_mediumMuonMult['from_prompt_tau'])
             self.addObject(self.h_mediumMuonMult['from_b'])
@@ -446,6 +479,12 @@ class TriggerStudy(Module):
         self.addObject(self.h_muonIsoPt['no_trigger'])
         self.addObject(self.h_muonMap['no_trigger'])
 
+        self.addObject(self.h_muonEtaNomedium['no_trigger'])
+        self.addObject(self.h_muonPhiNomedium['no_trigger'])
+        self.addObject(self.h_muonIsolationNomedium['no_trigger'])
+        self.addObject(self.h_muonIsoPtNomedium['no_trigger'])
+        self.addObject(self.h_muonMapNomedium['no_trigger'])
+
         self.addObject(self.h_metPt['no_trigger'])
         self.addObject(self.h_metPhi['no_trigger'])
 
@@ -471,25 +510,30 @@ class TriggerStudy(Module):
                                                    150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_jetMap[trgPath])
 
-                self.h_muonPtMap[trgPath] = ROOT.TH2F('h_muonPtMap_' + trgPath, trgPath + ';Tight muon Pt; Medium muon Pt',
+                self.h_muonPtMap[trgPath] = ROOT.TH2F('h_muonPtMap_' + trgPath,
+                                                      trgPath + ';Tight muon Pt; Medium muon Pt',
                                                       300, 0, 300, 300, 0, 300)
                 self.addObject(self.h_muonPtMap[trgPath])
                 self.h_muonPt[trgPath] = ROOT.TH1D('h_muonPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);Number of '
                                                                                     'Events per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_muonPt[trgPath])
 
-                self.h_muonPtnomedium[trgPath] = ROOT.TH1D('h_muonPtnomedium_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);Number of '
-                                                                                    'Events per 1 GeV/c', 300, 0, 300)
+                self.h_muonPtnomedium[trgPath] = ROOT.TH1D('h_muonPtnomedium_' + trgPath,
+                                                           trgPath + ';Muon P_{T} (GeV/c);Number of '
+                                                                     'Events per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_muonPtnomedium[trgPath])
 
-                self.h_mediumMuonTightPt[trgPath] = ROOT.TH1D('h_mediumMuonTightPt_' + trgPath, trgPath + ';tight Muon P_{T} (GeV/c);Number of '
-                                                            'Events per 1 GeV/c', 300, 0, 300)
+                self.h_mediumMuonTightPt[trgPath] = ROOT.TH1D('h_mediumMuonTightPt_' + trgPath,
+                                                              trgPath + ';tight Muon P_{T} (GeV/c);Number of '
+                                                                        'Events per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_mediumMuonTightPt[trgPath])
-                self.h_mediumMuonPt[trgPath] = ROOT.TH1D('h_mediumMuonPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);Number of '
-                                                       'Events per 1 GeV/c', 300, 0, 300)
+                self.h_mediumMuonPt[trgPath] = ROOT.TH1D('h_mediumMuonPt_' + trgPath,
+                                                         trgPath + ';Muon P_{T} (GeV/c);Number of '
+                                                                   'Events per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_mediumMuonPt[trgPath])
-                self.h_mediumMuonMult[trgPath] = ROOT.TH1D('h_mediumMuonMult' + trgPath, trgPath + ';Number of Soft Muons;Number of Events',
-                                                         10, 0, 10)
+                self.h_mediumMuonMult[trgPath] = ROOT.TH1D('h_mediumMuonMult' + trgPath,
+                                                           trgPath + ';Number of Soft Muons;Number of Events',
+                                                           10, 0, 10)
                 self.addObject(self.h_mediumMuonMult[trgPath])
                 if not self.era.find('mc') == -1:
                     self.h_muonPt['prompt' + trgPath] = ROOT.TH1D('h_muonPt_prompt' + trgPath,
@@ -508,134 +552,144 @@ class TriggerStudy(Module):
                                                                   'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
                                                                   'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPt['from_c' + trgPath])
-                    self.h_muonPt['from_light_or_unknown' + trgPath] = ROOT.TH1D('h_muonPt_from_light_or_unknown' + trgPath,
-                                                                                 'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
-                                                                                 'per 1 GeV/c', 300, 0, 300)
+                    self.h_muonPt['from_light_or_unknown' + trgPath] = ROOT.TH1D(
+                        'h_muonPt_from_light_or_unknown' + trgPath,
+                        'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPt['from_light_or_unknown' + trgPath])
                     self.h_muonPt['unmatched' + trgPath] = ROOT.TH1D('h_muonPt_unmatched' + trgPath,
                                                                      'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
                                                                      'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPt['unmatched' + trgPath])
-                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
-                                                         'of Events per 1 GeV/c', 300, 0, 300)
+                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath,
+                                                         trgPath + ';GenMET P_{T} (GeV/c);Number '
+                                                                   'of Events per 1 GeV/c', 300, 0, 300)
 
                     self.h_muonPtnomedium['prompt' + trgPath] = ROOT.TH1D('h_muonPtnomedium_prompt' + trgPath,
-                                                                  'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                                  'Events per 1 GeV/c', 300, 0, 300)
+                                                                          'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                                          'Events per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPtnomedium['prompt' + trgPath])
-                    self.h_muonPtnomedium['from_prompt_tau' + trgPath] = ROOT.TH1D('h_muonPtnomedium_from_prompt_tau' + trgPath,
-                                                                           'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
-                                                                           'per 1 GeV/c', 300, 0, 300)
+                    self.h_muonPtnomedium['from_prompt_tau' + trgPath] = ROOT.TH1D(
+                        'h_muonPtnomedium_from_prompt_tau' + trgPath,
+                        'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPtnomedium['from_prompt_tau' + trgPath])
                     self.h_muonPtnomedium['from_b' + trgPath] = ROOT.TH1D('h_muonPtnomedium_from_b' + trgPath,
-                                                                  'muons from_b;Muon P_{T} (GeV/c);Number of Events '
-                                                                  'per 1 GeV/c', 300, 0, 300)
+                                                                          'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                                          'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPtnomedium['from_b' + trgPath])
                     self.h_muonPtnomedium['from_c' + trgPath] = ROOT.TH1D('h_muonPtnomedium_from_c' + trgPath,
-                                                                  'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
-                                                                  'per 1 GeV/c', 300, 0, 300)
+                                                                          'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                                          'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPtnomedium['from_c' + trgPath])
-                    self.h_muonPtnomedium['from_light_or_unknown' + trgPath] = ROOT.TH1D('h_muonPtnomedium_from_light_or_unknown' + trgPath,
-                                                                                 'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
-                                                                                 'per 1 GeV/c', 300, 0, 300)
+                    self.h_muonPtnomedium['from_light_or_unknown' + trgPath] = ROOT.TH1D(
+                        'h_muonPtnomedium_from_light_or_unknown' + trgPath,
+                        'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPtnomedium['from_light_or_unknown' + trgPath])
                     self.h_muonPtnomedium['unmatched' + trgPath] = ROOT.TH1D('h_muonPtnomedium_unmatched' + trgPath,
-                                                                     'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
-                                                                     'per 1 GeV/c', 300, 0, 300)
+                                                                             'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                                             'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_muonPtnomedium['unmatched' + trgPath])
-                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
-                                                         'of Events per 1 GeV/c', 300, 0, 300)
+                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath,
+                                                         trgPath + ';GenMET P_{T} (GeV/c);Number '
+                                                                   'of Events per 1 GeV/c', 300, 0, 300)
 
                     self.addObject(self.h_genMetPt[trgPath])
                     self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
-                                                          'Events per #delta#phi=0.046', 300, -6, 8)
+                                                                                              'Events per #delta#phi=0.046',
+                                                          300, -6, 8)
                     self.addObject(self.h_genMetPhi[trgPath])
 
                     self.h_mediumMuonPt['prompt' + trgPath] = ROOT.TH1D('h_mediumMuonPt_prompt' + trgPath,
-                                                                      'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                                      'Events per 1 GeV/c', 300, 0, 300)
+                                                                        'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                                        'Events per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonPt['prompt' + trgPath])
-                    self.h_mediumMuonPt['from_prompt_tau' + trgPath] = ROOT.TH1D('h_mediumMuonPt_from_prompt_tau' + trgPath,
-                                                                               'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
-                                                                               'per 1 GeV/c', 300, 0, 300)
+                    self.h_mediumMuonPt['from_prompt_tau' + trgPath] = ROOT.TH1D(
+                        'h_mediumMuonPt_from_prompt_tau' + trgPath,
+                        'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonPt['from_prompt_tau' + trgPath])
                     self.h_mediumMuonPt['from_b' + trgPath] = ROOT.TH1D('h_mediumMuonPt_from_b' + trgPath,
-                                                                      'muons from_b;Muon P_{T} (GeV/c);Number of Events '
-                                                                      'per 1 GeV/c', 300, 0, 300)
+                                                                        'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonPt['from_b' + trgPath])
                     self.h_mediumMuonPt['from_c' + trgPath] = ROOT.TH1D('h_mediumMuonPt_from_c' + trgPath,
-                                                                      'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
-                                                                      'per 1 GeV/c', 300, 0, 300)
+                                                                        'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonPt['from_c' + trgPath])
-                    self.h_mediumMuonPt['from_light_or_unknown' + trgPath] = ROOT.TH1D('h_mediumMuonPt_from_light_or_unknown' + trgPath,
-                                                                                     'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
-                                                                                     'per 1 GeV/c', 300, 0, 300)
+                    self.h_mediumMuonPt['from_light_or_unknown' + trgPath] = ROOT.TH1D(
+                        'h_mediumMuonPt_from_light_or_unknown' + trgPath,
+                        'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonPt['from_light_or_unknown' + trgPath])
                     self.h_mediumMuonPt['unmatched' + trgPath] = ROOT.TH1D('h_mediumMuonPt_unmatched' + trgPath,
-                                                                         'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
-                                                                         'per 1 GeV/c',300, 0, 300)
+                                                                           'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                                           'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonPt['unmatched' + trgPath])
 
-
                     self.h_mediumMuonTightPt['prompt' + trgPath] = ROOT.TH1D('h_mediumMuonTightPt_prompt' + trgPath,
-                                                                      'prompt muons ;tight Muon P_{T} (GeV/c);Number of '
-                                                                      'Events per 1 GeV/c', 300, 0, 300)
+                                                                             'prompt muons ;tight Muon P_{T} (GeV/c);Number of '
+                                                                             'Events per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonTightPt['prompt' + trgPath])
-                    self.h_mediumMuonTightPt['from_prompt_tau' + trgPath] = ROOT.TH1D('h_mediumMuonTightPt_from_prompt_tau' + trgPath,
-                                                                               'muons from_prompt_tau ;tight Muon P_{T} (GeV/c);Number of Events '
-                                                                               'per 1 GeV/c', 300, 0, 300)
+                    self.h_mediumMuonTightPt['from_prompt_tau' + trgPath] = ROOT.TH1D(
+                        'h_mediumMuonTightPt_from_prompt_tau' + trgPath,
+                        'muons from_prompt_tau ;tight Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonTightPt['from_prompt_tau' + trgPath])
                     self.h_mediumMuonTightPt['from_b' + trgPath] = ROOT.TH1D('h_mediumMuonTightPt_from_b' + trgPath,
-                                                                      'muons from_b;tight Muon P_{T} (GeV/c);Number of Events '
-                                                                      'per 1 GeV/c', 300, 0, 300)
+                                                                             'muons from_b;tight Muon P_{T} (GeV/c);Number of Events '
+                                                                             'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonTightPt['from_b' + trgPath])
                     self.h_mediumMuonTightPt['from_c' + trgPath] = ROOT.TH1D('h_mediumMuonTightPt_from_c' + trgPath,
-                                                                      'muons from_c ;tight Muon P_{T} (GeV/c);Number of Events '
-                                                                      'per 1 GeV/c', 300, 0, 300)
+                                                                             'muons from_c ;tight Muon P_{T} (GeV/c);Number of Events '
+                                                                             'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonTightPt['from_c' + trgPath])
-                    self.h_mediumMuonTightPt['from_light_or_unknown' + trgPath] = ROOT.TH1D('h_mediumMuonTightPt_from_light_or_unknown' + trgPath,
-                                                                                     'muons from_light_or_unknown;tight Muon P_{T} (GeV/c);Number of Events '
-                                                                                     'per 1 GeV/c', 300, 0, 300)
+                    self.h_mediumMuonTightPt['from_light_or_unknown' + trgPath] = ROOT.TH1D(
+                        'h_mediumMuonTightPt_from_light_or_unknown' + trgPath,
+                        'muons from_light_or_unknown;tight Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonTightPt['from_light_or_unknown' + trgPath])
-                    self.h_mediumMuonTightPt['unmatched' + trgPath] = ROOT.TH1D('h_mediumMuonTightPt_unmatched' + trgPath,
-                                                                         'unmatched muons ;tight Muon P_{T} (GeV/c);Number of Events '
-                                                                         'per 1 GeV/c',300, 0, 300)
+                    self.h_mediumMuonTightPt['unmatched' + trgPath] = ROOT.TH1D(
+                        'h_mediumMuonTightPt_unmatched' + trgPath,
+                        'unmatched muons ;tight Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 300, 0, 300)
                     self.addObject(self.h_mediumMuonTightPt['unmatched' + trgPath])
 
-
-
                     self.h_mediumMuonMult['prompt' + trgPath] = ROOT.TH1D('h_mediumMuonMult_prompt' + trgPath,
-                                                                      'prompt muons ;Muon P_{T} (GeV/c);Number of '
-                                                                      'Events per 1 GeV/c', 10, 0, 10)
+                                                                          'prompt muons ;Muon P_{T} (GeV/c);Number of '
+                                                                          'Events per 1 GeV/c', 10, 0, 10)
                     self.addObject(self.h_mediumMuonMult['prompt' + trgPath])
-                    self.h_mediumMuonMult['from_prompt_tau' + trgPath] = ROOT.TH1D('h_mediumMuonMult_from_prompt_tau' + trgPath,
-                                                                               'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
-                                                                               'per 1 GeV/c', 10, 0, 10)
+                    self.h_mediumMuonMult['from_prompt_tau' + trgPath] = ROOT.TH1D(
+                        'h_mediumMuonMult_from_prompt_tau' + trgPath,
+                        'muons from_prompt_tau ;Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 10, 0, 10)
                     self.addObject(self.h_mediumMuonMult['from_prompt_tau' + trgPath])
                     self.h_mediumMuonMult['from_b' + trgPath] = ROOT.TH1D('h_mediumMuonMult_from_b' + trgPath,
-                                                                      'muons from_b;Muon P_{T} (GeV/c);Number of Events '
-                                                                      'per 1 GeV/c', 10, 0, 10)
+                                                                          'muons from_b;Muon P_{T} (GeV/c);Number of Events '
+                                                                          'per 1 GeV/c', 10, 0, 10)
                     self.addObject(self.h_mediumMuonMult['from_b' + trgPath])
                     self.h_mediumMuonMult['from_c' + trgPath] = ROOT.TH1D('h_mediumMuonMult_from_c' + trgPath,
-                                                                      'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
-                                                                      'per 1 GeV/c', 10, 0, 10)
+                                                                          'muons from_c ;Muon P_{T} (GeV/c);Number of Events '
+                                                                          'per 1 GeV/c', 10, 0, 10)
                     self.addObject(self.h_mediumMuonMult['from_c' + trgPath])
-                    self.h_mediumMuonMult['from_light_or_unknown' + trgPath] = ROOT.TH1D('h_mediumMuonMult_from_light_or_unknown' + trgPath,
-                                                                                     'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
-                                                                                     'per 1 GeV/c', 10, 0, 10)
+                    self.h_mediumMuonMult['from_light_or_unknown' + trgPath] = ROOT.TH1D(
+                        'h_mediumMuonMult_from_light_or_unknown' + trgPath,
+                        'muons from_light_or_unknown;Muon P_{T} (GeV/c);Number of Events '
+                        'per 1 GeV/c', 10, 0, 10)
                     self.addObject(self.h_mediumMuonMult['from_light_or_unknown' + trgPath])
                     self.h_mediumMuonMult['unmatched' + trgPath] = ROOT.TH1D('h_mediumMuonMult_unmatched' + trgPath,
-                                                                         'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
-                                                                         'per 1 GeV/c', 10, 0, 10)
+                                                                             'unmatched muons ;Muon P_{T} (GeV/c);Number of Events '
+                                                                             'per 1 GeV/c', 10, 0, 10)
                     self.addObject(self.h_mediumMuonMult['unmatched' + trgPath])
 
-#                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
- #                                                        'of Events per 1 GeV/c', 300, 0, 300)
-  #                  self.addObject(self.h_genMetPt[trgPath])
-   #                 self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
-    #                                                                                        'Events per #delta#phi=0.046',
-     #                                                     300, -6, 8)
-      #              self.addObject(self.h_genMetPhi[trgPath])
+                #                    self.h_genMetPt[trgPath] = ROOT.TH1D('h_genMetPt_' + trgPath, trgPath + ';GenMET P_{T} (GeV/c);Number '
+                #                                                        'of Events per 1 GeV/c', 300, 0, 300)
+                #                  self.addObject(self.h_genMetPt[trgPath])
+                #                 self.h_genMetPhi[trgPath] = ROOT.TH1D('h_genMetPhi_' + trgPath, trgPath + ';GenMET #phi;Number of '
+                #                                                                                        'Events per #delta#phi=0.046',
+                #                                                     300, -6, 8)
+                #              self.addObject(self.h_genMetPhi[trgPath])
 
                 self.h_muonEta[trgPath] = ROOT.TH1D('h_muonEta_' + trgPath, trgPath + ';Muon #eta;Number of Events per'
                                                                                       ' #delta#eta = 0.046', 300, -6, 8)
@@ -644,7 +698,8 @@ class TriggerStudy(Module):
                                                                                       ' #delta#phi = 0.046', 300, -6, 8)
                 self.addObject(self.h_muonPhi[trgPath])
                 self.h_muonIsolation[trgPath] = ROOT.TH1D('h_muonIsolation_' + trgPath,
-                                                          trgPath + ';Muon miniPFRelIso_all;Number of Events', 30, 0, 0.17)
+                                                          trgPath + ';Muon miniPFRelIso_all;Number of Events', 30, 0,
+                                                          0.17)
                 self.addObject(self.h_muonIsolation[trgPath])
                 self.h_muonIsoPt[trgPath] = ROOT.TH2F('h_muonIsoPt_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);'
                                                                                           'Muon miniPFRelIso_all',
@@ -653,6 +708,29 @@ class TriggerStudy(Module):
                 self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath, trgPath + ';Muon #eta;Muon #phi',
                                                     150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
+
+                self.h_muonEtaNomedium[trgPath] = ROOT.TH1D('h_muonEtaNomedium_' + trgPath,
+                                                            trgPath + ';Muon #eta;Number of Events per'
+                                                                      ' #delta#eta = 0.046', 300, -6, 8)
+                self.addObject(self.h_muonEtaNomedium[trgPath])
+                self.h_muonPhiNomedium[trgPath] = ROOT.TH1D('h_muonPhiNomedium_' + trgPath,
+                                                            trgPath + ';Muon #phi;Number of Events per'
+                                                                      ' #delta#phi = 0.046', 300, -6, 8)
+                self.addObject(self.h_muonPhiNomedium[trgPath])
+                self.h_muonIsolationNomedium[trgPath] = ROOT.TH1D('h_muonIsolationNomedium_' + trgPath,
+                                                                  trgPath + ';Muon miniPFRelIso_all;Number of Events',
+                                                                  30, 0, 0.17)
+                self.addObject(self.h_muonIsolationNomedium[trgPath])
+                self.h_muonIsoPtNomedium[trgPath] = ROOT.TH2F('h_muonIsoPtNomedium_' + trgPath,
+                                                              trgPath + ';Muon P_{T} (GeV/c);'
+                                                                        'Muon miniPFRelIso_all',
+                                                              300, 0, 300, 30, 0, 0.17)
+                self.addObject(self.h_muonIsoPtNomedium[trgPath])
+                self.h_muonMapNomedium[trgPath] = ROOT.TH2F('h_muonMapNomedium_' + trgPath,
+                                                            trgPath + ';Muon #eta;Muon #phi',
+                                                            150, -3, 3, 160, -3.2, 3.2)
+                self.addObject(self.h_muonMapNomedium[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
+
                 self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
                                                                                   'per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_metPt[trgPath])
@@ -847,21 +925,28 @@ class TriggerStudy(Module):
                 for nm, muon in enumerate(muons):
                     if MuonPassIdx == nm: tightMuonPt = muon.pt
                 for nm, muon in enumerate(muons):
-                    if nSoftMuonPass > 0:
+                    if nSoftMuonPass > 0 and nm != MuonPassIdx:
+                        self.h_mediumMuonMult['no_trigger'].Fill(nSoftMuonPass)
+                        self.h_mediumMuonPt['no_trigger'].Fill(muon.pt)
                         self.h_muonPtMap['no_trigger'].Fill(tightMuonPt, muon.pt)
+
+                        self.h_muonEtaNomedium['no_trigger'].Fill(muon.eta)
+                        self.h_muonPhiNomedium['no_trigger'].Fill(muon.phi)
+                        self.h_muonMapNomedium['no_trigger'].Fill(muon.eta, muon.phi)
+                        self.h_muonIsolationNomedium['no_trigger'].Fill(muon.miniPFRelIso_all)
+                        self.h_muonIsoPtNomedium['no_trigger'].Fill(muon.pt, muon.miniPFRelIso_all)
+
                         for key in self.trigLst:
                             if not key.find("El") == -1: continue
                             for tg in self.trigLst[key]:
                                 if trigPath[tg]:
                                     self.h_muonPtMap[tg].Fill(tightMuonPt, muon.pt)
-                    if nSoftMuonPass > 0 and nm != MuonPassIdx:
-                        self.h_mediumMuonMult['no_trigger'].Fill(nSoftMuonPass)
-                        self.h_mediumMuonPt['no_trigger'].Fill(muon.pt)
-                        for key in self.trigLst:
-                            if not key.find("El") == -1: continue
-                            for tg in self.trigLst[key]:
-                                if trigPath[tg]:
                                     self.h_mediumMuonPt[tg].Fill(muon.pt)
+                                    self.h_muonEtaNomedium[tg].Fill(muon.eta)
+                                    self.h_muonPhiNomedium[tg].Fill(muon.phi)
+                                    self.h_muonMapNomedium[tg].Fill(muon.eta, muon.phi)
+                                    self.h_muonIsolationNomedium[tg].Fill(muon.miniPFRelIso_all)
+                                    self.h_muonIsoPtNomedium[tg].Fill(muon.pt, muon.miniPFRelIso_all)
                                     self.h_mediumMuonMult[tg].Fill(nSoftMuonPass)
                                     if not self.era.find('mc') == -1:
                                         if muon.genPartFlav == 1:
@@ -935,6 +1020,7 @@ class TriggerStudy(Module):
                             elif muon.genPartFlav == 15:
                                 self.h_mediumMuonTightPt['from_prompt_tau'].Fill(muon.pt)
                     if not MuonPassIdx == nm: continue
+                    if nSoftMuonPass > 0: continue
                     self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
                     if not self.era.find('mc') == -1:
                         self.h_muonGenPartFlav.Fill(muon.genPartFlav)
@@ -944,16 +1030,16 @@ class TriggerStudy(Module):
                     self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
                     self.h_muonIsolation['no_trigger'].Fill(muon.miniPFRelIso_all)
                     self.h_muonIsoPt['no_trigger'].Fill(muon.pt, muon.miniPFRelIso_all)
+
                     self.h_muonPt['no_trigger'].Fill(muon.pt)
-                    if nSoftMuonPass == 0: 
-                        self.h_muonPtnomedium['no_trigger'].Fill(muon.pt)
-                        self.h_eventsPrg.Fill(2)                        
+                    # self.h_muonPtnomedium['no_trigger'].Fill(muon.pt)
+                    self.h_eventsPrg.Fill(2)
                     for key in self.trigLst:
                         if not key.find("El") == -1: continue
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 self.h_muonPt[tg].Fill(muon.pt)
-                                if nSoftMuonPass == 0: self.h_muonPtnomedium[tg].Fill(muon.pt)
+                                # if nSoftMuonPass == 0: self.h_muonPtnomedium[tg].Fill(muon.pt)
                                 if not self.era.find('mc') == -1:
                                     if muon.genPartFlav == 1:
                                         self.h_muonPt['prompt' + tg].Fill(muon.pt)
@@ -967,19 +1053,6 @@ class TriggerStudy(Module):
                                         self.h_muonPt['unmatched' + tg].Fill(muon.pt)
                                     elif muon.genPartFlav == 15:
                                         self.h_muonPt['from_prompt_tau' + tg].Fill(muon.pt)
-                                    if nSoftMuonPass == 0:
-                                        if muon.genPartFlav == 1:
-                                            self.h_muonPtnomedium['prompt' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 5:
-                                            self.h_muonPtnomedium['from_b' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 4:
-                                            self.h_muonPtnomedium['from_c' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 3:
-                                            self.h_muonPtnomedium['from_light_or_unknown' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 0:
-                                            self.h_muonPtnomedium['unmatched' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 15:
-                                            self.h_muonPtnomedium['from_prompt_tau' + tg].Fill(muon.pt)
                                 self.h_muonEta[tg].Fill(muon.eta)
                                 self.h_muonPhi[tg].Fill(muon.phi)
                                 self.h_muonMap[tg].Fill(muon.eta, muon.phi)
@@ -998,19 +1071,6 @@ class TriggerStudy(Module):
                             self.h_muonPt['unmatched'].Fill(muon.pt)
                         elif muon.genPartFlav == 15:
                             self.h_muonPt['from_prompt_tau'].Fill(muon.pt)
-                        if nSoftMuonPass == 0:
-                            if muon.genPartFlav == 1:
-                                self.h_muonPtnomedium['prompt'].Fill(muon.pt)
-                            elif muon.genPartFlav == 5:
-                                self.h_muonPtnomedium['from_b'].Fill(muon.pt)
-                            elif muon.genPartFlav == 4:
-                                self.h_muonPtnomedium['from_c'].Fill(muon.pt)
-                            elif muon.genPartFlav == 3:
-                                self.h_muonPtnomedium['from_light_or_unknown'].Fill(muon.pt)
-                            elif muon.genPartFlav == 0:
-                                self.h_muonPtnomedium['unmatched'].Fill(muon.pt)
-                            elif muon.genPartFlav == 15:
-                                self.h_muonPtnomedium['from_prompt_tau'].Fill(muon.pt)
                 for nj, jet in enumerate(jets):
                     if nj not in JetPassIdx: continue
                     for key in self.trigLst:
@@ -1071,7 +1131,8 @@ def main(argms):
         trigList = getFileContents(pathToTrigLists + "2017CtrigList.txt", True)
         era2017 = "17C"
         if argms.fileName.find("pythia") != -1 and argms.era == "17C": era2017 = "17Cmc"
-    elif argms.fileName.find("Run2017D") !=-1 or argms.fileName.find("Run2017E") !=-1 or argms.fileName.find("Run2017F") != -1 or argms.era == "17DEF":
+    elif argms.fileName.find("Run2017D") != -1 or argms.fileName.find("Run2017E") != -1 or argms.fileName.find(
+            "Run2017F") != -1 or argms.era == "17DEF":
         trigList = getFileContents(pathToTrigLists + "2017DEFtrigList.txt", True)
         era2017 = "17DEF"
         if argms.fileName.find("pythia") != -1 and argms.era == "17DEF": era2017 = "17DEFmc"
@@ -1088,11 +1149,12 @@ def main(argms):
     preSelCuts = getFileContents(pathToTrigLists + "preSelectionCuts.txt", False)
     selCriteria = getFileContents("selectionCriteria.txt", False)
 
-    if argms.noWriteFile: writeFile = False
-    else: writeFile = True
+    if argms.noWriteFile:
+        writeFile = False
+    else:
+        writeFile = True
 
     files = findEraRootFiles(argms.fileName)
-
 
     p99 = PostProcessor(".",
                         files,
@@ -1112,7 +1174,7 @@ def main(argms):
     t0 = time.time()
     p99.run()
     t1 = time.time()
-    print("Elapsed time %7.1fs" % (t1-t0))
+    print("Elapsed time %7.1fs" % (t1 - t0))
 
 
 if __name__ == '__main__':

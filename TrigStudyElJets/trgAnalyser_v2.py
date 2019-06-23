@@ -130,6 +130,11 @@ class TriggerStudy(Module):
         self.h_muonMap = {}
         self.h_muonIsolation = {}
         self.h_muonIsoPt = {}
+        self.h_muonEtaNomedium = {}
+        self.h_muonPhiNomedium = {}
+        self.h_muonMapNomedium = {}
+        self.h_muonIsolationNomedium = {}
+        self.h_muonIsoPtNomedium = {}
         self.h_metPt = {}
         self.h_metPhi = {}
 
@@ -319,6 +324,19 @@ class TriggerStudy(Module):
 
             self.addObject(self.h_muonGenPartFlav)
             self.addObject(self.h_muonGenPartIdx)
+
+        self.h_muonEtaNomedium['no_trigger'] = ROOT.TH1D('h_muonEtaNomedium_notrigger', 'no trigger ;Muon #eta;Number of Events per '
+                                                         '#delta#eta = 0.046', 300, -6, 8)
+        self.h_muonPhiNomedium['no_trigger'] = ROOT.TH1D('h_muonPhiNomedium_notrigger', 'no trigger ;Muon #phi;Number of Events per '
+                                                         '#delta#phi = 0.046', 300, -6, 8)
+        self.h_muonIsolationNomedium['no_trigger'] = ROOT.TH1D('h_muonIsolationNomedium_notrigger', 'no trigger ;Muon miniPFRelIso_all;'
+                                                               'Number of Events', 30, 0, 0.17)
+        self.h_muonIsoPtNomedium['no_trigger'] = ROOT.TH2F('h_muonIsoPtNomedium_notrigger', 'no trigger ;Muon P_{T} (GeV/c);'
+                                                           'Muon miniPFRelIso_all',
+                                                           300, 0, 300, 30, 0, 0.17)
+        self.h_muonMapNomedium['no_trigger'] = ROOT.TH2F('h_muonMapNomedium_notrigger', 'no trigger;Muon #eta;Muon #phi;',
+                                                         150, -6, 6, 160, -3.2, 3.2)
+
         self.h_muonEta['no_trigger'] = ROOT.TH1D('h_muonEta_notrigger', 'no trigger ;Muon #eta;Number of Events per '
                                                                         '#delta#eta = 0.046', 300, -6, 8)
         self.h_muonPhi['no_trigger'] = ROOT.TH1D('h_muonPhi_notrigger', 'no trigger ;Muon #phi;Number of Events per '
@@ -445,6 +463,12 @@ class TriggerStudy(Module):
         self.addObject(self.h_muonIsolation['no_trigger'])
         self.addObject(self.h_muonIsoPt['no_trigger'])
         self.addObject(self.h_muonMap['no_trigger'])
+
+        self.addObject(self.h_muonEtaNomedium['no_trigger'])
+        self.addObject(self.h_muonPhiNomedium['no_trigger'])
+        self.addObject(self.h_muonIsolationNomedium['no_trigger'])
+        self.addObject(self.h_muonIsoPtNomedium['no_trigger'])
+        self.addObject(self.h_muonMapNomedium['no_trigger'])
 
         self.addObject(self.h_metPt['no_trigger'])
         self.addObject(self.h_metPhi['no_trigger'])
@@ -653,6 +677,24 @@ class TriggerStudy(Module):
                 self.h_muonMap[trgPath] = ROOT.TH2F('h_muonMap_' + trgPath, trgPath + ';Muon #eta;Muon #phi',
                                                     150, -3, 3, 160, -3.2, 3.2)
                 self.addObject(self.h_muonMap[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
+
+                self.h_muonEtaNomedium[trgPath] = ROOT.TH1D('h_muonEtaNomedium_' + trgPath, trgPath + ';Muon #eta;Number of Events per'
+                                                                                      ' #delta#eta = 0.046', 300, -6, 8)
+                self.addObject(self.h_muonEtaNomedium[trgPath])
+                self.h_muonPhiNomedium[trgPath] = ROOT.TH1D('h_muonPhiNomedium_' + trgPath, trgPath + ';Muon #phi;Number of Events per'
+                                                                                      ' #delta#phi = 0.046', 300, -6, 8)
+                self.addObject(self.h_muonPhiNomedium[trgPath])
+                self.h_muonIsolationNomedium[trgPath] = ROOT.TH1D('h_muonIsolationNomedium_' + trgPath,
+                                                          trgPath + ';Muon miniPFRelIso_all;Number of Events', 30, 0, 0.17)
+                self.addObject(self.h_muonIsolationNomedium[trgPath])
+                self.h_muonIsoPtNomedium[trgPath] = ROOT.TH2F('h_muonIsoPtNomedium_' + trgPath, trgPath + ';Muon P_{T} (GeV/c);'
+                                                                                          'Muon miniPFRelIso_all',
+                                                      300, 0, 300, 30, 0, 0.17)
+                self.addObject(self.h_muonIsoPtNomedium[trgPath])
+                self.h_muonMapNomedium[trgPath] = ROOT.TH2F('h_muonMapNomedium_' + trgPath, trgPath + ';Muon #eta;Muon #phi',
+                                                    150, -3, 3, 160, -3.2, 3.2)
+                self.addObject(self.h_muonMapNomedium[trgPath])  # - Draw ith CONTZ COLZPOL COLZ1 ARR E
+
                 self.h_metPt[trgPath] = ROOT.TH1D('h_metPt_' + trgPath, trgPath + ';MET P_{T} (GeV/c);Number of Events '
                                                                                   'per 1 GeV/c', 300, 0, 300)
                 self.addObject(self.h_metPt[trgPath])
@@ -847,21 +889,28 @@ class TriggerStudy(Module):
                 for nm, muon in enumerate(muons):
                     if MuonPassIdx == nm: tightMuonPt = muon.pt
                 for nm, muon in enumerate(muons):
-                    if nSoftMuonPass > 0:
+                    if nSoftMuonPass > 0 and nm != MuonPassIdx:
+                        self.h_mediumMuonMult['no_trigger'].Fill(nSoftMuonPass)
+                        self.h_mediumMuonPt['no_trigger'].Fill(muon.pt)
                         self.h_muonPtMap['no_trigger'].Fill(tightMuonPt, muon.pt)
+
+                        self.h_muonEtaNomedium['no_trigger'].Fill(muon.eta)
+                        self.h_muonPhiNomedium['no_trigger'].Fill(muon.phi)
+                        self.h_muonMapNomedium['no_trigger'].Fill(muon.eta, muon.phi)
+                        self.h_muonIsolationNomedium['no_trigger'].Fill(muon.miniPFRelIso_all)
+                        self.h_muonIsoPtNomedium['no_trigger'].Fill(muon.pt, muon.miniPFRelIso_all)
+
                         for key in self.trigLst:
                             if not key.find("El") == -1: continue
                             for tg in self.trigLst[key]:
                                 if trigPath[tg]:
                                     self.h_muonPtMap[tg].Fill(tightMuonPt, muon.pt)
-                    if nSoftMuonPass > 0 and nm != MuonPassIdx:
-                        self.h_mediumMuonMult['no_trigger'].Fill(nSoftMuonPass)
-                        self.h_mediumMuonPt['no_trigger'].Fill(muon.pt)
-                        for key in self.trigLst:
-                            if not key.find("El") == -1: continue
-                            for tg in self.trigLst[key]:
-                                if trigPath[tg]:
                                     self.h_mediumMuonPt[tg].Fill(muon.pt)
+                                    self.h_muonEtaNomedium[tg].Fill(muon.eta)
+                                    self.h_muonPhiNomedium[tg].Fill(muon.phi)
+                                    self.h_muonMapNomedium[tg].Fill(muon.eta, muon.phi)
+                                    self.h_muonIsolationNomedium[tg].Fill(muon.miniPFRelIso_all)
+                                    self.h_muonIsoPtNomedium[tg].Fill(muon.pt, muon.miniPFRelIso_all)
                                     self.h_mediumMuonMult[tg].Fill(nSoftMuonPass)
                                     if not self.era.find('mc') == -1:
                                         if muon.genPartFlav == 1:
@@ -935,6 +984,7 @@ class TriggerStudy(Module):
                             elif muon.genPartFlav == 15:
                                 self.h_mediumMuonTightPt['from_prompt_tau'].Fill(muon.pt)
                     if not MuonPassIdx == nm: continue
+                    if nSoftMuonPass > 0: continue
                     self.h_muonRelIso04_all.Fill(muon.pfRelIso04_all)
                     if not self.era.find('mc') == -1:
                         self.h_muonGenPartFlav.Fill(muon.genPartFlav)
@@ -944,16 +994,16 @@ class TriggerStudy(Module):
                     self.h_muonMap['no_trigger'].Fill(muon.eta, muon.phi)
                     self.h_muonIsolation['no_trigger'].Fill(muon.miniPFRelIso_all)
                     self.h_muonIsoPt['no_trigger'].Fill(muon.pt, muon.miniPFRelIso_all)
-                    self.h_muonPt['no_trigger'].Fill(muon.pt)
-                    if nSoftMuonPass == 0: 
-                        self.h_muonPtnomedium['no_trigger'].Fill(muon.pt)
-                        self.h_eventsPrg.Fill(2)                        
+
+                    self.h_muonPt['no_trigger'].Fill(muon.pt) 
+                    #self.h_muonPtnomedium['no_trigger'].Fill(muon.pt)
+                    self.h_eventsPrg.Fill(2)                        
                     for key in self.trigLst:
                         if not key.find("El") == -1: continue
                         for tg in self.trigLst[key]:
                             if trigPath[tg]:
                                 self.h_muonPt[tg].Fill(muon.pt)
-                                if nSoftMuonPass == 0: self.h_muonPtnomedium[tg].Fill(muon.pt)
+                                # if nSoftMuonPass == 0: self.h_muonPtnomedium[tg].Fill(muon.pt)
                                 if not self.era.find('mc') == -1:
                                     if muon.genPartFlav == 1:
                                         self.h_muonPt['prompt' + tg].Fill(muon.pt)
@@ -967,19 +1017,6 @@ class TriggerStudy(Module):
                                         self.h_muonPt['unmatched' + tg].Fill(muon.pt)
                                     elif muon.genPartFlav == 15:
                                         self.h_muonPt['from_prompt_tau' + tg].Fill(muon.pt)
-                                    if nSoftMuonPass == 0:
-                                        if muon.genPartFlav == 1:
-                                            self.h_muonPtnomedium['prompt' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 5:
-                                            self.h_muonPtnomedium['from_b' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 4:
-                                            self.h_muonPtnomedium['from_c' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 3:
-                                            self.h_muonPtnomedium['from_light_or_unknown' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 0:
-                                            self.h_muonPtnomedium['unmatched' + tg].Fill(muon.pt)
-                                        elif muon.genPartFlav == 15:
-                                            self.h_muonPtnomedium['from_prompt_tau' + tg].Fill(muon.pt)
                                 self.h_muonEta[tg].Fill(muon.eta)
                                 self.h_muonPhi[tg].Fill(muon.phi)
                                 self.h_muonMap[tg].Fill(muon.eta, muon.phi)
@@ -998,19 +1035,6 @@ class TriggerStudy(Module):
                             self.h_muonPt['unmatched'].Fill(muon.pt)
                         elif muon.genPartFlav == 15:
                             self.h_muonPt['from_prompt_tau'].Fill(muon.pt)
-                        if nSoftMuonPass == 0:
-                            if muon.genPartFlav == 1:
-                                self.h_muonPtnomedium['prompt'].Fill(muon.pt)
-                            elif muon.genPartFlav == 5:
-                                self.h_muonPtnomedium['from_b'].Fill(muon.pt)
-                            elif muon.genPartFlav == 4:
-                                self.h_muonPtnomedium['from_c'].Fill(muon.pt)
-                            elif muon.genPartFlav == 3:
-                                self.h_muonPtnomedium['from_light_or_unknown'].Fill(muon.pt)
-                            elif muon.genPartFlav == 0:
-                                self.h_muonPtnomedium['unmatched'].Fill(muon.pt)
-                            elif muon.genPartFlav == 15:
-                                self.h_muonPtnomedium['from_prompt_tau'].Fill(muon.pt)
                 for nj, jet in enumerate(jets):
                     if nj not in JetPassIdx: continue
                     for key in self.trigLst:

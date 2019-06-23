@@ -66,7 +66,8 @@ def getFileName(pathToFile):
     numberOfSteps = pathToFile.count("/")
     fileDir = "/".join(foldersList[:numberOfSteps]) + "/"
     fileName, fileExt = foldersList[-1].split(".")
-    channelType = foldersList[4]
+    if foldersList[2] == "mc": channelType = foldersList[4]
+    elif foldersList[2] == "data": channelType = foldersList[4] + "_" + foldersList[3] + "_" + foldersList[6]
     
     return channelType, fileName
 
@@ -172,7 +173,7 @@ class PfJetsSkimmer(Module):
             nMuonsPass += 1
             MuonsPassIdx = nm
 
-        return nMuonsPass, MuonsPassIdx, nSoftMuonsPass, MuonsSoftPassIdx
+        return nMuonsPass, MuonsPassIdx
 
     def electronCriteria(self, electrons):
         """
@@ -210,39 +211,39 @@ class PfJetsSkimmer(Module):
         ##################################
         #  Event Collections and Objects #
         ##################################
-        #muons = Collection(event, "Muon")
-        #electrons = Collection(event, "Electron")
-        #jets = Collection(event, "Jet")
-        #hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
-        #met = Object(event, "MET")
+        muons = Collection(event, "Muon")
+        electrons = Collection(event, "Electron")
+        jets = Collection(event, "Jet")
+        hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
+        met = Object(event, "MET")
         # genMet = Object(event, "GenMET")
 
-        #metPt = getattr(met, "pt")
-        #metPhi = getattr(met, "phi")
+        metPt = getattr(met, "pt")
+        metPhi = getattr(met, "phi")
         # genMetPt = getattr(genMet, "pt")
         # genMetPhi = getattr(genMet, "phi")
 
-        #nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
-        #nMuonPass, MuonPassIdx = self.muonCriteria(muons)
-        #nElPass, ElPassIdx = self.electronCriteria(electrons)
+        nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
+        nMuonPass, MuonPassIdx = self.muonCriteria(muons)
+        nElPass, ElPassIdx = self.electronCriteria(electrons)
 
-        #if nJetPass > 5 and nBtagPass > 1:
-         #   if nMuonPass == 1 and nElPass == 0:
-         #       jetHt = 0
-         #       for nj, jet in enumerate(jets):
-         #           jetHt += jet.pt
-         #       self.out.fillBranch("Jet2_HT", jetHt)
-         #       return True
-         #   elif nMuonPass == 0 and nElPass == 1:
-         #       jetHt = 0
-         #       for nj, jet in enumerate(jets):
-         #           jetHt += jet.pt
-         #       self.out.fillBranch("Jet2_HT", jetHt)
-         #       return True
-         #   else:
-         #       return False
-        #else:
-         #   return False
+        if nJetPass > 5 and nBtagPass > 1:
+            if nMuonPass == 1 and nElPass == 0:
+                jetHt = 0
+                for nj, jet in enumerate(jets):
+                    jetHt += jet.pt
+                self.out.fillBranch("Jet2_HT", jetHt)
+                return True
+            elif nMuonPass == 0 and nElPass == 1:
+                jetHt = 0
+                for nj, jet in enumerate(jets):
+                    jetHt += jet.pt
+                self.out.fillBranch("Jet2_HT", jetHt)
+                return True
+            else:
+                return False
+        else:
+            return False
         return True
 
 

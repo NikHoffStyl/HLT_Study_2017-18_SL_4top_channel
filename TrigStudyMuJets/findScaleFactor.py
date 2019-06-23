@@ -10,6 +10,7 @@ import errno
 import ROOT
 from ROOT import TLatex
 import numpy
+from tools import *
 import math
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime
@@ -149,17 +150,23 @@ def cmsPlotString(args):
 
     """
     if args == "17B":
-        legStr = "CMS Run2017B"
+        #legStr = "CMS Run2017B"
+        legStr = "CMS #bf{                                        Data Run2017B                                           4.823 fb^{-1} (13TeV)}"
     elif args == "17C":
-        legStr = "CMS Run2017C"
+        #legStr = "CMS Run2017C"
+        legStr = "CMS #bf{                                        Data Run2017C                                           9.664 fb^{-1} (13TeV)}"
     elif args == "17D":
-        legStr = "CMS Run2017D"
+        #legStr = "CMS Run2017D"
+        legStr = "CMS #bf{                                        Data Run2017D                                            4.62 fb^{-1} (13TeV)}"
     elif args == "17E":
-        legStr = "CMS Run2017E"
+        #legStr = "CMS Run2017E"
+        legStr = "CMS #bf{                                        Data Run2017E                                            9.83 fb^{-1} (13TeV)}"
     elif args == "17F":
-        legStr = "CMS Run2017F"
+        #legStr = "CMS Run2017F"
+        legStr = "CMS #bf{                                        Data Run2017F                                           13.16 fb^{-1} (13TeV)}"
     elif args == "17DEF":
-        legStr = "CMS Run2017D-F"
+        # legStr = "CMS Run2017D-F"
+        legStr = "CMS #bf{                                        Data Run2017D-F                                          27.052 fb^{-1} (13TeV)}"
     elif args == "17CDEF":
         legStr = "CMS Run2017C-F"
     elif args == "all":
@@ -236,8 +243,8 @@ def findTrigList(file):
     Returns: Trigger List
 
     """
-    if "17B" in file and "data" in file: trigList = getFileContents("../myInFiles/2017ABtrigList.txt", False)
-    elif "17B" in file and "TTT" in file: trigList = getFileContents("../myInFiles/trigList.txt", False)
+    if "17B" in file and (("data" in file) or ("Run20" in file)): trigList = getFileContents("../myInFiles/2017ABtrigList.txt", False)
+    elif "17B" in file and ("TT" in file or "bbbar" in file): trigList = getFileContents("../myInFiles/trigList.txt", False)
     elif "17C" in file: trigList = getFileContents("../myInFiles/2017CtrigList.txt", False)
     else: trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", False)
 
@@ -289,7 +296,7 @@ def getHistograms(fileList, era, newDir):
     for fName in fileList:
         f.append(ROOT.TFile.Open(fName))
         f[counter].cd("plots")
-        if "dataSEl" in fName:
+        if ("dataSEl" in fName ) or ("SingleEl" in fName):
             names = getHistNames(fName)
             for name in names:
                 hName = name.replace("h_", "h_dataSEl" + era + "_")
@@ -297,15 +304,15 @@ def getHistograms(fileList, era, newDir):
                 if not h_dataSEl[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 h_dataSEl[name].SetName(hName)
                 h_dataSEl[name].SetDirectory(newDir)  # = h_dataSEl[name].Clone("El" + name)
-        if "dataSMu" in fName:
+        if ("dataSMu" in fName) or ("SingleMu" in fName):
             names = getHistNames(fName)
             for name in names:
                 hName = name.replace("h_", "h_dataSMu" + era + "_")
                 h_dataSMu[name] = ROOT.gDirectory.Get(name)
-                if not h_dataSMu[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
+                if h_dataSMu[name] == None: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 h_dataSMu[name].SetName(hName)
                 h_dataSMu[name].SetDirectory(newDir)  # = h_dataSMu[name].Clone("Mu" + name)
-        if "dataHTMHT" in fName:
+        if "HTMHT" in fName:
             names = getHistNames(fName)
             for name in names:
                 hName = name.replace("h_", "h_dataHTMHT" + era + "_")
@@ -321,7 +328,7 @@ def getHistograms(fileList, era, newDir):
                 if not h_mcTTTT[name]: print('[ERROR]: No histogram "' + name + '" found in ' + fName)
                 h_mcTTTT[name].SetName(hName)
                 h_mcTTTT[name].SetDirectory(newDir)  # = h_mcTTTT[name].Clone("tt" + name)
-        if "TTToSemiLep" in fName:
+        if "bbbar" in fName: #"TTToSemiLep" in fName:
             names = getHistNames(fName)
             for name in names:
                 hName = name.replace("h_", "h_mcTTToSemiLep" + era + "_")
@@ -376,11 +383,11 @@ def findTrigRatio(h1, title, newDir):
                 h_TH1DOut[hName].Divide(h2[prop])
                 xTitle = h2[prop].GetXaxis().GetTitle()
                 xBinWidth = h2[prop].GetXaxis().GetBinWidth(1)
-                h_TH1DOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                h_TH1DOut[hName].SetTitle(title + ";{0};Trigger Efficiency".format(xTitle))
                 h_TH1DOut[hName].SetDirectory(newDir)
                 if not ROOT.TEfficiency.CheckConsistency(h1[hName], h2[prop]): continue
                 h_TEffOut[hName] = ROOT.TEfficiency(h1[hName], h2[prop])
-                h_TEffOut[hName].SetTitle(title + ";{0};Trigger Efficiency per {1} GeV/c".format(xTitle, round(xBinWidth)))
+                h_TEffOut[hName].SetTitle(title + ";{0};Trigger Efficiency".format(xTitle))
                 h_TEffOut[hName].SetName(effName2)
 
     return h_TH1DOut, h_TEffOut
@@ -427,7 +434,7 @@ def scaleFactor(h1, h2, title, era, newDir):
             h_scale[hName].Divide(h2[hName2])
             xTitle = h2[hName2].GetXaxis().GetTitle()
             xBinWidth = h2[hName2].GetXaxis().GetBinWidth(1)
-            h_scale[hName].SetTitle(title + ";{0};Scale Factors per {1} GeV/c".format(xTitle, round(xBinWidth)))
+            h_scale[hName].SetTitle(title + ";{0};Scale Factors".format(xTitle))
             h_scale[hName].SetDirectory(newDir)
 
     return h_scale, hNameList
@@ -492,17 +499,17 @@ def main():
     h_dataHTMHTs = {}
     h_dataSMus = {}
     h_dataSEls = {}
-    # files = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17DEF", FullPaths=True)
+    # files = findEraRootFiles(path="OutFiles/Histograms_LooseMuInfo_vetoing", era="17DEF", FullPaths=True)
     # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
-    files17B = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17B", FullPaths=True)
+    files17B = findEraRootFiles(path="OutFiles/Histograms_LooseMuInfo_vetoing", era="17B", FullPaths=True)
     h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(files17B, "17B", eventDIR)
-    files17C = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17C", FullPaths=True)
+    files17C = findEraRootFiles(path="OutFiles/Histograms_LooseMuInfo_vetoing", era="17C", FullPaths=True)
     h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(files17C, "17C", eventDIR)
-    files17D = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17D", FullPaths=True)
+    files17D = findEraRootFiles(path="OutFiles/Histograms_LooseMuInfo_vetoing", era="17D", FullPaths=True)
     h_mcTTTTs17D, h_mcTTToSemiLeps17D, h_dataHTMHTs17D, h_dataSMus17D, h_dataSEls17D = getHistograms(files17D, "17D", eventDIR)
-    files17E = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17E", FullPaths=True)
+    files17E = findEraRootFiles(path="OutFiles/Histograms_LooseMuInfo_vetoing", era="17E", FullPaths=True)
     h_mcTTTTs17E, h_mcTTToSemiLeps17E, h_dataHTMHTs17E, h_dataSMus17E, h_dataSEls17E = getHistograms(files17E, "17E", eventDIR)
-    files17F = findEraRootFiles(path="OutFiles/Histograms_HTcut", era="17F", FullPaths=True)
+    files17F = findEraRootFiles(path="OutFiles/Histograms_LooseMuInfo_vetoing", era="17F", FullPaths=True)
     h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(files17F, "17F", eventDIR)
 
     eventDIR.cd()
@@ -564,6 +571,7 @@ def main():
     s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN, sfDIR)
 
     ROOT.gStyle.SetOptTitle(0)
+    ROOT.gStyle.SetOptStat(0)
 
     triggerCanvas.cd(1)
     ltx = TLatex()
@@ -580,13 +588,13 @@ def main():
         cv0[hn] = triggerCanvas.cd(1)
         trg = whatTrig(hName)
         if args.inputLFN == "17B":
-            intgrLumi = 5.61  # /fb
+            intgrLumi = 4.823  # /fb
             if not trg == "IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075": continue  # 1 is data 2 is mc
         elif args.inputLFN == "17C":
-            intgrLumi = 10.83  # /fb
+            intgrLumi = 9.664  # /fb
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2": continue
         elif args.inputLFN == "17D" or args.inputLFN == "17E" or args.inputLFN == "17F" or args.inputLFN == "17DEF":
-            intgrLumi = 27.61  # /fb
+            intgrLumi = 27.052  # /fb
             if not trg == "IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2": continue
         else:
             intgrLumi = 41.53  # /fb
@@ -596,41 +604,69 @@ def main():
         if not hName.find("DoubleBTagCSV_p075") == -1: hName2 = hName.replace("SixJet32_DoubleBTagCSV_p075", "SixPFJet32_DoublePFBTagDeepCSV_2p2")
         else: hName2 = hName
         t = ROOT.TPaveText(0.15, 0.91, 0.7, 0.98, "nbNDC")
-        t2 = ROOT.TPaveText(0.55, 0.81, 0.75, 0.88, "nbNDC")
+        t2 = ROOT.TPaveText(0.08, 0.91, 0.92, 0.96, "nbNDC")
         t.SetFillColor(0)
         t2.SetFillColor(0)
         t.SetTextSize(0.03)
-        t2.SetTextSize(0.03)
+        t2.SetTextSize(0.035)
         t.AddText(trg)
         t2.AddText(legString)
-        h_mcTTToSemiLeps[hName2].SetTitle("Top-AntiTop MC")
-        h_dataHTMHTs[hName].SetTitle("HTMHT Data")
-        h_dataSMus[hName].SetTitle("Single Muon Data")
-        h_dataSEls[hName].SetTitle("Single Electron Data")
-        normVal = (intgrLumi * 831000 * 0.45)/43732445  # (h_mcTTToSemiLeps[hName2].GetEntries())
+        histEntries = h_mcTTToSemiLeps[hName2].GetEntries()
+        h_mcTTToSemiLeps[hName2].SetTitle("Top-AntiTop MC (%d)" % histEntries)
+        histEntries = h_dataHTMHTs[hName].GetEntries()
+        h_dataHTMHTs[hName].SetTitle("HTMHT Data (%d)" % histEntries)
+        histEntries = h_dataSMus[hName].GetEntries()
+        h_dataSMus[hName].SetTitle("Single Muon Data (%d) " % histEntries)
+        histEntries = h_dataSEls[hName].GetEntries()
+        h_dataSEls[hName].SetTitle("Single Electron Data (%d)" % histEntries)
+        normVal = (intgrLumi * 327200)/1888402#ttjets722800)/8026103 # * 54230)/ 28380110 # semi = 365.34/43732445  # (h_mcTTToSemiLeps[hName2].GetEntries())
         print(normVal)
         h_mcTTToSemiLeps[hName2].Scale(normVal)
+        for i in range (0, 17):
+            binWidth = h_mcTTToSemiLeps[hName2].GetXaxis().GetBinWidth(i)
+            binContent = h_mcTTToSemiLeps[hName2].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_mcTTToSemiLeps[hName2].SetBinContent(i, newBinContent)
+            binContent = h_dataHTMHTs[hName].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_dataHTMHTs[hName].SetBinContent(i, newBinContent)
+            binContent = h_dataSMus[hName].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_dataSMus[hName].SetBinContent(i, newBinContent)
+            binContent = h_dataSEls[hName].GetBinContent(i)
+            newBinContent = round(binContent/binWidth)
+            h_dataSEls[hName].SetBinContent(i, newBinContent)
+        maxYs = getMaxY([h_mcTTToSemiLeps[hName2], h_dataSMus[hName], h_dataHTMHTs[hName], h_dataSEls[hName]])
+        h_mcTTToSemiLeps[hName2].SetMaximum(maxYs + 100)
         h_mcTTToSemiLeps[hName2].Draw("hist")
         h_mcTTToSemiLeps[hName2].SetLineColor(1)
         # tX1 = 0.05 * (h_mcTTToSemiLeps[hName].GetXaxis().GetXmax())
         # tY1 = 1.1*(h_mcTTToSemiLeps[hName].GetMaximum())
-        h_dataSMus[hName].Draw('same')
         h_dataSMus[hName].SetLineColor(2)
-        h_dataSMus[hName].SetFillColorAlpha(2, 0.4)
-        h_dataHTMHTs[hName].Draw('same')
+        h_dataSMus[hName].SetMarkerStyle(8)
+        h_dataSMus[hName].SetMarkerSize(1) 
+        h_dataSMus[hName].Draw('E1 same')
+#        h_dataSMus[hName].SetFillColorAlpha(2, 0.4)
         h_dataHTMHTs[hName].SetLineColor(4)
-        h_dataHTMHTs[hName].SetFillColorAlpha(4, 0.4)
-        h_dataSEls[hName].Draw('same')
+        h_dataHTMHTs[hName].SetMarkerStyle(8)
+        h_dataHTMHTs[hName].SetMarkerSize(1)
+        h_dataHTMHTs[hName].Draw('E1 same') 
+ #       h_dataHTMHTs[hName].SetFillColorAlpha(4, 0.4)
         h_dataSEls[hName].SetLineColor(6)
-        h_dataSEls[hName].SetFillColorAlpha(6, 0.4)
-        t.Draw("same")
+        h_dataSEls[hName].SetMarkerStyle(8)
+        h_dataSEls[hName].SetMarkerSize(1)
+        h_dataSEls[hName].Draw('E1 same') 
+  #      h_dataSEls[hName].SetFillColorAlpha(6, 0.4)
+        # t.Draw("same")
         t2.Draw("same")
-        cv0[hn].BuildLegend(0.6, 0.5, 0.9, 0.7)
-        ROOT.gStyle.SetLegendTextSize(0.03)
+        ROOT.gStyle.SetLegendTextSize(0.035)
+        cv0[hn].BuildLegend(0.65, 0.55, 0.95, 0.9)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
+        triggerCanvas.Print("TriggerPlots/images/{0}events.png".format(hn), "png")
+
 
         # - Draw trigger efficiency hists
         cv1[hn] = triggerCanvas.cd(1)
@@ -650,14 +686,15 @@ def main():
         tr2_dataHTMHT[hName].SetLineColor(4)
         tr2_dataSEl[hName].Draw('same')
         tr2_dataSEl[hName].SetLineColor(6)
-        t.Draw("same")
+        # t.Draw("same")
         t2.Draw("same")
-        cv1[hn].BuildLegend(0.6, 0.1, 0.9, 0.3)
-        ROOT.gStyle.SetLegendTextSize(0.03)
+        ROOT.gStyle.SetLegendTextSize(0.035)
+        cv1[hn].BuildLegend(0.65, 0.1, 0.9, 0.38)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
+        triggerCanvas.Print("TriggerPlots/images/{0}teff.png".format(hn), "png")
 
         # - Draw scale factor hists
         cv2[hn] = triggerCanvas.cd(1)
@@ -672,14 +709,15 @@ def main():
         s_dataSMu[hName].SetLineColor(2)
         s_dataSEl[hName].Draw('E1 same')
         s_dataSEl[hName].SetLineColor(6)
-        t.Draw("same")
+        # t.Draw("same")
         t2.Draw("same")
-        cv2[hn].BuildLegend(0.6, 0.1, 0.9, 0.3)
-        ROOT.gStyle.SetLegendTextSize(0.03)
+        ROOT.gStyle.SetLegendTextSize(0.035)
+        cv2[hn].BuildLegend(0.65, 0.1, 0.9, 0.28)
         # ltx = TLatex()
         # ltx.SetTextSize(0.03)
         # ltx.DrawLatex(tX1, tY1, legString)
         pdfCreator(args, 1, triggerCanvas)
+        triggerCanvas.Print("TriggerPlots/images/{0}sf.png".format(hn), "png")
         
         eventDIR.cd()
         mcName = hName2.replace("h_", "h_mcTTToSemiLep_")

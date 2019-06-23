@@ -9,6 +9,7 @@ from __future__ import (division, print_function)
 import ROOT
 import time
 import os
+import csv
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
@@ -18,7 +19,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 #  Change global variables as needed
 ##
 pathToTrigLists = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/myInFiles/"
-# pathToSelectionCriteria = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets"
+pathToScriptDir = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/"
 ###
 
 
@@ -37,7 +38,8 @@ def process_arguments():
                         help="Does not output a ROOT file, which contains the histograms.")
     parser.add_argument("-e", "--eventLimit", type=int, default=-1,
                         help="Set a limit to the number of events.")
-    parser.add_argument("-o", "--outputName", default="_v", help="Set name of output file")
+    parser.add_argument("-o", "--outputName", default="v5_HistFiles", help="Set name of output file")
+    parser.add_argument("-csv_", "--commaDelFile", default="eventIDs.csv", help="Set csv output file for event, lumi and run numbers")
     args = parser.parse_args()
     return args
 
@@ -58,6 +60,7 @@ def findEraRootFiles(path, verbose=False, FullPaths=True):
     if verbose: print(' >> Looking for files in path: ' + path)
     for f in os.listdir(path):
         if not f[-5:] == '.root': continue
+        if f == 'A22A95CF-A110-B145-92FD-C121E5F9F84DdataHTMHT18C.root': continue
         # if era != "all" and era not in f[:-5]: continue
         if verbose: print(' >> Adding file: ', f)
         files.append(f)
@@ -115,7 +118,7 @@ class TriggerStudy(Module):
     """This class HistogramMaker() fills histograms of required variables of jets, muons, electrons and MET;
     for different combinations of trigger paths."""
 
-    def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None, era=None):
+    def __init__(self, writeHistFile=True, eventLimit=-1, trigLst=None, era=None, csvFile="temp.csv"):
         """
         Initialise global variables
 
@@ -129,7 +132,14 @@ class TriggerStudy(Module):
         self.eventLimit = eventLimit
         self.era = era
         self.trigLst = trigLst
+        self.trigLst['no-HLT'] = "HLT_none"
+        
+        self.h = {}  # dictionary for histograms
 
+        #self.evelurun = open(pathToTrigLists + csvFile, 'w')
+        #self.csv_writer = csv.writer(self.evelurun, delimiter=',')
+        #self.evelurun = open(pathToTrigLists + csvFile, 'r')
+        #self.csv_writer = csv.writer(self.evelurun, delimiter=',')
         pathToSelectionCriteria = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets"
 
         self.selCriteria = {}
@@ -149,51 +159,35 @@ class TriggerStudy(Module):
 
         # - Run beginJob() of Module
         Module.beginJob(self, histFile, histDirName)
+        for key , tg in self.trigLst.iteritems():
+            for lep, lepton  in {"Mu":"Muon", "El":"Electron"}.iteritems():
+                if lep == "El" and "Mu" in key : continue
+                if lep == "Mu" and "El" in key : continue
+                self.h[lep + key + "_HT"] =  ROOT.TH1D( "h_" + lep + "_HT_" + key, tg + " in " + lepton + "channel; H_{T} / GeVc^{-1} ;Number of Events per GeVc^{-1}", 300, 0, 3000)
+                self.h[lep + key + "_pt"] = ROOT.TH1D( "h_" + lep + "_pt_" + key, tg + " in " + lepton + "channel; Lepton p_{T} / GeVc^{-1};Number of Events per GeVc^{-1}", 300, 0, 300)
+                self.h[lep + key + "_lepEta"] = ROOT.TH1D( "h_" + lep + "_lepEta_" + key, tg + " in " + lepton + "channel; Lepton #eta ;Number of Events", 100, -6, 8)
+                self.h[lep + key + "_lepPhi"] = ROOT.TH1D( "h_" + lep + "_lepPhi_" + key, tg + " in " + lepton + "channel; Lepton #phi;Number of Events", 100, -6, 8)
+                self.h[lep + key + "_jetEta"] = ROOT.TH1D( "h_" + lep + "_jetEta_" + key, tg + " in " + lepton + "channel; Jet #eta;Number of Events", 100, -6, 8)
+                self.h[lep + key + "_jetPhi"] = ROOT.TH1D( "h_" + lep + "_jetPhi_" + key, tg + " in " + lepton + "channel; Jet #phi;Number of Events", 100, -6, 8)
+                self.h[lep + key + "_nJet"] = ROOT.TH1D( "h_" + lep + "_nJet_" + key, tg + " in " + lepton + "channel; Number of Jets;Number of Events", 20, 0, 20)
+                self.h[lep + key + "_nBJet"] = ROOT.TH1D( "h_" + lep + "_nBJet_" + key, tg + " in " + lepton + "channel; Number of b-tagged Jets;Number of Events", 20, 0, 20)
+                self.addObject(self.h[lep + key + "_HT"])
+                self.addObject(self.h[lep + key + "_pt"])
+                self.addObject(self.h[lep + key + "_lepEta"])
+                self.addObject(self.h[lep + key + "_lepPhi"])
+                self.addObject(self.h[lep + key + "_jetEta"])
+                self.addObject(self.h[lep + key + "_jetPhi"])
+                self.addObject(self.h[lep + key + "_nJet"])
+                self.addObject(self.h[lep + key + "_nBJet"])
+
+
+
 
     def endJob(self):
         """end Job"""
+        #self.evelurun.close()
         Module.endJob(self)
 
-    def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        """add branches to file"""
-        self.out = wrappedOutputTree
-
-        self.out.branch("nVetoMuons", "I")
-        self.out.branch("VetoMuons_" + "pt", "F")
-        self.out.branch("VetoMuons_" + "phi", "F")
-        self.out.branch("VetoMuons_" + "eta", "F")
-
-        self.out.branch("nVetoElectrons", "I")
-        self.out.branch("VetoElectrons_" + "pt", "F")
-        self.out.branch("VetoElectrons_" + "phi", "F")
-        self.out.branch("VetoElectrons_" + "eta", "F")
-
-        if self.era == "17ABdata":
-            self.out.branch("HLT_IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", "I")
-            self.out.branch("HLT_Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075", "I")
-        elif self.era == "17ABmc":
-            self.out.branch("HLT_IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
-            self.out.branch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
-        elif not self.era.find("17C") == -1:
-            self.out.branch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", "I")
-            self.out.branch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", "I")
-        elif not self.era.find("17DEF") == -1:
-            self.out.branch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
-            self.out.branch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
-        elif self.era == '18data':
-            self.out.branch("HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
-            self.out.branch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", "I")
-        else:
-            self.out.branch("HLT_OR", "I")
-
-        self.out.branch("nBtagJets", "I")
-        self.out.branch("Jet_HT", "F")
-
-        pass
-
-    def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        """end file"""
-        pass
 
     def jetCriteria(self, jets):
         """
@@ -220,7 +214,8 @@ class TriggerStudy(Module):
             JetPassIdx.append(nj)
             # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
             # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-            if jet.btagDeepFlavB > 0.7489:
+            #if jet.btagDeepFlavB > 0.7489:
+            if jet.btagDeepFlavB > 0.7264:
                 nBtagsPass += 1
 
         return nJetsPass, JetPassIdx, nBtagsPass
@@ -242,11 +237,14 @@ class TriggerStudy(Module):
         mediumMuonsPassIdx = 0
         for nm, muon in enumerate(muons):
             if (getattr(muon, "mediumId") is True) and (getattr(muon, "tightId") is False):
+                if muon.pt < 10: continue
+                if muon.pfRelIso04_all > 0.25: continue
                 nMediumMuonsPass += 1
                 mediumMuonsPassIdx = nm
             # - Check muon criteria 2017 https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
             if (getattr(muon, "tightId") is False) or abs(muon.eta) > self.selCriteria["maxObjEta"]: continue
             if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
+            # if muon.pt < 21: continue
             nTightMuonsPass += 1
             tightMuonsPassIdx = nm
 
@@ -269,6 +267,7 @@ class TriggerStudy(Module):
         looseElectronsPassIdx = 0
         for ne, el in enumerate(electrons):
             if  el.mvaFall17V2Iso_WPL is True and el.mvaFall17V2Iso_WP90 is False:
+                if  el.pt < 10: continue
                 nLooseElectronsPass += 1
                 looseElectronsPassIdx = ne
 
@@ -276,7 +275,7 @@ class TriggerStudy(Module):
             if el.miniPFRelIso_all > self.selCriteria["maxMiniPfRelIso"]: continue
             if self.selCriteria["mvaWP"] == 90 and el.mvaFall17V2Iso_WP90 is False: continue
             if 1.4442 < abs(el.eta) < 1.566: continue
-
+            # if  el.pt < 5: continue
             nElsPass += 1
             ElsPassIdx = ne
 
@@ -300,6 +299,7 @@ class TriggerStudy(Module):
         hltObj = Object(event, "HLT")  # object with only the trigger branches in that event
         # met = Object(event, "MET")
         # genMet = Object(event, "GenMET")
+        jet2 = Object(event,"Jet2")
 
         ########################################
         #  Set Object attributes to variables  #
@@ -308,76 +308,17 @@ class TriggerStudy(Module):
         # metPhi = getattr(met, "phi")
         # genMetPt = getattr(genMet, "pt")
         # genMetPhi = getattr(genMet, "phi")
-        trigPath = {}
-        for key in self.trigLst:
-            if key.find("_OR_") == -1:
-                for tg in self.trigLst[key]:
-                    trigPath.update({tg: getattr(hltObj, tg)})
-            else:
-                for tg in self.trigLst[key]:
-                    trigPath.update({tg: False})
+        HT = getattr(jet2, "HT")
 
-        ############################
-        #  Fill new HLT_OR Branch  #
-        ############################
-        if self.era == "17ABdata":
-            if trigPath['IsoMu24_eta2p1'] is True or trigPath['PFHT380_SixJet32_DoubleBTagCSV_p075'] is True:
-                trigPath['IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075'] = True
-                self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", 1)
-            else:
-                self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixJet32_DoubleBTagCSV_p075", 0)
-            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixJet32_DoubleBTagCSV_p075'] is True:
-                trigPath['Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075'] = True
-                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075", 1)
-            else:
-                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixJet32_DoubleBTagCSV_p075", 0)
-        elif self.era == "17ABmc":
-            if trigPath['IsoMu24_eta2p1'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-                trigPath['IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-                self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_IsoMu24_eta2p1_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
-            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-                trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
-        elif not self.era.find("17C") == -1:
-            if trigPath['IsoMu27'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] is True:
-                trigPath['IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] = True
-                self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 0)
-            if trigPath['Ele35_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] is True:
-                trigPath['Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2'] = True
-                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_Ele35_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagCSV_2p2", 0)
-        elif not self.era.find("17DEF") == -1:
-            if trigPath['IsoMu27'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-                trigPath['IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-                self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_IsoMu27_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
-            if trigPath['Ele32_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-                trigPath['Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
-        elif self.era == '18data':
-            if trigPath['IsoMu24'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-                trigPath['HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-                self.out.fillBranch("HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_IsoMu24_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
-            if trigPath['Ele32_WPTight_Gsf'] is True or trigPath['PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] is True:
-                trigPath['HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2'] = True
-                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 1)
-            else:
-                self.out.fillBranch("HLT_Ele32_WPTight_Gsf_PFHT380_SixPFJet32_DoublePFBTagDeepCSV_2p2", 0)
-        else:
-            print("No era specified. Stopped Analysis.")
-            return False
+        trigPath = {}
+        for key , tg in self.trigLst.iteritems():
+            if key == "no-HLT": trigPath.update({tg: True})
+            else: 
+                if hasattr(hltObj, tg):trigPath.update({tg: getattr(hltObj, tg)})
+                else: trigPath.update({tg: False})
+
+        #eventLumibRun = [event.event, event.luminosityBlock, event.run]
+        #self.csv_writer.writerow(eventLumibRun)
 
         # Object Criteria
         nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
@@ -386,24 +327,44 @@ class TriggerStudy(Module):
 
         HT = 0
         for jet in jets:
-            HT += jet.pt
-        if nJetPass > 5 and nBtagPass > 1 and ( nMuonPass == 1 or nElPass == 1):
-            if HT > 500:
-                self.out.fillBranch("Jet_HT", HT)
-                self.out.fillBranch("nBtagJets", nBtagPass)
+            #HT = jet.HT
+            HT += jet.pt 
+            jetPhi = jet.phi
+            jetEta = jet.eta
+        if nJetPass > 5 and nBtagPass > 1 and HT > 500 and nMediumMuonPass == 0 and nLooseElectronPass == 0:
+            if nMuonPass == 1 and nElPass == 0: 
                 for nm, muon in enumerate(muons):
-                    self.out.fillBranch("nVetoMuons", nMediumMuonPass)
-                    if nMediumMuonPass > 0 and nm != MuonPassIdx:
-                        self.out.fillBranch("VetoMuons_" + "pt", muon.pt)
-                        self.out.fillBranch("VetoMuons_" + "phi", muon.phi)
-                        self.out.fillBranch("VetoMuons_" + "eta", muon.eta)
-                    # if not MuonPassIdx == nm: continue
+                    # Save Histograms for Muon Properties
+                    if not MuonPassIdx == nm: continue
+                    for key , tg in self.trigLst.iteritems():
+                        if "El" in key: continue
+                        if trigPath[tg] == 0: continue
+                        self.h["Mu" + key + "_HT"].Fill(HT)
+                        self.h["Mu" + key + "_pt"].Fill(muon.pt)
+                        self.h["Mu" + key + "_lepEta"].Fill(muon.eta)
+                        self.h["Mu" + key + "_lepPhi"].Fill(muon.phi)
+                        self.h["Mu" + key + "_nJet"].Fill(nJetPass)
+                        self.h["Mu" + key + "_nBJet"].Fill(nBtagPass)
+                        for jet in jets:
+                            self.h["Mu" + key + "_jetEta"].Fill(jet.eta)
+                            self.h["Mu" + key + "_jetPhi"].Fill(jet.phi)
+
+            if nMuonPass == 0 and nElPass == 1:
                 for ne, el in enumerate(electrons):
-                    self.out.fillBranch("nVetoElectrons", nLooseElectronPass)
-                    if nLooseElectronPass > 0 and ne != ElPassIdx:
-                        self.out.fillBranch("VetoElectrons_" + "pt", el.pt)
-                        self.out.fillBranch("VetoElectrons_" + "phi", el.phi)
-                        self.out.fillBranch("VetoElectrons_" + "eta", el.eta)                    
+                    # Save Histograms for Electron Properties
+                    if not ElPassIdx == ne: continue
+                    for key , tg in self.trigLst.iteritems():
+                        if "Mu" in key: continue
+                        if trigPath[tg] == 0: continue
+                        self.h["El" + key + "_HT"].Fill(HT)
+                        self.h["El" + key + "_pt"].Fill(el.pt)
+                        self.h["El" + key + "_lepEta"].Fill(el.eta)
+                        self.h["El" + key + "_lepPhi"].Fill(el.phi)
+                        self.h["El" + key + "_nJet"].Fill(nJetPass)
+                        self.h["El" + key + "_nBJet"].Fill(nBtagPass)
+                        for jet in jets:
+                            self.h["El" + key + "_jetEta"].Fill(jetEta)
+                            self.h["El" + key + "_jetPhi"].Fill(jetPhi)
             else:
                 return False
         else:
@@ -422,73 +383,60 @@ def main(argms):
     """
     if argms.fileName.find("Run2017B") != -1 or argms.era == "17B":
         if not argms.fileName.find("pythia") == -1:
-            trigList = getFileContents(pathToTrigLists + "trigList.txt", True)
+            trigList = getFileContents(pathToTrigLists + "trigList.txt", False)
             era2017 = "17ABmc"
-            jsonINPUT = None
         else:
-            trigList = getFileContents(pathToTrigLists + "2017ABtrigList.txt", True)
+            trigList = getFileContents(pathToTrigLists + "2017ABtrigList.txt", False)
             era2017 = "17ABdata"
-            jsonINPUT = pathToTrigLists + "Json_files/Cert_297020-299329_13TeV_PromptReco_Collisions17_JSON_eraB.txt"
     elif argms.fileName.find("Run2017C") != -1 or argms.era == "17C":
-        trigList = getFileContents(pathToTrigLists + "2017CtrigList.txt", True)
+        trigList = getFileContents(pathToTrigLists + "2017CtrigList.txt", False)
         era2017 = "17C"
-        jsonINPUT = pathToTrigLists + "Json_files/Cert_299337-302029_13TeV_PromptReco_Collisions17_JSON_eraC.txt"
         if argms.fileName.find("pythia") != -1 and argms.era == "17C":
             era2017 = "17Cmc"
-            jsonINPUT = None
     elif argms.fileName.find("Run2017D") != -1 or argms.fileName.find("Run2017E") != -1 or argms.fileName.find("Run2017F") != -1 or argms.era == "17DEF":
-        trigList = getFileContents(pathToTrigLists + "2017DEFtrigList.txt", True)
+        trigList = getFileContents(pathToTrigLists + "2017DEFtrigList.txt", False)
         era2017 = "17DEF"
-        if argms.fileName.find("Run2017D") != -1: jsonINPUT = pathToTrigLists + "Json_files/Cert_302030-303434_13TeV_PromptReco_Collisions17_JSON_eraD.txt"
-        if argms.fileName.find("Run2017E") != -1: jsonINPUT = pathToTrigLists + "Json_files/Cert_303435-304826_13TeV_PromptReco_Collisions17_JSON_eraE.txt"
-        if argms.fileName.find("Run2017F") != -1: jsonINPUT = pathToTrigLists + "Json_files/Cert_304911-306462_13TeV_PromptReco_Collisions17_JSON_eraF.txt"
         if argms.fileName.find("pythia") != -1 and argms.era == "17DEF": 
             era2017 = "17DEFmc"
-            jsonINPUT = None
-    elif not argms.fileName.find("Run2018") == -1:
-        trigList = getFileContents(pathToTrigLists + "2018trigList.txt", True)
+    elif not argms.fileName.find("Run2018") == -1 or argms.era == "18":
+        trigList = getFileContents(pathToTrigLists + "2018trigList.txt", False)
         era2017 = "18data"
-        jsonINPUT = None
         if not argms.fileName.find("pythia") == -1: 
             era2017 = "18mc"
-            jsonINPUT = None
     else:
-        trigList = getFileContents(pathToTrigLists + "trigList.txt", True)
+        trigList = getFileContents(pathToTrigLists + "trigList.txt", False)
         era2017 = "original"
-        jsonINPUT = None
 
     print(era2017)
-
-    # preSelCuts = getFileContents(pathToTrigLists + "preSelectionCuts.txt", False)
-    # selCriteria = getFileContents("selectionCriteria.txt", False)
 
     if argms.noWriteFile: writeFile = False
     else: writeFile = True
 
-    # files = findEraRootFiles(argms.fileName)
-    pathToFile = argms.fileName
-    OutDir, inFile = getFileName(argms.fileName)
-    thePostFix = "_v"
+    files = findEraRootFiles(argms.fileName)
+    # pathToFile = argms.fileName
+    # OutDir, inFile = getFileName(argms.fileName)
+    # thePostFix = "_v"
+    #"/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/E2B1106E-2614-3443-8516-A651A11C0DB2.root",
 
     p99 = PostProcessor(".",
-                        [pathToFile],
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 )",
+                        files,
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && nVetoMuons == 0 && nVetoElectrons == 0 && Jet_HT > 500",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList,
-                                              era=era2017)],
-                        jsonInput=jsonINPUT,
-                        postfix=thePostFix,
-                        branchsel="/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/kd_branchsel.txt",
-                        outputbranchsel="/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/kd_branchsel.txt",
+                                              era=era2017,
+                                              csvFile=argms.commaDelFile)],
+                        # postfix=thePostFix,
+                        noOut=True,
+                        histFileName=pathToScriptDir + argms.outputName,
+                        histDirName="plots",
                         )
 
     print(p99.inputFiles)
     t0 = time.time()
     p99.run()
-    os.system(" echo $TMPDIR ")
-    cmdString = " gfal-copy file://$TMPDIR/{0}{1}.root srm://maite.iihe.ac.be:8443{2}BaseSelectionv2_{3}/ ".format(inFile, thePostFix, OutDir, argms.era)
-    os.system(cmdString)
+    # cmdString = "gfal-copy -r file://$TMPDIR/{0}{1}.root srm://maite.iihe.ac.be:8443{2}HistFiles{3}/{0}.root/".format(inFile, thePostFix, OutDir, argms.era)
+    # os.system(cmdString)
     t1 = time.time()
     proc = os.getpid()
     print(">>> Elapsed time {0:7.1f} s by process id: {1}".format((t1 - t0), proc))

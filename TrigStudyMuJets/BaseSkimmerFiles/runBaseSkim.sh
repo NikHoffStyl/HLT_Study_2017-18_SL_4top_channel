@@ -16,6 +16,6 @@ cd $TMPDIR
 export SKIMJOBDIR=/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/BaseSkimmerFiles
 # export SKIMJOBDIR=$pwd
 
-# python $SKIMJOBDIR/trgAnalyser_Tree.py -fnp $FILE_IN -era $ERA
+#python $SKIMJOBDIR/trgAnalyser_Tree.py -fnp $FILE_IN -era $ERA
 
 python $SKIMJOBDIR/trgAnalyser_Tree2018.py -fnp $FILE_IN

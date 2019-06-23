@@ -510,7 +510,6 @@ def main(argms):
         trigList = getFileContents("../myInFiles/2017DEFtrigList.txt", True)
     else:
         trigList = getFileContents("../myInFiles/trigList.txt", True)
-    # trigList = getFileContents("../myInFiles/trigList.txt", True)
     preSelCuts = getFileContents("../myInFiles/preSelectionCuts.txt", False)
     selCriteria = getFileContents("selectionCriteria.txt", False)
 
@@ -575,12 +574,6 @@ def main(argms):
     # - Create canvases
     triggerCanvas = ROOT.TCanvas('triggerCanvas', 'Triggers', 900, 500)#900,500  # 1100 600
     triggerCanvas.SetGrid()
-#    genCanvas = ROOT.TCanvas('genCanvas', 'muonMothers', 900, 500)  # 1100 600
-#    genCanvas.SetGrid()
-
-    # - Open file and sub folder
-    # histFile = ROOT.TFile.Open(inputFile)
-    # histFile.cd("plots")
 
     i = 2
     style = [1, 8, 9, 10]
@@ -975,92 +968,6 @@ def main(argms):
 #     t2.Draw("same")
 #     pdfCreator(argms, 1, triggerCanvas, selCriteria)
 #     triggerCanvas.Print("TriggerPlots/images/event_muonGentest1.png", "png")
-
-#    cv71 = genCanvas.cd(1)
-#    hstack = ROOT.THStack("hsgg","ggg")
-#    # h_muonPt["notrigger"].SetTitle("")
-#    h_muonPtcp2 = {}
-#    h_muonPtcp2["notrigger"] = h_muonPt["notrigger"]#.Rebin(13, "h_muonPt_notrigger_v2", muonpT_rebin)
-#    h_muonPtcp2["notrigger"].SetMinimum(0.)
-#    h_muonPtd["notrigger"] = h_muonPtd["notrigger"].Rebin(16, "h_muonPt_prompt", muonpT_rebin)
-#    h_muonPtd["notrigger"].SetTitle("Data")
-#    h_muonPtd["notrigger"].SetLineStyle(10)
-#    normVal = (27.61 * 524200 ) /11103685#  831000 * 0.45)/43732445  # (h_mcTTToSemiLeps[hName2].GetEntries())
-#    print(1/normVal)
-#    h_muonPtd["notrigger"].Scale(1/normVal)
-#    # h_muonPt["notrigger"].SetMaximum(3500)
-#    h_muonPt["prompt"].SetTitle("prompt muons")
-#    h_muonPt["prompt"] = h_muonPt["prompt"].Rebin(16, "h_muonPt_prompt", muonpT_rebin)
-#    h_muonPtcp2["prompt"] = h_muonPt["prompt"]
-#    h_muonPtcp2["prompt"].SetFillColorAlpha(4,0.4)
-#    h_muonPt["from_b"] = h_muonPt["from_b"].Rebin(16, "h_muonPt_from_b", muonpT_rebin)
-#    h_muonPtcp2["from_b"] = h_muonPt["from_b"]
-#    h_muonPtcp2["from_b"].SetFillColorAlpha(2,0.4)
-#    h_muonPt["from_c"] = h_muonPt["from_c"].Rebin(16, "h_muonPt_from_c", muonpT_rebin)
-#    h_muonPtcp2["from_c"] = h_muonPt["from_c"]
-#    h_muonPtcp2["from_c"].SetFillColorAlpha(3,0.4)
-#    h_muonPt["from_light_or_unknown"] = h_muonPt["from_light_or_unknown"].Rebin(16, "h_muonPt_from_light_or_unknown", muonpT_rebin)
-#    h_muonPtcp2["from_light_or_unknown"] = h_muonPt["from_light_or_unknown"]
-#    h_muonPtcp2["from_light_or_unknown"].SetFillColorAlpha(6,0.4)
-#    h_muonPt["unmatched"] = h_muonPt["unmatched"].Rebin(16, "h_muonPt_unmatched", muonpT_rebin)
-#    h_muonPtcp2["unmatched"] = h_muonPt["unmatched"]
-#    h_muonPtcp2["unmatched"].SetFillColorAlpha(9,0.4)
-#    h_muonPt["from_prompt_tau"] = h_muonPt["from_prompt_tau"].Rebin(16, "h_muonPt_from_prompt_tau", muonpT_rebin)
-#    h_muonPtcp2["from_prompt_tau"] = h_muonPt["from_prompt_tau"]
-#    h_muonPtcp2["from_prompt_tau"].SetFillColorAlpha(8,0.5)
-
-#    for i in range (0, 17):
-#        binWidth = h_muonPtcp2["notrigger"].GetXaxis().GetBinWidth(i)
-#        binContent = h_muonPtcp2["notrigger"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtcp2["notrigger"].SetBinContent(i, newBinContent)
-#        binContent = h_muonPtd["notrigger"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtd["notrigger"].SetBinContent(i, newBinContent)
-#        binContent = h_muonPtcp2["prompt"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtcp2["prompt"].SetBinContent(i, newBinContent)
-#        binContent = h_muonPtcp2["from_b"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtcp2["from_b"].SetBinContent(i, newBinContent)
-#        binContent = h_muonPtcp2["from_c"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtcp2["from_c"].SetBinContent(i, newBinContent)
-#        binContent = h_muonPtcp2["from_light_or_unknown"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtcp2["from_light_or_unknown"].SetBinContent(i, newBinContent)
-#        binContent = h_muonPtcp2["unmatched"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtcp2["unmatched"].SetBinContent(i, newBinContent)
-#        binContent = h_muonPtcp2["from_prompt_tau"].GetBinContent(i)
-#        newBinContent = round(binContent/binWidth)
-#        h_muonPtcp2["from_prompt_tau"].SetBinContent(i,  newBinContent)
-#    #    h_muonPtcp2["notrigger"].Draw()
-#    h_muonPtd["notrigger"].SetMarkerStyle(8)
-#    h_muonPtd["notrigger"].SetMarkerSize(1)
-#    #    h_muonPtd["notrigger"].Draw('same')
-#    #    h_muonPtcp2["prompt"].Draw('same')
-    #    h_muonPtcp2["from_b"].Draw('same')
-    #    h_muonPtcp2["from_c"].Draw('same')
-    #    h_muonPtcp2["from_light_or_unknown"].Draw('same')
-    #    h_muonPtcp2["unmatched"].Draw('same')
-    #    h_muonPtcp2["from_prompt_tau"].Draw('same')
-#    hstack.Add(h_muonPtcp2["from_c"])
-#    hstack.Add(h_muonPtcp2["from_light_or_unknown"])
-#    hstack.Add(h_muonPtcp2["unmatched"])
-#    hstack.Add(h_muonPtcp2["from_b"])
-#    hstack.Add(h_muonPtcp2["from_prompt_tau"])
-#    hstack.Add(h_muonPtcp2["prompt"])
-#    hstack.Draw()
-#    h_muonPtd["notrigger"].Draw('same')
-#    h_muonPtcp2["notrigger"].Draw('same')
-
-#    ROOT.gStyle.SetLegendTextSize(0.035)
-#    cv71.BuildLegend(0.47, 0.3, 0.97, 0.9)
-#    t2.Draw("same")
-#    pdfCreator(argms, 1, genCanvas, selCriteria)
-#    genCanvas.Print("TriggerPlots/images/event_muonGentest2.png", "png")
-
 
     cv11 = triggerCanvas.cd(1)
     for key in trigList:
@@ -1573,7 +1480,124 @@ def main(argms):
     t3.Draw()
     pdfCreator(argms, 2, triggerCanvas, selCriteria)
 
-#    histFile.Close()
+    genCanvas = ROOT.TCanvas('genCanvas', 'muonMothers', 900, 500)  # 1100 600
+    genCanvas.SetGrid()
 
+    intLumiDEF = 27.052
+    intLumiC = 9.664
+    intLumiB = 4.823
+
+
+    cv71 = genCanvas.cd(1)
+    hstack = ROOT.THStack("hsgg","ggg")
+    # h_muonPt["notrigger"].SetTitle("")
+    h_muonPtcp2 = {}
+    h_muonPtcp2["notrigger"] = h_muonPt["notrigger"]#.Rebin(13, "h_muonPt_notrigger_v2", muonpT_rebin)
+    h_muonPtcp2["notrigger"].SetMinimum(0.)
+    h_muonPtd["notrigger"] = h_muonPtd["notrigger"].Rebin(16, "h_muonPt_prompt", muonpT_rebin)
+    h_muonPtd["notrigger"].SetTitle("Data")
+    h_muonPtd["notrigger"].SetLineStyle(10)
+    normVal = (4.823*831000 * 0.45)/43732445  # wjets = * 524200 ) /11103685  ttsemi=831000 * 0.45)/43732445  # (h_mcTTToSemiLeps[hName2].GetEntries())
+    print(1/normVal)
+
+    # h_muonPtd["notrigger"].Scale(1/normVal)
+    # h_muonPt["notrigger"].SetMaximum(3500)
+    h_muonPt["prompt"].SetTitle("prompt muons")
+    h_muonPt["prompt"] = h_muonPt["prompt"].Rebin(16, "h_muonPt_prompt", muonpT_rebin)
+    h_muonPtcp2["prompt"] = h_muonPt["prompt"]
+    h_muonPtcp2["prompt"].SetFillColorAlpha(4,0.4)
+    h_muonPt["from_b"] = h_muonPt["from_b"].Rebin(16, "h_muonPt_from_b", muonpT_rebin)
+    h_muonPtcp2["from_b"] = h_muonPt["from_b"]
+    h_muonPtcp2["from_b"].SetFillColorAlpha(2,0.4)
+    h_muonPt["from_c"] = h_muonPt["from_c"].Rebin(16, "h_muonPt_from_c", muonpT_rebin)
+    h_muonPtcp2["from_c"] = h_muonPt["from_c"]
+    h_muonPtcp2["from_c"].SetFillColorAlpha(3,0.4)
+    h_muonPt["from_light_or_unknown"] = h_muonPt["from_light_or_unknown"].Rebin(16, "h_muonPt_from_light_or_unknown", muonpT_rebin)
+    h_muonPtcp2["from_light_or_unknown"] = h_muonPt["from_light_or_unknown"]
+    h_muonPtcp2["from_light_or_unknown"].SetFillColorAlpha(6,0.4)
+    h_muonPt["unmatched"] = h_muonPt["unmatched"].Rebin(16, "h_muonPt_unmatched", muonpT_rebin)
+    h_muonPtcp2["unmatched"] = h_muonPt["unmatched"]
+    h_muonPtcp2["unmatched"].SetFillColorAlpha(9,0.4)
+    h_muonPt["from_prompt_tau"] = h_muonPt["from_prompt_tau"].Rebin(16, "h_muonPt_from_prompt_tau", muonpT_rebin)
+    h_muonPtcp2["from_prompt_tau"] = h_muonPt["from_prompt_tau"]
+    h_muonPtcp2["from_prompt_tau"].SetFillColorAlpha(8,0.5)
+
+#    h_muonPt["prompt"].Scale(normVal)
+#    h_muonPt["from_b"].Scale(normVal)
+#    h_muonPt["from_c"].Scale(normVal)
+#    h_muonPt["from_light_or_unknown"].Scale(#normVal)
+#    h_muonPt["unmatched"].Scale(normVal)
+#    h_muonPt["from_prompt_tau"].Scale(normVal)
+
+    h_muonPt["prompt"].Draw('hist')
+    h_muonPt["from_b"].Draw('hist')
+    h_muonPt["from_c"].Draw('hist')
+    h_muonPt["from_light_or_unknown"].Draw('hist')
+    h_muonPt["unmatched"].Draw('hist')
+    h_muonPt["from_prompt_tau"].Draw('hist')
+
+
+    histListnew = [h_muonPtcp2["notrigger"], h_muonPtd["notrigger"],h_muonPtcp2["prompt"],h_muonPtcp2["from_b"],h_muonPtcp2["from_c"],h_muonPtcp2["from_light_or_unknown"],h_muonPtcp2["from_prompt_tau"]]
+    maxYhistlist = getMaxY(histListnew)
+    hstack.SetMaximum(maxYhistlist)
+    print maxYhistlist
+    hstack.SetTitle(";Muon pt GeV/c; Number of events per GeVc^{-1}")
+    
+    
+    for i in range (0, 17):
+        binWidth = h_muonPtcp2["notrigger"].GetXaxis().GetBinWidth(i)
+        binContent = h_muonPtcp2["notrigger"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtcp2["notrigger"].SetBinContent(i, newBinContent)
+        binContent = h_muonPtd["notrigger"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtd["notrigger"].SetBinContent(i, newBinContent)
+        binContent = h_muonPtcp2["prompt"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtcp2["prompt"].SetBinContent(i, newBinContent)
+        binContent = h_muonPtcp2["from_b"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtcp2["from_b"].SetBinContent(i, newBinContent)
+        binContent = h_muonPtcp2["from_c"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtcp2["from_c"].SetBinContent(i, newBinContent)
+        binContent = h_muonPtcp2["from_light_or_unknown"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtcp2["from_light_or_unknown"].SetBinContent(i, newBinContent)
+        binContent = h_muonPtcp2["unmatched"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtcp2["unmatched"].SetBinContent(i, newBinContent)
+        binContent = h_muonPtcp2["from_prompt_tau"].GetBinContent(i)
+        newBinContent = round(binContent/binWidth)
+        h_muonPtcp2["from_prompt_tau"].SetBinContent(i,  newBinContent)
+    #    h_muonPtcp2["notrigger"].Draw()
+    h_muonPtd["notrigger"].SetMarkerStyle(8)
+    h_muonPtd["notrigger"].SetMarkerSize(1)
+    #    h_muonPtd["notrigger"].Draw('same')
+    #    h_muonPtcp2["prompt"].Draw('same')
+    #    h_muonPtcp2["from_b"].Draw('same')
+    #    h_muonPtcp2["from_c"].Draw('same')
+    #    h_muonPtcp2["from_light_or_unknown"].Draw('same')
+    #    h_muonPtcp2["unmatched"].Draw('same')
+    #    h_muonPtcp2["from_prompt_tau"].Draw('same')
+    hstack.Add(h_muonPtcp2["from_c"])
+    hstack.Add(h_muonPtcp2["from_light_or_unknown"])
+    hstack.Add(h_muonPtcp2["unmatched"])
+    hstack.Add(h_muonPtcp2["from_b"])
+    hstack.Add(h_muonPtcp2["from_prompt_tau"])
+    hstack.Add(h_muonPtcp2["prompt"])
+    hstack.Draw()
+    h_muonPtd["notrigger"].Draw('E1 same')
+    h_muonPtcp2["notrigger"].Draw('same')
+
+    ROOT.gStyle.SetLegendTextSize(0.035)
+    cv71.BuildLegend(0.47, 0.3, 0.97, 0.9)
+    t2.Draw("same")
+    pdfCreator(argms, 1, genCanvas, selCriteria)
+    genCanvas.Print("TriggerPlots/images/event_muonGentest2.png", "png")
+
+
+
+#    histFile.Close()
 
 main(process_arguments())
