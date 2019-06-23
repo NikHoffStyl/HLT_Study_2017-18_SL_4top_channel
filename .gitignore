@@ -22,6 +22,7 @@
 .DS_Store
 .DS_Store?
 ._*
+.*
 
 # Large submission generated files #
 *.txt.*
@@ -39,5 +40,22 @@
 # Specific to project #
 **/TrashBin
 **/Not_Used
+**.idea
+TrigStudyElJets
+TrigStudyLepJets
 
+EfficiencyFitInfo.xlsx
+Makefile
+TrigStudyMuJets/muBaseline.py
+TrigStudyMuJets/run2017DataJobCopy.sh
+TrigStudyMuJets/runAllJobs.sh
+Values2017.xlsx
+_build/
+conf.py
+env.sh
+index.rst
+make.bat
+run2017DataJob.sh
+runallJobs.sh
+venv/
 
