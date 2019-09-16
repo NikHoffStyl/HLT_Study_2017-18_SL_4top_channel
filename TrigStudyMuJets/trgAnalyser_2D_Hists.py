@@ -10,6 +10,7 @@ import ROOT
 import time
 import os
 import csv
+import numpy
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
@@ -38,7 +39,7 @@ def process_arguments():
                         help="Does not output a ROOT file, which contains the histograms.")
     parser.add_argument("-e", "--eventLimit", type=int, default=-1,
                         help="Set a limit to the number of events.")
-    parser.add_argument("-o", "--outputName", default="v5_HistFiles", help="Set name of output file")
+    parser.add_argument("-o", "--outputName", default="v8_HistFiles", help="Set name of output file")
     parser.add_argument("-csv_", "--commaDelFile", default="eventIDs.csv", help="Set csv output file for event, lumi and run numbers")
     args = parser.parse_args()
     return args
@@ -60,6 +61,7 @@ def findEraRootFiles(path, verbose=False, FullPaths=True):
     if verbose: print(' >> Looking for files in path: ' + path)
     for f in os.listdir(path):
         if not f[-5:] == '.root': continue
+        if f == 'A22A95CF-A110-B145-92FD-C121E5F9F84DdataHTMHT18C.root': continue
         # if era != "all" and era not in f[:-5]: continue
         if verbose: print(' >> Adding file: ', f)
         files.append(f)
@@ -132,13 +134,22 @@ class TriggerStudy(Module):
         self.era = era
         self.trigLst = trigLst
         self.trigLst['no-HLT'] = "HLT_none"
-        
+        self.trigLst['no-HLT2'] = "HLT_none2"
         self.h = {}  # dictionary for histograms
 
-        #self.evelurun = open(pathToTrigLists + csvFile, 'w')
-        #self.csv_writer = csv.writer(self.evelurun, delimiter=',')
-        #self.evelurun = open(pathToTrigLists + csvFile, 'r')
-        #self.csv_writer = csv.writer(self.evelurun, delimiter=',')
+        # self.evelurun = open(pathToTrigLists + csvFile, 'w')
+        # self.csv_writer = csv.writer(self.evelurun, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        self.csvFile = csvFile
+
+        self.evelurun = open(pathToTrigLists + csvFile, 'r')
+        self.csv_reader = csv.reader(self.evelurun, delimiter=',')
+        csvFile2 = csvFile.replace("smu", "sel")
+        self.evelurun2 = open(pathToTrigLists + csvFile2, 'r')
+        self.csv_reader2 = csv.reader(self.evelurun2, delimiter=',')
+        os.system("echo $PWD")
+        # self.sffile = open(pathToScriptDir + "SF_17DEF_file.csv", 'r')
+        # self.sf_reader = csv.reader(self.sffile, delimiter=',')
+
         pathToSelectionCriteria = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets"
 
         self.selCriteria = {}
@@ -162,29 +173,19 @@ class TriggerStudy(Module):
             for lep, lepton  in {"Mu":"Muon", "El":"Electron"}.iteritems():
                 if lep == "El" and "Mu" in key : continue
                 if lep == "Mu" and "El" in key : continue
-                self.h[lep + key + "_HT"] =  ROOT.TH1D( "h_" + lep + "_HT_" + key, tg + " in " + lepton + "channel; H_{T} / GeVc^{-1} ;Number of Events per GeVc^{-1}", 300, 0, 3000)
-                self.h[lep + key + "_pt"] = ROOT.TH1D( "h_" + lep + "_pt_" + key, tg + " in " + lepton + "channel; Lepton p_{T} / GeVc^{-1};Number of Events per GeVc^{-1}", 300, 0, 300)
-                self.h[lep + key + "_lepEta"] = ROOT.TH1D( "h_" + lep + "_lepEta_" + key, tg + " in " + lepton + "channel; Lepton #eta ;Number of Events", 100, -6, 8)
-                self.h[lep + key + "_lepPhi"] = ROOT.TH1D( "h_" + lep + "_lepPhi_" + key, tg + " in " + lepton + "channel; Lepton #phi;Number of Events", 100, -6, 8)
-                self.h[lep + key + "_jetEta"] = ROOT.TH1D( "h_" + lep + "_jetEta_" + key, tg + " in " + lepton + "channel; Jet #eta;Number of Events", 100, -6, 8)
-                self.h[lep + key + "_jetPhi"] = ROOT.TH1D( "h_" + lep + "_jetPhi_" + key, tg + " in " + lepton + "channel; Jet #phi;Number of Events", 100, -6, 8)
-                self.h[lep + key + "_nJet"] = ROOT.TH1D( "h_" + lep + "_nJet_" + key, tg + " in " + lepton + "channel; Number of Jets;Number of Events", 20, 0, 20)
-                self.h[lep + key + "_nBJet"] = ROOT.TH1D( "h_" + lep + "_nBJet_" + key, tg + " in " + lepton + "channel; Number of b-tagged Jets;Number of Events", 20, 0, 20)
-                self.addObject(self.h[lep + key + "_HT"])
-                self.addObject(self.h[lep + key + "_pt"])
-                self.addObject(self.h[lep + key + "_lepEta"])
-                self.addObject(self.h[lep + key + "_lepPhi"])
-                self.addObject(self.h[lep + key + "_jetEta"])
-                self.addObject(self.h[lep + key + "_jetPhi"])
-                self.addObject(self.h[lep + key + "_nJet"])
-                self.addObject(self.h[lep + key + "_nBJet"])
 
+                muonpT_rebin = numpy.array((0., 20., 40., 50., 300.))
+                ht_rebin = numpy.array((0., 100., 500., 750., 2000., 3000.))
+                self.h[lep + key + "_HTpt"] =  ROOT.TH2F( "h_" + lep + "_HTpt_" + key, tg + " in " + lepton + "channel; H_{T} / GeV ; Lepton p_{T} / GeV;Number of Events per GeV", 5, ht_rebin, 4, muonpT_rebin)
+                self.addObject(self.h[lep + key + "_HTpt"])
 
 
 
     def endJob(self):
         """end Job"""
-        #self.evelurun.close()
+        self.evelurun.close()
+        self.evelurun2.close()
+        # self.sffile.close()
         Module.endJob(self)
 
 
@@ -213,7 +214,8 @@ class TriggerStudy(Module):
             JetPassIdx.append(nj)
             # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
             # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-            if jet.btagDeepFlavB > 0.7489:
+            # if jet.btagDeepFlavB > 0.7489:
+            if jet.btagDeepFlavB > 0.7264:
                 nBtagsPass += 1
 
         return nJetsPass, JetPassIdx, nBtagsPass
@@ -235,14 +237,13 @@ class TriggerStudy(Module):
         mediumMuonsPassIdx = 0
         for nm, muon in enumerate(muons):
             if (getattr(muon, "mediumId") is True) and (getattr(muon, "tightId") is False):
-                if muon.pt < 30: continue
+                if muon.pt < 10: continue
                 if muon.pfRelIso04_all > 0.25: continue
                 nMediumMuonsPass += 1
                 mediumMuonsPassIdx = nm
             # - Check muon criteria 2017 https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
             if (getattr(muon, "tightId") is False) or abs(muon.eta) > self.selCriteria["maxObjEta"]: continue
             if muon.pfRelIso04_all > self.selCriteria["maxPfRelIso04"]: continue
-            # if muon.pt < 21: continue
             nTightMuonsPass += 1
             tightMuonsPassIdx = nm
 
@@ -265,7 +266,7 @@ class TriggerStudy(Module):
         looseElectronsPassIdx = 0
         for ne, el in enumerate(electrons):
             if  el.mvaFall17V2Iso_WPL is True and el.mvaFall17V2Iso_WP90 is False:
-                if  el.pt < 30: continue
+                if  el.pt < 10: continue
                 nLooseElectronsPass += 1
                 looseElectronsPassIdx = ne
 
@@ -273,7 +274,6 @@ class TriggerStudy(Module):
             if el.miniPFRelIso_all > self.selCriteria["maxMiniPfRelIso"]: continue
             if self.selCriteria["mvaWP"] == 90 and el.mvaFall17V2Iso_WP90 is False: continue
             if 1.4442 < abs(el.eta) < 1.566: continue
-            # if  el.pt < 5: continue
             nElsPass += 1
             ElsPassIdx = ne
 
@@ -309,12 +309,21 @@ class TriggerStudy(Module):
         HT = getattr(jet2, "HT")
 
         trigPath = {}
-        for key, tg in self.trigLst.iteritems():
-            if key == "no-HLT": trigPath.update({tg: True})
-            else: trigPath.update({tg: getattr(hltObj, tg)})
-
-        #eventLumibRun = [event.event, event.luminosityBlock, event.run]
-        #self.csv_writer.writerow(eventLumibRun)
+        for key , tg in self.trigLst.iteritems():
+            if hasattr(hltObj, tg) and "no-HLT" not in key:
+                trigPath.update({tg: getattr(hltObj, tg)})
+                if key == "Jet":
+                    trig2 = False
+                if key == "Jet2":
+                    trig2 = True
+            else:
+                trigPath.update({tg: False})
+        if trig2 == False:
+            trigPath.update({"HLT_none2": False})
+            trigPath.update({"HLT_none": True})
+        else:
+            trigPath.update({"HLT_none": False})
+            trigPath.update({"HLT_none2": True})            
 
         # Object Criteria
         nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
@@ -323,44 +332,47 @@ class TriggerStudy(Module):
 
         HT = 0
         for jet in jets:
-            #HT = jet.HT
             HT += jet.pt 
             jetPhi = jet.phi
             jetEta = jet.eta
         if nJetPass > 5 and nBtagPass > 1 and HT > 500 and nMediumMuonPass == 0 and nLooseElectronPass == 0:
-            if nMuonPass == 1 and nElPass == 0: 
+            if nMuonPass == 1 and nElPass == 0:
                 for nm, muon in enumerate(muons):
                     # Save Histograms for Muon Properties
                     if not MuonPassIdx == nm: continue
                     for key , tg in self.trigLst.iteritems():
                         if "El" in key: continue
                         if trigPath[tg] == 0: continue
-                        self.h["Mu" + key + "_HT"].Fill(HT)
-                        self.h["Mu" + key + "_pt"].Fill(muon.pt)
-                        self.h["Mu" + key + "_lepEta"].Fill(muon.eta)
-                        self.h["Mu" + key + "_lepPhi"].Fill(muon.phi)
-                        self.h["Mu" + key + "_nJet"].Fill(nJetPass)
-                        self.h["Mu" + key + "_nBJet"].Fill(nBtagPass)
-                        for jet in jets:
-                            self.h["Mu" + key + "_jetEta"].Fill(jet.eta)
-                            self.h["Mu" + key + "_jetPhi"].Fill(jet.phi)
+                        if "Compare" in self.csvFile:
+                            self.evelurun.seek(0)
+                            keepEvent = True
+                            for row in self.csv_reader:
+                                if int(row[0]) == event.event and int(row[1]) == event.luminosityBlock and int(row[2]) == event.run:
+                                    keepEvent = False
+                                    break
+                            if keepEvent == False: 
+                                print("Deleting Event %d , lumi %d , run %d" %(event.event, event.luminosityBlock, event.run))
+                                continue
+                        self.h["Mu" + key + "_HTpt"].Fill(HT, muon.pt)
 
             if nMuonPass == 0 and nElPass == 1:
-                 for ne, el in enumerate(electrons):
+                for ne, el in enumerate(electrons):
                     # Save Histograms for Electron Properties
-                     if not ElPassIdx == ne: continue
-                     for key , tg in self.trigLst.iteritems():
-                         if "Mu" in key: continue
-                         if trigPath[tg] == 0: continue
-                         self.h["El" + key + "_HT"].Fill(HT)
-                         self.h["El" + key + "_pt"].Fill(el.pt)
-                         self.h["El" + key + "_lepEta"].Fill(el.eta)
-                         self.h["El" + key + "_lepPhi"].Fill(el.phi)
-                         self.h["El" + key + "_nJet"].Fill(nJetPass)
-                         self.h["El" + key + "_nBJet"].Fill(nBtagPass)
-                         for jet in jets:
-                             self.h["El" + key + "_jetEta"].Fill(jetEta)
-                             self.h["El" + key + "_jetPhi"].Fill(jetPhi)
+                    if not ElPassIdx == ne: continue
+                    for key , tg in self.trigLst.iteritems():
+                        if "Mu" in key: continue
+                        if trigPath[tg] == 0: continue
+                        if "ht" in self.csvFile:
+                            keepEvent = True
+                            self.evelurun2.seek(0)
+                            for row in self.csv_reader2:
+                                if int(row[0]) == event.event and int(row[1]) == event.luminosityBlock and int(row[2]) == event.run:
+                                    keepEvent = False
+                                    break
+                            if keepEvent == False: 
+                                print("Deleting Event %d , lumi %d , run %d" %(event.event, event.luminosityBlock, event.run))
+                                continue
+                        self.h["El" + key + "_HTpt"].Fill(HT, el.pt)
             else:
                 return False
         else:
@@ -394,7 +406,7 @@ def main(argms):
         era2017 = "17DEF"
         if argms.fileName.find("pythia") != -1 and argms.era == "17DEF": 
             era2017 = "17DEFmc"
-    elif not argms.fileName.find("Run2018") == -1:
+    elif not argms.fileName.find("Run2018") == -1 or argms.era == "18":
         trigList = getFileContents(pathToTrigLists + "2018trigList.txt", False)
         era2017 = "18data"
         if not argms.fileName.find("pythia") == -1: 
@@ -412,21 +424,20 @@ def main(argms):
     # pathToFile = argms.fileName
     # OutDir, inFile = getFileName(argms.fileName)
     # thePostFix = "_v"
+    # "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/E2B1106E-2614-3443-8516-A651A11C0DB2.root",
+    # && nVetoMuons == 0 && nVetoElectrons == 0
 
     p99 = PostProcessor(".",
                         files,
-                        #'/pnfs/iihe/cms/store/user/nistylia/Trimmed2017Data/SingleElectron/737F1D2B-E60D-E845-8BDB-A0337A3DC513.root',
-                        #'/pnfs/iihe/cms/store/user/nistylia/Trimmed2017Data/SingleElectron_Run2017B-Nano14Dec2018-v1/56259908-929E-BA45-9BB6-5456350E3B10.root',
-                        #"/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/E2B1106E-2614-3443-8516-A651A11C0DB2.root",
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && nVetoMuons == 0 && nVetoElectrons == 0 && Jet_HT > 500",
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && Jet_HT > 500",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList,
-                                              era="17C",
+                                              era=era2017,
                                               csvFile=argms.commaDelFile)],
                         # postfix=thePostFix,
                         noOut=True,
-                        histFileName="v5_HistFiles/test2.root",
+                        histFileName=pathToScriptDir + argms.outputName,
                         histDirName="plots",
                         )
 

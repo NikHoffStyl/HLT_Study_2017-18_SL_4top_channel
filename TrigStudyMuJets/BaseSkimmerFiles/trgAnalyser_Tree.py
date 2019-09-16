@@ -242,6 +242,8 @@ class TriggerStudy(Module):
         mediumMuonsPassIdx = 0
         for nm, muon in enumerate(muons):
             if (getattr(muon, "mediumId") is True) and (getattr(muon, "tightId") is False):
+                if muon.pt < 10: continue
+                if muon.pfRelIso04_all > 0.25: continue
                 nMediumMuonsPass += 1
                 mediumMuonsPassIdx = nm
             # - Check muon criteria 2017 https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
@@ -269,6 +271,7 @@ class TriggerStudy(Module):
         looseElectronsPassIdx = 0
         for ne, el in enumerate(electrons):
             if  el.mvaFall17V2Iso_WPL is True and el.mvaFall17V2Iso_WP90 is False:
+                if el.pt < 10: continue
                 nLooseElectronsPass += 1
                 looseElectronsPassIdx = ne
 
@@ -487,7 +490,7 @@ def main(argms):
     t0 = time.time()
     p99.run()
     os.system(" echo $TMPDIR ")
-    cmdString = " gfal-copy file://$TMPDIR/{0}{1}.root srm://maite.iihe.ac.be:8443{2}BaseSelectionv2_{3}/ ".format(inFile, thePostFix, OutDir, argms.era)
+    cmdString = " gfal-copy file://$TMPDIR/{0}{1}.root srm://maite.iihe.ac.be:8443{2}BaseSelectionv3_{3}/ ".format(inFile, thePostFix, OutDir, argms.era)
     os.system(cmdString)
     t1 = time.time()
     proc = os.getpid()

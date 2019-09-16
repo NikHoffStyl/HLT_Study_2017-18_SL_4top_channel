@@ -28,6 +28,8 @@ outputFILE=${FILE_OUT}${ERA}.root
 # python trgAnalyser_v2.py -fnp ${FILE_IN} -o ${outputFILE} -era ${ERA}
 python ${SKIMJOBDIR}/trgAnalyser_Hists.py -fnp ${FILE_IN} -o ${FILE_OUT} -era ${ERA} -csv_  ${CSV_FILE}
 
+# python ${SKIMJOBDIR}/trgAnalyser_2D_Hists.py -fnp ${FILE_IN} -o ${FILE_OUT} -era ${ERA} -csv_  ${CSV_FILE}
+
 #python runAnaTrigsMuJets.py -o _HTcutGenInfo -f tt_semilep102_17B
 #python runAnaTrigsMuJets.py -o _HTcutGenInfo -f tt_semilep102_17C
 #python runAnaTrigsMuJets.py -o _GenInfoV2 -f tt_semilep102_17DEF

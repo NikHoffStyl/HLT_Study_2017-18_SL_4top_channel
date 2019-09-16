@@ -38,7 +38,7 @@ def process_arguments():
                         help="Does not output a ROOT file, which contains the histograms.")
     parser.add_argument("-e", "--eventLimit", type=int, default=-1,
                         help="Set a limit to the number of events.")
-    parser.add_argument("-o", "--outputName", default="v5_HistFiles", help="Set name of output file")
+    parser.add_argument("-o", "--outputName", default="v7_HistFiles", help="Set name of output file")
     parser.add_argument("-csv_", "--commaDelFile", default="eventIDs.csv", help="Set csv output file for event, lumi and run numbers")
     args = parser.parse_args()
     return args
@@ -133,13 +133,22 @@ class TriggerStudy(Module):
         self.era = era
         self.trigLst = trigLst
         self.trigLst['no-HLT'] = "HLT_none"
-        
+        self.trigLst['no-HLT2'] = "HLT_none2"
         self.h = {}  # dictionary for histograms
 
-        #self.evelurun = open(pathToTrigLists + csvFile, 'w')
-        #self.csv_writer = csv.writer(self.evelurun, delimiter=',')
-        #self.evelurun = open(pathToTrigLists + csvFile, 'r')
-        #self.csv_writer = csv.writer(self.evelurun, delimiter=',')
+        # self.evelurun = open(pathToTrigLists + csvFile, 'w')
+        # self.csv_writer = csv.writer(self.evelurun, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        self.csvFile = csvFile
+
+        # self.evelurun = open(pathToTrigLists + csvFile, 'r')
+        # self.csv_reader = csv.reader(self.evelurun, delimiter=',')
+        # csvFile2 = csvFile.replace("smu", "sel")
+        # self.evelurun2 = open(pathToTrigLists + csvFile2, 'r')
+        # self.csv_reader2 = csv.reader(self.evelurun2, delimiter=',')
+        os.system("echo $PWD")
+        self.sffile = open(pathToScriptDir + "SF_17DEF_file.csv", 'r')
+        self.sf_reader = csv.reader(self.sffile, delimiter=',')
+
         pathToSelectionCriteria = "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets"
 
         self.selCriteria = {}
@@ -180,12 +189,23 @@ class TriggerStudy(Module):
                 self.addObject(self.h[lep + key + "_nJet"])
                 self.addObject(self.h[lep + key + "_nBJet"])
 
+                self.h[lep + key + "_HT_sfht"] =  ROOT.TH1D( "h_" + lep + "_HT_sfht_" + key, tg + " in " + lepton + "channel; H_{T} / GeVc^{-1} ;Number of Events per GeVc^{-1}", 300, 0, 3000)
+                self.h[lep + key + "_pt_sfht"] = ROOT.TH1D( "h_" + lep + "_pt_sfht_" + key, tg + " in " + lepton + "channel; Lepton p_{T} / GeVc^{-1};Number of Events per GeVc^{-1}", 300, 0, 300)
+                self.h[lep + key + "_HT_sfpt"] =  ROOT.TH1D( "h_" + lep + "_HT_sfpt_" + key, tg + " in " + lepton + "channel; H_{T} / GeVc^{-1} ;Number of Events per GeVc^{-1}", 300, 0, 3000)
+                self.h[lep + key + "_pt_sfpt"] = ROOT.TH1D( "h_" + lep + "_pt_sfpt_" + key, tg + " in " + lepton + "channel; Lepton p_{T} / GeVc^{-1};Number of Events per GeVc^{-1}", 300, 0, 300)
+                self.addObject(self.h[lep + key + "_HT_sfht"])
+                self.addObject(self.h[lep + key + "_pt_sfht"])
+                self.addObject(self.h[lep + key + "_HT_sfpt"])
+                self.addObject(self.h[lep + key + "_pt_sfpt"])
+
 
 
 
     def endJob(self):
         """end Job"""
-        #self.evelurun.close()
+        # self.evelurun.close()
+        # self.evelurun2.close()
+        self.sffile.close()
         Module.endJob(self)
 
 
@@ -214,8 +234,8 @@ class TriggerStudy(Module):
             JetPassIdx.append(nj)
             # Count b-tagged jets with DeepFlavourB algorithm at the medium working point
             # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
-            #if jet.btagDeepFlavB > 0.7489:
-            if jet.btagDeepFlavB > 0.7264:
+            if jet.btagDeepFlavB > 0.7489:
+                # if jet.btagDeepFlavB > 0.7264:
                 nBtagsPass += 1
 
         return nJetsPass, JetPassIdx, nBtagsPass
@@ -311,14 +331,32 @@ class TriggerStudy(Module):
         HT = getattr(jet2, "HT")
 
         trigPath = {}
-        for key , tg in self.trigLst.iteritems():
-            if key == "no-HLT": trigPath.update({tg: True})
-            else: 
-                if hasattr(hltObj, tg):trigPath.update({tg: getattr(hltObj, tg)})
-                else: trigPath.update({tg: False})
+        #for key , tg in self.trigLst.iteritems():
+         #   if key == "no-HLT": trigPath.update({tg: True})
+          #  else: 
+           #     if hasattr(hltObj, tg):trigPath.update({tg: getattr(hltObj, tg)})
+            #    else: trigPath.update({tg: False})
 
+        for key , tg in self.trigLst.iteritems():
+            if hasattr(hltObj, tg) and "no-HLT" not in key:
+                trigPath.update({tg: getattr(hltObj, tg)})
+                if key == "Jet":
+                    trig2 = False
+                if key == "Jet2":
+                    trig2 = True
+        if trig2 == False:
+            trigPath.update({"HLT_none2": False})
+            trigPath.update({"HLT_none": True})
+        else:
+            trigPath.update({"HLT_none": False})
+            trigPath.update({"HLT_none2": True})
         #eventLumibRun = [event.event, event.luminosityBlock, event.run]
+        # print(event.event)
+        # print(event.run)
+        # print(eventLumibRun)
+        #print("%f , %f , %f" %(event.event, event.luminosityBlock, event.run))
         #self.csv_writer.writerow(eventLumibRun)
+            
 
         # Object Criteria
         nJetPass, JetPassIdx, nBtagPass = self.jetCriteria(jets)
@@ -332,13 +370,19 @@ class TriggerStudy(Module):
             jetPhi = jet.phi
             jetEta = jet.eta
         if nJetPass > 5 and nBtagPass > 1 and HT > 500 and nMediumMuonPass == 0 and nLooseElectronPass == 0:
-            if nMuonPass == 1 and nElPass == 0: 
+            if nMuonPass == 1 and nElPass == 0:
                 for nm, muon in enumerate(muons):
                     # Save Histograms for Muon Properties
                     if not MuonPassIdx == nm: continue
                     for key , tg in self.trigLst.iteritems():
                         if "El" in key: continue
                         if trigPath[tg] == 0: continue
+                        # self.evelurun.seek(0)
+                        # keepEvent = True
+                        # for row in self.csv_reader:
+                            # if int(row[0]) == event.event and int(row[1]) == event.luminosityBlock and int(row[2]) == event.run:
+                                # keepEvent = False
+                        # if keepEvent == False: continue
                         self.h["Mu" + key + "_HT"].Fill(HT)
                         self.h["Mu" + key + "_pt"].Fill(muon.pt)
                         self.h["Mu" + key + "_lepEta"].Fill(muon.eta)
@@ -348,14 +392,30 @@ class TriggerStudy(Module):
                         for jet in jets:
                             self.h["Mu" + key + "_jetEta"].Fill(jet.eta)
                             self.h["Mu" + key + "_jetPhi"].Fill(jet.phi)
-
+                        self.sffile.seek(0)
+                        if "OR" in key:
+                            for row in self.sf_reader:
+                                if "HT" in row[0] and "Mu" in row[0]:
+                                    if HT > float(row[1]) and HT < float(row[2]):
+                                        self.h["Mu" + key + "_HT_sfht"].Fill(HT, float(row[3]))
+                                        self.h["Mu" + key + "_pt_sfht"].Fill(muon.pt , float(row[3]))
+                                if "pt" in row[0] and "Mu" in row[0]:
+                                    if muon.pt > float(row[1]) and muon.pt < float(row[2]):
+                                        self.h["Mu" + key + "_HT_sfpt"].Fill(HT , float(row[3]))
+                                        self.h["Mu" + key + "_pt_sfpt"].Fill(muon.pt , float(row[3]))
             if nMuonPass == 0 and nElPass == 1:
                 for ne, el in enumerate(electrons):
                     # Save Histograms for Electron Properties
                     if not ElPassIdx == ne: continue
                     for key , tg in self.trigLst.iteritems():
                         if "Mu" in key: continue
-                        if trigPath[tg] == 0: continue
+                        # if trigPath[tg] == 0: continue
+                        # keepEvent = True
+                        # self.evelurun2.seek(0)
+                        # for row in self.csv_reader2:
+                            # if int(row[0]) == event.event and int(row[1]) == event.luminosityBlock and int(row[2]) == event.run:
+                                # keepEvent = False
+                        # if keepEvent == False: continue
                         self.h["El" + key + "_HT"].Fill(HT)
                         self.h["El" + key + "_pt"].Fill(el.pt)
                         self.h["El" + key + "_lepEta"].Fill(el.eta)
@@ -365,6 +425,17 @@ class TriggerStudy(Module):
                         for jet in jets:
                             self.h["El" + key + "_jetEta"].Fill(jetEta)
                             self.h["El" + key + "_jetPhi"].Fill(jetPhi)
+                        self.sffile.seek(0)
+                        if "OR" in key:
+                            for row in self.sf_reader:
+                                if "HT" in row[0] and "El" in row[0]:
+                                    if HT > float(row[1]) and HT < float(row[2]):
+                                        self.h["El" + key + "_HT_sfht"].Fill(HT , float(row[3]))
+                                        self.h["El" + key + "_pt_sfht"].Fill(el.pt , float(row[3]))                      
+                                if "pt" in row[0] and "El" in row[0]:
+                                    if el.pt > float(row[1]) and el.pt < float(row[2]):
+                                        self.h["El" + key + "_HT_sfpt"].Fill(HT , float(row[3]))
+                                        self.h["El" + key + "_pt_sfpt"].Fill(el.pt , float(row[3]))
             else:
                 return False
         else:
@@ -416,11 +487,12 @@ def main(argms):
     # pathToFile = argms.fileName
     # OutDir, inFile = getFileName(argms.fileName)
     # thePostFix = "_v"
-    #"/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/E2B1106E-2614-3443-8516-A651A11C0DB2.root",
+    # "/user/nistylia/CMSSW_9_4_10/src/TopBrussels/RemoteWork/TrigStudyMuJets/E2B1106E-2614-3443-8516-A651A11C0DB2.root",
+    # && nVetoMuons == 0 && nVetoElectrons == 0
 
     p99 = PostProcessor(".",
                         files,
-                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && nVetoMuons == 0 && nVetoElectrons == 0 && Jet_HT > 500",
+                        cut="nJet > 5 && ( nMuon >0 || nElectron >0 ) && Jet_HT > 500",
                         modules=[TriggerStudy(writeHistFile=writeFile,
                                               eventLimit=argms.eventLimit,
                                               trigLst=trigList,

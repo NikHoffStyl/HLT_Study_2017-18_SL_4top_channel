@@ -14,15 +14,15 @@ def SetPlotStyle():
   r.gStyle.SetPalette(1)
 
   # set the paper & margin sizes
-  r.gStyle.SetPaperSize(20,26)
+  r.gStyle.SetPaperSize(20,26)  # 20,26 
   r.gStyle.SetPadTopMargin(0.05)
-  r.gStyle.SetPadRightMargin(0.05)
-  r.gStyle.SetPadBottomMargin(0.16)
-  r.gStyle.SetPadLeftMargin(0.16)
+  r.gStyle.SetPadRightMargin(0.05)  # 0.2  
+  r.gStyle.SetPadBottomMargin(0.16)  # 0.16
+  r.gStyle.SetPadLeftMargin(0.16)  # 0.16
 
   # set title offsets (for axis label)
-  r.gStyle.SetTitleXOffset(1.4)
-  r.gStyle.SetTitleYOffset(1.4)
+  r.gStyle.SetTitleXOffset(1.3)
+  r.gStyle.SetTitleYOffset(1.3)
 
   # use large fonts
   r.gStyle.SetTextFont(42)
@@ -43,9 +43,9 @@ def SetPlotStyle():
   # use bold lines and markers
   r.gStyle.SetMarkerStyle(20)
   r.gStyle.SetMarkerSize(1.2)
-  r.gStyle.SetHistLineWidth(2)
-  r.gStyle.SetLineStyleString(2,"[12 12]")
-  r.gStyle.SetErrorX(0.00001)
+  r.gStyle.SetHistLineWidth(5)
+  r.gStyle.SetLineStyleString(4,"[12 12]")
+  #r.gStyle.SetErrorX(0.00001)
 
   # get rid of error bar caps
   r.gStyle.SetEndErrorSize(0.)

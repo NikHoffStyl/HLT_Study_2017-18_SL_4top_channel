@@ -497,6 +497,7 @@ def findTrigRatio(h1, title, newDir):
                     h_TH1DOut[histNameNum].SetStats(0)
                     h_TH1DOut[histNameNum].Divide(h1[histNameDen])
                     xTitle = h1[histNameDen].GetXaxis().GetTitle()
+                    xTitle = xTitle.replace("/ GeVc^{-1}", " [GeV]")
                     xBinWidth = h1[histNameDen].GetXaxis().GetBinWidth(1)
                     if "Mu" in histNameDen: 
                         newxTitle = xTitle.replace("Lepton", "Muon")
@@ -634,15 +635,22 @@ def main():
     h_mcTTTTs = {}
     h_HLTcompare = {}
     h_mcTTToSemiLeps = {}
+    h_dataHTMHTs17DEF = {}
+    h_dataSMus17DEF = {}
+    h_dataSEls17DEF = {}
     h_dataHTMHTs = {}
     h_dataSMus = {}
     h_dataSEls = {}
-    # files = findEraRootFiles(path="OutFiles/Histograms_LooseMuInfo_vetoing", era="17DEF", FullPaths=True)
-    # h_mcTTTTs, h_mcTTToSemiLeps, h_dataHTMHTs, h_dataSMus, h_dataSEls = getHistograms(files, "17DEF")
+    h_dataMuHTs = {}
+    h_dataElHTs = {}
+    tr2_dataHTMHT = {}
+    tr2_dataSEl = {}
+    tr2_dataSMu = {}
+    tr2_dataMuHTs = {}
+    tr2_dataElHTs = {}
     files17B = findEraRootFiles(path=histFilesDir, era="17B", FullPaths=True)
     h_mcTTTTs17B, h_mcTTToSemiLeps17B, h_mcTTJets_DiLeps17B, h_mcTTHadronics17B, h_mcTTJets17B, h_dataHTMHTs17B, h_dataSMus17B, h_dataSEls17B = getHistograms(
         files17B, "17B", eventDIR)
-    #print(h_mcTTToSemiLeps17B["h_El_HT_El_OR_Jets"].GetName())
     files17C = findEraRootFiles(path=histFilesDir, era="17C", FullPaths=True)
     h_mcTTTTs17C, h_mcTTToSemiLeps17C, h_mcTTJets_DiLeps17C, h_mcTTHadronics17C, h_mcTTJets17C, h_dataHTMHTs17C, h_dataSMus17C, h_dataSEls17C = getHistograms(
         files17C, "17C", eventDIR)
@@ -655,90 +663,37 @@ def main():
     files17F = findEraRootFiles(path=histFilesDir, era="17F", FullPaths=True)
     h_mcTTTTs17F, h_mcTTToSemiLeps17F, h_mcTTJets_DiLeps17F, h_mcTTHadronics17F, h_mcTTJets17F, h_dataHTMHTs17F, h_dataSMus17F, h_dataSEls17F = getHistograms(
         files17F, "17F", eventDIR)
-    #print(h_mcTTToSemiLeps17B["h_El_HT_El_OR_Jets"].GetName())
 
     eventDIR.cd()
 
-    if args.inputLFN == "17B":
-        for hName in h_mcTTToSemiLeps17B:
-            h_HLTcompare[hName] = h_mcTTTTs17B[hName]
-            h_mcTTToSemiLeps[hName] = h_mcTTJets17B[hName]  # h_mcTTToSemiLeps17B[hName]
-            # h_mcTTToSemiLeps[hName].Write(hName)
-            if args.outputName == "ttsemi": h_HLTcompare[hName] = h_mcTTToSemiLeps17B[hName]
-            elif args.outputName == "ttjets": h_HLTcompare[hName] = h_mcTTJets17B[hName]
-        for hName in h_dataHTMHTs17B:
-            h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
-            h_dataSMus[hName] = h_dataSMus17B[hName]
-            h_dataSEls[hName] = h_dataSEls17B[hName]
-            # h_dataHTMHTs[hName].Write(hName)
-            # h_dataSMus[hName].Write(hName)
-            # h_dataSEls[hName].Write(hName)
-            if args.outputName == "smu": h_HLTcompare[hName] = h_dataSMus[hName]
-            elif args.outputName == "sel": h_HLTcompare[hName] = h_dataSEls[hName]
-            elif args.outputName == "ht": h_HLTcompare[hName] = h_dataHTMHTs[hName]
-    elif args.inputLFN == "17C":
-        for hName in h_mcTTToSemiLeps17C:
-            h_HLTcompare[hName] = h_mcTTTTs17C[hName]
-            h_mcTTToSemiLeps[hName] = h_mcTTJets17C[hName]  # h_mcTTToSemiLeps17C[hName]
-            h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
-            h_dataSMus[hName] = h_dataSMus17C[hName]
-            h_dataSEls[hName] = h_dataSEls17C[hName]
-            # h_mcTTToSemiLeps[hName].Write(hName)
-            # h_dataHTMHTs[hName].Write(hName)
-            # h_dataSMus[hName].Write(hName)
-            # h_dataSEls[hName].Write(hName)
-            if args.outputName == "ttsemi": h_HLTcompare[hName] = h_mcTTToSemiLeps17C[hName]
-            elif args.outputName == "ttjets": h_HLTcompare[hName] = h_mcTTJets17C[hName]
-            elif args.outputName == "smu": h_HLTcompare[hName] = h_dataSMus[hName]
-            elif args.outputName == "sel": h_HLTcompare[hName] = h_dataSEls[hName]
-            elif args.outputName == "ht": h_HLTcompare[hName] = h_dataHTMHTs[hName]
-    else:
+    for hname1 in h_dataHTMHTs17D:
+        for hname2 in h_dataHTMHTs17E:
+            if hname1 == hname2:
+                oldName = h_dataHTMHTs17D[hname1].GetName()
+                newName = oldName.replace("h_", "h_def")
+                h_dataHTMHTs17DEF[hname1] = h_dataHTMHTs17D[hname1].Clone(newName)
+                oldName = h_dataSMus17D[hname1].GetName()
+                newName = oldName.replace("h_", "h_def")
+                h_dataSMus17DEF[hname1] = h_dataSMus17D[hname1].Clone(newName)
+                oldName = h_dataSEls17D[hname1].GetName()
+                newName = oldName.replace("h_", "h_def")
+                h_dataSEls17DEF[hname1] = h_dataSEls17D[hname1].Clone(newName)
+                h_dataHTMHTs17DEF[hname1].Add(h_dataHTMHTs17E[hname1])
+                h_dataSMus17DEF[hname1].Add(h_dataSMus17E[hname1])
+                h_dataSEls17DEF[hname1].Add(h_dataSEls17E[hname1])
+                for hname3 in h_dataHTMHTs17F:
+                    if hname3 == hname1:
+                        h_dataHTMHTs17DEF[hname1].Add(h_dataHTMHTs17F[hname1])
+                        h_dataSMus17DEF[hname1].Add(h_dataSMus17F[hname1])
+                        h_dataSEls17DEF[hname1].Add(h_dataSEls17F[hname1])
 
-        for hname1 in h_dataHTMHTs17D:
-            h_HLTcompare[hname1] = h_mcTTTTs17D[hname1]
-            #print(hname1)
-            #print(h_mcTTToSemiLeps17D[hname1].GetName())
-            #h_mcTTToSemiLeps[hname1] = h_mcTTToSemiLeps17D[hname1]
-            #h_mcTTToSemiLeps[hname1].Add(h_mcTTJets_DiLeps17D[hname1])
-            #h_mcTTToSemiLeps[hname1].Add(h_mcTTHadronics17D[hname1])
-            h_mcTTToSemiLeps[hname1] = h_mcTTJets17D[hname1]
-            # eventDIR.cd()
-            # h_mcTTToSemiLeps[hname1].Write(hname1)
-            for hname2 in h_dataHTMHTs17E:
-                if hname1 == hname2:
-                    oldName = h_dataHTMHTs17D[hname1].GetName()
-                    newName = oldName.replace("h_", "h_def")
-                    h_dataHTMHTs[hname1] = h_dataHTMHTs17D[hname1].Clone(newName)
-                    oldName = h_dataSMus17D[hname1].GetName()
-                    newName = oldName.replace("h_", "h_def")
-                    h_dataSMus[hname1] = h_dataSMus17D[hname1].Clone(newName)
-                    oldName = h_dataSEls17D[hname1].GetName()
-                    newName = oldName.replace("h_", "h_def")
-                    h_dataSEls[hname1] = h_dataSEls17D[hname1].Clone(newName)
-                    h_dataHTMHTs[hname1].Add(h_dataHTMHTs17E[hname1])
-                    h_dataSMus[hname1].Add(h_dataSMus17E[hname1])
-                    h_dataSEls[hname1].Add(h_dataSEls17E[hname1])
-                    for hname3 in h_dataHTMHTs17F:
-                        if hname3 == hname1:
-                            h_dataHTMHTs[hname1].Add(h_dataHTMHTs17F[hname1])
-                            h_dataSMus[hname1].Add(h_dataSMus17F[hname1])
-                            h_dataSEls[hname1].Add(h_dataSEls17F[hname1])
-                            # h_dataHTMHTs[hName].Add(h_dataHTMHTs17D[hName], h_dataHTMHTs17E[hName], 1, 1)
-                            # h_dataSMus[hName].Add(h_dataSMus17D[hName], h_dataSMus17E[hName], 1, 1)
-                            # h_dataSEls[hName].Add(h_dataSEls17D[hName], h_dataSEls17E[hName], 1, 1)
-            if args.outputName == "ttsemi": h_HLTcompare[hname1] = h_mcTTToSemiLeps[hname1]
-            elif args.outputName == "ttjets": h_HLTcompare[hname1] = h_mcTTJets17D[hname1]
-            elif args.outputName == "smu": h_HLTcompare[hname1] = h_dataSMus[hname1]
-            elif args.outputName == "sel": h_HLTcompare[hname1] = h_dataSEls[hname1]
-            elif args.outputName == "ht": h_HLTcompare[hname1] = h_dataHTMHTs[hname1]
-    print("1 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
-    h_dataMuHTs17B = {} # h_dataHTMHTs17B
-    h_dataElHTs17B ={} #  h_dataHTMHTs17B
-    h_dataMuHTs17C ={} #  h_dataHTMHTs17C
-    h_dataElHTs17C ={} #  h_dataHTMHTs17C
-    h_dataMuHTs17DEF ={} #  h_dataHTMHTs
-    h_dataElHTs17DEF ={} #  h_dataHTMHTs
-    print("3 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
+    h_dataMuHTs17B = {} 
+    h_dataElHTs17B ={} 
+    h_dataMuHTs17C ={} 
+    h_dataElHTs17C ={} 
+    h_dataMuHTs17DEF ={}
+    h_dataElHTs17DEF ={} 
+    #print("3 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
     for hName in h_dataSMus17B:
         oldName = h_dataHTMHTs17B[hName].GetName()
         newName = oldName.replace("h_", "h_muhtB")
@@ -748,7 +703,7 @@ def main():
         h_dataElHTs17B[hName] = h_dataHTMHTs17B[hName].Clone(newName)
         h_dataMuHTs17B[hName].Add(h_dataSMus17B[hName])
         h_dataElHTs17B[hName].Add(h_dataSEls17B[hName])
-    print("4 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
+    #print("4 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
     for hName in h_dataSMus17C:
         oldName = h_dataHTMHTs17C[hName].GetName()
         newName = oldName.replace("h_", "h_muhtC")
@@ -756,24 +711,19 @@ def main():
         oldName = h_dataHTMHTs17C[hName].GetName()
         newName = oldName.replace("h_", "h_elhtC")
         h_dataElHTs17C[hName] = h_dataHTMHTs17C[hName].Clone(newName)
-        print(hName + "2 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
         h_dataMuHTs17C[hName].Add(h_dataSMus17C[hName])
         h_dataElHTs17C[hName].Add(h_dataSEls17C[hName])
-    print("2 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
-    for hName in h_dataSMus:
-        oldName = h_dataHTMHTs[hName].GetName()
+    #print("2 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
+    for hName in h_dataSMus17DEF:
+        oldName = h_dataHTMHTs17DEF[hName].GetName()
         newName = oldName.replace("h_", "h_muhtDEF")
-        h_dataMuHTs17DEF[hName] = h_dataHTMHTs[hName].Clone(newName)
-        oldName = h_dataHTMHTs[hName].GetName()
+        h_dataMuHTs17DEF[hName] = h_dataHTMHTs17DEF[hName].Clone(newName)
+        oldName = h_dataHTMHTs17DEF[hName].GetName()
         newName = oldName.replace("h_", "h_elhtDEF")
-        h_dataElHTs17DEF[hName] = h_dataHTMHTs[hName].Clone(newName)
-        h_dataMuHTs17DEF[hName].Add(h_dataSMus[hName])
-        h_dataElHTs17DEF[hName].Add(h_dataSEls[hName])
-    print("5 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
-
-    #  - Find efficiency ratio histogram dictionaries
-    hltCompareTitle = "No title"
-    tr_HLTcompare, tr2_HLTcompare = findTrigRatio(h_HLTcompare, hltCompareTitle, effDIR)
+        h_dataElHTs17DEF[hName] = h_dataHTMHTs17DEF[hName].Clone(newName)
+        h_dataMuHTs17DEF[hName].Add(h_dataSMus17DEF[hName])
+        h_dataElHTs17DEF[hName].Add(h_dataSEls17DEF[hName])
+    #print("5 h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
 
     tr_mcTTTT_B, tr2_mcTTTT_B = findTrigRatio(h_mcTTTTs17B, "Four Top MC 17B", effDIR)
     tr_mcTTToSemiLep_B, tr2_mcTTToSemiLep_B = findTrigRatio(h_mcTTJets17B, "Top-AntiTop MC 17B", effDIR)
@@ -793,9 +743,9 @@ def main():
 
     tr_mcTTTT, tr2_mcTTTT = findTrigRatio(h_mcTTTTs17D, "Four Top MC", effDIR)
     tr_mcTTToSemiLep, tr2_mcTTToSemiLep = findTrigRatio(h_mcTTJets17D, "Top-AntiTop MC", effDIR)
-    tr_dataHTMHT, tr2_dataHTMHT = findTrigRatio(h_dataHTMHTs, "HTMHT Data", effDIR)
-    tr_dataSMu, tr2_dataSMu = findTrigRatio(h_dataSMus, "Single Muon Data", effDIR)
-    tr_dataSEl, tr2_dataSEl = findTrigRatio(h_dataSEls, "Single Electron Data", effDIR)
+    tr_dataHTMHT_DEF, tr2_dataHTMHT_DEF = findTrigRatio(h_dataHTMHTs17DEF, "HTMHT Data", effDIR)
+    tr_dataSMu_DEF, tr2_dataSMu_DEF = findTrigRatio(h_dataSMus17DEF, "Single Muon Data", effDIR)
+    tr_dataSEl_DEF, tr2_dataSEl_DEF = findTrigRatio(h_dataSEls17DEF, "Single Electron Data", effDIR)
     tr_dataMuHTs17DEF, tr2_dataMuHTs17DEF = findTrigRatio(h_dataMuHTs17DEF, "All Data", effDIR)
     tr_dataElHTs17DEF, tr2_dataElHTs17DEF = findTrigRatio(h_dataElHTs17DEF, "All Data", effDIR)
 
@@ -813,11 +763,100 @@ def main():
     s_dataMuHTs17C, hNamesHTMu_C = scaleFactor(tr_dataMuHTs17C, tr_mcTTToSemiLep_C, "All Data", args.inputLFN, sfDIR)
     s_dataElHTs17C, hNamesHTEl_C = scaleFactor(tr_dataElHTs17C, tr_mcTTToSemiLep_C, "All Data 17C", args.inputLFN, sfDIR)
 
-    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT, tr_mcTTToSemiLep, "HTMHT Data", args.inputLFN, sfDIR)
-    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu, tr_mcTTToSemiLep, "Single Muon Data", args.inputLFN, sfDIR)
-    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN, sfDIR)
+    s_HTMHT, hNames = scaleFactor(tr_dataHTMHT_DEF, tr_mcTTToSemiLep, "HTMHT Data", args.inputLFN, sfDIR)
+    s_dataSMu, hNamesMu = scaleFactor(tr_dataSMu_DEF, tr_mcTTToSemiLep, "Single Muon Data", args.inputLFN, sfDIR)
+    s_dataSEl, hNamesEl = scaleFactor(tr_dataSEl_DEF, tr_mcTTToSemiLep, "Single Electron Data", args.inputLFN, sfDIR)
     s_dataMuHTs17DEF, hNamesHTMu_DEF = scaleFactor(tr_dataMuHTs17DEF, tr_mcTTToSemiLep, "All Data", args.inputLFN, sfDIR)
     s_dataElHTs17DEF, hNamesHTEl_DEF = scaleFactor(tr_dataElHTs17DEF, tr_mcTTToSemiLep, "All Data", args.inputLFN, sfDIR)
+
+    effDIR.cd()
+
+    if args.inputLFN == "17B":
+        for hName in h_mcTTToSemiLeps17B:
+            h_HLTcompare[hName] = h_mcTTTTs17B[hName]
+            if args.outputName == "ttsemi": h_HLTcompare[hName] = h_mcTTToSemiLeps17B[hName]
+            elif args.outputName == "ttjets": h_HLTcompare[hName] = h_mcTTJets17B[hName]
+            h_mcTTToSemiLeps[hName] = h_mcTTJets17B[hName]
+            # h_mcTTToSemiLeps[hName].Write(hName)
+        for hName in h_dataHTMHTs17B:
+            h_dataHTMHTs[hName] = h_dataHTMHTs17B[hName]
+            h_dataSMus[hName] = h_dataSMus17B[hName]
+            h_dataSEls[hName] = h_dataSEls17B[hName]
+            h_dataMuHTs[hName] = h_dataMuHTs17B[hName]
+            h_dataElHTs[hName] = h_dataElHTs17B[hName]
+            if "no-HLT" not in hName:
+                tr2_dataHTMHT[hName] = tr2_dataHTMHT_B[hName]
+                tr2_dataSEl[hName] = tr2_dataSEl_B[hName]
+                tr2_dataSMu[hName] = tr2_dataSMu_B[hName]
+                tr2_dataMuHTs[hName] = tr2_dataMuHTs17B[hName]
+                tr2_dataElHTs[hName] = tr2_dataElHTs17B[hName]
+            # h_dataHTMHTs[hName].Write(hName)
+            # h_dataSMus[hName].Write(hName)
+            # h_dataSEls[hName].Write(hName)
+            if args.outputName == "smu": h_HLTcompare[hName] = h_dataSMus17B[hName]
+            elif args.outputName == "sel": h_HLTcompare[hName] = h_dataSEls17B[hName]
+            elif args.outputName == "ht": h_HLTcompare[hName] = h_dataHTMHTs17B[hName]
+            elif args.outputName == "htel": h_HLTcompare[hName] = h_dataElHTs17B[hName]
+            elif args.outputName == "htmu": h_HLTcompare[hName] = h_dataMuHTs17B[hName]
+    elif args.inputLFN == "17C":
+        for hName in h_mcTTToSemiLeps17C:
+            h_HLTcompare[hName] = h_mcTTTTs17C[hName]
+            h_mcTTToSemiLeps[hName] = h_mcTTJets17C[hName]
+            h_dataHTMHTs[hName] = h_dataHTMHTs17C[hName]
+            h_dataSMus[hName] = h_dataSMus17C[hName]
+            h_dataSEls[hName] = h_dataSEls17C[hName]
+            h_dataMuHTs[hName] = h_dataMuHTs17C[hName]
+            h_dataElHTs[hName] = h_dataElHTs17C[hName]
+            if "no-HLT" not in hName:
+                tr2_dataHTMHT[hName] = tr2_dataHTMHT_C[hName]
+                tr2_dataSEl[hName] = tr2_dataSEl_C[hName]
+                tr2_dataSMu[hName] = tr2_dataSMu_C[hName]
+                tr2_dataMuHTs[hName] = tr2_dataMuHTs17C[hName]
+                tr2_dataElHTs[hName] = tr2_dataElHTs17C[hName]
+            # h_mcTTToSemiLeps[hName].Write(hName)
+            # h_dataHTMHTs[hName].Write(hName)
+            # h_dataSMus[hName].Write(hName)
+            # h_dataSEls[hName].Write(hName)
+            if args.outputName == "ttsemi": h_HLTcompare[hName] = h_mcTTToSemiLeps17C[hName]
+            elif args.outputName == "ttjets": h_HLTcompare[hName] = h_mcTTJets17C[hName]
+            elif args.outputName == "smu": h_HLTcompare[hName] = h_dataSMus17C[hName]
+            elif args.outputName == "sel": h_HLTcompare[hName] = h_dataSEls17C[hName]
+            elif args.outputName == "ht": h_HLTcompare[hName] = h_dataHTMHTs17C[hName]
+            elif args.outputName == "htel": h_HLTcompare[hName] = h_dataElHTs17C[hName]
+            elif args.outputName == "htmu": h_HLTcompare[hName] = h_dataMuHTs17C[hName]
+    else:
+
+        for hName in h_dataHTMHTs17DEF:
+            h_HLTcompare[hName] = h_mcTTTTs17D[hName]
+            #print(hName)
+            #print(h_mcTTToSemiLeps17D[hName].GetName())
+            #h_mcTTToSemiLeps[hName] = h_mcTTToSemiLeps17D[hName]
+            #h_mcTTToSemiLeps[hName].Add(h_mcTTJets_DiLeps17D[hName])
+            #h_mcTTToSemiLeps[hName].Add(h_mcTTHadronics17D[hName])
+            h_mcTTToSemiLeps[hName] = h_mcTTJets17D[hName]
+            # h_mcTTToSemiLeps[hName].Write(hName)
+            h_dataHTMHTs[hName] = h_dataHTMHTs17DEF[hName]
+            h_dataSMus[hName] = h_dataSMus17DEF[hName]
+            h_dataSEls[hName] = h_dataSEls17DEF[hName]
+            h_dataMuHTs[hName] = h_dataMuHTs17DEF[hName]
+            h_dataElHTs[hName] = h_dataElHTs17DEF[hName]
+            if "no-HLT" not in hName:
+                tr2_dataHTMHT[hName] = tr2_dataHTMHT_DEF[hName]
+                tr2_dataSEl[hName] = tr2_dataSEl_DEF[hName]
+                tr2_dataSMu[hName] = tr2_dataSMu_DEF[hName]
+                tr2_dataMuHTs[hName] = tr2_dataMuHTs17DEF[hName]
+                tr2_dataElHTs[hName] = tr2_dataElHTs17DEF[hName]
+            if args.outputName == "ttsemi": h_HLTcompare[hName] = h_mcTTToSemiLeps[hName]
+            elif args.outputName == "ttjets": h_HLTcompare[hName] = h_mcTTJets17D[hName]
+            elif args.outputName == "smu": h_HLTcompare[hName] = h_dataSMus17DEF[hName]
+            elif args.outputName == "sel": h_HLTcompare[hName] = h_dataSEls17DEF[hName]
+            elif args.outputName == "ht": h_HLTcompare[hName] = h_dataHTMHTs17DEF[hName]
+            elif args.outputName == "htel": h_HLTcompare[hName] = h_dataElHTs17DEF[hName]
+            elif args.outputName == "htmu": h_HLTcompare[hName] = h_dataMuHTs17DEF[hName]
+
+    #  - Find efficiency ratio histogram dictionaries
+    hltCompareTitle = "HLT comparison" + args.inputLFN
+    tr_HLTcompare, tr2_HLTcompare = findTrigRatio(h_HLTcompare, hltCompareTitle, effDIR)
 
     #    ROOT.gStyle.SetOptTitle(0)
     #    ROOT.gStyle.SetOptStat(0)
@@ -829,16 +868,18 @@ def main():
 
     # - Create text for legend
     # legString = cmsPlotString(arg.inputLFN)
-    t1 = ROOT.TPaveText(0.2, 0.95, 0.93, 1, "nbNDC")
+    t1 = ROOT.TPaveText(0.18, 0.95, 0.93, 1, "nbNDC")
     t1.SetFillColorAlpha(0, 0.9)
     t1.SetTextSize(0.03)
     if args.outputName == "ttsemi": t1.AddText("#bf{CMS Preliminary}                                #sigma(t#bar{t}) = 374 pb (13TeV)")
     elif args.outputName == "ttjets": t1.AddText("#bf{CMS Preliminary}                                #sigma(t#bar{t}) = 831 pb (13TeV)")
-    elif args.outputName == "smu": t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1}(13TeV)")
-    elif args.outputName == "sel": t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1}(13TeV)")
-    elif args.outputName == "ht":  t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1}(13TeV)")
+    elif args.outputName == "smu": t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1} (13TeV)")
+    elif args.outputName == "sel": t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1} (13TeV)")
+    elif args.outputName == "htmu": t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1} (13TeV)")
+    elif args.outputName == "htel": t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1} (13TeV)")
+    elif args.outputName == "ht":  t1.AddText("#bf{CMS Preliminary}    " + runName + "    " + inLumi + " fb^{-1} (13TeV)")
     else: t1.AddText("#bf{CMS Preliminary}                           #sigma(t#bar{t}t#bar{t}) = 9.2 fb (13TeV)")
-    t2 = ROOT.TPaveText(0.2, 0.95, 0.93, 1, "nbNDC")
+    t2 = ROOT.TPaveText(0.18, 0.95, 0.93, 1, "nbNDC")
     t2.SetFillColorAlpha(0, 0.9)
     t2.SetTextSize(0.03)
     t2.AddText(legString)
@@ -860,10 +901,13 @@ def main():
             n_count += 1
             print(n_count)
             cv3[n_count] = triggerCanvas.cd(1)
-            if "lep" in xAxis: legend[n_count] = ROOT.TLegend(0.55, 0.16, 0.95, 0.58)
-            else: legend[n_count] = ROOT.TLegend(0.55, 0.53, 0.95, 0.95)
+            legend[n_count] = ROOT.TLegend(0.55, 0.53, 0.95, 0.95)
+            #if "lep" in xAxis: 
+            legend[n_count] = ROOT.TLegend(0.2, 0.8, 0.95, 0.95)
+            legend[n_count].SetNColumns(2)
             histName = "h_" + channel + xAxis + "no-HLT"
             # h_HLTcompare[histName].Scale(1)
+            histEntries = h_HLTcompare[histName].GetEntries()
             for i in range(0, 17):
                 binWidth = h_HLTcompare[histName].GetXaxis().GetBinWidth(i)
                 binContent = h_HLTcompare[histName].GetBinContent(i)
@@ -871,17 +915,20 @@ def main():
                 h_HLTcompare[histName].SetBinContent(i, newBinContent)
             #h_HLTcompare[histName].SetLineWidth(3)
             h_HLTcompare[histName].SetLineColor(1)
-            h_HLTcompare[histName].GetXaxis().SetTitleOffset(1.4)
+            h_HLTcompare[histName].GetXaxis().SetTitleOffset(1.3)
             xTitle = h_HLTcompare[histName].GetXaxis().GetTitle()
+            xTitle = xTitle.replace("/ GeVc^{-1}", " [GeV]")
+            yTitle = h_HLTcompare[histName].GetYaxis().GetTitle()
+            yTitle = yTitle.replace("GeVc^{-1}", "GeV")
+            h_HLTcompare[histName].GetYaxis().SetTitle(yTitle)
+            maxYs = h_HLTcompare[histName].GetMaximum()
+            h_HLTcompare[histName].SetMaximum(1.3 * maxYs)
             if "Mu" in histName: 
                 newxTitle = xTitle.replace("Lepton", "Muon")
-                #if "lep" in xAxis: newxTitle = xTitle.replace("Jet", "Muon")
                 h_HLTcompare[histName].GetXaxis().SetTitle(newxTitle)
             elif "El" in histName: 
                 newxTitle = xTitle.replace("Lepton", "Electron")
-                #if "lep" in xAxis: newxTitle = xTitle.replace("Jet", "Electron")
                 h_HLTcompare[histName].GetXaxis().SetTitle(newxTitle)
-            # h_HLTcompare[histName].GetYaxis().SetTitleOffset(1.4)
             h_HLTcompare[histName].SetLabelFont(42,"x")
             h_HLTcompare[histName].SetTitleFont(42,"x")
             h_HLTcompare[histName].SetLabelFont(42,"y")
@@ -893,10 +940,11 @@ def main():
             h_HLTcompare[histName].SetLabelSize(0.04,"y")
             h_HLTcompare[histName].SetTitleSize(0.04,"y")
             h_HLTcompare[histName].Draw("hist")
-            histEntries = h_HLTcompare[histName].GetEntries()
-            if xAxis == "nBJet_": h_HLTcompare[histName].GetXaxis().SetRangeUser(2, 10)
-            elif xAxis == "nJet_": h_HLTcompare[histName].GetXaxis().SetRangeUser(6, 20)
-            elif xAxis == "HT_": h_HLTcompare[histName].GetXaxis().SetRangeUser(400, 3000)
+            if xAxis == "nBJet_": h_HLTcompare[histName].GetXaxis().SetRangeUser(0, 7)
+            elif xAxis == "nJet_": h_HLTcompare[histName].GetXaxis().SetRangeUser(6, 14)
+            elif xAxis == "lepEta_": h_HLTcompare[histName].GetXaxis().SetRangeUser(-4, 4)
+            elif xAxis == "lepPhi_": h_HLTcompare[histName].GetXaxis().SetRangeUser(-4, 4)
+            elif xAxis == "HT_": h_HLTcompare[histName].GetXaxis().SetRangeUser(0, 3000)
             legEntry = "Baseline (%d)" % histEntries
             legend[n_count].AddEntry(h_HLTcompare[histName], legEntry, 'l')
             # legend[n_count].AddEntry(histName, legEntry, 'l')
@@ -906,6 +954,7 @@ def main():
                 if (channel == "El_") and ("Mu" in hlt): continue
                 if (channel == "Mu_") and ("El" in hlt): continue
                 histName = "h_" + channel + xAxis + hlt
+                histEntries = h_HLTcompare[histName].GetEntries()                
                 for i in range(0, 17):
                     binWidth = h_HLTcompare[histName].GetXaxis().GetBinWidth(i)
                     binContent = h_HLTcompare[histName].GetBinContent(i)
@@ -916,7 +965,6 @@ def main():
                 elif "CROSS" in histName: h_HLTcompare[histName].SetLineColor(8)
                 # if "Mu_OR_Jets" not in hlt: 
                 h_HLTcompare[histName].Draw("hist same")
-                histEntries = h_HLTcompare[histName].GetEntries()
                 legEntry = hlt.replace("El_", "e^{#pm} ")
                 legEntry = legEntry.replace("Mu_", "#mu^{#pm} ")
                 legEntry = legEntry.replace("Jets", "")
@@ -925,7 +973,6 @@ def main():
                 legEntry = legEntry.replace("Muon", "#mu^{#pm}  ")
                 legEntry = legEntry.replace("_", " ")
                 legEntry = legEntry + " HLT (%d)" % histEntries
-                #legend[n_count].AddEntry(histName, legEntry, 'l')
                 legend[n_count].AddEntry(h_HLTcompare[histName], legEntry, 'l')
                 colourL += 2
             t1.Draw("same")
@@ -934,47 +981,56 @@ def main():
                 legend[n_count].SetHeader(legHeader, "C")
             elif args.outputName == "smu": legend[n_count].SetHeader("#bf{SingleMuon Samples after:}", "C")
             elif args.outputName == "sel": legend[n_count].SetHeader("#bf{SingleElectron Samples after:}", "C")
+            elif args.outputName == "htmu": legend[n_count].SetHeader("#bf{#mu + jets Samples after:}", "C")
+            elif args.outputName == "htel": legend[n_count].SetHeader("#bf{e + jets Samples after:}", "C")
             elif args.outputName == "ht": legend[n_count].SetHeader("#bf{HTMHT Samples after:}", "C")
             else: 
                 legHeader = "#bf{t#bar{t}t#bar{t} MC with " + runName + " HLTs}"
                 legend[n_count].SetHeader(legHeader, "C")
             legend[n_count].Draw("same")
             triggerCanvas.Print(args.imageName + channel + xAxis + "ttttEv.png", "png")
-            
-            print("h_El_HT_El_OR_Jets %d" % h_dataHTMHTs["h_El_HT_El_OR_Jets"].GetEntries())
 
             cv4[n_count] = triggerCanvas.cd(1)
             colourM = 2
             # ROOT.gStyle.SetErrorX(0.0001)
-            legend2[n_count] = ROOT.TLegend(0.5, 0.16, 0.95, 0.5)
+            #legend2[n_count] = ROOT.TLegend(0.5, 0.16, 0.95, 0.5)
+            legend2[n_count] = ROOT.TLegend(0.3, 0.8, 0.95, 0.95)
+            #legend2[n_count].SetFillColorAlpha(0, 0.9)
+            #legend2[n_count].SetBorderSize(0)
+            legend2[n_count].SetNColumns(2)
             nhlt = 0
             for hlt in hltTypes:
                 if hlt == "Mu_CROSS_Jets" and args.inputLFN == "17B": continue
                 if (channel == "El_") and ("Mu" in hlt): continue
                 if (channel == "Mu_") and ("El" in hlt): continue
                 histName = "h_" + channel + xAxis + hlt
-                tr2_mcTTTT[histName].SetMarkerColor(colourM)
-                tr2_mcTTTT[histName].SetLineColor(colourM)
+                tr2_HLTcompare[histName].SetMarkerColor(colourM)
+                tr2_HLTcompare[histName].SetLineColor(colourM)
                 if "OR" in histName:
-                    tr2_mcTTTT[histName].SetMarkerColor(6)
-                    tr2_mcTTTT[histName].SetLineColor(6)
+                    tr2_HLTcompare[histName].SetMarkerColor(6)
+                    tr2_HLTcompare[histName].SetLineColor(6)
                 elif "CROSS" in histName:
-                    tr2_mcTTTT[histName].SetMarkerColor(8)
-                    tr2_mcTTTT[histName].SetLineColor(8)
-                tr2_mcTTTT[histName].SetMarkerStyle(20)
-                tr2_mcTTTT[histName].SetMarkerSize(1.2)
+                    tr2_HLTcompare[histName].SetMarkerColor(8)
+                    tr2_HLTcompare[histName].SetLineColor(8)
+                tr2_HLTcompare[histName].SetMarkerStyle(20)
+                tr2_HLTcompare[histName].SetMarkerSize(1.2)
                 if nhlt == 0:
-                    tr2_mcTTTT[histName].Draw()
+                    tr2_HLTcompare[histName].Draw()
                     cv4[n_count].Update()
-                    graph1 = tr2_mcTTTT[histName].GetPaintedGraph()
+                    graph1 = tr2_HLTcompare[histName].GetPaintedGraph()
                     graph1.SetMinimum(0)
-                    graph1.SetMaximum(1.2)
+                    graph1.SetMaximum(1.4)
+                    if xAxis == "nBJet_": graph1.GetXaxis().SetRangeUser(0, 7)
+                    elif xAxis == "nJet_": graph1.GetXaxis().SetRangeUser(6, 14)
+                    elif xAxis == "lepEta_": graph1.GetXaxis().SetRangeUser(-4, 4)
+                    elif xAxis == "lepPhi_": graph1.GetXaxis().SetRangeUser(-4, 4)
+                    elif xAxis == "HT_": graph1.GetXaxis().SetRangeUser(0, 3000)
                     # graph1.GetXaxis().SetLabelSize(0.05)
                     cv4[n_count].Update()
-                    histEntries = h_HLTcompare[histName].GetEntries()                    
+                    histEntries = h_HLTcompare[histName].GetEntries()
                     nhlt += 1
                 else:
-                    tr2_mcTTTT[histName].Draw("same")
+                    tr2_HLTcompare[histName].Draw("same")
                     histEntries = h_HLTcompare[histName].GetEntries()
                 effname = histName.replace("h_", "h_eff2")
                 legEntry = hlt.replace("El_", "e^{#pm} ")
@@ -985,8 +1041,7 @@ def main():
                 legEntry = legEntry.replace("Muon", "#mu^{#pm}  ")
                 legEntry = legEntry.replace("_", " ")
                 legEntry = legEntry + " HLT"
-                #legend2[n_count].AddEntry(effname, legEntry, "lep")
-                legend2[n_count].AddEntry(h_HLTcompare[histName], legEntry, "lep")
+                legend2[n_count].AddEntry(tr2_HLTcompare[histName], legEntry, "lep")
                 colourM += 2
             t1.Draw("same")
             #legend2[n_count].SetHeader("#bf{t#bar{t} inclusive MC after:}", "C")
@@ -998,6 +1053,8 @@ def main():
             elif args.outputName == "smu": legend2[n_count].SetHeader("#bf{SingleMuon Samples after:}", "C")
             elif args.outputName == "sel": legend2[n_count].SetHeader("#bf{SingleElectron Samples after:}", "C")
             elif args.outputName == "ht": legend2[n_count].SetHeader("#bf{HTMHT Samples after:}", "C")
+            elif args.outputName == "htmu": legend2[n_count].SetHeader("#bf{#mu + jets Samples after:}", "C")
+            elif args.outputName == "htel": legend2[n_count].SetHeader("#bf{e + jets Samples after:}", "C")
             else: 
                 legHeader = "#bf{t#bar{t}t#bar{t} MC with " + runName + " HLTs}"
                 legend2[n_count].SetHeader(legHeader, "C")
@@ -1023,6 +1080,8 @@ def main():
         print(">>>>>>>  {0}".format(hName))
         cv0[n_count] = triggerCanvas.cd(1)
         legend3[n_count] = ROOT.TLegend(0.55, 0.55, 0.95, 0.95)
+        legend3[n_count] = ROOT.TLegend(0.5, 0.85, 0.95, 0.95)
+        legend3[n_count].SetNColumns(2)
         histEntries = h_mcTTToSemiLeps[hName].GetEntries()
         histEntriesSMu = h_dataSMus[hName].GetEntries()
         histEntriesHT = h_dataHTMHTs[hName].GetEntries()
@@ -1046,12 +1105,22 @@ def main():
             h_dataSEls[hName].SetBinContent(i, newBinContent)
 
         maxYs = getMaxY([h_mcTTToSemiLeps[hName], h_dataSMus[hName], h_dataHTMHTs[hName], h_dataSEls[hName]])
-        h_mcTTToSemiLeps[hName].SetMaximum(maxYs + 100)
+        h_mcTTToSemiLeps[hName].SetMaximum(maxYs + 0.3 * maxYs)
         h_mcTTToSemiLeps[hName].SetLineColor(1)
+        xTitle = h_mcTTToSemiLeps[hName].GetXaxis().GetTitle()
+        xTitle = xTitle.replace("/ GeVc^{-1}", " [GeV]")
+        if "Mu" in hName:
+            xTitle = xTitle.replace("Lepton", "Muon")
+        elif "El" in histName:
+            xTitle = xTitle.replace("Lepton", "Electron")
+        h_mcTTToSemiLeps[hName].GetXaxis().SetTitle(newxTitle)
         h_mcTTToSemiLeps[hName].Draw("hist")
+        if "nBJet_" in hName: h_mcTTToSemiLeps[hName].GetXaxis().SetRangeUser(0, 7)
+        elif "nJet_" in hName: h_mcTTToSemiLeps[hName].GetXaxis().SetRangeUser(6, 14)
+        elif "lepEta_" in hName: h_mcTTToSemiLeps[hName].GetXaxis().SetRangeUser(-4, 4)
+        elif "lepPhi_" in hName: h_mcTTToSemiLeps[hName].GetXaxis().SetRangeUser(-4, 4)
+        elif "HT_" in hName: h_mcTTToSemiLeps[hName].GetXaxis().SetRangeUser(0, 3000)
         h_mcTTToSemiLeps[hName].SetTitle("t#bar{t} pair MC (%d)" % histEntries)
-        newName = h_mcTTToSemiLeps[hName].GetName()
-        # print(newName)
         legend3[n_count].AddEntry(h_mcTTToSemiLeps[hName], "t#bar{t} pair MC (%d)" % histEntries, 'l')
 
         h_dataHTMHTs[hName].SetLineColor(4)
@@ -1062,30 +1131,48 @@ def main():
         # histEntries = h_dataHTMHTs[hName].GetEntries()
         h_dataHTMHTs[hName].SetTitle("HTMHT Data (%d)" % histEntriesHT)
         newName = h_dataHTMHTs[hName].GetName()
-        legend3[n_count].AddEntry(h_dataHTMHTs[hName], "HTMHT Data (%d)" % histEntriesHT, 'lep')
+        # legend3[n_count].AddEntry(h_dataHTMHTs[hName], "HTMHT Data (%d)" % histEntriesHT, 'lep')
 
         if hName.find("Mu") != -1:
             legend3[n_count].SetHeader("#bf{#mu^{#pm} + jets  selection}", "C")
+
+            h_dataMuHTs[hName].SetLineColor(2)
+            h_dataMuHTs[hName].SetMarkerStyle(20)
+            h_dataMuHTs[hName].SetMarkerColor(2)
+            h_dataMuHTs[hName].SetMarkerSize(1.2)
+            h_dataMuHTs[hName].Draw('E X0 same')
+            # histEntries = h_dataMuHTs[hName].GetEntries()
+            h_dataMuHTs[hName].SetTitle("Data (%d) " % histEntriesSMu)
+            legend3[n_count].AddEntry(h_dataMuHTs[hName], "Data (%d) " % histEntriesSMu, 'lep')
+
             h_dataSMus[hName].SetLineColor(2)
             h_dataSMus[hName].SetMarkerStyle(20)
             h_dataSMus[hName].SetMarkerColor(2)
             h_dataSMus[hName].SetMarkerSize(1.2)
-            h_dataSMus[hName].Draw('E0 X0 same')
+            # h_dataSMus[hName].Draw('E X0 same')
             # histEntries = h_dataSMus[hName].GetEntries()
             h_dataSMus[hName].SetTitle("Single Muon Data (%d) " % histEntriesSMu)
-            newName = h_dataSMus[hName].GetName()
-            legend3[n_count].AddEntry(h_dataSMus[hName], "Single Muon Data (%d) " % histEntriesSMu, 'lep')
+            # legend3[n_count].AddEntry(h_dataSMus[hName], "Single Muon Data (%d) " % histEntriesSMu, 'lep')
         elif hName.find("El") != -1: 
             legend3[n_count].SetHeader("#bf{e^{#pm} + jets  selection}", "C")
+            h_dataElHTs[hName].SetLineColor(2)
+            h_dataElHTs[hName].SetMarkerStyle(20)
+            h_dataElHTs[hName].SetMarkerColor(2)
+            h_dataElHTs[hName].SetMarkerSize(1.2)
+            h_dataElHTs[hName].Draw('E X0 same')
+            # histEntries = h_h_dataElHTs[hName].GetEntries()
+            h_dataElHTs[hName].SetTitle("Data (%d)" % histEntriesSEl)
+            legend3[n_count].AddEntry(h_dataElHTs[hName], "Data (%d)" % histEntriesSEl, 'lep')
+
             h_dataSEls[hName].SetLineColor(2)
             h_dataSEls[hName].SetMarkerStyle(20)
             h_dataSEls[hName].SetMarkerColor(2)
             h_dataSEls[hName].SetMarkerSize(1.2)
-            h_dataSEls[hName].Draw('E0 X0 same')
+            #h_dataSEls[hName].Draw('E X0 same')
             # histEntries = h_dataSEls[hName].GetEntries()
             h_dataSEls[hName].SetTitle("Single Electron Data (%d)" % histEntriesSEl)
-            newName = h_dataSEls[hName].GetName()
-            legend3[n_count].AddEntry(h_dataSEls[hName], "Single Electron Data (%d)" % histEntriesSEl, 'lep')
+            #legend3[n_count].AddEntry(h_dataSEls[hName], "Single Electron Data (%d)" % histEntriesSEl, 'lep')
+
 
         t2.Draw("same")
         legend3[n_count].Draw("same")
@@ -1097,54 +1184,61 @@ def main():
         ####################################
         cv1[n_count] = triggerCanvas.cd(1)
         legend4[n_count] = ROOT.TLegend(0.5, 0.16, 0.95, 0.5)
+        legend4[n_count] = ROOT.TLegend(0.56, 0.85, 0.95, 0.95)
+        legend4[n_count].SetNColumns(2)
         tr2_mcTTToSemiLep[hName].SetLineColor(1)
         tr2_mcTTToSemiLep[hName].Draw()
         newName = tr2_mcTTToSemiLep[hName].GetName()
-        legend4[n_count].AddEntry(newName, "t#bar{t} pair MC", 'le')
+        legend4[n_count].AddEntry(newName, "t#bar{t} pair MC", 'lep')
         cv1[n_count].Update()
         graph1 = tr2_mcTTToSemiLep[hName].GetPaintedGraph()
         graph1.SetMinimum(0)
-        graph1.SetMaximum(1.2)
+        graph1.SetMaximum(1.4)
+        if "nBJet_" in hName: graph1.GetXaxis().SetRangeUser(0, 7)
+        elif "nJet_" in hName: graph1.GetXaxis().SetRangeUser(6, 14)
+        elif "lepEta_" in hName: graph1.GetXaxis().SetRangeUser(-4, 4)
+        elif "lepPhi_" in hName: graph1.GetXaxis().SetRangeUser(-4, 4)
+        elif "HT_" in hName: graph1.GetXaxis().SetRangeUser(0, 3000)
         #cv1[n_count].SetLogy(1)
         cv1[n_count].Update()
 
         if "Mu" in hName:
             legend4[n_count].SetHeader("#bf{#mu^{#pm} + jets  selection}", "C")
-            tr2_dataSMu[hName].SetLineColor(2)
-            tr2_dataSMu[hName].SetMarkerStyle(20)
-            tr2_dataSMu[hName].SetMarkerColor(2)
-            tr2_dataSMu[hName].SetMarkerSize(1.2)
-            tr2_dataSMu[hName].Draw('same')
-            newName = tr2_dataSMu[hName].GetName()
-            #legend4[n_count].AddEntry(newName, "Single Muon Data", 'lep')
-            legend4[n_count].AddEntry(tr2_dataSMu[hName], "SingleMuon Data", 'lep')
+            #tr2_dataSMu[hName].SetLineColor(2)
+            #tr2_dataSMu[hName].SetMarkerStyle(20)
+            #tr2_dataSMu[hName].SetMarkerColor(2)
+            #tr2_dataSMu[hName].SetMarkerSize(1.2)
+            #tr2_dataSMu[hName].Draw('same')
+            #legend4[n_count].AddEntry(tr2_dataSMu[hName], "SingleMuon Data", 'lep')
+
+            tr2_dataMuHTs[hName].SetLineColor(2)
+            tr2_dataMuHTs[hName].SetMarkerStyle(20)
+            tr2_dataMuHTs[hName].SetMarkerColor(2)
+            tr2_dataMuHTs[hName].SetMarkerSize(1.2)
+            tr2_dataMuHTs[hName].Draw('same')
+            legend4[n_count].AddEntry(tr2_dataMuHTs[hName], "Data", 'lep')
         elif "El" in hName:
             legend4[n_count].SetHeader("#bf{e^{#pm} + jets  selection}", "C")
-            tr2_dataSEl[hName].SetLineColor(2)
-            tr2_dataSEl[hName].SetMarkerStyle(20)
-            tr2_dataSEl[hName].SetMarkerColor(2)
-            tr2_dataSEl[hName].SetMarkerSize(1.2)
-            tr2_dataSEl[hName].Draw('same')
-            tr2_dataSEl[hName].SetMarkerStyle(20)
-            tr2_dataSEl[hName].SetMarkerColor(2)
-            tr2_dataSEl[hName].SetMarkerSize(1.2)
-            tr2_dataSEl[hName].SetLineColor(2)
-            newName = tr2_dataSEl[hName].GetName()
-            #legend4[n_count].AddEntry(newName, "Single Electron Data", 'lep')
-            legend4[n_count].AddEntry(tr2_dataSEl[hName], "SingleElectron Data", 'lep')
+            #tr2_dataSEl[hName].SetLineColor(2)
+            #tr2_dataSEl[hName].SetMarkerStyle(20)
+            #tr2_dataSEl[hName].SetMarkerColor(2)
+            #tr2_dataSEl[hName].SetMarkerSize(1.2)
+            #tr2_dataSEl[hName].Draw('same')
+            #legend4[n_count].AddEntry(tr2_dataSEl[hName], "SingleElectron Data", 'lep')
 
-        tr2_dataHTMHT[hName].SetLineColor(4)
-        tr2_dataHTMHT[hName].SetMarkerStyle(20)
-        tr2_dataHTMHT[hName].SetMarkerColor(4)
-        tr2_dataHTMHT[hName].SetMarkerSize(1.2)
-        tr2_dataHTMHT[hName].Draw('same')
-        tr2_dataHTMHT[hName].SetLineColor(4)
-        tr2_dataHTMHT[hName].SetMarkerStyle(20)
-        tr2_dataHTMHT[hName].SetMarkerColor(4)
-        tr2_dataHTMHT[hName].SetMarkerSize(1.2)
-        newName = tr2_dataHTMHT[hName].GetName()
-        #legend4[n_count].AddEntry(newName, "HTMHT Data", 'lep')
-        legend4[n_count].AddEntry(tr2_dataHTMHT[hName], "HTMHT Data", 'lep')
+            tr2_dataElHTs[hName].SetLineColor(2)
+            tr2_dataElHTs[hName].SetMarkerStyle(20)
+            tr2_dataElHTs[hName].SetMarkerColor(2)
+            tr2_dataElHTs[hName].SetMarkerSize(1.2)
+            tr2_dataElHTs[hName].Draw('same')
+            legend4[n_count].AddEntry(tr2_dataElHTs[hName], "Data", 'lep')
+
+        # tr2_dataHTMHT[hName].SetLineColor(4)
+        # tr2_dataHTMHT[hName].SetMarkerStyle(20)
+        # tr2_dataHTMHT[hName].SetMarkerColor(4)
+        # tr2_dataHTMHT[hName].SetMarkerSize(1.2)
+        # tr2_dataHTMHT[hName].Draw('same')
+        # legend4[n_count].AddEntry(tr2_dataHTMHT[hName], "HTMHT Data", 'lep')
 
         t2.Draw("same")
         legend4[n_count].Draw("same")
@@ -1156,6 +1250,8 @@ def main():
         ##############################
         cv2[n_count] = triggerCanvas.cd(1)
         legend5[n_count] = ROOT.TLegend(0.5, 0.16, 0.95, 0.5)
+        legend5[n_count] = ROOT.TLegend(0.16, 0.85, 0.95, 0.95)
+        legend5[n_count].SetNColumns(3)
         s_HTMHT[hName].SetLineColor(4)
         s_dataSMu[hName].SetMarkerStyle(20)
         s_dataSMu[hName].SetMarkerColor(2)
@@ -1164,54 +1260,60 @@ def main():
         newName = s_HTMHT[hName].GetName()
         #legend5[n_count].AddEntry(newName, "HTMHT Data", 'lep')
         s_HTMHT[hName].SetMinimum(0)
-        s_HTMHT[hName].SetMaximum(1.2)
+        s_HTMHT[hName].SetMaximum(1.4)
         if "Mu" in hName:
-            legend5[n_count].SetHeader("#bf{SingleMuon Data}", "C")
-            s_dataSMu_B[hName].SetLineColor(2)
-            s_dataSMu_B[hName].SetMarkerStyle(20)
-            s_dataSMu_B[hName].SetMarkerColor(2)
-            s_dataSMu_B[hName].SetMarkerSize(1.2)
-            s_dataSMu_B[hName].SetMinimum(0)
-            s_dataSMu_B[hName].SetMaximum(1.2)
-            #s_dataSMu_B[hName].Draw('E')
-            newName = s_dataSMu_B[hName].GetName()
-            legend5[n_count].AddEntry(s_dataSMu_B[hName], "RunII 2017B", 'lep')
+            legend5[n_count].SetHeader("#bf{#mu^{#pm} + jets  selection}", "C")
+            # s_dataSMu_B[hName].SetLineColor(2)
+            # s_dataSMu_B[hName].SetMarkerStyle(20)
+            # s_dataSMu_B[hName].SetMarkerColor(2)
+            # s_dataSMu_B[hName].SetMarkerSize(1.2)
+            # s_dataSMu_B[hName].SetMinimum(0)
+            # s_dataSMu_B[hName].SetMaximum(1.4)
+            # s_dataSMu_B[hName].Draw('E')
+            # newName = s_dataSMu_B[hName].GetName()
+            # legend5[n_count].AddEntry(s_dataSMu_B[hName], "RunII 2017B", 'lep')
 
             s_dataMuHTs17B[hName].SetLineColor(2)
             s_dataMuHTs17B[hName].SetMarkerStyle(20)
             s_dataMuHTs17B[hName].SetMarkerColor(2)
             s_dataMuHTs17B[hName].SetMarkerSize(1.2)
             s_dataMuHTs17B[hName].SetMinimum(0)
-            s_dataMuHTs17B[hName].SetMaximum(1.2)
+            s_dataMuHTs17B[hName].SetMaximum(1.4)
+            if "nBJet_" in hName: s_dataMuHTs17B[hName].GetXaxis().SetRangeUser(0, 7)
+            elif "nJet_" in hName: s_dataMuHTs17B[hName].GetXaxis().SetRangeUser(6, 14)
+            elif "lepEta_" in hName: s_dataMuHTs17B[hName].GetXaxis().SetRangeUser(-4, 4)
+            elif "lepPhi_" in hName: s_dataMuHTs17B[hName].GetXaxis().SetRangeUser(-4, 4)
+            elif "HT_" in hName: s_dataMuHTs17B[hName].GetXaxis().SetRangeUser(0, 3000)
             s_dataMuHTs17B[hName].Draw('E')
+            legend5[n_count].AddEntry(s_dataMuHTs17B[hName], "RunII 2017B", 'lep')
 
-            s_dataSMu_C[hName].SetLineColor(4)
-            s_dataSMu_C[hName].SetMarkerStyle(20)
-            s_dataSMu_C[hName].SetMarkerColor(4)
-            s_dataSMu_C[hName].SetMarkerSize(1.2)
-            #s_dataSMu_C[hName].Draw('E same')
-            newName = s_dataSMu_C[hName].GetName()
-            legend5[n_count].AddEntry(s_dataSMu_C[hName], "RunII 2017C", 'lep')
+            # s_dataSMu_C[hName].SetLineColor(4)
+            # s_dataSMu_C[hName].SetMarkerStyle(20)
+            # s_dataSMu_C[hName].SetMarkerColor(4)
+            # s_dataSMu_C[hName].SetMarkerSize(1.4)
+            # s_dataSMu_C[hName].Draw('E same')
+            # legend5[n_count].AddEntry(s_dataSMu_C[hName], "RunII 2017C", 'lep')
 
             s_dataMuHTs17C[hName].SetLineColor(4)
             s_dataMuHTs17C[hName].SetMarkerStyle(20)
             s_dataMuHTs17C[hName].SetMarkerColor(4)
             s_dataMuHTs17C[hName].SetMarkerSize(1.2)
             s_dataMuHTs17C[hName].Draw('E same')
+            legend5[n_count].AddEntry(s_dataMuHTs17C[hName], "RunII 2017C", 'lep')
 
-            s_dataSMu[hName].SetLineColor(8)
-            s_dataSMu[hName].SetMarkerStyle(20)
-            s_dataSMu[hName].SetMarkerColor(8)
-            s_dataSMu[hName].SetMarkerSize(1.2)
-            #s_dataSMu[hName].Draw('E same')
-            newName = s_dataSMu[hName].GetName()
-            legend5[n_count].AddEntry(s_dataSMu[hName], "RunII 2017D-F", 'lep')
+            # s_dataSMu[hName].SetLineColor(8)
+            # s_dataSMu[hName].SetMarkerStyle(20)
+            # s_dataSMu[hName].SetMarkerColor(8)
+            # s_dataSMu[hName].SetMarkerSize(1.4)
+            # s_dataSMu[hName].Draw('E same')
+            # legend5[n_count].AddEntry(s_dataSMu[hName], "RunII 2017D-F", 'lep')
 
             s_dataMuHTs17DEF[hName].SetLineColor(8)
             s_dataMuHTs17DEF[hName].SetMarkerStyle(20)
             s_dataMuHTs17DEF[hName].SetMarkerColor(8)
             s_dataMuHTs17DEF[hName].SetMarkerSize(1.2)
             s_dataMuHTs17DEF[hName].Draw('E same')
+            legend5[n_count].AddEntry(s_dataMuHTs17DEF[hName], "RunII 2017D-F", 'lep')
             #if ("HT" in hName or "pt" in hName) and "OR" in hName:
              #   with open('SF_HTfile.csv', mode='a') as sf_file:
               #      sf_writer = csv.writer(sf_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
@@ -1225,52 +1327,57 @@ def main():
                       #  sf_writer.writerow(write_list)
             
         elif "El" in hName:
-            legend5[n_count].SetHeader("#bf{SingleElectron Data}", "C")
-            s_dataSEl_B[hName].SetLineColor(2)
-            s_dataSEl_B[hName].SetMarkerStyle(20)
-            s_dataSEl_B[hName].SetMarkerColor(2)
-            s_dataSEl_B[hName].SetMarkerSize(1.2)
-            s_dataSEl_B[hName].SetMinimum(0)
-            s_dataSEl_B[hName].SetMaximum(1.2)
-            #s_dataSEl_B[hName].Draw('E')
-            newName = s_dataSEl_B[hName].GetName()
-            legend5[n_count].AddEntry(s_dataSEl_B[hName], "RunII 2017B", 'lep')
+            legend5[n_count].SetHeader("#bf{e^{#pm} + jets  selection}", "C")
+            # s_dataSEl_B[hName].SetLineColor(2)
+            # s_dataSEl_B[hName].SetMarkerStyle(20)
+            # s_dataSEl_B[hName].SetMarkerColor(2)
+            # s_dataSEl_B[hName].SetMarkerSize(1.2)
+            # s_dataSEl_B[hName].SetMinimum(0)
+            # s_dataSEl_B[hName].SetMaximum(1.4)
+            # s_dataSEl_B[hName].Draw('E')
+            # legend5[n_count].AddEntry(s_dataSEl_B[hName], "RunII 2017B", 'lep')
 
             s_dataElHTs17B[hName].SetLineColor(2)
             s_dataElHTs17B[hName].SetMarkerStyle(20)
             s_dataElHTs17B[hName].SetMarkerColor(2)
             s_dataElHTs17B[hName].SetMarkerSize(1.2)
             s_dataElHTs17B[hName].SetMinimum(0)
-            s_dataElHTs17B[hName].SetMaximum(1.2)
+            s_dataElHTs17B[hName].SetMaximum(1.4)
+            if "nBJet_" in hName: s_dataElHTs17B[hName].GetXaxis().SetRangeUser(0, 7)
+            elif "nJet_" in hName: s_dataElHTs17B[hName].GetXaxis().SetRangeUser(6, 14)
+            elif "lepEta_" in hName: s_dataElHTs17B[hName].GetXaxis().SetRangeUser(-4, 4)
+            elif "lepPhi_" in hName: s_dataElHTs17B[hName].GetXaxis().SetRangeUser(-4, 4)
+            elif "HT_" in hName: s_dataElHTs17B[hName].GetXaxis().SetRangeUser(0, 3000)
             s_dataElHTs17B[hName].Draw('E')
+            legend5[n_count].AddEntry(s_dataElHTs17B[hName], "RunII 2017B", 'lep')
 
-            s_dataSEl_C[hName].SetLineColor(4)
-            s_dataSEl_C[hName].SetMarkerStyle(20)
-            s_dataSEl_C[hName].SetMarkerColor(4)
-            s_dataSEl_C[hName].SetMarkerSize(1.2)
-            #s_dataSEl_C[hName].Draw('E same')
-            newName = s_dataSEl_C[hName].GetName()
-            legend5[n_count].AddEntry(s_dataSEl_C[hName], "RunII 2017C", 'lep')
+            # s_dataSEl_C[hName].SetLineColor(4)
+            # s_dataSEl_C[hName].SetMarkerStyle(20)
+            # s_dataSEl_C[hName].SetMarkerColor(4)
+            # s_dataSEl_C[hName].SetMarkerSize(1.4)
+            # s_dataSEl_C[hName].Draw('E same')
+            # legend5[n_count].AddEntry(s_dataSEl_C[hName], "RunII 2017C", 'lep')
 
             s_dataElHTs17C[hName].SetLineColor(4)
             s_dataElHTs17C[hName].SetMarkerStyle(20)
             s_dataElHTs17C[hName].SetMarkerColor(4)
             s_dataElHTs17C[hName].SetMarkerSize(1.2)
             s_dataElHTs17C[hName].Draw('E same')
+            legend5[n_count].AddEntry(s_dataElHTs17C[hName], "RunII 2017C", 'lep')
 
-            s_dataSEl[hName].SetLineColor(8)
-            s_dataSEl[hName].SetMarkerStyle(20)
-            s_dataSEl[hName].SetMarkerColor(8)
-            s_dataSEl[hName].SetMarkerSize(1.2)
-            #s_dataSEl[hName].Draw('E same')
-            newName = s_dataSEl[hName].GetName()
-            legend5[n_count].AddEntry(s_dataSEl[hName], "RunII 2017D-F", 'lep')
+            # s_dataSEl[hName].SetLineColor(8)
+            # s_dataSEl[hName].SetMarkerStyle(20)
+            # s_dataSEl[hName].SetMarkerColor(8)
+            # s_dataSEl[hName].SetMarkerSize(1.4)
+            # s_dataSEl[hName].Draw('E same')
+            # legend5[n_count].AddEntry(s_dataSEl[hName], "RunII 2017D-F", 'lep')
 
             s_dataElHTs17DEF[hName].SetLineColor(8)
-            s_dataElHTs17DEF[hName].SetMarkerStyle(21)
+            s_dataElHTs17DEF[hName].SetMarkerStyle(20)
             s_dataElHTs17DEF[hName].SetMarkerColor(8)
             s_dataElHTs17DEF[hName].SetMarkerSize(1.2)
             s_dataElHTs17DEF[hName].Draw('E same')
+            legend5[n_count].AddEntry(s_dataElHTs17DEF[hName], "RunII 2017D-F", 'lep')
             #if ("HT" in hName or "pt" in hName) and "OR" in hName:
              #   with open('SF_HTfile.csv', mode='a') as sf_file:
               #      sf_writer = csv.writer(sf_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
@@ -1283,7 +1390,7 @@ def main():
                     #    write_list = [ hName , bin_lowEdge, bin_upEdge, bin_sf, bin_error ]
                       #  sf_writer.writerow(write_list)
 
-        t3 = ROOT.TPaveText(0.2, 0.95, 0.5, 1, "nbNDC")
+        t3 = ROOT.TPaveText(0.18, 0.95, 0.5, 1, "nbNDC")
         t3.SetFillColorAlpha(0, 0.9)
         t3.SetTextSize(0.03)
         t3.AddText("#bf{CMS Preliminary}")
@@ -1304,14 +1411,14 @@ def main():
 
         effDIR.cd()
         tr_mcTTToSemiLep[hName].Write(mcName)
-        tr_dataHTMHT[hName].Write(htName)
-        tr_dataSMu[hName].Write(muName)
-        tr_dataSEl[hName].Write(eleName)
+        tr2_dataHTMHT[hName].Write(hName + "_HTtef")
+        tr2_dataSMu[hName].Write(hName + "_Mutef")
+        tr2_dataSEl[hName].Write(hName + "_Eltef")
 
         sfDIR.cd()
-        s_HTMHT[hName].Write(htName)
-        s_dataSMu[hName].Write(muName)
-        s_dataSEl[hName].Write(eleName)
+        s_HTMHT[hName].Write(hName + "_HTsf")
+        s_dataSMu[hName].Write(hName + "_Musf")
+        s_dataSEl[hName].Write(hName + "_Elsf")
     # cv1 = triggerCanvas.cd(1)
     # count = 0
     # for hn, hName in enumerate(hNames):
